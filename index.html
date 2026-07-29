@@ -121,10 +121,7 @@
     display: none;
   }
   .window.open { display: flex; flex-direction: column; }
-  .window.active {
-    border-color: rgba(57,255,20,.8);
-    box-shadow: var(--shadow), 0 0 0 1px rgba(57,255,20,.15);
-  }
+  .window.active { border-color: rgba(57,255,20,.8); box-shadow: var(--shadow), 0 0 0 1px rgba(57,255,20,.15); }
 
   .titlebar {
     display: flex;
@@ -168,8 +165,8 @@
     color: var(--green);
     border-radius: 10px;
     padding: 8px 12px;
-   font: inherit;
-    font-size: 12px;
+    font: inherit;
+   font-size: 12px;
     cursor: pointer;
     transition: .15s ease;
   }
@@ -180,6 +177,127 @@
     background: rgba(255,255,255,.04);
   }
   .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+  .drone-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+  }
+  .drone-slot {
+    background: rgba(57,255,14,.04);
+    border: 1px solid rgba(57,255,14,.25);
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+  }
+  .drone-placeholder {
+    height: 92px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    background: rgba(0,0,0,.4);
+    border: 1px dashed rgba(57,255,14,.3);
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .drone-label {
+    font-size: 11px;
+    color: var(--muted);
+    word-break: break-all;
+  }
+
+  .bookshelf {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    padding: 20px 10px;
+    background: rgba(0,0,0,.4);
+    border: 1px solid rgba(57,255,14,.2);
+    border-radius: 8px;
+  }
+  .book {
+    width: 78px;
+    height: 110px;
+    background: linear-gradient(145deg, #2a3a2a, #1a2a1a);
+    border: 2px solid #39ff14;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 4px 4px 0 rgba(0,0,0,.5);
+  }
+  .book:hover {
+    transform: translateY(-6px) rotate(2deg);
+  }
+  .book-spine {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 11px;
+    color: #39ff14;
+    letter-spacing: 1px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .aura-meter {
+    position: absolute;
+    top: 80px;
+    right: 20px;
+    width: 72px;
+    background: rgba(10,14,10,.92);
+    border: 1px solid rgba(57,255,20,.45);
+    border-radius: 10px;
+    padding: 10px 12px 9px;
+    font-size: 10px;
+    display: none;
+    z-index: 10;
+    box-shadow: 0 4px 20px rgba(0,0,0,.4);
+  }
+  .aura-label {
+    color: var(--green);
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+    font-size: 9px;
+  }
+  .aura-bar {
+    height: 7px;
+    background: rgba(57,255,20,.12);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(57,255,20,.2);
+  }
+  .aura-fill {
+    height: 100%;
+    width: 87%;
+    background: linear-gradient(90deg, #39ff14, #1f8f0f);
+    transition: width 0.8s ease-out;
+    box-shadow: 0 0 6px rgba(57,255,20,.5);
+  }
+  .aura-value {
+    text-align: right;
+    margin-top: 5px;
+    font-size: 11px;
+    color: var(--muted);
+    font-feature-settings: "tnum";
+  }
+
+  /* Golden Snitch */
+  #snitch {
+    position: fixed;
+    font-size: 28px;
+    z-index: 9999;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    user-select: none;
+    display: none;
+    text-shadow: 0 0 8px #ffd700;
+  }
+  #snitch:hover {
+    transform: scale(1.3) rotate(12deg);
+  }
 
   .stat {
     display: flex;
@@ -225,7 +343,7 @@
     padding: 8px 10px;
     border-radius: 16px;
     background: rgba(0,0,0,.72);
-    border: 1px solid rgba(57,255,20,.25);
+   border: 1px solid rgba(57,255,20,.25);
     backdrop-filter: blur(12px);
     box-shadow: var(--shadow);
   }
@@ -239,10 +357,7 @@
     border-radius: 10px;
     cursor: pointer;
   }
-  .taskbar button:hover {
-    background: rgba(57,255,20,.1);
-    color: var(--green);
-  }
+  .taskbar button:hover { background: rgba(57,255,20,.1); color: var(--green); }
   .clock {
     min-width: 78px;
     text-align: right;
@@ -311,17 +426,84 @@
   }
   .secret.show { display: block; }
 
+  /* Mobile optimization */
   @media (max-width: 700px) {
     .icons {
-      top: 10px;
-      left: 8px;
-      grid-template-columns: repeat(2, 86px);
+      top: 12px;
+      left: 10px;
+      grid-template-columns: repeat(4, 68px);
+      gap: 8px;
     }
+    .icon {
+      width: 68px;
+      padding: 6px 4px;
+    }
+    .icon .glyph {
+      width: 38px;
+      height: 38px;
+    }
+    .icon .label {
+      font-size: 10px;
+    }
+
     .window {
-      left: 12px !important;
-      right: 12px;
+      left: 8px !important;
+      right: 8px !important;
       width: auto !important;
       max-width: none;
+      top: 90px !important;
+    }
+    .titlebar {
+      padding: 6px 10px;
+    }
+    .content {
+      padding: 10px 12px;
+    }
+
+    .aura-meter {
+      top: auto;
+      bottom: 70px;
+      right: 10px;
+      width: 64px;
+      padding: 8px 10px;
+    }
+
+    .taskbar {
+      padding: 0 6px;
+      gap: 4px;
+    }
+    .taskbar button {
+      font-size: 10px;
+      padding: 4px 8px;
+    }
+
+    .terminal {
+      height: 160px;
+    }
+
+    .bookshelf {
+      gap: 8px;
+      padding: 14px 6px;
+    }
+    .book {
+      width: 62px;
+      height: 88px;
+    }
+    .book-spine {
+      font-size: 9px;
+    }
+
+    #snitch {
+      font-size: 22px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .icons {
+      grid-template-columns: repeat(3, 64px);
+    }
+    .icon {
+      width: 64px;
     }
   }
 </style>
@@ -347,7 +529,7 @@
         <div class="glyph">📈</div>
         <div class="label">Winning</div>
       </div>
-      <div class="icon" tabindex="0" data-open="terminal">
+     <div class="icon" tabindex="0" data-open="terminal">
         <div class="glyph">💻</div>
         <div class="label">Terminal</div>
       </div>
@@ -358,6 +540,14 @@
       <div class="icon" tabindex="0" data-open="trash">
         <div class="glyph">🗑️</div>
         <div class="label">Trash</div>
+      </div>
+      <div class="icon" tabindex="0" data-open="drone">
+        <div class="glyph">🚁</div>
+        <div class="label">Drone</div>
+      </div>
+      <div class="icon" tabindex="0" data-open="bookshelf">
+        <div class="glyph">📚</div>
+        <div class="label">Bookshelf</div>
       </div>
     </div>
 
@@ -372,10 +562,10 @@
       </div>
       <div class="content">
         <div class="green">THIS IS MY WEBSITE NOW</div>
-        <p class="muted">Welcome to Pepe OS — a deeply serious operating system powered by spite, and bad decisions.</p>
+        <p class="muted">Welcome to Pepe OS — a deeply serious operating system powered by vibes, spite, and questionable decisions.</p>
         <p>Owner: <span class="green">Nikita Kovalenko</span><br>
-        Status: <span class="danger">Too much winning</span><br>
-        Mood: Just vibing in the pond</p>
+        Status: <span class="danger">too much winning</span><br>
+        Mood: looking at the skyline like it owes him money</p>
         <div class="row">
           <button class="btn" id="rageBtn">Click for wisdom</button>
           <button class="btn secondary" id="glitchBtn">Glitch once</button>
@@ -421,7 +611,7 @@
           <button class="btn" type="submit">run</button>
         </form>
       </div>
-   </section>
+    </section>
 
     <section class="window" id="win-contact" style="top:160px; left:180px; width:380px;">
       <div class="titlebar" data-drag>
@@ -431,7 +621,7 @@
           <div class="dot max"></div>
         </div>
         <div class="title">Contact.app</div>
-      </div>
+     </div>
       <div class="content">
         <p>Business, chaos, or accidental brilliance:</p>
         <p class="green" id="emailText">winning@nikitakovalenko.com</p>
@@ -465,6 +655,71 @@
         </div>
       </div>
     </section>
+
+    <section class="window" id="win-drone" style="top:140px; left:260px; width:620px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="drone"></div>
+          <div class="dot min" data-close="drone"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Drone_Shots</div>
+      </div>
+      <div class="content">
+        <p class="green">DRONE ARCHIVE // COMING SOON</p>
+        <p class="muted" style="margin-bottom:12px;">High-resolution drone photography. Replace the placeholders below with your actual shots.</p>
+
+        <div class="drone-grid">
+          <div class="drone-slot">
+            <div class="drone-placeholder">📷</div>
+            <div class="drone-label">shot_01.jpg</div>
+          </div>
+          <div class="drone-slot">
+            <div class="drone-placeholder">📷</div>
+            <div class="drone-label">shot_02.jpg</div>
+          </div>
+          <div class="drone-slot">
+            <div class="drone-placeholder">📷</div>
+            <div class="drone-label">shot_03.jpg</div>
+          </div>
+          <div class="drone-slot">
+            <div class="drone-placeholder">📷</div>
+            <div class="drone-label">shot_04.jpg</div>
+          </div>
+        </div>
+
+        <p class="muted" style="margin-top:14px; font-size:11px;">Drop your images in the same folder and update the src attributes.</p>
+      </div>
+    </section>
+
+    <section class="window" id="win-bookshelf" style="top:160px; left:300px; width:580px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="bookshelf"></div>
+          <div class="dot min" data-close="bookshelf"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Book_Shelf</div>
+      </div>
+      <div class="content">
+        <p class="green">PERSONAL ARCHIVE // DO NOT TOUCH</p>
+        <div class="bookshelf">
+          <div class="book" data-book="1">
+            <div class="book-spine">The art of pepe</div>
+          </div>
+          <div class="book" data-book="2">
+            <div class="book-spine">Memetics 101</div>
+          </div>
+          <div class="book" data-book="3">
+            <div class="book-spine">Rare Pepe Archive</div>
+          </div>
+          <div class="book" data-book="4">
+            <div class="book-spine">Internet culture for dummies</div>
+          </div>
+        </div>
+       <p class="muted" style="margin-top:12px; font-size:11px;">Click a book to open. PDFs coming later.</p>
+      </div>
+    </section>
   </div>
 
   <div class="taskbar">
@@ -475,7 +730,15 @@
     <div class="clock" id="clock">00:00:00</div>
   </div>
 
+  <div class="aura-meter" id="auraMeter">
+    <div class="aura-label">AURA</div>
+    <div class="aura-bar"><div class="aura-fill" id="auraFill"></div></div>
+    <div class="aura-value" id="auraValue">87</div>
+  </div>
+
   <div class="toast" id="toast"></div>
+  <div id="snitch">✨</div>
+
 <script>
 (function () {
   const lines = [
@@ -510,7 +773,9 @@
     stats: document.getElementById("win-stats"),
     terminal: document.getElementById("win-terminal"),
     contact: document.getElementById("win-contact"),
-    trash: document.getElementById("win-trash")
+    trash: document.getElementById("win-trash"),
+    drone: document.getElementById("win-drone"),
+    bookshelf: document.getElementById("win-bookshelf")
   };
 
   function save() {
@@ -556,6 +821,39 @@
     save();
   }
 
+  // retro click sound (Web Audio API - zero file size)
+  let audioCtx;
+  let confessionMode = false;
+  let auraActive = false;
+  let auraValue = 87;
+
+  function playClick() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      const filter = audioCtx.createBiquadFilter();
+
+      osc.type = "square";
+      osc.frequency.value = 920;
+      filter.type = "lowpass";
+      filter.frequency.value = 1800;
+
+      gain.gain.value = 0.18;
+
+      const t = audioCtx.currentTime;
+      gain.gain.setValueAtTime(0.18, t);
+      gain.gain.linearRampToValueAtTime(0.0001, t + 0.09);
+
+      osc.connect(filter);
+     filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(t);
+      osc.stop(t + 0.12);
+    } catch (e) {}
+  }
+
   function termPrint(text, cls) {
     const line = document.createElement("div");
     line.className = "line" + (cls ? " " + cls : "");
@@ -589,23 +887,95 @@
       termPrint("he sees the skyline. he does not blink.");
     } else if (cmd === "fuck you") {
       termPrint("noted. added to brand guidelines.");
+    } else if (cmd === "scan") {
+      termPrint("scanning local system...");
+      termPrint("threats detected: 0");
+      termPrint("winning signature: confirmed");
+      termPrint("user ego level: dangerously high");
+    } else if (cmd === "coinflip") {
+      termPrint(Math.random() > 0.5 ? "heads" : "tails");
+    } else if (cmd === "confess") {
+      confessionMode = true;
+      termPrint("the terminal is listening.");
+      termPrint("type your confession.");
+    } else if (cmd === "matrix") {
+      termPrint("entering the matrix...");
+      termPrint("there is no spoon.");
+      termPrint("there is only winning.");
+    } else if (cmd === "aura") {
+      auraActive = !auraActive;
+      const meter = document.getElementById("auraMeter");
+
+      if (auraActive) {
+        meter.style.display = "block";
+        updateAura();
+        termPrint("aura meter activated.");
+        termPrint("it is already depleting.");
+      } else {
+        meter.style.display = "none";
+        if (auraInterval) {
+          clearInterval(auraInterval);
+          auraInterval = null;
+        }
+        termPrint("aura meter deactivated.");
+      }
     } else {
-      termPrint("command not found: " + input);
-      termPrint("type `help` before inventing responsibilities.");
+      if (confessionMode) {
+        termPrint("confession received.");
+        termPrint("judgment: weak. try harder.");
+        confessionMode = false;
+      } else {
+        termPrint("command not found: " + input);
+        termPrint("type `help` before inventing responsibilities.");
+      }
     }
   }
 
+  let auraInterval;
+
+  function updateAura() {
+    if (!auraActive) return;
+    const fill = document.getElementById("auraFill");
+    const val = document.getElementById("auraValue");
+    if (!fill || !val) return;
+
+    // Clear any existing interval to prevent multiple drains
+    if (auraInterval) clearInterval(auraInterval);
+
+    auraInterval = setInterval(() => {
+      if (!auraActive) return;
+      auraValue = Math.max(12, auraValue - 1);
+      fill.style.width = auraValue + "%";
+      val.textContent = auraValue;
+
+      if (auraValue <= 30) {
+        fill.style.boxShadow = "0 0 10px #ff4d4d";
+        val.style.color = "#ff4d4d";
+      } else {
+        fill.style.boxShadow = "0 0 6px rgba(57,255,20,.5)";
+        val.style.color = "var(--muted)";
+      }
+    }, 28000);
+  }
+
+  // boot
   setTimeout(() => {
     boot.classList.add("hide");
     openWindow("about");
     termPrint("Pepe OS ready.");
     termPrint("type `help` to pretend you know what you're doing.");
   }, 1500);
- document.querySelectorAll("[data-open]").forEach(el => {
-    el.addEventListener("click", () => openWindow(el.getAttribute("data-open")));
+
+  // icons + taskbar
+  document.querySelectorAll("[data-open]").forEach(el => {
+    el.addEventListener("click", () => {
+      playClick();
+     openWindow(el.getAttribute("data-open"));
+    });
     el.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
+        playClick();
         openWindow(el.getAttribute("data-open"));
       }
     });
@@ -614,14 +984,19 @@
   document.querySelectorAll("[data-close]").forEach(el => {
     el.addEventListener("click", (e) => {
       e.stopPropagation();
+      playClick();
       closeWindow(el.getAttribute("data-close"));
     });
   });
 
   Object.entries(windows).forEach(([name, el]) => {
-    el.addEventListener("mousedown", () => focusWindow(name));
+    el.addEventListener("mousedown", () => {
+      playClick();
+      focusWindow(name);
+    });
   });
 
+  // drag
   document.querySelectorAll("[data-drag]").forEach(bar => {
     const win = bar.parentElement;
     let sx = 0, sy = 0, ox = 0, oy = 0, dragging = false;
@@ -646,6 +1021,7 @@
     bar.addEventListener("pointerup", () => { dragging = false; });
   });
 
+  // interactions
   document.getElementById("rageBtn").addEventListener("click", () => {
     bumpWinning(3);
     wisdom.textContent = lines[Math.floor(Math.random() * lines.length)];
@@ -704,12 +1080,15 @@
     bumpWinning(1);
   });
 
+  // clock
   function tick() {
-    document.getElementById("clock").textContent = new Date().toLocaleTimeString();
+    const d = new Date();
+    document.getElementById("clock").textContent = d.toLocaleTimeString();
   }
   tick();
   setInterval(tick, 1000);
 
+  // konami
   const seq = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
   let progress = 0;
   window.addEventListener("keydown", (e) => {
@@ -720,8 +1099,8 @@
       if (progress === seq.length) {
         progress = 0;
         openWindow("contact");
-        vipRoom.classList.add("show");
-       winIndex += 50;
+       vipRoom.classList.add("show");
+        winIndex += 50;
         renderStats();
         save();
         showToast("VIP Winning Room unlocked");
@@ -731,10 +1110,74 @@
     }
   });
 
+  // click anywhere on wallpaper lightly counts
   document.querySelector(".desktop").addEventListener("click", (e) => {
     if (e.target.classList.contains("desktop") || e.target.classList.contains("icons")) {
       bumpWinning(1);
     }
+  });
+
+  // === Golden Snitch Easter Egg ===
+  const snitch = document.getElementById("snitch");
+  let snitchTimeout;
+
+  function spawnSnitch() {
+    if (!snitch) return;
+    snitch.style.display = "block";
+    snitch.style.left = Math.random() * (window.innerWidth - 60) + "px";
+    snitch.style.top = Math.random() * (window.innerHeight - 60) + "px";
+
+    clearTimeout(snitchTimeout);
+    snitchTimeout = setTimeout(() => {
+      if (snitch.style.display === "block") snitch.style.display = "none";
+    }, 5000);
+  }
+
+  function scheduleNextSnitch() {
+    const delay = 30000 + Math.random() * 40000; // 30-70s
+    setTimeout(() => {
+      spawnSnitch();
+      scheduleNextSnitch();
+    }, delay);
+  }
+
+  if (snitch) {
+    snitch.addEventListener("click", () => {
+      snitch.style.display = "none";
+      clearTimeout(snitchTimeout);
+      bumpWinning(47);
+      showToast("Caught the Snitch! +47 winning");
+    });
+
+    setTimeout(() => {
+      scheduleNextSnitch();
+    }, 45000);
+  }
+
+  // Bookshelf book clicks (nonsense content for now)
+  document.querySelectorAll("#win-bookshelf .book").forEach(book => {
+    book.addEventListener("click", () => {
+      const bookNum = book.getAttribute("data-book");
+      const messages = {
+        "1": "Chapter 1: Never sell your rare Pepes.",
+        "2": "Lesson 4: If you have to explain the meme, you already lost.",
+        "3": "Page 69: This page intentionally left rare.",
+        "4": "Appendix C: How to lose aura in 3 easy steps."
+      };
+      showToast(messages[bookNum] || "This book is cursed.");
+      bumpWinning(3);
+    });
+  });
+
+  // === Custom Cursor (Pepe magnifying glass on hover) ===
+  const hoverTargets = document.querySelectorAll(".icon, .window, button");
+  hoverTargets.forEach(el => {
+    el.addEventListener("mouseenter", () => {
+      document.body.style.cursor = "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewBox=\"0 0 32 32\"><text y=\"24\" font-size=\"22\">🔍</text></svg>') 2 2, auto";
+    });
+    el.addEventListener("mouseleave", () => {
+      document.body.style.cursor = "default";
+    });
   });
 
   renderStats();
