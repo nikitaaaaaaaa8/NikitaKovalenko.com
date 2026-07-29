@@ -3,28 +3,742 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>nikitakovalenko.com</title>
+<title>nikitakovalenko.com — Pepe OS</title>
 <style>
+  :root {
+    --green: #39ff14;
+    --green-dim: #1f8f0f;
+    --panel: rgba(10, 14, 10, 0.88);
+    --panel-border: rgba(57, 255, 20, 0.45);
+    --text: #d8ffd0;
+    --muted: #7ea878;
+    --danger: #ff4d4d;
+    --shadow: 0 18px 50px rgba(0,0,0,.55);
+    --font: "SF Mono", "Menlo", "Consolas", monospace;
+  }
+
+  * { box-sizing: border-box; }
   html, body {
     margin: 0;
     height: 100%;
+    overflow: hidden;
+    font-family: var(--font);
+    color: var(--text);
     background: #000;
+    user-select: none;
   }
+
   body {
+    background:
+      radial-gradient(circle at 20% 20%, rgba(57,255,20,.08), transparent 35%),
+      radial-gradient(circle at 80% 80%, rgba(57,255,20,.05), transparent 30%),
+      #000;
+  }
+
+  .wallpaper {
+    position: fixed;
+    inset: 0;
+    background: #000 center/contain no-repeat;
+    background-image: url("site.jpg");
+    filter: saturate(1.05) contrast(1.05);
+    z-index: 0;
+  }
+
+  .scanlines {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0px,
+        rgba(0,0,0,0) 2px,
+        rgba(0,0,0,.12) 3px
+      );
+    mix-blend-mode: multiply;
+    opacity: .35;
+  }
+
+  .desktop {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+  }
+
+  .icons {
+    position: absolute;
+    top: 18px;
+    left: 14px;
+    display: grid;
+    gap: 14px;
+  }
+
+  .icon {
+    width: 86px;
+    text-align: center;
+    cursor: pointer;
+    padding: 8px 4px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: .15s ease;
+  }
+  .icon:hover, .icon:focus {
+    background: rgba(57,255,20,.08);
+    border-color: rgba(57,255,20,.25);
+    outline: none;
+  }
+  .icon .glyph {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 8px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(57,255,20,.18), rgba(0,0,0,.35));
+    border: 1px solid rgba(57,255,20,.35);
+    box-shadow: inset 0 0 18px rgba(57,255,20,.12);
+    font-size: 22px;
+  }
+  .icon .label {
+    font-size: 11px;
+    line-height: 1.25;
+    color: #eaffea;
+    text-shadow: 0 1px 2px #000, 0 0 8px rgba(0,0,0,.8);
+  }
+
+  .window {
+    position: absolute;
+    min-width: 280px;
+    max-width: min(520px, calc(100vw - 24px));
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    display: none;
+  }
+  .window.open { display: flex; flex-direction: column; }
+  .window.active {
+    border-color: rgba(57,255,20,.8);
+    box-shadow: var(--shadow), 0 0 0 1px rgba(57,255,20,.15);
+  }
+
+  .titlebar {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: linear-gradient(180deg, rgba(57,255,20,.12), rgba(0,0,0,.2));
+    border-bottom: 1px solid rgba(57,255,20,.18);
+    cursor: grab;
   }
-  img {
-    max-width: 100%;
-    max-height: 100vh;
-    width: auto;
-    height: auto;
-    display: block;
+  .titlebar:active { cursor: grabbing; }
+  .dots { display: flex; gap: 6px; }
+  .dot {
+    width: 11px; height: 11px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.15);
+  }
+  .dot.close { background: #ff5f57; }
+  .dot.min { background: #febc2e; }
+  .dot.max { background: #28c840; }
+  .title {
+    flex: 1;
+    font-size: 12px;
+    color: var(--green);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .content {
+    padding: 14px 16px 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .muted { color: var(--muted); }
+  .danger { color: var(--danger); }
+  .green { color: var(--green); }
+
+  .btn {
+    appearance: none;
+    border: 1px solid rgba(57,255,20,.4);
+    background: rgba(57,255,20,.08);
+    color: var(--green);
+    border-radius: 10px;
+    padding: 8px 12px;
+   font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: .15s ease;
+  }
+  .btn:hover { background: rgba(57,255,20,.16); }
+  .btn.secondary {
+    border-color: rgba(255,255,255,.12);
+    color: var(--text);
+    background: rgba(255,255,255,.04);
+  }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+  .stat {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(57,255,20,.15);
+  }
+  .stat:last-child { border-bottom: 0; }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 64px;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(0,0,0,.88);
+    border: 1px solid rgba(57,255,20,.45);
+    color: var(--green);
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: .2s ease;
+    z-index: 50;
+    max-width: min(90vw, 420px);
+    text-align: center;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .taskbar {
+    position: fixed;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    z-index: 40;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 16px;
+    background: rgba(0,0,0,.72);
+    border: 1px solid rgba(57,255,20,.25);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--shadow);
+  }
+  .taskbar button {
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 12px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .taskbar button:hover {
+    background: rgba(57,255,20,.1);
+    color: var(--green);
+  }
+  .clock {
+    min-width: 78px;
+    text-align: right;
+    color: var(--green);
+    font-size: 12px;
+    padding: 0 6px;
+  }
+
+  .boot {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: #000;
+    display: grid;
+    place-items: center;
+    transition: opacity .45s ease;
+  }
+  .boot.hide { opacity: 0; pointer-events: none; }
+  .boot-box { width: min(420px, 90vw); }
+  .boot-title { color: var(--green); margin-bottom: 10px; font-size: 14px; }
+  .boot-bar {
+    height: 10px;
+    border: 1px solid rgba(57,255,20,.35);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .boot-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--green-dim), var(--green));
+    box-shadow: 0 0 18px rgba(57,255,20,.55);
+    animation: load 1.4s ease forwards;
+  }
+  @keyframes load { to { width: 100%; } }
+
+  .terminal {
+    background: rgba(0,0,0,.55);
+    border: 1px solid rgba(57,255,20,.18);
+    border-radius: 10px;
+    padding: 10px;
+    min-height: 180px;
+    max-height: 260px;
+    overflow: auto;
+    font-size: 12px;
+  }
+  .terminal .line { margin: 0 0 6px; white-space: pre-wrap; }
+  .prompt-row { display: flex; gap: 8px; margin-top: 10px; }
+  .prompt-row input {
+    flex: 1;
+    background: rgba(0,0,0,.45);
+    border: 1px solid rgba(57,255,20,.25);
+    border-radius: 8px;
+    color: var(--green);
+    font: inherit;
+    padding: 8px 10px;
+    outline: none;
+  }
+
+  .secret {
+    display: none;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px dashed rgba(57,255,20,.4);
+    background: rgba(57,255,20,.05);
+  }
+  .secret.show { display: block; }
+
+  @media (max-width: 700px) {
+    .icons {
+      top: 10px;
+      left: 8px;
+      grid-template-columns: repeat(2, 86px);
+    }
+    .window {
+      left: 12px !important;
+      right: 12px;
+      width: auto !important;
+      max-width: none;
+    }
   }
 </style>
 </head>
 <body>
-  <img src="site.jpg" alt="This is my website now">
+  <div class="boot" id="boot">
+    <div class="boot-box">
+      <div class="boot-title">PEPE OS v0.1 — loading too much winning...</div>
+      <div class="boot-bar"><div class="boot-fill"></div></div>
+    </div>
+  </div>
+
+  <div class="wallpaper" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <div class="desktop" id="desktop">
+    <div class="icons">
+      <div class="icon" tabindex="0" data-open="about">
+        <div class="glyph">🐸</div>
+        <div class="label">About</div>
+      </div>
+      <div class="icon" tabindex="0" data-open="stats">
+        <div class="glyph">📈</div>
+        <div class="label">Winning</div>
+      </div>
+      <div class="icon" tabindex="0" data-open="terminal">
+        <div class="glyph">💻</div>
+        <div class="label">Terminal</div>
+      </div>
+      <div class="icon" tabindex="0" data-open="contact">
+        <div class="glyph">✉️</div>
+        <div class="label">Contact</div>
+      </div>
+      <div class="icon" tabindex="0" data-open="trash">
+        <div class="glyph">🗑️</div>
+        <div class="label">Trash</div>
+      </div>
+    </div>
+
+    <section class="window" id="win-about" style="top:80px; left:140px; width:420px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="about"></div>
+          <div class="dot min" data-close="about"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">About.txt</div>
+      </div>
+      <div class="content">
+        <div class="green">THIS IS MY WEBSITE NOW</div>
+        <p class="muted">Welcome to Pepe OS — a deeply serious operating system powered by vibes, spite, and questionable decisions.</p>
+        <p>Owner: <span class="green">Nikita Kovalenko</span><br>
+        Status: <span class="danger">too much winning</span><br>
+        Mood: looking at the skyline like it owes him money</p>
+        <div class="row">
+          <button class="btn" id="rageBtn">Click for wisdom</button>
+          <button class="btn secondary" id="glitchBtn">Glitch once</button>
+        </div>
+        <p class="muted" id="wisdom" style="margin-top:12px;">Tip: try the Konami code.</p>
+      </div>
+    </section>
+
+    <section class="window" id="win-stats" style="top:120px; left:220px; width:360px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="stats"></div>
+          <div class="dot min" data-close="stats"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Winning Monitor</div>
+      </div>
+      <div class="content">
+        <div class="stat"><span>Session clicks</span><span class="green" id="clickCount">0</span></div>
+        <div class="stat"><span>Winning index</span><span class="green" id="winIndex">100</span></div>
+        <div class="stat"><span>Emails answered</span><span class="danger">0</span></div>
+        <div class="stat"><span>System stability</span><span class="muted">cosmetic only</span></div>
+        <div class="row">
+          <button class="btn" id="winBtn">Add winning</button>
+          <button class="btn secondary" id="resetBtn">Reset ego</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="window" id="win-terminal" style="top:90px; left:300px; width:480px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="terminal"></div>
+          <div class="dot min" data-close="terminal"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">pepe@winning:~</div>
+      </div>
+      <div class="content">
+        <div class="terminal" id="termOut"></div>
+        <form class="prompt-row" id="termForm">
+          <input id="termIn" autocomplete="off" spellcheck="false" placeholder="try: help, whoami, winning, email, clear">
+          <button class="btn" type="submit">run</button>
+        </form>
+      </div>
+   </section>
+
+    <section class="window" id="win-contact" style="top:160px; left:180px; width:380px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="contact"></div>
+          <div class="dot min" data-close="contact"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Contact.app</div>
+      </div>
+      <div class="content">
+        <p>Business, chaos, or accidental brilliance:</p>
+        <p class="green" id="emailText">winning@nikitakovalenko.com</p>
+        <p class="muted">Auto-reply is currently on strike. The inbox still works.</p>
+        <div class="row">
+          <button class="btn" id="copyEmail">Copy email</button>
+          <a class="btn secondary" href="mailto:winning@nikitakovalenko.com">Open mail app</a>
+        </div>
+        <div class="secret" id="vipRoom">
+          <div class="green">VIP WINNING ROOM UNLOCKED</div>
+          <div class="muted">You know the code. Respect.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="window" id="win-trash" style="top:210px; left:420px; width:320px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="trash"></div>
+          <div class="dot min" data-close="trash"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Trash</div>
+      </div>
+      <div class="content">
+        <p class="danger">Empty?</p>
+        <p class="muted">No. It contains:</p>
+        <p>• unread obligations<br>• corporate synergy<br>• your cold email<br>• the concept of work-life balance</p>
+        <div class="row">
+          <button class="btn secondary" id="emptyTrash">Empty trash</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="taskbar">
+    <button data-open="about">About</button>
+    <button data-open="stats">Winning</button>
+    <button data-open="terminal">Terminal</button>
+    <button data-open="contact">Contact</button>
+    <div class="clock" id="clock">00:00:00</div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+<script>
+(function () {
+  const lines = [
+    "too much winning. come back never.",
+    "this is my website now.",
+    "skill issue detected.",
+    "email received. emotionally declined.",
+    "pepe has left the chat but stayed on the homepage.",
+    "your meeting could have been a void.",
+    "currently optimizing for aura.",
+    "404: humility not found.",
+    "built different. documented never.",
+    "FUCK YOU (affectionate? unclear)"
+  ];
+
+  const boot = document.getElementById("boot");
+  const toast = document.getElementById("toast");
+  const clickCountEl = document.getElementById("clickCount");
+  const winIndexEl = document.getElementById("winIndex");
+  const wisdom = document.getElementById("wisdom");
+  const termOut = document.getElementById("termOut");
+  const termIn = document.getElementById("termIn");
+  const vipRoom = document.getElementById("vipRoom");
+  const wallpaper = document.querySelector(".wallpaper");
+
+  let clicks = Number(localStorage.getItem("pepe_clicks") || 0);
+  let winIndex = Number(localStorage.getItem("pepe_win") || 100);
+  let z = 10;
+
+  const windows = {
+    about: document.getElementById("win-about"),
+    stats: document.getElementById("win-stats"),
+    terminal: document.getElementById("win-terminal"),
+    contact: document.getElementById("win-contact"),
+    trash: document.getElementById("win-trash")
+  };
+
+  function save() {
+    localStorage.setItem("pepe_clicks", String(clicks));
+    localStorage.setItem("pepe_win", String(winIndex));
+  }
+
+  function renderStats() {
+    clickCountEl.textContent = String(clicks);
+    winIndexEl.textContent = String(winIndex);
+  }
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove("show"), 1800);
+  }
+
+  function focusWindow(name) {
+    const el = windows[name];
+    if (!el) return;
+    Object.values(windows).forEach(w => w.classList.remove("active"));
+    el.classList.add("open", "active");
+    el.style.zIndex = String(++z);
+  }
+
+  function openWindow(name) {
+    focusWindow(name);
+    if (name === "terminal") setTimeout(() => termIn.focus(), 50);
+  }
+
+  function closeWindow(name) {
+    const el = windows[name];
+    if (!el) return;
+    el.classList.remove("open", "active");
+  }
+
+  function bumpWinning(by) {
+    clicks += 1;
+    winIndex += by;
+    renderStats();
+    save();
+  }
+
+  function termPrint(text, cls) {
+    const line = document.createElement("div");
+    line.className = "line" + (cls ? " " + cls : "");
+    line.textContent = text;
+    termOut.appendChild(line);
+    termOut.scrollTop = termOut.scrollHeight;
+  }
+
+  function runCommand(raw) {
+    const input = raw.trim();
+    const cmd = input.toLowerCase();
+    termPrint("> " + input, "green");
+    if (!cmd) return;
+
+    if (cmd === "help") {
+      termPrint("commands: help, whoami, winning, email, clear, sudo, date, pepe");
+    } else if (cmd === "whoami") {
+      termPrint("guest@nikitakovalenko.com // temporary main character");
+    } else if (cmd === "winning") {
+      termPrint("winning index: " + winIndex);
+      termPrint("diagnosis: chronic victory");
+    } else if (cmd === "email") {
+      termPrint("winning@nikitakovalenko.com");
+    } else if (cmd === "clear") {
+      termOut.innerHTML = "";
+    } else if (cmd === "sudo") {
+      termPrint("nice try. pepe is root.");
+    } else if (cmd === "date") {
+      termPrint(new Date().toString());
+    } else if (cmd === "pepe") {
+      termPrint("he sees the skyline. he does not blink.");
+    } else if (cmd === "fuck you") {
+      termPrint("noted. added to brand guidelines.");
+    } else {
+      termPrint("command not found: " + input);
+      termPrint("type `help` before inventing responsibilities.");
+    }
+  }
+
+  setTimeout(() => {
+    boot.classList.add("hide");
+    openWindow("about");
+    termPrint("Pepe OS ready.");
+    termPrint("type `help` to pretend you know what you're doing.");
+  }, 1500);
+ document.querySelectorAll("[data-open]").forEach(el => {
+    el.addEventListener("click", () => openWindow(el.getAttribute("data-open")));
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openWindow(el.getAttribute("data-open"));
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-close]").forEach(el => {
+    el.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeWindow(el.getAttribute("data-close"));
+    });
+  });
+
+  Object.entries(windows).forEach(([name, el]) => {
+    el.addEventListener("mousedown", () => focusWindow(name));
+  });
+
+  document.querySelectorAll("[data-drag]").forEach(bar => {
+    const win = bar.parentElement;
+    let sx = 0, sy = 0, ox = 0, oy = 0, dragging = false;
+
+    bar.addEventListener("pointerdown", (e) => {
+      if (e.target.closest(".dot")) return;
+      dragging = true;
+      bar.setPointerCapture(e.pointerId);
+      const rect = win.getBoundingClientRect();
+      sx = e.clientX; sy = e.clientY; ox = rect.left; oy = rect.top;
+      win.style.right = "auto";
+    });
+
+    bar.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const nx = ox + (e.clientX - sx);
+      const ny = oy + (e.clientY - sy);
+      win.style.left = Math.max(8, Math.min(window.innerWidth - 80, nx)) + "px";
+      win.style.top = Math.max(8, Math.min(window.innerHeight - 80, ny)) + "px";
+    });
+
+    bar.addEventListener("pointerup", () => { dragging = false; });
+  });
+
+  document.getElementById("rageBtn").addEventListener("click", () => {
+    bumpWinning(3);
+    wisdom.textContent = lines[Math.floor(Math.random() * lines.length)];
+    showToast(wisdom.textContent);
+  });
+
+  document.getElementById("glitchBtn").addEventListener("click", () => {
+    bumpWinning(1);
+    wallpaper.style.filter = "hue-rotate(70deg) saturate(2) contrast(1.3)";
+    document.body.animate([
+      { transform: "translate(0,0)" },
+      { transform: "translate(-4px,2px)" },
+      { transform: "translate(3px,-2px)" },
+      { transform: "translate(0,0)" }
+    ], { duration: 220, iterations: 2 });
+    setTimeout(() => {
+      wallpaper.style.filter = "saturate(1.05) contrast(1.05)";
+    }, 280);
+    showToast("visual integrity: optional");
+  });
+
+  document.getElementById("winBtn").addEventListener("click", () => {
+    bumpWinning(7);
+    showToast("winning increased. side effects unknown.");
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    clicks = 0;
+    winIndex = 100;
+    renderStats();
+    save();
+    showToast("ego rebooted to factory smugness");
+  });
+
+  document.getElementById("copyEmail").addEventListener("click", async () => {
+    const email = "winning@nikitakovalenko.com";
+    try {
+      await navigator.clipboard.writeText(email);
+      showToast("email copied. use responsibly or don't.");
+    } catch (e) {
+      showToast(email);
+    }
+    bumpWinning(1);
+  });
+
+  document.getElementById("emptyTrash").addEventListener("click", () => {
+    showToast("trash refused. it likes it here.");
+    bumpWinning(1);
+  });
+
+  document.getElementById("termForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const value = termIn.value;
+    termIn.value = "";
+    runCommand(value);
+    bumpWinning(1);
+  });
+
+  function tick() {
+    document.getElementById("clock").textContent = new Date().toLocaleTimeString();
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  const seq = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+  let progress = 0;
+  window.addEventListener("keydown", (e) => {
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    const wanted = seq[progress];
+    if (key === wanted || (wanted.length === 1 && key === wanted)) {
+      progress += 1;
+      if (progress === seq.length) {
+        progress = 0;
+        openWindow("contact");
+        vipRoom.classList.add("show");
+       winIndex += 50;
+        renderStats();
+        save();
+        showToast("VIP Winning Room unlocked");
+      }
+    } else {
+      progress = key === seq[0] ? 1 : 0;
+    }
+  });
+
+  document.querySelector(".desktop").addEventListener("click", (e) => {
+    if (e.target.classList.contains("desktop") || e.target.classList.contains("icons")) {
+      bumpWinning(1);
+    }
+  });
+
+  renderStats();
+})();
+</script>
 </body>
 </html>
