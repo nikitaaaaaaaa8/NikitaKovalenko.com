@@ -541,14 +541,7 @@
         <div class="glyph">🗑️</div>
         <div class="label">Trash</div>
       </div>
-      <div class="icon" tabindex="0" data-open="drone">
-        <div class="glyph">🚁</div>
-        <div class="label">Drone</div>
-      </div>
-      <div class="icon" tabindex="0" data-open="bookshelf">
-        <div class="glyph">📚</div>
-        <div class="label">Bookshelf</div>
-      </div>
+      <!-- Drone and Bookshelf icons hidden for now -->
     </div>
 
     <section class="window" id="win-about" style="top:80px; left:140px; width:420px;">
@@ -621,11 +614,11 @@
           <div class="dot max"></div>
         </div>
         <div class="title">Contact.app</div>
-     </div>
+      </div>
       <div class="content">
         <p>Business, chaos, or accidental brilliance:</p>
         <p class="green" id="emailText">winning@nikitakovalenko.com</p>
-        <p class="muted">Auto-reply is currently on strike. The inbox still works.</p>
+       <p class="muted">Auto-reply is currently on strike. The inbox still works.</p>
         <div class="row">
           <button class="btn" id="copyEmail">Copy email</button>
           <a class="btn secondary" href="mailto:winning@nikitakovalenko.com">Open mail app</a>
@@ -656,7 +649,7 @@
       </div>
     </section>
 
-    <section class="window" id="win-drone" style="top:140px; left:260px; width:620px;">
+    <section class="window" id="win-drone" style="top:140px; left:260px; width:620px; display: none;">
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="drone"></div>
@@ -692,7 +685,7 @@
       </div>
     </section>
 
-    <section class="window" id="win-bookshelf" style="top:160px; left:300px; width:580px;">
+    <section class="window" id="win-bookshelf" style="top:160px; left:300px; width:580px; display: none;">
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="bookshelf"></div>
@@ -717,14 +710,14 @@
             <div class="book-spine">Internet culture for dummies</div>
           </div>
         </div>
-       <p class="muted" style="margin-top:12px; font-size:11px;">Click a book to open. PDFs coming later.</p>
+        <p class="muted" style="margin-top:12px; font-size:11px;">Click a book to open. PDFs coming later.</p>
       </div>
     </section>
   </div>
 
   <div class="taskbar">
     <button data-open="about">About</button>
-    <button data-open="stats">Winning</button>
+   <button data-open="stats">Winning</button>
     <button data-open="terminal">Terminal</button>
     <button data-open="contact">Contact</button>
     <div class="clock" id="clock">00:00:00</div>
@@ -821,38 +814,9 @@
     save();
   }
 
-  // retro click sound (Web Audio API - zero file size)
-  let audioCtx;
   let confessionMode = false;
   let auraActive = false;
   let auraValue = 87;
-
-  function playClick() {
-    try {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      const filter = audioCtx.createBiquadFilter();
-
-      osc.type = "square";
-      osc.frequency.value = 920;
-      filter.type = "lowpass";
-      filter.frequency.value = 1800;
-
-      gain.gain.value = 0.18;
-
-      const t = audioCtx.currentTime;
-      gain.gain.setValueAtTime(0.18, t);
-      gain.gain.linearRampToValueAtTime(0.0001, t + 0.09);
-
-      osc.connect(filter);
-     filter.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      osc.start(t);
-      osc.stop(t + 0.12);
-    } catch (e) {}
-  }
 
   function termPrint(text, cls) {
     const line = document.createElement("div");
@@ -869,7 +833,7 @@
     if (!cmd) return;
 
     if (cmd === "help") {
-      termPrint("commands: help, whoami, winning, email, clear, sudo, date, pepe");
+      termPrint("commands: help, whoami, winning, email, clear, sudo, date, pepe, scan, confess, coinflip, matrix, aura");
     } else if (cmd === "whoami") {
       termPrint("guest@nikitakovalenko.com // temporary main character");
     } else if (cmd === "winning") {
@@ -877,7 +841,7 @@
       termPrint("diagnosis: chronic victory");
     } else if (cmd === "email") {
       termPrint("winning@nikitakovalenko.com");
-    } else if (cmd === "clear") {
+   } else if (cmd === "clear") {
       termOut.innerHTML = "";
     } else if (cmd === "sudo") {
       termPrint("nice try. pepe is root.");
@@ -939,7 +903,6 @@
     const val = document.getElementById("auraValue");
     if (!fill || !val) return;
 
-    // Clear any existing interval to prevent multiple drains
     if (auraInterval) clearInterval(auraInterval);
 
     auraInterval = setInterval(() => {
@@ -969,13 +932,11 @@
   // icons + taskbar
   document.querySelectorAll("[data-open]").forEach(el => {
     el.addEventListener("click", () => {
-      playClick();
-     openWindow(el.getAttribute("data-open"));
+      openWindow(el.getAttribute("data-open"));
     });
     el.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        playClick();
         openWindow(el.getAttribute("data-open"));
       }
     });
@@ -984,14 +945,12 @@
   document.querySelectorAll("[data-close]").forEach(el => {
     el.addEventListener("click", (e) => {
       e.stopPropagation();
-      playClick();
       closeWindow(el.getAttribute("data-close"));
     });
   });
 
   Object.entries(windows).forEach(([name, el]) => {
     el.addEventListener("mousedown", () => {
-      playClick();
       focusWindow(name);
     });
   });
@@ -1009,8 +968,7 @@
       sx = e.clientX; sy = e.clientY; ox = rect.left; oy = rect.top;
       win.style.right = "auto";
     });
-
-    bar.addEventListener("pointermove", (e) => {
+   bar.addEventListener("pointermove", (e) => {
       if (!dragging) return;
       const nx = ox + (e.clientX - sx);
       const ny = oy + (e.clientY - sy);
@@ -1099,7 +1057,7 @@
       if (progress === seq.length) {
         progress = 0;
         openWindow("contact");
-       vipRoom.classList.add("show");
+        vipRoom.classList.add("show");
         winIndex += 50;
         renderStats();
         save();
@@ -1134,10 +1092,10 @@
   }
 
   function scheduleNextSnitch() {
-    const delay = 30000 + Math.random() * 40000; // 30-70s
+    const delay = 30000 + Math.random() * 40000;
     setTimeout(() => {
       spawnSnitch();
-      scheduleNextSnitch();
+     scheduleNextSnitch();
     }, delay);
   }
 
