@@ -324,6 +324,14 @@
     background: linear-gradient(90deg, #2a1a32, #4a2e5a 40%, #1e1426);
     height: 160px;
   }
+  .book:nth-child(8) {
+    background: linear-gradient(90deg, #1c2438, #2e3c58 40%, #141a28);
+    height: 156px;
+  }
+  .book:nth-child(9) {
+    background: linear-gradient(90deg, #3a3018, #5a4820 40%, #2a2410);
+    height: 172px;
+  }
   .book:hover,
   .book.active {
     transform: translateY(-8px);
@@ -352,7 +360,8 @@
   }
   .book:nth-child(2) .book-spine,
   .book:nth-child(5) .book-spine,
-  .book:nth-child(6) .book-spine {
+  .book:nth-child(6) .book-spine,
+  .book:nth-child(9) .book-spine {
     font-size: 8px;
     letter-spacing: 0.02em;
     max-height: 148px;
@@ -948,13 +957,16 @@
     .book:nth-child(5) { height: 110px; }
     .book:nth-child(6) { height: 114px; }
     .book:nth-child(7) { height: 102px; }
+    .book:nth-child(8) { height: 100px; }
+    .book:nth-child(9) { height: 112px; }
     .book-spine {
       font-size: 7px;
       max-height: 86px;
     }
     .book:nth-child(2) .book-spine,
     .book:nth-child(5) .book-spine,
-    .book:nth-child(6) .book-spine {
+    .book:nth-child(6) .book-spine,
+    .book:nth-child(9) .book-spine {
       font-size: 6.5px;
       max-height: 96px;
     }
@@ -1229,6 +1241,12 @@
           </div>
           <div class="book" data-book="dunbar" tabindex="0">
             <div class="book-spine">Dunbar's number</div>
+          </div>
+          <div class="book" data-book="sunk" tabindex="0">
+            <div class="book-spine">Sunk cost</div>
+          </div>
+          <div class="book" data-book="hand" tabindex="0">
+            <div class="book-spine">The invisible hand</div>
           </div>
         </div>
         <div class="book-reader" id="bookReader">
@@ -2300,6 +2318,28 @@
         "You can host a dinner and have a sense of the room. You can walk the street and nod at almost everyone. That is not magic. It is a brain with a budget for people.",
         "Now make it 1,500. You cannot hold that. Strangers show up. You forget who you already met. A fight starts and you do not know either side. So you invent badges, rules, and a person whose job is “please don’t do that.” The village did not get mean. It got too big for memory.",
         "Robin Dunbar’s number is that ceiling: roughly 150 stable relationships a person can actually keep. Under that, trust can stay informal. Over that, you get lines, roles, and “who even is that.”"
+      ]
+    },
+    sunk: {
+      kicker: "Vol. 08",
+      title: "Sunk cost",
+      paragraphs: [
+        "You buy a ticket to a movie. Twenty minutes in, it is bad. You know it is bad. The rest of the night is still yours.",
+        "A voice says: I already paid. If I leave, the money was wasted. So you stay. You pay twice. Once with cash, once with the hours you will not get back.",
+        "The ticket is gone either way. Staying does not refund it. It just spends the rest of the night on something you already know you do not want.",
+        "Same thing with a hole in the wrong place. You have been digging for days. The water is not there. Digging more does not save the days you already dug. It only spends tomorrow on the same mistake.",
+        "A sunk cost is a cost you cannot recover. The useful question is only: knowing what I know now, would I start this again? If the answer is no, the past is not a reason to continue."
+      ]
+    },
+    hand: {
+      kicker: "Vol. 09",
+      title: "The invisible hand",
+      paragraphs: [
+        "A baker gets up early. Not because they love you. Because they want to get paid, keep the shop open, and not go hungry. You get bread anyway.",
+        "The butcher and the brewer are the same. They chase their own interest. You still eat. Adam Smith called this the invisible hand: order that shows up without a planner assigning breakfast.",
+        "Nobody in the market sat down and designed your sandwich. Prices do a lot of the talking. If more people want bread, the baker bakes more. If wheat is scarce, bread costs more, and people waste less of it.",
+        "It is not magic and it is not kindness. It is a pattern. People looking after themselves can, in the right setup, feed a town they will never meet.",
+        "It also has edges. The same pattern can skip people who cannot pay, or dump costs on a river nobody owns. The hand is a description of how trade coordinates. It is not a promise that every outcome is good."
       ]
     }
   };
