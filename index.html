@@ -1367,12 +1367,15 @@
     showToast._t = setTimeout(() => toast.classList.remove("show"), 1800);
   }
 
-  function placeWindowOnScreen(el) {
+  function overlaps(a, b, pad) {
+    return !(a.right + pad <= b.left || a.left >= b.right + pad || a.bottom + pad <= b.top || a.top >= b.bottom + pad);
+  }
+
+  function placeWindowOnScreen(el, opts) {
     if (!el) return;
     const margin = 8;
     const isMobile = window.innerWidth <= 700;
     const topBar = isMobile ? 88 : 16;
-    // Prefer measured width once visible; fall back to inline width
     const preferred = parseInt(el.style.width, 10) || el.offsetWidth || 360;
     const maxW = Math.max(200, window.innerWidth - margin * 2);
     const width = isMobile ? maxW : Math.min(preferred, maxW);
@@ -1388,15 +1391,71 @@
       return;
     }
 
-    // Desktop: keep authored position when it fits; otherwise clamp into view
-    let left = parseFloat(el.style.left);
-    let top = parseFloat(el.style.top);
-    if (Number.isNaN(left)) left = el.getBoundingClientRect().left || 40;
-    if (Number.isNaN(top)) top = el.getBoundingClientRect().top || 40;
-    const maxLeft = Math.max(margin, window.innerWidth - width - margin);
-    const maxTop = Math.max(margin, window.innerHeight - 80);
-    el.style.left = Math.max(margin, Math.min(maxLeft, left)) + "px";
-    el.style.top = Math.max(margin, Math.min(maxTop, top)) + "px";
+    const fresh = !!(opts && opts.fresh);
+    const w = el.offsetWidth || width;
+    const h = el.offsetHeight || 280;
+    const taskbarRoom = 80;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight - taskbarRoom;
+    const maxLeft = Math.max(margin, vw - w - margin);
+    const maxTop = Math.max(margin, vh - Math.min(h, vh - margin));
+
+    function clampPos(left, top) {
+      return {
+        left: Math.max(margin, Math.min(maxLeft, left)),
+        top: Math.max(margin, Math.min(maxTop, top))
+      };
+    }
+
+    if (!fresh) {
+      let left = parseFloat(el.style.left);
+      let top = parseFloat(el.style.top);
+      if (Number.isNaN(left)) left = el.getBoundingClientRect().left || 40;
+      if (Number.isNaN(top)) top = el.getBoundingClientRect().top || 40;
+      const pos = clampPos(left, top);
+      el.style.left = pos.left + "px";
+      el.style.top = pos.top + "px";
+      return;
+    }
+
+    const others = [...document.querySelectorAll(".window.open")]
+      .filter(x => x !== el)
+      .map(x => x.getBoundingClientRect());
+
+    const candidates = [];
+    candidates.push({
+      left: Math.round((vw - w) / 2),
+      top: Math.round((vh - h) / 2)
+    });
+    others.forEach(r => {
+      candidates.push({ left: r.left + 40, top: r.top + 40 });
+      candidates.push({ left: r.right + 18, top: r.top });
+      candidates.push({ left: r.left, top: r.bottom + 18 });
+      candidates.push({ left: r.left - w - 18, top: r.top });
+      candidates.push({ left: r.left, top: r.top - h - 18 });
+    });
+    const cols = 4, rows = 3;
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const gx = cols === 1 ? margin : margin + x * ((vw - w - margin * 2) / (cols - 1));
+        const gy = rows === 1 ? margin : margin + y * ((vh - h - margin * 2) / (rows - 1));
+        candidates.push({ left: Math.round(gx), top: Math.round(gy) });
+      }
+    }
+
+    for (let i = 0; i < candidates.length; i++) {
+      const pos = clampPos(candidates[i].left, candidates[i].top);
+      const box = { left: pos.left, top: pos.top, right: pos.left + w, bottom: pos.top + h };
+      if (others.some(o => overlaps(box, o, 10))) continue;
+      el.style.left = pos.left + "px";
+      el.style.top = pos.top + "px";
+      return;
+    }
+
+    const n = others.length;
+    const pos = clampPos(margin + n * 32, margin + n * 32);
+    el.style.left = pos.left + "px";
+    el.style.top = pos.top + "px";
   }
 
   function centerWindowDesktop(el) {
@@ -1421,9 +1480,10 @@
 
   function openWindow(name) {
     const el = windows[name];
+    const alreadyOpen = !!(el && el.classList.contains("open"));
     focusWindow(name);
     // Fit into the viewport every time an app opens (fixes phone off-screen starts)
-    requestAnimationFrame(() => placeWindowOnScreen(el));
+    requestAnimationFrame(() => placeWindowOnScreen(el, { fresh: !alreadyOpen }));
     // Skip autofocus on phones — iOS zooms the page when focusing inputs
     if (name === "terminal" && window.innerWidth > 700) {
       setTimeout(() => termIn.focus(), 50);
