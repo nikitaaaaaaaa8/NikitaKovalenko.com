@@ -2216,8 +2216,8 @@
   }
 
   function scheduleNextSnitch() {
-    // Random gap: 40–60s between appearances
-    const delay = 40000 + Math.random() * 20000;
+    // Every 120s, visible for 5s
+    const delay = 120000;
     setTimeout(() => {
       spawnSnitch();
       scheduleNextSnitch();
@@ -2232,7 +2232,7 @@
       showToast("Caught the Snitch! +47 winning");
     });
 
-    // First appearance also in the 40–60s window
+    // First appearance also after 120s
     scheduleNextSnitch();
   }
 
