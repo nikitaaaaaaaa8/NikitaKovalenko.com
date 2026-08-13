@@ -547,40 +547,115 @@
 
   .taskbar {
     position: fixed;
-    left: 50%;
-    bottom: 12px;
-    transform: translateX(-50%);
-    z-index: 40;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 80;
+    height: 40px;
     display: flex;
-    gap: 8px;
-    align-items: center;
-    padding: 8px 10px;
-    border-radius: 16px;
-    background: rgba(0,0,0,.72);
-   border: 1px solid rgba(57,255,20,.25);
-    backdrop-filter: blur(12px);
-    box-shadow: var(--shadow);
-  }
-  .taskbar button {
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    border-radius: 0;
     border: 0;
-    background: transparent;
-    color: var(--text);
-    font: inherit;
-    font-size: 12px;
-    padding: 8px 10px;
-    border-radius: 10px;
-    cursor: pointer;
+    border-top: 1px solid #3c9af0;
+    background: linear-gradient(180deg, #1f5fd0 0%, #245edb 8%, #245edb 50%, #1941a5 100%);
+    box-shadow: inset 0 1px 0 #7bb3f5;
+    font-family: Tahoma, "Segoe UI", sans-serif;
   }
-  .taskbar button:hover { background: rgba(57,255,20,.1); color: var(--green); }
+  .start-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border: 0;
+    margin: 2px 0 2px 2px;
+    padding: 0 18px 0 10px;
+    border-radius: 0 18px 18px 0;
+    cursor: pointer;
+    color: #fff;
+    font: italic 700 16px "Trebuchet MS", Tahoma, sans-serif;
+    letter-spacing: 0.02em;
+    text-shadow: 1px 1px 2px rgba(0,0,0,.45);
+    background: linear-gradient(180deg, #3cbb3c 0%, #2da02d 38%, #1e8a1e 70%, #167c16 100%);
+    box-shadow: inset 0 1px 0 #b6f0b6, inset 0 -1px 0 #0d5a0d, 1px 0 0 rgba(0,0,0,.2);
+  }
+  .start-btn:hover { filter: brightness(1.08); }
+  .start-btn.open,
+  .start-btn:active {
+    background: linear-gradient(180deg, #167c16 0%, #1e8a1e 40%, #2da02d 100%);
+  }
+  .xp-flag {
+    width: 18px;
+    height: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    transform: skewX(-8deg);
+  }
+  .xp-flag i { display: block; border-radius: 1px; }
+  .xp-flag .r { background: #e23b2e; }
+  .xp-flag .g { background: #7cbf2a; }
+  .xp-flag .b { background: #2a7de1; }
+  .xp-flag .y { background: #f0c01a; }
+  .taskbar-mid { flex: 1; }
+  .tray {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    margin: 3px 3px 3px 0;
+    border: 1px solid #0f3d8c;
+    border-left-color: #083070;
+    background: linear-gradient(180deg, #1198ee 0%, #0d7dd4 55%, #0a6fc2 100%);
+    box-shadow: inset 1px 1px 0 #5ec4ff;
+    min-width: 76px;
+    justify-content: center;
+  }
   .clock {
-    min-width: 7.5em;
+    min-width: 0;
     flex-shrink: 0;
     white-space: nowrap;
-    text-align: right;
-    color: var(--green);
-    font-size: 12px;
-    padding: 0 6px;
+    text-align: center;
+    color: #fff;
+    font: 11px Tahoma, "Segoe UI", sans-serif;
+    padding: 0;
     line-height: 1.2;
+    text-shadow: 0 1px 0 rgba(0,0,0,.25);
+  }
+  .start-menu {
+    position: absolute;
+    left: 0;
+    bottom: 40px;
+    width: min(280px, 92vw);
+    background: #fff;
+    border: 1px solid #003c74;
+    box-shadow: 2px 2px 8px rgba(0,0,0,.4);
+    font-family: Tahoma, "Segoe UI", sans-serif;
+    overflow: hidden;
+  }
+  .start-menu[hidden] { display: none; }
+  .start-head {
+    background: linear-gradient(180deg, #1f5fd0, #1941a5);
+    color: #fff;
+    padding: 10px 12px;
+    font: 700 13px Tahoma, sans-serif;
+  }
+  .start-menu button,
+  .start-menu a {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border: 0;
+    background: #fff;
+    color: #000;
+    font: 12px Tahoma, "Segoe UI", sans-serif;
+    padding: 8px 14px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .start-menu button:hover,
+  .start-menu a:hover {
+    background: #316ac5;
+    color: #fff;
   }
 
   .boot {
@@ -894,20 +969,10 @@
       padding: 8px 10px;
     }
 
-    .taskbar {
-      padding: 0 6px;
-      gap: 4px;
-    }
-    .taskbar button {
-      font-size: 10px;
-      padding: 4px 8px;
-    }
-    .clock {
-      font-size: 11px;
-      flex-shrink: 0;
-      white-space: nowrap;
-      padding: 0 4px;
-    }
+    .taskbar { height: 44px; }
+    .start-menu { bottom: 44px; }
+    .start-btn { font-size: 15px; padding: 0 16px 0 8px; }
+    .clock { font-size: 11px; }
 
     .terminal {
       height: min(160px, 28vh);
@@ -1390,12 +1455,27 @@
 
   </div>
 
-  <div class="taskbar">
-    <button data-open="about">About</button>
-   <button data-open="stats">Tracker</button>
-    <button data-open="terminal">Terminal</button>
-    <button data-open="contact">Contact</button>
-    <div class="clock" id="clock">00:00:00</div>
+  <div class="taskbar" id="taskbar">
+    <button type="button" class="start-btn" id="startBtn" aria-expanded="false" aria-controls="startMenu">
+      <span class="xp-flag" aria-hidden="true"><i class="r"></i><i class="g"></i><i class="b"></i><i class="y"></i></span>
+      start
+    </button>
+    <div class="taskbar-mid"></div>
+    <div class="tray">
+      <div class="clock" id="clock">1:00 AM</div>
+    </div>
+    <div class="start-menu" id="startMenu" hidden>
+      <div class="start-head">Kita</div>
+      <button type="button" data-open="about">About</button>
+      <button type="button" data-open="stats">Tracker</button>
+      <button type="button" data-open="terminal">Terminal</button>
+      <button type="button" data-open="contact">Contact</button>
+      <button type="button" data-open="games">Games</button>
+      <button type="button" data-open="bookshelf">Bookshelf</button>
+      <button type="button" data-open="weather">Weather</button>
+      <a data-link="https://dronestuff.io">DroneStuff</a>
+      <button type="button" data-open="trash">Trash</button>
+    </div>
   </div>
 
   <div class="aura-meter" id="auraMeter">
@@ -1851,6 +1931,29 @@
     termPrint("type `help` to pretend you know what you're doing.");
   }, 1500);
 
+  // Start menu
+  const startBtn = document.getElementById("startBtn");
+  const startMenu = document.getElementById("startMenu");
+  function setStartOpen(open) {
+    if (!startMenu || !startBtn) return;
+    startMenu.hidden = !open;
+    startBtn.classList.toggle("open", open);
+    startBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+  if (startBtn) {
+    startBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setStartOpen(startMenu.hidden);
+    });
+  }
+  document.addEventListener("click", () => setStartOpen(false));
+  if (startMenu) {
+    startMenu.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (e.target.closest("[data-open], [data-link]")) setStartOpen(false);
+    });
+  }
+
   // icons + taskbar
   function activateDesktopControl(el) {
     const link = el.getAttribute("data-link");
@@ -2007,7 +2110,7 @@
   // clock
   function tick() {
     const d = new Date();
-    document.getElementById("clock").textContent = d.toLocaleTimeString();
+    document.getElementById("clock").textContent = d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
   }
   tick();
   setInterval(tick, 1000);
