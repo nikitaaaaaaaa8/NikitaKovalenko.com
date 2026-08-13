@@ -316,33 +316,90 @@
   }
   .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 
+  #win-drone {
+    max-width: min(620px, calc(100vw - 24px));
+  }
+  #win-drone .content {
+    max-height: min(72vh, 580px);
+    overflow: auto;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(57,255,20,.07), transparent 42%),
+      #050805;
+  }
   .drone-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
   }
-  .drone-slot {
-    background: rgba(57,255,14,.04);
-    border: 1px solid rgba(57,255,14,.25);
+  .drone-shot {
+    appearance: none;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 1px solid rgba(57,255,20,.22);
     border-radius: 8px;
-    padding: 8px;
-    text-align: center;
+    background: #000;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color .15s ease, box-shadow .15s ease;
   }
-  .drone-placeholder {
-    height: 92px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    background: rgba(0,0,0,.4);
-    border: 1px dashed rgba(57,255,14,.3);
-    border-radius: 6px;
-    margin-bottom: 8px;
+  .drone-shot:hover,
+  .drone-shot:focus {
+    outline: none;
+    border-color: rgba(57,255,20,.7);
+    box-shadow: 0 0 18px rgba(57,255,20,.18);
   }
-  .drone-label {
-    font-size: 11px;
+  .drone-shot img {
+    display: block;
+    width: 100%;
+    height: 96px;
+    object-fit: cover;
+    filter: saturate(1.08) contrast(1.08);
+    background: #0a0a0a;
+  }
+  .drone-shot:hover img,
+  .drone-shot:focus img {
+    filter: saturate(1.18) contrast(1.12) brightness(1.06);
+  }
+  .drone-caption {
+    font-size: 10px;
     color: var(--muted);
-    word-break: break-all;
+    padding: 6px 8px 8px;
+    line-height: 1.3;
+  }
+  #droneLightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9200;
+    background: rgba(0,0,0,.9);
+    display: grid;
+    place-items: center;
+    padding: 24px 16px 48px;
+    cursor: zoom-out;
+  }
+  #droneLightbox[hidden] { display: none !important; }
+  #droneLightbox img {
+    max-width: min(92vw, 1100px);
+    max-height: min(82vh, 820px);
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 0 40px rgba(57,255,20,.12), 0 18px 50px rgba(0,0,0,.7);
+    pointer-events: none;
+  }
+  #droneLightbox .drone-lightbox-cap {
+    position: absolute;
+    bottom: 16px;
+    left: 12px;
+    right: 12px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: .04em;
+    pointer-events: none;
   }
 
   .bookshelf {
@@ -1661,7 +1718,7 @@
         <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="M3.8 7.2L12 13.2l8.2-6"/><path d="M8.5 12.2l-4.7 4.1"/><path d="M15.5 12.2l4.7 4.1"/></svg></div>
         <div class="label">Contact</div>
       </div>
-      <div class="icon" tabindex="0" data-link="https://dronestuff.io" role="link" aria-label="Open DroneStuff.io">
+      <div class="icon" tabindex="0" data-open="drone" aria-label="DroneStuff">
         <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="6" r="2.2"/><circle cx="18.5" cy="6" r="2.2"/><circle cx="5.5" cy="18" r="2.2"/><circle cx="18.5" cy="18" r="2.2"/><path d="M7.4 6.8l3.2 3.1"/><path d="M16.6 6.8l-3.2 3.1"/><path d="M7.4 17.2l3.2-3.1"/><path d="M16.6 17.2l-3.2-3.1"/><rect x="9.2" y="9.2" width="5.6" height="5.6" rx="1.2"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg></div>
         <div class="label">DroneStuff</div>
       </div>
@@ -1805,29 +1862,43 @@
         <div class="title">DroneStuff</div>
       </div>
       <div class="content">
-        <p class="green">DRONESTUFF // LIVE AT DRONESTUFF.IO</p>
-        <p class="muted" style="margin-bottom:12px;">Drone photography portfolio. The desktop icon opens the live site.</p>
+        <p class="green">DRONESTUFF // AERIAL STILLS</p>
+        <p class="muted" style="margin-bottom:12px;">Eight shots. Click a frame to view it full-size.</p>
 
         <div class="drone-grid">
-          <div class="drone-slot">
-            <div class="drone-placeholder">📷</div>
-            <div class="drone-label">shot_01.jpg</div>
-          </div>
-          <div class="drone-slot">
-            <div class="drone-placeholder">📷</div>
-            <div class="drone-label">shot_02.jpg</div>
-          </div>
-          <div class="drone-slot">
-            <div class="drone-placeholder">📷</div>
-            <div class="drone-label">shot_03.jpg</div>
-          </div>
-          <div class="drone-slot">
-            <div class="drone-placeholder">📷</div>
-            <div class="drone-label">shot_04.jpg</div>
-          </div>
+          <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-01.jpg" data-drone-cap="Benjamin Franklin Bridge">
+            <img src="https://dronestuff.io/shot-01.jpg" alt="Benjamin Franklin Bridge" loading="lazy" width="280" height="96">
+            <div class="drone-caption">Benjamin Franklin Bridge</div>
+          </button>
+          <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-02.jpg" data-drone-cap="Mountain ridge">
+            <img src="https://dronestuff.io/shot-02.jpg" alt="Mountain ridge" loading="lazy" width="280" height="96">
+            <div class="drone-caption">Mountain ridge</div>
+          </button>
+          <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-03.jpg" data-drone-cap="Autumn road">
+            <img src="https://dronestuff.io/shot-03.jpg" alt="Autumn road" loading="lazy" width="280" height="96">
+            <div class="drone-caption">Autumn road</div>
+          </button>
+          <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-04.jpg" data-drone-cap="Hairpin turn">
+            <img src="https://dronestuff.io/shot-04.jpg" alt="Hairpin turn" loading="lazy" width="280" height="96">
+            <div class="drone-caption">Hairpin turn</div>
+          </button>
+          <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-05.jpg" data-drone-cap="Groton Long Point, Connecticut">
+            <img src="https://dronestuff.io/shot-05.jpg" alt="Groton Long Point, Connecticut" loading="lazy" width="280" height="96">
+            <div class="drone-caption">Groton Long Point, Connecticut</div>
+          </button>
+          <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-06.jpg" data-drone-cap="Philadelphia skyline">
+            <img src="https://dronestuff.io/shot-06.jpg" alt="Philadelphia skyline" loading="lazy" width="280" height="96">
+            <div class="drone-caption">Philadelphia skyline</div>
+          </button>
+          <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-07.jpg" data-drone-cap="Graffiti, Philadelphia">
+            <img src="https://dronestuff.io/shot-07.jpg" alt="Graffiti, Philadelphia" loading="lazy" width="280" height="96">
+            <div class="drone-caption">Graffiti, Philadelphia</div>
+          </button>
+          <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-08.jpg" data-drone-cap="Graffiti, Camden">
+            <img src="https://dronestuff.io/shot-08.jpg" alt="Graffiti, Camden" loading="lazy" width="280" height="96">
+            <div class="drone-caption">Graffiti, Camden</div>
+          </button>
         </div>
-
-        <p class="muted" style="margin-top:14px; font-size:11px;">Drop your images in the same folder and update the src attributes.</p>
       </div>
     </section>
 
@@ -2136,7 +2207,7 @@
       <button type="button" data-open="bookshelf">Bookshelf</button>
       <button type="button" data-open="weather">Weather</button>
       <button type="button" data-open="paint">Paint</button>
-      <a data-link="https://dronestuff.io">DroneStuff</a>
+      <button type="button" data-open="drone">DroneStuff</button>
       <button type="button" data-open="trash">Trash</button>
     </div>
   </div>
@@ -2148,6 +2219,10 @@
   </div>
 
   <div class="toast" id="toast"></div>
+  <div id="droneLightbox" hidden role="dialog" aria-modal="true" aria-label="DroneStuff photo">
+    <img id="droneLightboxImg" alt="">
+    <div class="drone-lightbox-cap" id="droneLightboxCap"></div>
+  </div>
   <canvas id="snow-canvas" aria-hidden="true"></canvas>
   <canvas id="matrix-canvas" aria-hidden="true"></canvas>
   <div id="snitch" role="button" aria-label="Golden Snitch" title="Catch the Snitch"><svg viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">  <defs>    <radialGradient id="snitchBall" cx="35%" cy="30%" r="65%">      <stop offset="0%" stop-color="#fff4b0"/>      <stop offset="45%" stop-color="#ffd54a"/>      <stop offset="100%" stop-color="#c79200"/>    </radialGradient>    <linearGradient id="snitchWing" x1="0" y1="0" x2="1" y2="1">      <stop offset="0%" stop-color="#fff8d6"/>      <stop offset="55%" stop-color="#ffe27a"/>      <stop offset="100%" stop-color="#d4a017"/>    </linearGradient>  </defs>  <g class="wing-l" fill="url(#snitchWing)" stroke="#a87900" stroke-width="0.6">    <path d="M14.2 13.2c-2.2-1.1-5.4-2.8-7.8-3.2-1.3-.2-2.4.4-2.6 1.2-.2.9.6 1.7 1.8 2.1 1.9.6 4.4.7 6.4.7l2.2-.8z"/>    <path d="M13.6 14.6c-2.4-.1-5.2.1-7.1 1.1-1.1.6-1.4 1.6-.7 2.2.7.6 1.9.4 3-.1 1.8-.8 3.7-2 4.8-3.2z" opacity=".9"/>  </g>  <g class="wing-r" fill="url(#snitchWing)" stroke="#a87900" stroke-width="0.6">    <path d="M17.8 13.2c2.2-1.1 5.4-2.8 7.8-3.2 1.3-.2 2.4.4 2.6 1.2.2.9-.6 1.7-1.8 2.1-1.9.6-4.4.7-6.4.7l-2.2-.8z"/>    <path d="M18.4 14.6c2.4-.1 5.2.1 7.1 1.1 1.1.6 1.4 1.6.7 2.2-.7.6-1.9.4-3-.1-1.8-.8-3.7-2-4.8-3.2z" opacity=".9"/>  </g>  <circle cx="16" cy="16" r="5.2" fill="url(#snitchBall)" stroke="#9a7200" stroke-width="0.7"/>  <ellipse cx="14.4" cy="14.6" rx="1.6" ry="1.1" fill="#fff6c8" opacity=".75"/>  <path d="M16 11.2v9.6M12.4 16h7.2" stroke="#a87900" stroke-width="0.55" opacity=".45"/></svg></div>
@@ -2663,6 +2738,43 @@
       e.stopPropagation();
       closeWindow(el.getAttribute("data-close"));
     });
+  });
+
+  const droneLightbox = document.getElementById("droneLightbox");
+  const droneLightboxImg = document.getElementById("droneLightboxImg");
+  const droneLightboxCap = document.getElementById("droneLightboxCap");
+
+  function closeDroneLightbox() {
+    if (!droneLightbox || droneLightbox.hidden) return;
+    droneLightbox.hidden = true;
+    if (droneLightboxImg) {
+      droneLightboxImg.removeAttribute("src");
+      droneLightboxImg.alt = "";
+    }
+    if (droneLightboxCap) droneLightboxCap.textContent = "";
+  }
+
+  function openDroneLightbox(src, cap) {
+    if (!droneLightbox || !droneLightboxImg) return;
+    droneLightboxImg.src = src;
+    droneLightboxImg.alt = cap || "";
+    if (droneLightboxCap) droneLightboxCap.textContent = cap || "";
+    droneLightbox.hidden = false;
+  }
+
+  document.querySelectorAll(".drone-shot").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const src = btn.getAttribute("data-drone-src");
+      const cap = btn.getAttribute("data-drone-cap") || "";
+      if (src) openDroneLightbox(src, cap);
+    });
+  });
+  if (droneLightbox) {
+    droneLightbox.addEventListener("click", closeDroneLightbox);
+  }
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDroneLightbox();
   });
 
   Object.entries(windows).forEach(([name, el]) => {
@@ -4914,7 +5026,7 @@
     if (!el) return false;
     if (el.nodeType !== 1) el = el.parentElement;
     if (!el || !el.closest) return false;
-    if (el.closest(".window, .resize-handle, .taskbar, .start-menu, .start-btn, .icon, #snitch, #auraMeter, .boot, .toast, button, a, input, textarea, canvas, [data-open], [data-link], [data-close], [data-book], [data-act]")) {
+    if (el.closest(".window, .resize-handle, .taskbar, .start-menu, .start-btn, .icon, #snitch, #auraMeter, .boot, .toast, #droneLightbox, button, a, input, textarea, canvas, [data-open], [data-link], [data-close], [data-book], [data-act]")) {
       return false;
     }
     return el === document.body
