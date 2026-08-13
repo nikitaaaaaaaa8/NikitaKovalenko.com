@@ -3890,7 +3890,7 @@
       kicker: "Vol. 05",
       title: "How Kita OS works",
       paragraphs: [
-        "This website is a fake desktop. Click an icon to open a window. Drag the title bar to move it. The red dot closes it.",
+        "This website is a fake desktop. Click an icon to open a window. Drag the title bar to move it. The red dot closes it. Drag a box around icons to select them, then drag any selected icon to move the whole pile. Drop the pile on Trash to bin them all.",
         "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. The Games folder has Minesweeper, Snake, Tetris, and Solitaire. Casino is a fake-chip toy: Blackjack, Slots, and Roulette. You start at 1000 chips; a refresh resets them. Bookshelf is these notes.",
         "Open Terminal and type help, then press Run. Help lists commands and app names; type an app to open it. games and casino open those folders. snow turns the snow off.",
         "A golden snitch shows up every 120 seconds for 5 seconds. Catch it if you want. Refresh starts a new session.",
@@ -6081,10 +6081,15 @@
 
   document.addEventListener("pointerdown", (e) => {
     if (marqueeActive) return;
-    if (justMarqueeSelected) {
+    if (!justMarqueeSelected) return;
+    const hit = e.target && e.target.closest ? e.target.closest(".icons .icon") : null;
+    if (hit && hit.classList.contains("selected") && !hit.classList.contains("icon-trashed")) {
+      // Grabbing a selected icon starts a group drag — do not wipe the marquee selection.
       justMarqueeSelected = false;
-      clearIconSelection();
+      return;
     }
+    justMarqueeSelected = false;
+    clearIconSelection();
   }, true);
 
   document.addEventListener("pointerdown", (e) => {
@@ -6252,8 +6257,8 @@
     )).join("");
   }
 
-  function sendToTrash(icon) {
-    if (!icon || isTrashIcon(icon)) return;
+  function sendToTrash(icon, silent) {
+    if (!icon || isTrashIcon(icon)) return false;
     const labelEl = icon.querySelector(".label");
     const glyph = icon.querySelector(".glyph");
     recycleBin.push({
@@ -6270,8 +6275,9 @@
     icon.classList.remove("selected", "icon-dragging", "trash-hot");
     icon.setAttribute("aria-hidden", "true");
     renderTrash();
-    showToast("sent to trash");
+    if (!silent) showToast("sent to trash");
     bumpWinning(1);
+    return true;
   }
 
   function restoreFromTrash(index) {
@@ -6339,13 +6345,38 @@
     t.classList.toggle("trash-hot", hot);
   }
 
+  function dragMembers(drag) {
+    return (drag && drag.members && drag.members.length)
+      ? drag.members
+      : (drag ? [{ el: drag.el, origX: drag.origX, origY: drag.origY }] : []);
+  }
+
+  function clampGroupDelta(members, dx, dy) {
+    let loX = -Infinity, hiX = Infinity, loY = -Infinity, hiY = Infinity;
+    members.forEach((m) => {
+      const { w, h } = iconBox(m.el);
+      const maxX = Math.max(4, window.innerWidth - w - 4);
+      const maxY = Math.max(4, window.innerHeight - taskbarHeight() - h - 4);
+      loX = Math.max(loX, 4 - m.origX);
+      hiX = Math.min(hiX, maxX - m.origX);
+      loY = Math.max(loY, 4 - m.origY);
+      hiY = Math.min(hiY, maxY - m.origY);
+    });
+    if (loX > hiX) dx = (loX + hiX) / 2;
+    else dx = Math.max(loX, Math.min(hiX, dx));
+    if (loY > hiY) dy = (loY + hiY) / 2;
+    else dy = Math.max(loY, Math.min(hiY, dy));
+    return [dx, dy];
+  }
+
   function endIconDrag(e) {
     if (!iconDrag) return;
     if (e && iconDrag.pointerId != null && e.pointerId !== iconDrag.pointerId) return;
     const drag = iconDrag;
     iconDrag = null;
     const cancelled = !!(e && e.type === "pointercancel");
-    drag.el.classList.remove("icon-dragging");
+    const members = dragMembers(drag);
+    members.forEach((m) => m.el.classList.remove("icon-dragging"));
     document.body.classList.remove("icon-dragging");
     const t = trashIconEl();
     if (t) t.classList.remove("trash-hot");
@@ -6359,14 +6390,19 @@
       iconSkipClick = true;
       const x = e ? e.clientX : 0;
       const y = e ? e.clientY : 0;
+      // Grabbing Trash itself just moves it. Dropping a non-trash grab onto Trash
+      // bins every selected icon except Trash (Trash is never deleted).
       if (!cancelled && !isTrashIcon(drag.el) && pointOverTrash(x, y)) {
-        sendToTrash(drag.el);
+        const victims = members.map((m) => m.el).filter((el) => !isTrashIcon(el));
+        victims.forEach((el) => sendToTrash(el, true));
+        if (victims.length) showToast("sent to trash");
       }
       return;
     }
     if (cancelled) return;
     // Touch: open on pointerup and swallow the ghost click so it cannot hit the new window.
     // Mouse/pen: let the click handler open so tap/click still feels native.
+    // Click opens only the grabbed icon, never the whole selection.
     if (e && e.pointerType === "touch") {
       iconSkipClick = true;
       activateDesktopControl(drag.el);
@@ -6385,15 +6421,34 @@
       if (marqueeActive) return;
 
       iconSkipClick = false;
-      const x = parseFloat(icon.dataset.posX);
-      const y = parseFloat(icon.dataset.posY);
+      justMarqueeSelected = false;
+
+      const group = icon.classList.contains("selected");
+      if (!group) clearIconSelection();
+
+      const source = group
+        ? [...desktopIcons()].filter((ic) => ic.classList.contains("selected") && iconIsSelectable(ic))
+        : [icon];
+      if (!source.includes(icon)) source.unshift(icon);
+
+      const members = source.map((el) => {
+        const px = parseFloat(el.dataset.posX);
+        const py = parseFloat(el.dataset.posY);
+        return {
+          el,
+          origX: Number.isNaN(px) ? el.offsetLeft : px,
+          origY: Number.isNaN(py) ? el.offsetTop : py
+        };
+      });
+      const grabbed = members.find((m) => m.el === icon) || members[0];
       iconDrag = {
         el: icon,
+        members,
         pointerId: e.pointerId,
         startX: e.clientX,
         startY: e.clientY,
-        origX: Number.isNaN(x) ? icon.offsetLeft : x,
-        origY: Number.isNaN(y) ? icon.offsetTop : y,
+        origX: grabbed.origX,
+        origY: grabbed.origY,
         moved: false,
         threshold: e.pointerType === "touch" ? 10 : 6
       };
@@ -6405,14 +6460,16 @@
     if (!iconDrag || e.pointerId !== iconDrag.pointerId) return;
     const dx = e.clientX - iconDrag.startX;
     const dy = e.clientY - iconDrag.startY;
+    const members = dragMembers(iconDrag);
     if (!iconDrag.moved) {
       if (Math.hypot(dx, dy) < iconDrag.threshold) return;
       iconDrag.moved = true;
-      iconDrag.el.classList.add("icon-dragging");
+      members.forEach((m) => m.el.classList.add("icon-dragging"));
       document.body.classList.add("icon-dragging");
     }
     e.preventDefault();
-    setIconPos(iconDrag.el, iconDrag.origX + dx, iconDrag.origY + dy);
+    const [cdx, cdy] = clampGroupDelta(members, dx, dy);
+    members.forEach((m) => setIconPos(m.el, m.origX + cdx, m.origY + cdy));
     updateTrashHot(e.clientX, e.clientY, iconDrag.el);
   }, { passive: false });
 
