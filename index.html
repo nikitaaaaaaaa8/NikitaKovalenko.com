@@ -404,16 +404,33 @@
     font-size: 12px;
   }
   .terminal .line { margin: 0 0 6px; white-space: pre-wrap; }
-  .prompt-row { display: flex; gap: 8px; margin-top: 10px; }
+  .prompt-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+  }
   .prompt-row input {
-    flex: 1;
+    flex: 1 1 auto;
+    min-width: 0; /* allow shrink so Run button stays visible */
     background: rgba(0,0,0,.45);
     border: 1px solid rgba(57,255,20,.25);
     border-radius: 8px;
     color: var(--green);
     font: inherit;
-    padding: 8px 10px;
+    /* 16px+ prevents iOS Safari zoom-on-focus */
+    font-size: 16px;
+    line-height: 1.25;
+    padding: 10px 12px;
     outline: none;
+  }
+  .prompt-row .btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 10px 14px;
+    font-size: 14px;
   }
 
   .secret {
@@ -501,7 +518,38 @@
     }
 
     .terminal {
-      height: 160px;
+      height: min(160px, 28vh);
+      min-height: 100px;
+      max-height: 28vh;
+    }
+    .prompt-row {
+      gap: 6px;
+    }
+    .prompt-row input {
+      font-size: 16px; /* keep anti-zoom on phones */
+      padding: 12px 12px;
+    }
+    .prompt-row .btn {
+      font-size: 14px;
+      padding: 12px 14px;
+      min-width: 52px;
+    }
+    /* Extra room for keyboard: keep input row pinned in view */
+    #win-terminal .content {
+      max-height: calc(100vh - 120px);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    #win-terminal .terminal {
+      flex: 1 1 auto;
+    }
+    #win-terminal .prompt-row {
+      flex: 0 0 auto;
+      position: sticky;
+      bottom: 0;
+      padding-top: 6px;
+      background: linear-gradient(to bottom, transparent, rgba(10,14,10,.92) 30%);
     }
 
     .bookshelf {
@@ -856,7 +904,10 @@
     focusWindow(name);
     // Fit into the viewport every time an app opens (fixes phone off-screen starts)
     requestAnimationFrame(() => placeWindowOnScreen(el));
-    if (name === "terminal") setTimeout(() => termIn.focus(), 50);
+    // Skip autofocus on phones — iOS zooms the page when focusing inputs
+    if (name === "terminal" && window.innerWidth > 700) {
+      setTimeout(() => termIn.focus(), 50);
+    }
   }
 
   function closeWindow(name) {
