@@ -696,10 +696,13 @@
         <div class="title">Tracker</div>
       </div>
       <div class="content">
+        <div class="stat"><span>Approx location</span><span class="green" id="geoLocation">scanning…</span></div>
+        <div class="stat"><span>Network region</span><span class="muted" id="geoRegion">—</span></div>
         <div class="stat"><span>Session clicks</span><span class="green" id="clickCount">0</span></div>
         <div class="stat"><span>Tracker index</span><span class="green" id="winIndex">100</span></div>
         <div class="stat"><span>Emails answered</span><span class="danger">0</span></div>
         <div class="stat"><span>System stability</span><span class="muted">cosmetic only</span></div>
+        <p class="muted" style="margin: 8px 0 0; font-size: 11px;" id="geoNote">City guess from IP — not GPS. VPNs lie.</p>
         <div class="row">
           <button class="btn" id="winBtn">Add winning</button>
           <button class="btn secondary" id="resetBtn">Reset ego</button>
@@ -956,6 +959,64 @@
     if (name === "terminal" && window.innerWidth > 700) {
       setTimeout(() => termIn.focus(), 50);
     }
+    if (name === "stats") ensureApproxLocation();
+  }
+
+  let geoPromise = null;
+  function ensureApproxLocation() {
+    if (geoPromise) return geoPromise;
+    const locEl = document.getElementById("geoLocation");
+    const regionEl = document.getElementById("geoRegion");
+    const noteEl = document.getElementById("geoNote");
+    if (!locEl) return Promise.resolve();
+
+    async function readGeojs() {
+      const res = await fetch("https://get.geojs.io/v1/ip/geo.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("geojs failed");
+      const data = await res.json();
+      return {
+        city: data.city || "",
+        region: data.region || "",
+        country: data.country || data.country_code || "",
+        ip: data.ip || ""
+      };
+    }
+
+    async function readIpwho() {
+      const res = await fetch("https://ipwho.is/", { cache: "no-store" });
+      if (!res.ok) throw new Error("ipwho failed");
+      const data = await res.json();
+      if (data.success === false) throw new Error("ipwho denied");
+      return {
+        city: data.city || "",
+        region: data.region || data.region_code || "",
+        country: data.country || data.country_code || "",
+        ip: data.ip || ""
+      };
+    }
+
+    geoPromise = (async () => {
+      try {
+        let geo;
+        try { geo = await readGeojs(); }
+        catch (_) { geo = await readIpwho(); }
+
+        const city = (geo.city || "").trim();
+        const region = (geo.region || "").trim();
+        const country = (geo.country || "").trim();
+        locEl.textContent = city ? ("near " + city) : (country ? ("near " + country) : "unknown sector");
+        regionEl.textContent = [region, country].filter(Boolean).join(", ") || "—";
+        if (noteEl && geo.ip) {
+          noteEl.textContent = "City guess from IP (" + geo.ip + ") — not GPS. VPNs lie.";
+        }
+      } catch (err) {
+        locEl.textContent = "signal lost";
+        regionEl.textContent = "—";
+        if (noteEl) noteEl.textContent = "Could not read IP location. Network blocked it.";
+        geoPromise = null; // allow retry next open
+      }
+    })();
+    return geoPromise;
   }
 
   function closeWindow(name) {
