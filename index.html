@@ -1380,7 +1380,11 @@
     }
   });
 
-  // === Lightweight snow (session only — no reload persistence) ===
+  // === Lightweight snow + Golden Snitch ===
+  // TEMP PREVIEW: WINTER_PREVIEW=true → always-on snow + persistent snitch.
+  // Next update: set false to restore random snitch hunt + snow only on catch.
+  const WINTER_PREVIEW = true;
+
   const snowCanvas = document.getElementById("snow-canvas");
   let snowing = false;
   let snowRaf = 0;
@@ -1452,42 +1456,64 @@
     if (snowing) resizeSnow();
   });
 
-  // === Golden Snitch Easter Egg ===
   const snitch = document.getElementById("snitch");
   let snitchTimeout;
 
-  function spawnSnitch() {
+  function placeSnitch(persistent) {
     if (!snitch) return;
     snitch.style.display = "block";
-    snitch.style.left = Math.random() * (window.innerWidth - 60) + "px";
-    snitch.style.top = Math.random() * (window.innerHeight - 60) + "px";
-
+    snitch.style.left = Math.random() * Math.max(20, window.innerWidth - 60) + "px";
+    snitch.style.top = Math.random() * Math.max(20, window.innerHeight - 60) + "px";
     clearTimeout(snitchTimeout);
-    snitchTimeout = setTimeout(() => {
-      if (snitch.style.display === "block") snitch.style.display = "none";
-    }, 5000);
+    if (!persistent) {
+      snitchTimeout = setTimeout(() => {
+        if (snitch.style.display === "block") snitch.style.display = "none";
+      }, 5000);
+    }
   }
 
   function scheduleNextSnitch() {
     const delay = 30000 + Math.random() * 40000;
     setTimeout(() => {
-      spawnSnitch();
+      placeSnitch(false);
       scheduleNextSnitch();
     }, delay);
   }
 
   if (snitch) {
     snitch.addEventListener("click", () => {
+      bumpWinning(47);
+      if (WINTER_PREVIEW) {
+        // Stay visible for preview; just hop to a new spot
+        placeSnitch(true);
+        showToast("Snitch preview — winter UI is forced on");
+        return;
+      }
       snitch.style.display = "none";
       clearTimeout(snitchTimeout);
-      bumpWinning(47);
       const snowOn = startSnow();
       showToast(snowOn ? "Caught the Snitch! It started snowing." : "Caught the Snitch! +47 winning");
     });
 
-    setTimeout(() => {
-      scheduleNextSnitch();
-    }, 45000);
+    if (WINTER_PREVIEW) {
+      startSnow();
+      placeSnitch(true);
+      window.addEventListener("resize", () => {
+        // keep it on-screen during preview
+        if (snitch.style.display === "block") {
+          const maxL = Math.max(8, window.innerWidth - 40);
+          const maxT = Math.max(8, window.innerHeight - 40);
+          const left = parseFloat(snitch.style.left) || 40;
+          const top = parseFloat(snitch.style.top) || 40;
+          snitch.style.left = Math.min(left, maxL) + "px";
+          snitch.style.top = Math.min(top, maxT) + "px";
+        }
+      });
+    } else {
+      setTimeout(() => {
+        scheduleNextSnitch();
+      }, 45000);
+    }
   }
 
   // Bookshelf book clicks (nonsense content for now)
