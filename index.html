@@ -3092,7 +3092,6 @@
   }
 
   function bumpWinning(by) {
-    clicks += 1;
     winIndex += by;
     renderStats();
     save();
@@ -3724,12 +3723,30 @@
     }
   }, true);
 
-  // click anywhere on wallpaper lightly counts
-  document.querySelector(".desktop").addEventListener("click", (e) => {
-    if (e.target.classList.contains("desktop") || e.target.classList.contains("icons")) {
-      bumpWinning(1);
+  // Session clicks: one tap = +1 anywhere. pointer events (capture), not click —
+  // mobile often never fires click (marquee preventDefault, icon-drag ghost click,
+  // tapping an .icon is not target .desktop/.icons).
+  let tapStart = null;
+  document.addEventListener("pointerdown", (e) => {
+    if (!e.isPrimary) return;
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (e.pointerType !== "mouse" && e.pointerType !== "touch" && e.pointerType !== "pen") return;
+    tapStart = { x: e.clientX, y: e.clientY, id: e.pointerId };
+  }, true);
+  document.addEventListener("pointerup", (e) => {
+    if (!tapStart || e.pointerId !== tapStart.id) return;
+    const start = tapStart;
+    tapStart = null;
+    const dx = e.clientX - start.x;
+    const dy = e.clientY - start.y;
+    if (Math.hypot(dx, dy) < 12) {
+      clicks += 1;
+      renderStats();
     }
-  });
+  }, true);
+  document.addEventListener("pointercancel", (e) => {
+    if (tapStart && e.pointerId === tapStart.id) tapStart = null;
+  }, true);
 
   // === Lightweight snow (always on) + Golden Snitch hunt ===
   const snowCanvas = document.getElementById("snow-canvas");
@@ -3891,7 +3908,7 @@
       title: "How Kita OS works",
       paragraphs: [
         "This website is a fake desktop. Click an icon to open a window. Drag the title bar to move it. The red dot closes it. Drag a box around icons to select them, then drag any selected icon to move the whole pile. Drop the pile on Trash to bin them all.",
-        "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. The Games folder has Minesweeper, Snake, Tetris, and Solitaire. Casino is a fake-chip toy: Blackjack, Slots, and Roulette. You start at 1000 chips; a refresh resets them. Bookshelf is these notes.",
+        "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Session clicks count every tap or click this visit; a refresh resets them. The Games folder has Minesweeper, Snake, Tetris, and Solitaire. Casino is a fake-chip toy: Blackjack, Slots, and Roulette. You start at 1000 chips; a refresh resets them. Bookshelf is these notes.",
         "Open Terminal and type help, then press Run. Help lists commands and app names; type an app to open it. games and casino open those folders. snow turns the snow off.",
         "A golden snitch shows up every 120 seconds for 5 seconds. Catch it if you want. Refresh starts a new session.",
         "There is a Konami code: up, up, down, down, left, right, left, right, B, A. That opens a VIP box, turns on Matrix rain, and turns off the snow."
