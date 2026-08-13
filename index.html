@@ -359,11 +359,14 @@
   }
   .taskbar button:hover { background: rgba(57,255,20,.1); color: var(--green); }
   .clock {
-    min-width: 78px;
+    min-width: 7.5em;
+    flex-shrink: 0;
+    white-space: nowrap;
     text-align: right;
     color: var(--green);
     font-size: 12px;
     padding: 0 6px;
+    line-height: 1.2;
   }
 
   .boot {
@@ -515,6 +518,12 @@
     .taskbar button {
       font-size: 10px;
       padding: 4px 8px;
+    }
+    .clock {
+      font-size: 11px;
+      flex-shrink: 0;
+      white-space: nowrap;
+      padding: 0 4px;
     }
 
     .terminal {
