@@ -1399,6 +1399,17 @@
     el.style.top = Math.max(margin, Math.min(maxTop, top)) + "px";
   }
 
+  function centerWindowDesktop(el) {
+    if (!el || window.innerWidth <= 700) return;
+    const w = el.offsetWidth || parseInt(el.style.width, 10) || 420;
+    const h = el.offsetHeight || 280;
+    const taskbarRoom = 80;
+    const left = Math.max(16, Math.round((window.innerWidth - w) / 2));
+    const top = Math.max(16, Math.round((window.innerHeight - taskbarRoom - h) / 2));
+    el.style.left = left + "px";
+    el.style.top = top + "px";
+  }
+
   function focusWindow(name) {
     const el = windows[name];
     if (!el) return;
@@ -1607,6 +1618,9 @@
   setTimeout(() => {
     boot.classList.add("hide");
     openWindow("about");
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => centerWindowDesktop(windows.about));
+    });
     termPrint("Kita OS ready.");
     termPrint("type `help` to pretend you know what you're doing.");
   }, 1500);
