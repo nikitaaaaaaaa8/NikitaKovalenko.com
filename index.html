@@ -558,10 +558,10 @@
     padding: 0;
     border-radius: 0;
     border: 0;
-    border-top: 1px solid #3c9af0;
-    background: linear-gradient(180deg, #1f5fd0 0%, #245edb 8%, #245edb 50%, #1941a5 100%);
-    box-shadow: inset 0 1px 0 #7bb3f5;
-    font-family: Tahoma, "Segoe UI", sans-serif;
+    border-top: 1px solid rgba(57,255,20,.55);
+    background: linear-gradient(180deg, #163016 0%, #0c140c 18%, #080c08 100%);
+    box-shadow: inset 0 1px 0 rgba(57,255,20,.28), 0 -8px 24px rgba(0,0,0,.45);
+    font-family: var(--font);
   }
   .start-btn {
     display: flex;
@@ -572,17 +572,19 @@
     padding: 0 18px 0 10px;
     border-radius: 0 18px 18px 0;
     cursor: pointer;
-    color: #fff;
+    color: #041204;
     font: italic 700 16px "Trebuchet MS", Tahoma, sans-serif;
     letter-spacing: 0.02em;
-    text-shadow: 1px 1px 2px rgba(0,0,0,.45);
-    background: linear-gradient(180deg, #3cbb3c 0%, #2da02d 38%, #1e8a1e 70%, #167c16 100%);
-    box-shadow: inset 0 1px 0 #b6f0b6, inset 0 -1px 0 #0d5a0d, 1px 0 0 rgba(0,0,0,.2);
+    text-shadow: 0 1px 0 rgba(255,255,255,.25);
+    background: linear-gradient(180deg, #7dff62 0%, #39ff14 42%, #1f8f0f 78%, #14680c 100%);
+    box-shadow: inset 0 1px 0 #d4ffc8, inset 0 -1px 0 #0d4a0a, 0 0 10px rgba(57,255,20,.35);
   }
   .start-btn:hover { filter: brightness(1.08); }
   .start-btn.open,
   .start-btn:active {
-    background: linear-gradient(180deg, #167c16 0%, #1e8a1e 40%, #2da02d 100%);
+    color: #d8ffd0;
+    text-shadow: 0 1px 0 rgba(0,0,0,.5);
+    background: linear-gradient(180deg, #14680c 0%, #1f8f0f 45%, #39ff14 100%);
   }
   .xp-flag {
     width: 18px;
@@ -593,20 +595,19 @@
     transform: skewX(-8deg);
   }
   .xp-flag i { display: block; border-radius: 1px; }
-  .xp-flag .r { background: #e23b2e; }
-  .xp-flag .g { background: #7cbf2a; }
-  .xp-flag .b { background: #2a7de1; }
-  .xp-flag .y { background: #f0c01a; }
+  .xp-flag .r { background: #b8ff8a; }
+  .xp-flag .g { background: #39ff14; }
+  .xp-flag .b { background: #1f8f0f; }
+  .xp-flag .y { background: #d8ffd0; }
   .taskbar-mid { flex: 1; }
   .tray {
     display: flex;
     align-items: center;
     padding: 0 10px;
     margin: 3px 3px 3px 0;
-    border: 1px solid #0f3d8c;
-    border-left-color: #083070;
-    background: linear-gradient(180deg, #1198ee 0%, #0d7dd4 55%, #0a6fc2 100%);
-    box-shadow: inset 1px 1px 0 #5ec4ff;
+    border: 1px solid rgba(57,255,20,.35);
+    background: linear-gradient(180deg, #142014 0%, #0a100a 100%);
+    box-shadow: inset 1px 1px 0 rgba(57,255,20,.18);
     min-width: 76px;
     justify-content: center;
   }
@@ -615,29 +616,30 @@
     flex-shrink: 0;
     white-space: nowrap;
     text-align: center;
-    color: #fff;
-    font: 11px Tahoma, "Segoe UI", sans-serif;
+    color: var(--green);
+    font: 11px var(--font);
     padding: 0;
     line-height: 1.2;
-    text-shadow: 0 1px 0 rgba(0,0,0,.25);
+    text-shadow: 0 0 8px rgba(57,255,20,.45);
   }
   .start-menu {
     position: absolute;
     left: 0;
     bottom: 40px;
     width: min(280px, 92vw);
-    background: #fff;
-    border: 1px solid #003c74;
-    box-shadow: 2px 2px 8px rgba(0,0,0,.4);
-    font-family: Tahoma, "Segoe UI", sans-serif;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    box-shadow: var(--shadow);
+    font-family: var(--font);
     overflow: hidden;
   }
   .start-menu[hidden] { display: none; }
   .start-head {
-    background: linear-gradient(180deg, #1f5fd0, #1941a5);
-    color: #fff;
+    background: linear-gradient(180deg, rgba(57,255,20,.2), rgba(57,255,20,.08));
+    color: var(--green);
     padding: 10px 12px;
-    font: 700 13px Tahoma, sans-serif;
+    font: 700 13px var(--font);
+    border-bottom: 1px solid rgba(57,255,20,.25);
   }
   .start-menu button,
   .start-menu a {
@@ -645,17 +647,17 @@
     width: 100%;
     text-align: left;
     border: 0;
-    background: #fff;
-    color: #000;
-    font: 12px Tahoma, "Segoe UI", sans-serif;
+    background: transparent;
+    color: var(--text);
+    font: 12px var(--font);
     padding: 8px 14px;
     text-decoration: none;
     cursor: pointer;
   }
   .start-menu button:hover,
   .start-menu a:hover {
-    background: #316ac5;
-    color: #fff;
+    background: rgba(57,255,20,.16);
+    color: var(--green);
   }
 
   .boot {
