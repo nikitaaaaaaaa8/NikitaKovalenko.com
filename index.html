@@ -86,7 +86,8 @@
   .icon {
     width: 86px;
     text-align: center;
-    cursor: pointer;
+    cursor: grab;
+    touch-action: none;
     padding: 8px 4px;
     border-radius: 10px;
     border: 1px solid transparent;
@@ -156,6 +157,96 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .icon-tracker .glyph svg .sat-pulse { animation: none; opacity: .35; }
+  }
+
+  .icons.icons-free {
+    display: block;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .icons.icons-free .icon {
+    position: absolute;
+    pointer-events: auto;
+    z-index: 1;
+  }
+  .icon.icon-dragging {
+    opacity: 0.7;
+    cursor: grabbing;
+    z-index: 6;
+    transition: none;
+    filter: brightness(1.08);
+  }
+  .icon.icon-trashed {
+    display: none !important;
+  }
+  .icon.trash-hot {
+    background: rgba(255, 77, 77, 0.2);
+    border-color: var(--danger);
+    box-shadow: 0 0 14px rgba(255, 77, 77, 0.35);
+  }
+  .icon.trash-full .glyph {
+    box-shadow: inset 0 0 18px rgba(57,255,20,.32), 0 0 14px rgba(57,255,20,.35);
+  }
+
+  .trash-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+    max-height: min(50vh, 320px);
+    overflow: auto;
+  }
+  .trash-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(57,255,20,.22);
+    background: rgba(57,255,20,.06);
+    cursor: pointer;
+    text-align: left;
+  }
+  .trash-item:hover,
+  .trash-item:focus {
+    background: rgba(57,255,20,.14);
+    border-color: rgba(57,255,20,.45);
+    outline: none;
+  }
+  .trash-item .glyph {
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background:
+      radial-gradient(circle at 30% 25%, rgba(57,255,20,.28), transparent 45%),
+      linear-gradient(180deg, rgba(57,255,20,.16), rgba(0,0,0,.45));
+    border: 1px solid rgba(57,255,20,.4);
+    color: #39ff14;
+  }
+  .trash-item .glyph svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+    overflow: visible;
+  }
+  .trash-item-label {
+    flex: 1;
+    font-size: 12px;
+    color: #eaffea;
+  }
+  .trash-item .btn {
+    padding: 6px 10px;
+    font-size: 11px;
   }
 
   .window {
@@ -1439,14 +1530,28 @@
   button, a, [data-open], [data-link], [data-close], [data-book], [data-act] {
     cursor: pointer;
   }
+  .icons .icon,
+  .icons .icon[data-open] {
+    cursor: grab;
+  }
+  .icons .icon.icon-dragging,
+  .icons .icon.icon-dragging[data-open] {
+    cursor: grabbing;
+  }
   body.dragging,
-  body.resizing {
+  body.resizing,
+  body.icon-dragging {
     overflow: hidden;
     touch-action: none;
   }
   body.dragging .content,
   body.resizing .content {
     pointer-events: none;
+  }
+  body.icon-dragging {
+    overflow: hidden;
+    touch-action: none;
+    cursor: grabbing;
   }
   body.marquee-active {
     overflow: hidden;
@@ -1460,6 +1565,12 @@
       left: 10px;
       grid-template-columns: repeat(2, 72px);
       gap: 10px 8px;
+    }
+    .icons.icons-free {
+      top: 0;
+      left: 0;
+      grid-template-columns: none;
+      gap: 0;
     }
     .icon {
       width: 72px;
@@ -1653,6 +1764,10 @@
       grid-template-columns: repeat(2, 68px);
       gap: 8px 6px;
     }
+    .icons.icons-free {
+      grid-template-columns: none;
+      gap: 0;
+    }
     .icon {
       width: 68px;
     }
@@ -1803,7 +1918,7 @@
       <div class="content">
         <div class="terminal" id="termOut"></div>
         <form class="prompt-row" id="termForm">
-          <input id="termIn" autocomplete="off" spellcheck="false" placeholder="try: help, whoami, winning, clear">
+          <input id="termIn" autocomplete="off" spellcheck="false" placeholder="try: help">
           <button class="btn" type="submit">run</button>
         </form>
       </div>
@@ -1843,11 +1958,10 @@
         <div class="title">Trash</div>
       </div>
       <div class="content">
-        <p class="danger">Empty?</p>
-        <p class="muted">No. It contains:</p>
-        <p>• unread obligations<br>• corporate synergy<br>• your cold email<br>• the concept of work-life balance</p>
-        <div class="row">
-          <button class="btn secondary" id="emptyTrash">Empty trash</button>
+        <p class="muted" id="trashEmpty">recycle bin is empty. even the obligations bounced.</p>
+        <div class="trash-list" id="trashList" hidden></div>
+        <div class="row" id="trashActions" hidden>
+          <button type="button" class="btn secondary" id="emptyTrash">Empty</button>
         </div>
       </div>
     </section>
@@ -2580,6 +2694,7 @@
 
     if (cmd === "help") {
       termPrint("commands: help, whoami, winning, clear, sudo, date, kita, scan, confess, coinflip, matrix, aura, snow");
+      termPrint("apps: about, tracker, contact, drone, games, minesweeper, snake, tetris, solitaire, trash, bookshelf, weather, paint");
     } else if (cmd === "whoami") {
       termPrint("guest@nikitakovalenko.com // temporary main character");
     } else if (cmd === "winning") {
@@ -2635,7 +2750,43 @@
         termPrint("aura meter deactivated.");
       }
     } else {
-      if (confessionMode) {
+      const appAliases = {
+        about: "about",
+        tracker: "stats",
+        stats: "stats",
+        terminal: "terminal",
+        contact: "contact",
+        drone: "drone",
+        dronestuff: "drone",
+        games: "games",
+        minesweeper: "minesweeper",
+        mine: "minesweeper",
+        snake: "snake",
+        tetris: "tetris",
+        solitaire: "solitaire",
+        trash: "trash",
+        bookshelf: "bookshelf",
+        books: "bookshelf",
+        weather: "weather",
+        paint: "paint"
+      };
+      let launch = cmd;
+      if (launch.indexOf("open ") === 0) launch = launch.slice(5).trim();
+      const app = appAliases[launch];
+      if (app) {
+        if (app === "terminal") {
+          const termWin = windows.terminal;
+          if (termWin && termWin.classList.contains("open")) {
+            termPrint("already here.");
+          } else {
+            termPrint("opening terminal...");
+            openWindow("terminal");
+          }
+        } else {
+          termPrint("opening " + launch + "...");
+          openWindow(app);
+        }
+      } else if (confessionMode) {
         termPrint("confession received.");
         termPrint("judgment: weak. try harder.");
         confessionMode = false;
@@ -2723,6 +2874,12 @@
 
   document.querySelectorAll("[data-open], [data-link]").forEach(el => {
     el.addEventListener("click", () => {
+      if (el.classList.contains("icon") && el.closest(".icons")) {
+        if (iconSkipClick) {
+          iconSkipClick = false;
+          return;
+        }
+      }
       activateDesktopControl(el);
     });
     el.addEventListener("keydown", (e) => {
@@ -3009,8 +3166,7 @@
   });
 
   document.getElementById("emptyTrash").addEventListener("click", () => {
-    showToast("trash refused. it likes it here.");
-    bumpWinning(1);
+    emptyRecycleBin();
   });
 
   document.getElementById("termForm").addEventListener("submit", (e) => {
@@ -3312,7 +3468,7 @@
       paragraphs: [
         "This website is a fake desktop. Click an icon to open a window. Drag the title bar to move it. The red dot closes it.",
         "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Games are Minesweeper, Snake, Tetris, and Solitaire. Bookshelf is these notes.",
-        "Open Terminal and type help, then press Run. It prints the list of commands you can try, like whoami, date, and clear.",
+        "Open Terminal and type help, then press Run. Help lists commands and app names; type an app to open it. snow turns the snow off.",
         "A golden snitch shows up every 120 seconds for 5 seconds. Catch it if you want. Refresh starts a new session.",
         "There is a Konami code: up, up, down, down, left, right, left, right, B, A. That opens a VIP box, turns on Matrix rain, and turns off the snow."
       ]
@@ -4964,6 +5120,7 @@
 
   function iconIsSelectable(el) {
     if (!el || el.hidden) return false;
+    if (el.classList.contains("icon-trashed")) return false;
     const cs = window.getComputedStyle(el);
     if (cs.display === "none" || cs.visibility === "hidden") return false;
     return true;
@@ -5088,7 +5245,8 @@
     if (!e.isPrimary) return;
     if (e.button !== 0) return;
     if (e.pointerType !== "mouse" && e.pointerType !== "pen" && e.pointerType !== "touch") return;
-    if (document.body.classList.contains("dragging") || document.body.classList.contains("resizing")) return;
+    if (document.body.classList.contains("dragging") || document.body.classList.contains("resizing") || document.body.classList.contains("icon-dragging")) return;
+    if (iconDrag) return;
     if (!marqueeIsEmptyDesktop(e.target)) return;
     marqueeActive = true;
     marqueePointer = e.pointerId;
@@ -5113,6 +5271,330 @@
   document.addEventListener("pointerup", marqueeEnd);
   document.addEventListener("pointercancel", marqueeEnd);
   document.addEventListener("lostpointercapture", marqueeEnd);
+
+
+  // Desktop icons: freeze the 2-column grid into absolute positions, then drag.
+  const iconsRoot = document.querySelector(".icons");
+  const desktopEl = document.getElementById("desktop");
+  const recycleBin = [];
+  let iconsFrozen = false;
+  let iconDrag = null;
+  let iconSkipClick = false;
+
+  function isTrashIcon(el) {
+    return !!(el && el.getAttribute("data-open") === "trash");
+  }
+
+  function trashIconEl() {
+    return iconsRoot ? iconsRoot.querySelector('.icon[data-open="trash"]') : null;
+  }
+
+  function taskbarHeight() {
+    const tb = document.getElementById("taskbar");
+    return tb ? tb.offsetHeight : 40;
+  }
+
+  function iconBox(el) {
+    return { w: el.offsetWidth || 86, h: el.offsetHeight || 80 };
+  }
+
+  function clampIconPos(el, x, y) {
+    const { w, h } = iconBox(el);
+    const maxX = Math.max(4, window.innerWidth - w - 4);
+    const maxY = Math.max(4, window.innerHeight - taskbarHeight() - h - 4);
+    return [
+      Math.max(4, Math.min(maxX, x)),
+      Math.max(4, Math.min(maxY, y))
+    ];
+  }
+
+  function setIconPos(el, x, y) {
+    const [cx, cy] = clampIconPos(el, x, y);
+    el.style.left = cx + "px";
+    el.style.top = cy + "px";
+    el.dataset.posX = String(cx);
+    el.dataset.posY = String(cy);
+    return [cx, cy];
+  }
+
+  function freezeDesktopIcons() {
+    if (iconsFrozen || !iconsRoot || !desktopEl) return;
+    const icons = [...iconsRoot.querySelectorAll(".icon")];
+    if (!icons.length) return;
+    const first = icons[0].getBoundingClientRect();
+    if (first.width < 8) return;
+    const rects = icons.map((icon) => icon.getBoundingClientRect());
+    const desk = desktopEl.getBoundingClientRect();
+    iconsRoot.classList.add("icons-free");
+    icons.forEach((icon, i) => {
+      const r = rects[i];
+      const x = r.left - desk.left;
+      const y = r.top - desk.top;
+      icon.style.position = "absolute";
+      icon.style.margin = "0";
+      setIconPos(icon, x, y);
+      icon.dataset.homeX = icon.dataset.posX;
+      icon.dataset.homeY = icon.dataset.posY;
+    });
+    iconsFrozen = true;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+
+  function iconOverlapsPos(el, x, y, ignore) {
+    if (!el || el === ignore || el.classList.contains("icon-trashed")) return false;
+    const { w, h } = iconBox(el);
+    const ix = parseFloat(el.dataset.posX);
+    const iy = parseFloat(el.dataset.posY);
+    if (Number.isNaN(ix) || Number.isNaN(iy)) return false;
+    const { w: ow, h: oh } = iconBox(ignore || el);
+    const pad = 6;
+    return !(x + ow + pad < ix || x > ix + w + pad || y + oh + pad < iy || y > iy + h + pad);
+  }
+
+  function positionTaken(x, y, ignore) {
+    return [...desktopIcons()].some((ic) => iconOverlapsPos(ic, x, y, ignore));
+  }
+
+  function findFreeIconSpot(el, preferX, preferY) {
+    const [px, py] = clampIconPos(el, preferX, preferY);
+    if (!positionTaken(px, py, el)) return [px, py];
+    const { w, h } = iconBox(el);
+    const col = w + 12;
+    const row = h + 14;
+    const maxX = window.innerWidth - w - 4;
+    const maxY = window.innerHeight - taskbarHeight() - h - 4;
+    for (let y = 18; y <= maxY; y += row) {
+      for (let x = 14; x <= maxX; x += col) {
+        const [cx, cy] = clampIconPos(el, x, y);
+        if (!positionTaken(cx, cy, el)) return [cx, cy];
+      }
+    }
+    return clampIconPos(el, preferX + col, preferY);
+  }
+
+  function renderTrash() {
+    const empty = document.getElementById("trashEmpty");
+    const list = document.getElementById("trashList");
+    const actions = document.getElementById("trashActions");
+    const trashIcon = trashIconEl();
+    if (trashIcon) trashIcon.classList.toggle("trash-full", recycleBin.length > 0);
+    if (!recycleBin.length) {
+      if (empty) empty.hidden = false;
+      if (list) {
+        list.hidden = true;
+        list.innerHTML = "";
+      }
+      if (actions) actions.hidden = true;
+      return;
+    }
+    if (empty) empty.hidden = true;
+    if (actions) actions.hidden = false;
+    if (!list) return;
+    list.hidden = false;
+    list.innerHTML = recycleBin.map((item, i) => (
+      '<div class="trash-item" data-restore="' + i + '" role="button" tabindex="0">' +
+        '<div class="glyph">' + item.glyphHTML + '</div>' +
+        '<div class="trash-item-label">' + escapeHtml(item.label) + '</div>' +
+        '<button type="button" class="btn secondary" data-restore="' + i + '">Restore</button>' +
+      '</div>'
+    )).join("");
+  }
+
+  function sendToTrash(icon) {
+    if (!icon || isTrashIcon(icon)) return;
+    const labelEl = icon.querySelector(".label");
+    const glyph = icon.querySelector(".glyph");
+    recycleBin.push({
+      open: icon.getAttribute("data-open") || "",
+      label: ((labelEl && labelEl.textContent) || "item").trim(),
+      glyphHTML: glyph ? glyph.innerHTML : "",
+      homeX: parseFloat(icon.dataset.homeX) || 0,
+      homeY: parseFloat(icon.dataset.homeY) || 0,
+      lastX: parseFloat(icon.dataset.posX) || 0,
+      lastY: parseFloat(icon.dataset.posY) || 0,
+      el: icon
+    });
+    icon.classList.add("icon-trashed");
+    icon.classList.remove("selected", "icon-dragging", "trash-hot");
+    icon.setAttribute("aria-hidden", "true");
+    renderTrash();
+    showToast("sent to trash");
+    bumpWinning(1);
+  }
+
+  function restoreFromTrash(index) {
+    if (index < 0 || index >= recycleBin.length) return;
+    const item = recycleBin.splice(index, 1)[0];
+    if (!item || !item.el) return;
+    const el = item.el;
+    el.classList.remove("icon-trashed");
+    el.removeAttribute("aria-hidden");
+    const tryPos = (x, y) => {
+      const [cx, cy] = clampIconPos(el, x, y);
+      if (positionTaken(cx, cy, el)) return false;
+      setIconPos(el, cx, cy);
+      return true;
+    };
+    if (!tryPos(item.homeX, item.homeY) && !tryPos(item.lastX, item.lastY)) {
+      const [fx, fy] = findFreeIconSpot(el, item.homeX, item.homeY);
+      setIconPos(el, fx, fy);
+    }
+    renderTrash();
+    showToast("restored");
+  }
+
+  function emptyRecycleBin() {
+    if (!recycleBin.length) {
+      showToast("already empty. even the void clocked out.");
+      return;
+    }
+    recycleBin.length = 0;
+    renderTrash();
+    showToast("emptied. refresh if you miss them.");
+    bumpWinning(1);
+  }
+
+  const trashListEl = document.getElementById("trashList");
+  if (trashListEl) {
+    trashListEl.addEventListener("click", (e) => {
+      const hit = e.target.closest("[data-restore]");
+      if (!hit || !trashListEl.contains(hit)) return;
+      const i = parseInt(hit.getAttribute("data-restore"), 10);
+      if (!Number.isNaN(i)) restoreFromTrash(i);
+    });
+    trashListEl.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const hit = e.target.closest("[data-restore]");
+      if (!hit) return;
+      e.preventDefault();
+      const i = parseInt(hit.getAttribute("data-restore"), 10);
+      if (!Number.isNaN(i)) restoreFromTrash(i);
+    });
+  }
+
+  function pointOverTrash(x, y) {
+    const t = trashIconEl();
+    if (!t || t.classList.contains("icon-trashed")) return false;
+    const r = t.getBoundingClientRect();
+    const pad = 4;
+    return x >= r.left - pad && x <= r.right + pad && y >= r.top - pad && y <= r.bottom + pad;
+  }
+
+  function updateTrashHot(x, y, draggingEl) {
+    const t = trashIconEl();
+    if (!t) return;
+    const hot = !!(draggingEl && !isTrashIcon(draggingEl) && pointOverTrash(x, y));
+    t.classList.toggle("trash-hot", hot);
+  }
+
+  function endIconDrag(e) {
+    if (!iconDrag) return;
+    if (e && iconDrag.pointerId != null && e.pointerId !== iconDrag.pointerId) return;
+    const drag = iconDrag;
+    iconDrag = null;
+    const cancelled = !!(e && e.type === "pointercancel");
+    drag.el.classList.remove("icon-dragging");
+    document.body.classList.remove("icon-dragging");
+    const t = trashIconEl();
+    if (t) t.classList.remove("trash-hot");
+    try {
+      if (e && drag.el.releasePointerCapture && drag.el.hasPointerCapture && drag.el.hasPointerCapture(drag.pointerId)) {
+        drag.el.releasePointerCapture(drag.pointerId);
+      }
+    } catch (_) {}
+
+    if (drag.moved) {
+      iconSkipClick = true;
+      const x = e ? e.clientX : 0;
+      const y = e ? e.clientY : 0;
+      if (!cancelled && !isTrashIcon(drag.el) && pointOverTrash(x, y)) {
+        sendToTrash(drag.el);
+      }
+      return;
+    }
+    if (cancelled) return;
+    // Touch: open on pointerup and swallow the ghost click so it cannot hit the new window.
+    // Mouse/pen: let the click handler open so tap/click still feels native.
+    if (e && e.pointerType === "touch") {
+      iconSkipClick = true;
+      activateDesktopControl(drag.el);
+    }
+  }
+
+  if (iconsRoot) {
+    iconsRoot.addEventListener("pointerdown", (e) => {
+      if (iconDrag) return;
+      if (!e.isPrimary) return;
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      const icon = e.target.closest(".icon");
+      if (!icon || !iconsRoot.contains(icon)) return;
+      if (icon.classList.contains("icon-trashed")) return;
+      if (document.body.classList.contains("dragging") || document.body.classList.contains("resizing")) return;
+      if (marqueeActive) return;
+
+      iconSkipClick = false;
+      const x = parseFloat(icon.dataset.posX);
+      const y = parseFloat(icon.dataset.posY);
+      iconDrag = {
+        el: icon,
+        pointerId: e.pointerId,
+        startX: e.clientX,
+        startY: e.clientY,
+        origX: Number.isNaN(x) ? icon.offsetLeft : x,
+        origY: Number.isNaN(y) ? icon.offsetTop : y,
+        moved: false,
+        threshold: e.pointerType === "touch" ? 10 : 6
+      };
+      try { icon.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+  }
+
+  document.addEventListener("pointermove", (e) => {
+    if (!iconDrag || e.pointerId !== iconDrag.pointerId) return;
+    const dx = e.clientX - iconDrag.startX;
+    const dy = e.clientY - iconDrag.startY;
+    if (!iconDrag.moved) {
+      if (Math.hypot(dx, dy) < iconDrag.threshold) return;
+      iconDrag.moved = true;
+      iconDrag.el.classList.add("icon-dragging");
+      document.body.classList.add("icon-dragging");
+    }
+    e.preventDefault();
+    setIconPos(iconDrag.el, iconDrag.origX + dx, iconDrag.origY + dy);
+    updateTrashHot(e.clientX, e.clientY, iconDrag.el);
+  }, { passive: false });
+
+  document.addEventListener("pointerup", endIconDrag);
+  document.addEventListener("pointercancel", endIconDrag);
+  document.addEventListener("lostpointercapture", endIconDrag);
+
+  document.addEventListener("touchmove", (e) => {
+    if (!iconDrag || !iconDrag.moved) return;
+    e.preventDefault();
+  }, { passive: false });
+
+  window.addEventListener("resize", () => {
+    if (!iconsFrozen) {
+      freezeDesktopIcons();
+      return;
+    }
+    desktopIcons().forEach((icon) => {
+      if (icon.classList.contains("icon-trashed")) return;
+      const x = parseFloat(icon.dataset.posX);
+      const y = parseFloat(icon.dataset.posY);
+      if (!Number.isNaN(x) && !Number.isNaN(y)) setIconPos(icon, x, y);
+    });
+  });
+
+  requestAnimationFrame(() => requestAnimationFrame(freezeDesktopIcons));
+  window.addEventListener("load", () => {
+    if (!iconsFrozen) freezeDesktopIcons();
+  });
 
   renderStats();
 })();
