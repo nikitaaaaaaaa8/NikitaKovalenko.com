@@ -311,6 +311,10 @@
     background: linear-gradient(90deg, #2a2a14, #4a4a22 40%, #242412);
     height: 150px;
   }
+  .book:nth-child(5) {
+    background: linear-gradient(90deg, #1a2e2e, #2a4a4a 40%, #152424);
+    height: 170px;
+  }
   .book:hover,
   .book.active {
     transform: translateY(-8px);
@@ -337,7 +341,8 @@
     max-height: 140px;
     overflow: hidden;
   }
-  .book:nth-child(2) .book-spine {
+  .book:nth-child(2) .book-spine,
+  .book:nth-child(5) .book-spine {
     font-size: 8px;
     letter-spacing: 0.02em;
     max-height: 148px;
@@ -930,11 +935,13 @@
     .book:nth-child(2) { height: 112px; }
     .book:nth-child(3) { height: 106px; }
     .book:nth-child(4) { height: 94px; }
+    .book:nth-child(5) { height: 110px; }
     .book-spine {
       font-size: 7px;
       max-height: 86px;
     }
-    .book:nth-child(2) .book-spine {
+    .book:nth-child(2) .book-spine,
+    .book:nth-child(5) .book-spine {
       font-size: 6.5px;
       max-height: 96px;
     }
@@ -1200,6 +1207,9 @@
           </div>
           <div class="book" data-book="memetics" tabindex="0">
             <div class="book-spine">Memetics</div>
+          </div>
+          <div class="book" data-book="howto" tabindex="0">
+            <div class="book-spine">How Kita OS works</div>
           </div>
         </div>
         <div class="book-reader" id="bookReader">
@@ -2240,6 +2250,16 @@
         "Richard Dawkins coined “meme” in 1976 in The Selfish Gene. He shortened the Greek mimeme (something imitated) so it would sound like “gene.” A meme, in that book, is a unit of culture that jumps from brain to brain by imitation: a tune, a phrase, a fashion, a way of building a tool.",
         "The internet picked up the word and mostly meant image macros, copypasta, and templates. Same loop, smaller unit. A joke gets copied, someone changes a caption, the new version outcompetes the old one, or it dies.",
         "So memetics is the theory. A meme is the thing being copied. Online, that usually just means the format that keeps getting reused."
+      ]
+    },
+    howto: {
+      kicker: "Vol. 05",
+      title: "How Kita OS works",
+      paragraphs: [
+        "This website is a fake desktop. Click an icon to open a window. Drag the title bar to move it. The red dot closes it.",
+        "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Games are Minesweeper, Snake, and Tetris. Terminal takes typed commands. Bookshelf is these notes.",
+        "A golden snitch shows up every 40–60 seconds for a few seconds. Catch it if you want. Refresh starts a new session.",
+        "There is a Konami code: up, up, down, down, left, right, left, right, B, A. That opens a VIP box, turns on Matrix rain, and turns off the snow."
       ]
     }
   };
