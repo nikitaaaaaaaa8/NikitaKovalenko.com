@@ -314,19 +314,57 @@
     font-feature-settings: "tnum";
   }
 
+  /* Lightweight snow overlay (pointer-events none — UI still works) */
+  #snow-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9000;
+    pointer-events: none;
+    display: none;
+  }
+
   /* Golden Snitch */
   #snitch {
     position: fixed;
-    font-size: 28px;
+    width: 28px;
+    height: 28px;
     z-index: 9999;
     cursor: pointer;
-    transition: transform 0.1s ease;
+    transition: transform 0.12s ease;
     user-select: none;
     display: none;
-    text-shadow: 0 0 8px #ffd700;
+    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.85));
+    line-height: 0;
+  }
+  #snitch svg {
+    width: 28px;
+    height: 28px;
+    display: block;
+    overflow: visible;
   }
   #snitch:hover {
     transform: scale(1.3) rotate(12deg);
+  }
+  #snitch .wing-l {
+    transform-origin: 9px 12px;
+    animation: snitch-wing-l 0.28s ease-in-out infinite alternate;
+  }
+  #snitch .wing-r {
+    transform-origin: 23px 12px;
+    animation: snitch-wing-r 0.28s ease-in-out infinite alternate;
+  }
+  @keyframes snitch-wing-l {
+    from { transform: rotate(8deg); }
+    to { transform: rotate(-18deg); }
+  }
+  @keyframes snitch-wing-r {
+    from { transform: rotate(-8deg); }
+    to { transform: rotate(18deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #snitch .wing-l, #snitch .wing-r { animation: none; }
   }
 
   .stat {
@@ -607,8 +645,10 @@
       font-size: 9px;
     }
 
-    #snitch {
-      font-size: 22px;
+    #snitch,
+    #snitch svg {
+      width: 22px;
+      height: 22px;
     }
   }
 
@@ -852,7 +892,8 @@
   </div>
 
   <div class="toast" id="toast"></div>
-  <div id="snitch">✨</div>
+  <canvas id="snow-canvas" aria-hidden="true"></canvas>
+  <div id="snitch" role="button" aria-label="Golden Snitch" title="Catch the Snitch"><svg viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">  <defs>    <radialGradient id="snitchBall" cx="35%" cy="30%" r="65%">      <stop offset="0%" stop-color="#fff4b0"/>      <stop offset="45%" stop-color="#ffd54a"/>      <stop offset="100%" stop-color="#c79200"/>    </radialGradient>    <linearGradient id="snitchWing" x1="0" y1="0" x2="1" y2="1">      <stop offset="0%" stop-color="#fff8d6"/>      <stop offset="55%" stop-color="#ffe27a"/>      <stop offset="100%" stop-color="#d4a017"/>    </linearGradient>  </defs>  <g class="wing-l" fill="url(#snitchWing)" stroke="#a87900" stroke-width="0.6">    <path d="M14.2 13.2c-2.2-1.1-5.4-2.8-7.8-3.2-1.3-.2-2.4.4-2.6 1.2-.2.9.6 1.7 1.8 2.1 1.9.6 4.4.7 6.4.7l2.2-.8z"/>    <path d="M13.6 14.6c-2.4-.1-5.2.1-7.1 1.1-1.1.6-1.4 1.6-.7 2.2.7.6 1.9.4 3-.1 1.8-.8 3.7-2 4.8-3.2z" opacity=".9"/>  </g>  <g class="wing-r" fill="url(#snitchWing)" stroke="#a87900" stroke-width="0.6">    <path d="M17.8 13.2c2.2-1.1 5.4-2.8 7.8-3.2 1.3-.2 2.4.4 2.6 1.2.2.9-.6 1.7-1.8 2.1-1.9.6-4.4.7-6.4.7l-2.2-.8z"/>    <path d="M18.4 14.6c2.4-.1 5.2.1 7.1 1.1 1.1.6 1.4 1.6.7 2.2-.7.6-1.9.4-3-.1-1.8-.8-3.7-2-4.8-3.2z" opacity=".9"/>  </g>  <circle cx="16" cy="16" r="5.2" fill="url(#snitchBall)" stroke="#9a7200" stroke-width="0.7"/>  <ellipse cx="14.4" cy="14.6" rx="1.6" ry="1.1" fill="#fff6c8" opacity=".75"/>  <path d="M16 11.2v9.6M12.4 16h7.2" stroke="#a87900" stroke-width="0.55" opacity=".45"/></svg></div>
 
 <script>
 (function () {
@@ -1339,6 +1380,78 @@
     }
   });
 
+  // === Lightweight snow (session only — no reload persistence) ===
+  const snowCanvas = document.getElementById("snow-canvas");
+  let snowing = false;
+  let snowRaf = 0;
+  let snowFlakes = [];
+  let snowCtx = null;
+
+  function resizeSnow() {
+    if (!snowCanvas) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    snowCanvas.width = Math.floor(w * dpr);
+    snowCanvas.height = Math.floor(h * dpr);
+    snowCanvas.style.width = w + "px";
+    snowCanvas.style.height = h + "px";
+    snowCtx = snowCanvas.getContext("2d");
+    if (snowCtx) snowCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function makeFlake(spawnTop) {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    return {
+      x: Math.random() * w,
+      y: spawnTop ? Math.random() * -h * 0.3 : Math.random() * h,
+      r: 0.8 + Math.random() * 2.2,
+      vy: 0.45 + Math.random() * 0.9,
+      vx: -0.25 + Math.random() * 0.5,
+      a: 0.35 + Math.random() * 0.45
+    };
+  }
+
+  function startSnow() {
+    if (!snowCanvas || snowing) return false;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+    snowing = true;
+    snowCanvas.style.display = "block";
+    resizeSnow();
+    const count = Math.max(28, Math.min(55, Math.floor(window.innerWidth / 28)));
+    snowFlakes = Array.from({ length: count }, () => makeFlake(false));
+
+    const tickSnow = () => {
+      if (!snowing || !snowCtx) return;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      snowCtx.clearRect(0, 0, w, h);
+      for (let i = 0; i < snowFlakes.length; i++) {
+        const f = snowFlakes[i];
+        f.x += f.vx;
+        f.y += f.vy;
+        if (f.y > h + 4) {
+          snowFlakes[i] = makeFlake(true);
+          continue;
+        }
+        if (f.x < -4) f.x = w + 4;
+        if (f.x > w + 4) f.x = -4;
+        snowCtx.beginPath();
+        snowCtx.fillStyle = "rgba(235,255,245," + f.a + ")";
+        snowCtx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        snowCtx.fill();
+      }
+      snowRaf = requestAnimationFrame(tickSnow);
+    };
+    snowRaf = requestAnimationFrame(tickSnow);
+    return true;
+  }
+
+  window.addEventListener("resize", () => {
+    if (snowing) resizeSnow();
+  });
+
   // === Golden Snitch Easter Egg ===
   const snitch = document.getElementById("snitch");
   let snitchTimeout;
@@ -1359,7 +1472,7 @@
     const delay = 30000 + Math.random() * 40000;
     setTimeout(() => {
       spawnSnitch();
-     scheduleNextSnitch();
+      scheduleNextSnitch();
     }, delay);
   }
 
@@ -1368,7 +1481,8 @@
       snitch.style.display = "none";
       clearTimeout(snitchTimeout);
       bumpWinning(47);
-      showToast("Caught the Snitch! +47 winning");
+      const snowOn = startSnow();
+      showToast(snowOn ? "Caught the Snitch! It started snowing." : "Caught the Snitch! +47 winning");
     });
 
     setTimeout(() => {
