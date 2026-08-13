@@ -514,6 +514,166 @@
   }
   .secret.show { display: block; }
 
+
+  /* Games app */
+  .games-launcher {
+    display: grid;
+    gap: 10px;
+  }
+  .game-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+    border: 1px solid rgba(57,255,20,.35);
+    background: rgba(57,255,20,.06);
+    color: var(--text);
+    border-radius: 12px;
+    cursor: pointer;
+    font: inherit;
+    transition: .15s ease;
+  }
+  .game-card:hover {
+    background: rgba(57,255,20,.14);
+    border-color: rgba(57,255,20,.65);
+    box-shadow: 0 0 16px rgba(57,255,20,.12);
+  }
+  .game-card .gc-glyph {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    border: 1px solid rgba(57,255,20,.4);
+    background: linear-gradient(180deg, rgba(57,255,20,.16), rgba(0,0,0,.45));
+    color: var(--green);
+  }
+  .game-card .gc-glyph svg { width: 24px; height: 24px; display: block; }
+  .game-card .gc-meta { min-width: 0; }
+  .game-card .gc-title {
+    color: var(--green);
+    font-size: 13px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .game-card .gc-desc {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 2px;
+  }
+
+  .game-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .game-status {
+    font-size: 12px;
+    color: var(--green);
+    font-feature-settings: "tnum";
+  }
+  .game-toolbar .row { margin-top: 0; }
+
+  .ms-board {
+    display: grid;
+    grid-template-columns: repeat(9, 28px);
+    gap: 2px;
+    width: max-content;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  .ms-cell {
+    width: 28px;
+    height: 28px;
+    border: 1px solid rgba(57,255,20,.28);
+    background: rgba(57,255,20,.08);
+    color: var(--green);
+    border-radius: 4px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 0;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ms-cell:hover:not(.open):not(.boom) {
+    background: rgba(57,255,20,.18);
+  }
+  .ms-cell.open {
+    background: rgba(0,0,0,.45);
+    border-color: rgba(57,255,20,.12);
+    cursor: default;
+  }
+  .ms-cell.flag {
+    color: #ffb020;
+    background: rgba(255,176,32,.12);
+  }
+  .ms-cell.boom {
+    background: rgba(255,77,77,.25);
+    border-color: rgba(255,77,77,.55);
+    color: var(--danger);
+  }
+  .ms-cell.n1 { color: #5ec8ff; }
+  .ms-cell.n2 { color: #39ff14; }
+  .ms-cell.n3 { color: #ffb020; }
+  .ms-cell.n4 { color: #b48cff; }
+  .ms-cell.n5 { color: #ff6b6b; }
+
+  .game-canvas-wrap {
+    display: flex;
+    justify-content: center;
+    touch-action: none;
+  }
+  #snake-canvas, #tetris-canvas {
+    border: 1px solid rgba(57,255,20,.35);
+    background: #050805;
+    border-radius: 6px;
+    image-rendering: pixelated;
+    max-width: 100%;
+    display: block;
+  }
+  .game-pad {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(44px, 1fr));
+    gap: 6px;
+    max-width: 180px;
+    margin: 12px auto 0;
+  }
+  .game-pad .btn {
+    min-height: 42px;
+    padding: 8px 6px;
+    font-size: 14px;
+  }
+  .game-pad .pad-up { grid-column: 2; grid-row: 1; }
+  .game-pad .pad-left { grid-column: 1; grid-row: 2; }
+  .game-pad .pad-down { grid-column: 2; grid-row: 2; }
+  .game-pad .pad-right { grid-column: 3; grid-row: 2; }
+  .game-pad .pad-rot {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+  .game-hint {
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  @media (max-width: 700px) {
+    .ms-board { grid-template-columns: repeat(9, 26px); }
+    .ms-cell { width: 26px; height: 26px; font-size: 11px; }
+    .game-pad { max-width: 200px; }
+  }
+
   /* Mobile optimization — keep windows draggable (no !important position locks) */
   .titlebar[data-drag] {
     touch-action: none;
@@ -696,6 +856,10 @@
         <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14"/><path d="M9.5 4.5h5"/><path d="M8 8l.8 11.2A1.5 1.5 0 0 0 10.3 20.5h3.4a1.5 1.5 0 0 0 1.5-1.3L16 8"/><path d="M10 11.5v5"/><path d="M14 11.5v5"/></svg></div>
         <div class="label">Trash</div>
       </div>
+      <div class="icon" tabindex="0" data-open="games">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="8.2" width="17" height="9.6" rx="3.2"/><path d="M8 12.2v2.2"/><path d="M6.9 13.3h2.2"/><circle cx="15.2" cy="11.6" r="0.95" fill="currentColor" stroke="none"/><circle cx="17.3" cy="13.8" r="0.95" fill="currentColor" stroke="none"/><path d="M9.5 8.2c0-1.7 1.1-3.2 2.5-3.2s2.5 1.5 2.5 3.2" opacity=".7"/><path d="M4.8 10.2H3.2" opacity=".55"/><path d="M20.8 10.2h1.6" opacity=".55"/></svg></div>
+        <div class="label">Games</div>
+      </div>
       <div class="icon" tabindex="0" data-link="https://dronestuff.io" role="link" aria-label="Open DroneStuff.io">
         <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="6" r="2.2"/><circle cx="18.5" cy="6" r="2.2"/><circle cx="5.5" cy="18" r="2.2"/><circle cx="18.5" cy="18" r="2.2"/><path d="M7.4 6.8l3.2 3.1"/><path d="M16.6 6.8l-3.2 3.1"/><path d="M7.4 17.2l3.2-3.1"/><path d="M16.6 17.2l-3.2-3.1"/><rect x="9.2" y="9.2" width="5.6" height="5.6" rx="1.2"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg></div>
         <div class="label">DroneStuff</div>
@@ -875,6 +1039,117 @@
         <p class="muted" style="margin-top:12px; font-size:11px;">Click a book to open. PDFs coming later.</p>
       </div>
     </section>
+
+    <section class="window" id="win-games" style="top:100px; left:160px; width:360px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="games"></div>
+          <div class="dot min" data-close="games"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Games</div>
+      </div>
+      <div class="content">
+        <p class="green">ARCADE FOLDER // PICK YOUR POISON</p>
+        <p class="muted" style="margin-bottom:12px;">Lightweight classics. Keyboard on desktop, on-screen pads on mobile.</p>
+        <div class="games-launcher">
+          <button type="button" class="game-card" data-open="minesweeper">
+            <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6.2"/><path d="M12 3.5v2"/><path d="M12 18.5v2"/><path d="M3.5 12h2"/><path d="M18.5 12h2"/><path d="M6.2 6.2l1.4 1.4"/><path d="M16.4 16.4l1.4 1.4"/><circle cx="10.5" cy="10.2" r="1" fill="currentColor" stroke="none"/></svg></div>
+            <div class="gc-meta"><div class="gc-title">Minesweeper</div><div class="gc-desc">9×9 · 10 mines · tap to clear</div></div>
+          </button>
+          <button type="button" class="game-card" data-open="snake">
+            <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15.5h7.5a3 3 0 0 0 0-6H11"/><path d="M11 9.5H9a3 3 0 1 1 0-6h8.5"/><circle cx="18.2" cy="6.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="5" cy="15.5" r="1.3" fill="currentColor" stroke="none"/></svg></div>
+            <div class="gc-meta"><div class="gc-title">Snake</div><div class="gc-desc">Eat. Grow. Don’t hit walls.</div></div>
+          </button>
+          <button type="button" class="game-card" data-open="tetris">
+            <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3.5" width="6" height="3.2" rx="0.6"/><rect x="6" y="6.7" width="6" height="3.2" rx="0.6"/><rect x="12" y="6.7" width="6" height="3.2" rx="0.6"/><rect x="3.5" y="13.5" width="3.5" height="3.5" rx="0.5"/><rect x="7.2" y="13.5" width="3.5" height="3.5" rx="0.5"/><rect x="10.9" y="13.5" width="3.5" height="3.5" rx="0.5"/><rect x="14.6" y="13.5" width="3.5" height="3.5" rx="0.5"/><rect x="7.2" y="17.2" width="3.5" height="3.5" rx="0.5"/><rect x="10.9" y="17.2" width="3.5" height="3.5" rx="0.5"/></svg></div>
+            <div class="gc-meta"><div class="gc-title">Tetris</div><div class="gc-desc">Stack blocks. Clear lines.</div></div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="window" id="win-minesweeper" style="top:70px; left:200px; width:340px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="minesweeper"></div>
+          <div class="dot min" data-close="minesweeper"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Minesweeper</div>
+      </div>
+      <div class="content">
+        <div class="game-toolbar">
+          <div class="game-status" id="msStatus">Mines: 10</div>
+          <div class="row">
+            <button type="button" class="btn secondary" id="msFlagBtn" aria-pressed="false">Flag</button>
+            <button type="button" class="btn" id="msRestart">Restart</button>
+          </div>
+        </div>
+        <div class="ms-board" id="msBoard" aria-label="Minesweeper board"></div>
+        <p class="game-hint">Tap/click reveal · right-click or Flag mode to mark</p>
+      </div>
+    </section>
+
+    <section class="window" id="win-snake" style="top:80px; left:240px; width:360px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="snake"></div>
+          <div class="dot min" data-close="snake"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Snake</div>
+      </div>
+      <div class="content">
+        <div class="game-toolbar">
+          <div class="game-status" id="snakeStatus">Score: 0</div>
+          <div class="row">
+            <button type="button" class="btn" id="snakeRestart">Restart</button>
+          </div>
+        </div>
+        <div class="game-canvas-wrap">
+          <canvas id="snake-canvas" width="280" height="280" aria-label="Snake game"></canvas>
+        </div>
+        <div class="game-pad" id="snakePad">
+          <button type="button" class="btn pad-up" data-dir="up" aria-label="Up">▲</button>
+          <button type="button" class="btn pad-left" data-dir="left" aria-label="Left">◀</button>
+          <button type="button" class="btn pad-down" data-dir="down" aria-label="Down">▼</button>
+          <button type="button" class="btn pad-right" data-dir="right" aria-label="Right">▶</button>
+        </div>
+        <p class="game-hint">Arrows / WASD · die on wall</p>
+      </div>
+    </section>
+
+    <section class="window" id="win-tetris" style="top:60px; left:280px; width:340px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="tetris"></div>
+          <div class="dot min" data-close="tetris"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Tetris</div>
+      </div>
+      <div class="content">
+        <div class="game-toolbar">
+          <div class="game-status" id="tetrisStatus">Score: 0 · Lines: 0</div>
+          <div class="row">
+            <button type="button" class="btn" id="tetrisRestart">Restart</button>
+          </div>
+        </div>
+        <div class="game-canvas-wrap">
+          <canvas id="tetris-canvas" width="200" height="400" aria-label="Tetris game"></canvas>
+        </div>
+        <div class="game-pad" id="tetrisPad">
+          <button type="button" class="btn pad-up" data-act="rotate" aria-label="Rotate">↻</button>
+          <button type="button" class="btn pad-left" data-act="left" aria-label="Left">◀</button>
+          <button type="button" class="btn pad-down" data-act="down" aria-label="Down">▼</button>
+          <button type="button" class="btn pad-right" data-act="right" aria-label="Right">▶</button>
+          <button type="button" class="btn pad-rot secondary" data-act="drop" aria-label="Hard drop">DROP</button>
+        </div>
+        <p class="game-hint">Arrows / WASD · Up/W rotate · Space drop</p>
+      </div>
+    </section>
+
   </div>
 
   <div class="taskbar">
@@ -931,7 +1206,11 @@
     contact: document.getElementById("win-contact"),
     trash: document.getElementById("win-trash"),
     drone: document.getElementById("win-drone"),
-    bookshelf: document.getElementById("win-bookshelf")
+    bookshelf: document.getElementById("win-bookshelf"),
+    games: document.getElementById("win-games"),
+    minesweeper: document.getElementById("win-minesweeper"),
+    snake: document.getElementById("win-snake"),
+    tetris: document.getElementById("win-tetris")
   };
 
   function save() {
@@ -1001,6 +1280,7 @@
       setTimeout(() => termIn.focus(), 50);
     }
     if (name === "stats") ensureApproxLocation();
+    if (typeof onGameWindowOpen === "function") onGameWindowOpen(name);
   }
 
   let geoPromise = null;
@@ -1064,6 +1344,7 @@
     const el = windows[name];
     if (!el) return;
     el.classList.remove("open", "active");
+    if (typeof onGameWindowClose === "function") onGameWindowClose(name);
   }
 
   function bumpWinning(by) {
@@ -1505,6 +1786,627 @@
       bumpWinning(3);
     });
   });
+
+
+
+  // === Games: Minesweeper / Snake / Tetris ===
+  function gameWindowOpen(name) {
+    return !!(windows[name] && windows[name].classList.contains("open"));
+  }
+
+  // --- Minesweeper ---
+  const MS_W = 9, MS_H = 9, MS_MINES = 10;
+  const msBoardEl = document.getElementById("msBoard");
+  const msStatusEl = document.getElementById("msStatus");
+  const msFlagBtn = document.getElementById("msFlagBtn");
+  let msGrid = [];
+  let msAlive = false;
+  let msWon = false;
+  let msFlagMode = false;
+  let msFlags = 0;
+  let msRevealed = 0;
+  let msStarted = false;
+  let msTimer = 0;
+  let msTimerId = 0;
+
+  function msStopTimer() {
+    if (msTimerId) { clearInterval(msTimerId); msTimerId = 0; }
+  }
+
+  function msUpdateStatus() {
+    if (!msStatusEl) return;
+    const left = Math.max(0, MS_MINES - msFlags);
+    if (!msAlive && msStarted && !msWon) {
+      msStatusEl.textContent = "Boom · " + msTimer + "s";
+    } else if (msWon) {
+      msStatusEl.textContent = "Cleared · " + msTimer + "s";
+    } else {
+      msStatusEl.textContent = "Mines: " + left + " · " + msTimer + "s";
+    }
+  }
+
+  function msNeighbors(x, y) {
+    const out = [];
+    for (let dy = -1; dy <= 1; dy++) {
+      for (let dx = -1; dx <= 1; dx++) {
+        if (!dx && !dy) continue;
+        const nx = x + dx, ny = y + dy;
+        if (nx >= 0 && nx < MS_W && ny >= 0 && ny < MS_H) out.push(msGrid[ny][nx]);
+      }
+    }
+    return out;
+  }
+
+  function msPlaceMines(sx, sy) {
+    let placed = 0;
+    while (placed < MS_MINES) {
+      const x = Math.floor(Math.random() * MS_W);
+      const y = Math.floor(Math.random() * MS_H);
+      if (Math.abs(x - sx) <= 1 && Math.abs(y - sy) <= 1) continue;
+      const c = msGrid[y][x];
+      if (c.mine) continue;
+      c.mine = true;
+      placed++;
+    }
+    for (let y = 0; y < MS_H; y++) {
+      for (let x = 0; x < MS_W; x++) {
+        const c = msGrid[y][x];
+        if (c.mine) { c.n = -1; continue; }
+        c.n = msNeighbors(x, y).filter(o => o.mine).length;
+      }
+    }
+  }
+
+  function msRenderCell(c) {
+    const el = c.el;
+    el.className = "ms-cell";
+    el.textContent = "";
+    if (c.flag) {
+      el.classList.add("flag");
+      el.textContent = "F";
+      return;
+    }
+    if (!c.open) return;
+    el.classList.add("open");
+    if (c.mine) {
+      el.classList.add("boom");
+      el.textContent = "*";
+      return;
+    }
+    if (c.n > 0) {
+      el.classList.add("n" + Math.min(5, c.n));
+      el.textContent = String(c.n);
+    }
+  }
+
+  function msReveal(c) {
+    if (!msAlive || c.open || c.flag) return;
+    c.open = true;
+    msRevealed++;
+    msRenderCell(c);
+    if (c.mine) {
+      msAlive = false;
+      msStopTimer();
+      for (let y = 0; y < MS_H; y++) {
+        for (let x = 0; x < MS_W; x++) {
+          const o = msGrid[y][x];
+          if (o.mine) { o.open = true; msRenderCell(o); }
+        }
+      }
+      msUpdateStatus();
+      showToast("Mine hit. Skill issue.");
+      return;
+    }
+    if (c.n === 0) {
+      msNeighbors(c.x, c.y).forEach(msReveal);
+    }
+    if (msRevealed === MS_W * MS_H - MS_MINES) {
+      msWon = true;
+      msAlive = false;
+      msStopTimer();
+      msUpdateStatus();
+      showToast("Minesweeper cleared. +10 winning");
+      bumpWinning(10);
+    } else {
+      msUpdateStatus();
+    }
+  }
+
+  function msToggleFlag(c) {
+    if (!msAlive || c.open) return;
+    c.flag = !c.flag;
+    msFlags += c.flag ? 1 : -1;
+    msRenderCell(c);
+    msUpdateStatus();
+  }
+
+  function msReset() {
+    msStopTimer();
+    msAlive = true;
+    msWon = false;
+    msFlags = 0;
+    msRevealed = 0;
+    msStarted = false;
+    msTimer = 0;
+    msGrid = [];
+    if (!msBoardEl) return;
+    msBoardEl.innerHTML = "";
+    for (let y = 0; y < MS_H; y++) {
+      const row = [];
+      for (let x = 0; x < MS_W; x++) {
+        const el = document.createElement("button");
+        el.type = "button";
+        el.className = "ms-cell";
+        el.setAttribute("aria-label", "Cell " + (x + 1) + "," + (y + 1));
+        const cell = { x, y, mine: false, open: false, flag: false, n: 0, el };
+        let pressTimer = 0;
+        let longPressed = false;
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          if (longPressed) { longPressed = false; return; }
+          if (!msAlive) return;
+          if (!msStarted) {
+            msPlaceMines(x, y);
+            msStarted = true;
+            msTimerId = setInterval(() => { msTimer++; msUpdateStatus(); }, 1000);
+          }
+          if (msFlagMode) msToggleFlag(cell);
+          else msReveal(cell);
+        });
+        el.addEventListener("contextmenu", (e) => {
+          e.preventDefault();
+          if (!msStarted) return;
+          msToggleFlag(cell);
+        });
+        el.addEventListener("pointerdown", (e) => {
+          if (e.pointerType === "touch") {
+            longPressed = false;
+            pressTimer = setTimeout(() => {
+              pressTimer = 0;
+              longPressed = true;
+              if (!msStarted) {
+                msPlaceMines(x, y);
+                msStarted = true;
+                msTimerId = setInterval(() => { msTimer++; msUpdateStatus(); }, 1000);
+              }
+              msToggleFlag(cell);
+            }, 420);
+          }
+        });
+        el.addEventListener("pointerup", () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = 0; } });
+        el.addEventListener("pointerleave", () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = 0; } });
+        el.addEventListener("pointercancel", () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = 0; } });
+        msBoardEl.appendChild(el);
+        row.push(cell);
+      }
+      msGrid.push(row);
+    }
+    msUpdateStatus();
+  }
+
+  if (msFlagBtn) {
+    msFlagBtn.addEventListener("click", () => {
+      msFlagMode = !msFlagMode;
+      msFlagBtn.setAttribute("aria-pressed", msFlagMode ? "true" : "false");
+      msFlagBtn.classList.toggle("secondary", !msFlagMode);
+      msFlagBtn.textContent = msFlagMode ? "Flag ON" : "Flag";
+    });
+  }
+  const msRestartBtn = document.getElementById("msRestart");
+  if (msRestartBtn) msRestartBtn.addEventListener("click", () => { msReset(); showToast("Minesweeper reset"); });
+
+  // --- Snake ---
+  const snakeCanvas = document.getElementById("snake-canvas");
+  const snakeStatus = document.getElementById("snakeStatus");
+  const snakeCtx = snakeCanvas ? snakeCanvas.getContext("2d") : null;
+  const SN_COLS = 20, SN_ROWS = 20;
+  let snCell = 14;
+  let snSnake = [];
+  let snDir = { x: 1, y: 0 };
+  let snNext = { x: 1, y: 0 };
+  let snFood = { x: 10, y: 10 };
+  let snScore = 0;
+  let snAlive = false;
+  let snTimer = 0;
+  let snRunning = false;
+
+  function snPlaceFood() {
+    const taken = new Set(snSnake.map(p => p.x + "," + p.y));
+    let x, y, guard = 0;
+    do {
+      x = Math.floor(Math.random() * SN_COLS);
+      y = Math.floor(Math.random() * SN_ROWS);
+      guard++;
+    } while (taken.has(x + "," + y) && guard < 400);
+    snFood = { x, y };
+  }
+
+  function snDraw() {
+    if (!snakeCtx || !snakeCanvas) return;
+    const w = snakeCanvas.width, h = snakeCanvas.height;
+    snCell = Math.floor(Math.min(w / SN_COLS, h / SN_ROWS));
+    snakeCtx.fillStyle = "#050805";
+    snakeCtx.fillRect(0, 0, w, h);
+    snakeCtx.strokeStyle = "rgba(57,255,20,0.06)";
+    snakeCtx.lineWidth = 1;
+    for (let i = 0; i <= SN_COLS; i++) {
+      snakeCtx.beginPath();
+      snakeCtx.moveTo(i * snCell + 0.5, 0);
+      snakeCtx.lineTo(i * snCell + 0.5, SN_ROWS * snCell);
+      snakeCtx.stroke();
+    }
+    for (let j = 0; j <= SN_ROWS; j++) {
+      snakeCtx.beginPath();
+      snakeCtx.moveTo(0, j * snCell + 0.5);
+      snakeCtx.lineTo(SN_COLS * snCell, j * snCell + 0.5);
+      snakeCtx.stroke();
+    }
+    snakeCtx.fillStyle = "#ffb020";
+    snakeCtx.fillRect(snFood.x * snCell + 1, snFood.y * snCell + 1, snCell - 2, snCell - 2);
+    snSnake.forEach((p, i) => {
+      snakeCtx.fillStyle = i === 0 ? "#39ff14" : "rgba(57,255,20,0.75)";
+      snakeCtx.fillRect(p.x * snCell + 1, p.y * snCell + 1, snCell - 2, snCell - 2);
+    });
+  }
+
+  function snUpdateStatus() {
+    if (snakeStatus) snakeStatus.textContent = snAlive ? ("Score: " + snScore) : ("Game over · Score: " + snScore);
+  }
+
+  function snTick() {
+    if (!snRunning || !snAlive) return;
+    snDir = snNext;
+    const head = snSnake[0];
+    const nx = head.x + snDir.x;
+    const ny = head.y + snDir.y;
+    if (nx < 0 || ny < 0 || nx >= SN_COLS || ny >= SN_ROWS) {
+      snAlive = false; snStop(); snUpdateStatus(); showToast("Snake crashed. Score " + snScore); return;
+    }
+    if (snSnake.some(p => p.x === nx && p.y === ny)) {
+      snAlive = false; snStop(); snUpdateStatus(); showToast("Snake crashed. Score " + snScore); return;
+    }
+    snSnake.unshift({ x: nx, y: ny });
+    if (nx === snFood.x && ny === snFood.y) {
+      snScore += 1;
+      snPlaceFood();
+    } else {
+      snSnake.pop();
+    }
+    snUpdateStatus();
+    snDraw();
+  }
+
+  function snStop() {
+    snRunning = false;
+    if (snTimer) { clearInterval(snTimer); snTimer = 0; }
+  }
+
+  function snStartLoop() {
+    snStop();
+    if (!gameWindowOpen("snake")) return;
+    snRunning = true;
+    snTimer = setInterval(snTick, 110);
+    snDraw();
+  }
+
+  function snReset() {
+    snSnake = [{ x: 8, y: 10 }, { x: 7, y: 10 }, { x: 6, y: 10 }];
+    snDir = { x: 1, y: 0 };
+    snNext = { x: 1, y: 0 };
+    snScore = 0;
+    snAlive = true;
+    snPlaceFood();
+    snUpdateStatus();
+    snDraw();
+    snStartLoop();
+  }
+
+  function snSetDir(dx, dy) {
+    if (!snAlive) return;
+    if (dx === -snDir.x && dy === -snDir.y) return;
+    snNext = { x: dx, y: dy };
+  }
+
+  const snakePad = document.getElementById("snakePad");
+  if (snakePad) {
+    snakePad.querySelectorAll("[data-dir]").forEach(btn => {
+      const map = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const d = map[btn.getAttribute("data-dir")];
+        if (d) snSetDir(d[0], d[1]);
+      });
+    });
+  }
+  const snakeRestart = document.getElementById("snakeRestart");
+  if (snakeRestart) snakeRestart.addEventListener("click", () => { snReset(); showToast("Snake reset"); });
+
+  // --- Tetris ---
+  const tetrisCanvas = document.getElementById("tetris-canvas");
+  const tetrisStatus = document.getElementById("tetrisStatus");
+  const tCtx = tetrisCanvas ? tetrisCanvas.getContext("2d") : null;
+  const T_W = 10, T_H = 20;
+  const T_SHAPES = {
+    I: [[1,1,1,1]],
+    J: [[1,0,0],[1,1,1]],
+    L: [[0,0,1],[1,1,1]],
+    O: [[1,1],[1,1]],
+    S: [[0,1,1],[1,1,0]],
+    T: [[0,1,0],[1,1,1]],
+    Z: [[1,1,0],[0,1,1]]
+  };
+  const T_COLORS = {
+    I: "#5ec8ff", J: "#6b8cff", L: "#ffb020", O: "#ffe066",
+    S: "#39ff14", T: "#b48cff", Z: "#ff6b6b"
+  };
+  const T_KEYS = Object.keys(T_SHAPES);
+  let tBoard = [];
+  let tPiece = null;
+  let tScore = 0;
+  let tLines = 0;
+  let tAlive = false;
+  let tTimer = 0;
+  let tRunning = false;
+  let tCell = 20;
+
+  function tEmptyBoard() {
+    return Array.from({ length: T_H }, () => Array(T_W).fill(null));
+  }
+
+  function tSpawn() {
+    const type = T_KEYS[Math.floor(Math.random() * T_KEYS.length)];
+    const shape = T_SHAPES[type].map(r => r.slice());
+    tPiece = {
+      type,
+      shape,
+      x: Math.floor((T_W - shape[0].length) / 2),
+      y: 0
+    };
+    if (tCollides(tPiece.x, tPiece.y, tPiece.shape)) {
+      tAlive = false;
+      tStop();
+      tDraw();
+      tUpdateStatus();
+      showToast("Tetris over. Score " + tScore);
+      return false;
+    }
+    return true;
+  }
+
+  function tCollides(x, y, shape) {
+    for (let r = 0; r < shape.length; r++) {
+      for (let c = 0; c < shape[r].length; c++) {
+        if (!shape[r][c]) continue;
+        const nx = x + c, ny = y + r;
+        if (nx < 0 || nx >= T_W || ny >= T_H) return true;
+        if (ny >= 0 && tBoard[ny][nx]) return true;
+      }
+    }
+    return false;
+  }
+
+  function tRotate(shape) {
+    const h = shape.length, w = shape[0].length;
+    const out = Array.from({ length: w }, () => Array(h).fill(0));
+    for (let r = 0; r < h; r++) {
+      for (let c = 0; c < w; c++) out[c][h - 1 - r] = shape[r][c];
+    }
+    return out;
+  }
+
+  function tLock() {
+    const { shape, x, y, type } = tPiece;
+    for (let r = 0; r < shape.length; r++) {
+      for (let c = 0; c < shape[r].length; c++) {
+        if (!shape[r][c]) continue;
+        const ny = y + r, nx = x + c;
+        if (ny >= 0) tBoard[ny][nx] = type;
+      }
+    }
+    let cleared = 0;
+    for (let r = T_H - 1; r >= 0; r--) {
+      if (tBoard[r].every(Boolean)) {
+        tBoard.splice(r, 1);
+        tBoard.unshift(Array(T_W).fill(null));
+        cleared++;
+        r++;
+      }
+    }
+    if (cleared) {
+      tLines += cleared;
+      tScore += [0, 100, 300, 500, 800][cleared] || cleared * 200;
+    }
+    tSpawn();
+  }
+
+  function tUpdateStatus() {
+    if (!tetrisStatus) return;
+    tetrisStatus.textContent = (tAlive ? "Score: " : "Game over · Score: ") + tScore + " · Lines: " + tLines;
+  }
+
+  function tDrawCell(x, y, color) {
+    tCtx.fillStyle = color;
+    tCtx.fillRect(x * tCell + 1, y * tCell + 1, tCell - 2, tCell - 2);
+    tCtx.fillStyle = "rgba(255,255,255,0.12)";
+    tCtx.fillRect(x * tCell + 1, y * tCell + 1, tCell - 2, 3);
+  }
+
+  function tDraw() {
+    if (!tCtx || !tetrisCanvas) return;
+    tCell = Math.floor(tetrisCanvas.width / T_W);
+    tCtx.fillStyle = "#050805";
+    tCtx.fillRect(0, 0, tetrisCanvas.width, tetrisCanvas.height);
+    tCtx.strokeStyle = "rgba(57,255,20,0.06)";
+    for (let i = 0; i <= T_W; i++) {
+      tCtx.beginPath(); tCtx.moveTo(i * tCell + 0.5, 0); tCtx.lineTo(i * tCell + 0.5, T_H * tCell); tCtx.stroke();
+    }
+    for (let j = 0; j <= T_H; j++) {
+      tCtx.beginPath(); tCtx.moveTo(0, j * tCell + 0.5); tCtx.lineTo(T_W * tCell, j * tCell + 0.5); tCtx.stroke();
+    }
+    for (let y = 0; y < T_H; y++) {
+      for (let x = 0; x < T_W; x++) {
+        if (tBoard[y][x]) tDrawCell(x, y, T_COLORS[tBoard[y][x]] || "#39ff14");
+      }
+    }
+    if (tPiece && tAlive) {
+      const { shape, x, y, type } = tPiece;
+      for (let r = 0; r < shape.length; r++) {
+        for (let c = 0; c < shape[r].length; c++) {
+          if (shape[r][c] && y + r >= 0) tDrawCell(x + c, y + r, T_COLORS[type]);
+        }
+      }
+    }
+  }
+
+  function tTick() {
+    if (!tRunning || !tAlive || !tPiece) return;
+    if (!tCollides(tPiece.x, tPiece.y + 1, tPiece.shape)) {
+      tPiece.y += 1;
+    } else {
+      tLock();
+    }
+    tUpdateStatus();
+    tDraw();
+  }
+
+  function tStop() {
+    tRunning = false;
+    if (tTimer) { clearInterval(tTimer); tTimer = 0; }
+  }
+
+  function tStartLoop() {
+    tStop();
+    if (!gameWindowOpen("tetris") || !tAlive) return;
+    tRunning = true;
+    const speed = Math.max(140, 520 - tLines * 18);
+    tTimer = setInterval(tTick, speed);
+    tDraw();
+  }
+
+  function tReset() {
+    tBoard = tEmptyBoard();
+    tScore = 0;
+    tLines = 0;
+    tAlive = true;
+    tSpawn();
+    tUpdateStatus();
+    tStartLoop();
+  }
+
+  function tMove(dx) {
+    if (!tAlive || !tPiece) return;
+    if (!tCollides(tPiece.x + dx, tPiece.y, tPiece.shape)) {
+      tPiece.x += dx;
+      tDraw();
+    }
+  }
+
+  function tSoft() {
+    if (!tAlive || !tPiece) return;
+    if (!tCollides(tPiece.x, tPiece.y + 1, tPiece.shape)) {
+      tPiece.y += 1;
+      tScore += 1;
+      tUpdateStatus();
+      tDraw();
+    } else {
+      tLock();
+      tUpdateStatus();
+      tDraw();
+      tStartLoop();
+    }
+  }
+
+  function tHard() {
+    if (!tAlive || !tPiece) return;
+    while (!tCollides(tPiece.x, tPiece.y + 1, tPiece.shape)) {
+      tPiece.y += 1;
+      tScore += 2;
+    }
+    tLock();
+    tUpdateStatus();
+    tDraw();
+    tStartLoop();
+  }
+
+  function tDoRotate() {
+    if (!tAlive || !tPiece) return;
+    const next = tRotate(tPiece.shape);
+    const kicks = [0, -1, 1, -2, 2];
+    for (const k of kicks) {
+      if (!tCollides(tPiece.x + k, tPiece.y, next)) {
+        tPiece.x += k;
+        tPiece.shape = next;
+        tDraw();
+        return;
+      }
+    }
+  }
+
+  const tetrisPad = document.getElementById("tetrisPad");
+  if (tetrisPad) {
+    tetrisPad.querySelectorAll("[data-act]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const act = btn.getAttribute("data-act");
+        if (act === "left") tMove(-1);
+        else if (act === "right") tMove(1);
+        else if (act === "down") tSoft();
+        else if (act === "rotate") tDoRotate();
+        else if (act === "drop") tHard();
+      });
+    });
+  }
+  const tetrisRestart = document.getElementById("tetrisRestart");
+  if (tetrisRestart) tetrisRestart.addEventListener("click", () => { tReset(); showToast("Tetris reset"); });
+
+  window.addEventListener("keydown", (e) => {
+    const tag = (e.target && e.target.tagName) || "";
+    if (tag === "INPUT" || tag === "TEXTAREA") return;
+    const key = e.key;
+    if (gameWindowOpen("snake") && windows.snake.classList.contains("active")) {
+      let handled = true;
+      if (key === "ArrowUp" || key === "w" || key === "W") snSetDir(0, -1);
+      else if (key === "ArrowDown" || key === "s" || key === "S") snSetDir(0, 1);
+      else if (key === "ArrowLeft" || key === "a" || key === "A") snSetDir(-1, 0);
+      else if (key === "ArrowRight" || key === "d" || key === "D") snSetDir(1, 0);
+      else handled = false;
+      if (handled) e.preventDefault();
+    }
+    if (gameWindowOpen("tetris") && windows.tetris.classList.contains("active")) {
+      let handled = true;
+      if (key === "ArrowLeft" || key === "a" || key === "A") tMove(-1);
+      else if (key === "ArrowRight" || key === "d" || key === "D") tMove(1);
+      else if (key === "ArrowDown" || key === "s" || key === "S") tSoft();
+      else if (key === "ArrowUp" || key === "w" || key === "W") tDoRotate();
+      else if (key === " ") tHard();
+      else handled = false;
+      if (handled) e.preventDefault();
+    }
+  });
+
+  function onGameWindowOpen(name) {
+    if (name === "minesweeper") {
+      if (!msGrid.length) msReset();
+      else {
+        msUpdateStatus();
+        if (msAlive && msStarted && !msTimerId) {
+          msTimerId = setInterval(() => { msTimer++; msUpdateStatus(); }, 1000);
+        }
+      }
+    } else if (name === "snake") {
+      if (!snSnake.length || !snAlive) snReset();
+      else snStartLoop();
+    } else if (name === "tetris") {
+      if (!tBoard.length || !tAlive) tReset();
+      else tStartLoop();
+    }
+  }
+
+  function onGameWindowClose(name) {
+    if (name === "minesweeper") msStopTimer();
+    if (name === "snake") snStop();
+    if (name === "tetris") tStop();
+  }
 
 
   renderStats();
