@@ -166,10 +166,17 @@
     cursor: grab;
   }
   .titlebar:active { cursor: grabbing; }
-  .dots { display: flex; gap: 6px; }
+  .dots { display: flex; gap: 6px; cursor: pointer; }
   .dot {
     width: 11px; height: 11px; border-radius: 50%;
     border: 1px solid rgba(255,255,255,.15);
+    cursor: pointer;
+  }
+  .titlebar:active .dots,
+  .titlebar:active .dot,
+  .titlebar[data-drag]:active .dots,
+  .titlebar[data-drag]:active .dot {
+    cursor: pointer;
   }
   .dot.close { background: #ff5f57; }
   .dot.min { background: #febc2e; }
@@ -797,6 +804,11 @@
     cursor: grab;
   }
   .titlebar[data-drag]:active { cursor: grabbing; }
+  .titlebar[data-drag] .dots,
+  .titlebar[data-drag] .dot { cursor: pointer; }
+  button, a, [data-open], [data-link], [data-close], [data-book], [data-act] {
+    cursor: pointer;
+  }
   body.dragging {
     overflow: hidden;
     touch-action: none;
