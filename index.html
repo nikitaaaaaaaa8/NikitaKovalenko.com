@@ -1693,6 +1693,7 @@
   function startMatrix() {
     if (!matrixCanvas || matrixOn) return false;
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+    stopSnow();
     matrixOn = true;
     matrixCanvas.style.display = "block";
     resizeMatrix();
@@ -1738,7 +1739,7 @@
     winIndex += 50;
     renderStats();
     save();
-    showToast(matrix ? "VIP: Bookshelf unlocked. Matrix incoming." : "VIP: Bookshelf unlocked.");
+    showToast(matrix ? "VIP: Bookshelf unlocked. Matrix on, snow off." : "VIP: Bookshelf unlocked.");
   }
 
   if (localStorage.getItem("kita_vip") === "1") unlockBookshelf(false);
@@ -1848,6 +1849,15 @@
     };
     snowRaf = requestAnimationFrame(tickSnow);
     return true;
+  }
+
+  function stopSnow() {
+    snowing = false;
+    if (snowRaf) cancelAnimationFrame(snowRaf);
+    snowRaf = 0;
+    snowFlakes = [];
+    if (snowCanvas) snowCanvas.style.display = "none";
+    if (snowCtx) snowCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
   }
 
   window.addEventListener("resize", () => {
