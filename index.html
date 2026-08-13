@@ -307,6 +307,14 @@
     color: #d8f5d8;
   }
   .book-reader .br-body p:last-child { margin-bottom: 0; }
+  .book-reader .br-body img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 8px 0 4px;
+    background: #000;
+  }
   .book-reader .br-empty {
     color: var(--muted);
     font-size: 12px;
@@ -1076,24 +1084,24 @@
         <div class="title">Book_Shelf</div>
       </div>
       <div class="content">
-        <p class="green">PUBLIC STACK // INTERNET CULTURE ZINES</p>
-        <p class="muted" style="margin: 0 0 10px; font-size: 11px;">Click a spine. Short essays. Steal the takes, send the link.</p>
+        <p class="green">BOOKSHELF</p>
+        <p class="muted" style="margin: 0 0 10px; font-size: 11px;">Click a spine to open.</p>
         <div class="bookshelf">
-          <div class="book" data-book="meme" tabindex="0">
-            <div class="book-spine">The art of the meme</div>
+          <div class="book" data-book="game" tabindex="0">
+            <div class="book-spine">Game theory</div>
+          </div>
+          <div class="book" data-book="whoever" tabindex="0">
+            <div class="book-spine">Whoever needs to hear this</div>
+          </div>
+          <div class="book" data-book="evolution" tabindex="0">
+            <div class="book-spine">Theory of evolution</div>
           </div>
           <div class="book" data-book="memetics" tabindex="0">
-            <div class="book-spine">Memetics 101</div>
-          </div>
-          <div class="book" data-book="archive" tabindex="0">
-            <div class="book-spine">Rare Kita Archive</div>
-          </div>
-          <div class="book" data-book="dummies" tabindex="0">
-            <div class="book-spine">Internet culture for dummies</div>
+            <div class="book-spine">Memetics</div>
           </div>
         </div>
         <div class="book-reader" id="bookReader">
-          <div class="br-empty" id="bookReaderEmpty">Pick a volume. They’re all under two minutes.</div>
+          <div class="br-empty" id="bookReaderEmpty">Pick a book.</div>
           <div id="bookReaderMain" hidden>
             <div class="br-kicker" id="bookKicker"></div>
             <h3 id="bookTitle"></h3>
@@ -1953,42 +1961,39 @@
     scheduleNextSnitch();
   }
 
-  // Bookshelf: short internet-culture essays
+  // Bookshelf
   const essays = {
-    meme: {
-      kicker: "Vol. 01  ·  Foreword",
-      title: "The art of the meme",
+    game: {
+      kicker: "Vol. 01",
+      title: "Game theory",
       paragraphs: [
-        "A meme used to be a unit of culture that copied itself. An idea with legs. Then it became a frog, then a reaction image, then the way the internet talks when it doesn’t want to say the thing straight.",
-        "Now the meme is the water. Brands hire people to speak it and still sound like tourists. Politics showed up with a starter pack. Even sincerity comes in a format. If it can be screenshot, it can be a joke, which means it can be a weapon, which means it can be a product.",
-        "The art, if there is one, is knowing when you’re using the language and when the language is using you. Everything after that is just captions."
+        "Game theory looks at decisions where your result depends on what other people do, not just on you.",
+        "The usual example is the prisoner’s dilemma. Two people, two options: cooperate or defect. If both cooperate, they both do fine. If one defects and the other cooperates, the defector does great and the cooperator gets wrecked. If both defect, both do badly. Looking only at yourself, defecting looks safer. That’s how two “smart” choices add up to a worse outcome than trust would have.",
+        "In games that repeat, a simple strategy keeps showing up: start by cooperating, then copy whatever the other person did last round. Be decent first. Don’t be a sucker. Don’t carry the grudge longer than one turn."
       ]
+    },
+    whoever: {
+      kicker: "Vol. 02",
+      title: "Whoever needs to hear this",
+      paragraphs: [
+        "Don’t take life too seriously."
+      ]
+    },
+    evolution: {
+      kicker: "Vol. 03",
+      title: "Theory of evolution",
+      image: "/frog-evolution.jpg",
+      imageAlt: "March of progress, frog to human",
+      paragraphs: []
     },
     memetics: {
-      kicker: "Vol. 02",
-      title: "Memetics 101",
-      paragraphs: [
-        "A meme is not a joke. A joke is the delivery mechanism. The meme is whatever survives contact with a million bored thumbs.",
-        "Formats mutate on purpose. Caption, then no caption, then the same image used as punctuation. If you have to explain it, the organism already died in your mouth.",
-        "The lesson they don’t print: you don’t “make a meme.” You release a strain. The timeline is the petri dish. Screenshots are fossils. Never sell the rare ones. That’s how they stop being rare."
-      ]
-    },
-    archive: {
-      kicker: "Vol. 03",
-      title: "Rare Kita Archive",
-      paragraphs: [
-        "“Rare” used to mean scarce. Then it meant a jpeg of a frog with a watermark and a fake serial number. The archive is not a museum. It’s a folder someone forgot to delete, which is how all internet history actually works.",
-        "What belongs here: screenshots of websites that no longer boot, usernames that got banned for being early, files named final_FINAL2.zip. The rarest object left online is a page that isn’t trying to convert you.",
-        "If you’re reading this, you already have a copy. That’s the whole archive. Pass it on. Don’t restore it. Don’t mint it. Just keep it weird."
-      ]
-    },
-    dummies: {
       kicker: "Vol. 04",
-      title: "Internet culture for dummies",
+      title: "Memetics",
       paragraphs: [
-        "Lurk first. The timeline can smell a tourist. Don’t announce your arrival. Don’t ask where the joke is. Sit in the back until you can quote it without the citation.",
-        "Screenshot is how we cite. Block is a complete sentence. Ratio is not an argument. If the feed is screaming, that’s your cue to touch grass or at least a different tab.",
-        "Aura is a budget. Spend it on taste, not on dunks. And if a website works like an old computer, you already passed the test. Close this book. Go click something."
+        "Memetics is the idea that culture spreads the way genes do: copy, vary, compete.",
+        "Richard Dawkins coined “meme” in 1976 in The Selfish Gene. He shortened the Greek mimeme (something imitated) so it would sound like “gene.” A meme, in that book, is a unit of culture that jumps from brain to brain by imitation: a tune, a phrase, a fashion, a way of building a tool.",
+        "The internet picked up the word and mostly meant image macros, copypasta, and templates. Same loop, smaller unit. A joke gets copied, someone changes a caption, the new version outcompetes the old one, or it dies.",
+        "So memetics is the theory. A meme is the thing being copied. Online, that usually just means the format that keeps getting reused."
       ]
     }
   };
@@ -2008,10 +2013,16 @@
     document.querySelectorAll("#win-bookshelf .book").forEach(b => {
       b.classList.toggle("active", b.getAttribute("data-book") === id);
     });
-    bookKicker.textContent = essay.kicker;
+    bookKicker.textContent = essay.kicker || "";
     bookTitle.textContent = essay.title;
     bookBody.replaceChildren();
-    essay.paragraphs.forEach(para => {
+    if (essay.image) {
+      const img = document.createElement("img");
+      img.src = essay.image;
+      img.alt = essay.imageAlt || essay.title;
+      bookBody.appendChild(img);
+    }
+    (essay.paragraphs || []).forEach(para => {
       const p = document.createElement("p");
       p.textContent = para;
       bookBody.appendChild(p);
@@ -2050,7 +2061,8 @@
     const m = hash.match(/^book=([a-z]+)/i);
     if (!m) return false;
     let id = m[1].toLowerCase();
-    if (id === "art") id = "meme";
+    if (id === "art" || id === "meme") id = "game";
+    if (id === "archive" || id === "dummies") id = "memetics";
     if (!essays[id]) return false;
     unlockBookshelf(false);
     openWindow("bookshelf");
