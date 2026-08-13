@@ -1332,8 +1332,8 @@
   const vipRoom = document.getElementById("vipRoom");
   const wallpaper = document.querySelector(".wallpaper");
 
-  let clicks = Number(localStorage.getItem("kita_clicks") || 0);
-  let winIndex = Number(localStorage.getItem("kita_win") || 100);
+  let clicks = 0;
+  let winIndex = 100;
   let z = 10;
 
   const windows = {
@@ -1351,8 +1351,7 @@
   };
 
   function save() {
-    localStorage.setItem("kita_clicks", String(clicks));
-    localStorage.setItem("kita_win", String(winIndex));
+    // Session-only. Refresh starts clean.
   }
 
   function renderStats() {
@@ -2155,9 +2154,8 @@
     });
     if (bookReaderEmpty) bookReaderEmpty.hidden = true;
     if (bookReaderMain) bookReaderMain.hidden = false;
-    if (pushHash) {
-      try { history.replaceState(null, "", "#book=" + id); } catch (_) {}
-    }
+    // Do not write #book= into the URL on click. Refresh should not reopen Bookshelf.
+    // Shared links still use #book=id via the copy button.
     bumpWinning(2);
   }
 
@@ -2192,10 +2190,11 @@
     if (!essays[id]) return false;
     openWindow("bookshelf");
     openEssay(id, false);
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (_) {}
     return true;
   }
   window.addEventListener("hashchange", () => { openEssayFromHash(); });
-  // Deep links skip the Konami gate so a shared essay actually opens
+  // Shared #book= links open once, then the hash is stripped so refresh is a clean desktop
   setTimeout(() => { openEssayFromHash(); }, 1600);
 
 
