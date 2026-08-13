@@ -2375,8 +2375,14 @@
     });
     if (bookReaderEmpty) bookReaderEmpty.hidden = true;
     if (bookReaderMain) bookReaderMain.hidden = false;
-    // Do not write #book= into the URL on click. Refresh should not reopen Bookshelf.
-    // Shared links still use #book=id via the copy button.
+    const reader = document.getElementById("bookReader");
+    const shelfContent = document.querySelector("#win-bookshelf .content");
+    if (reader) reader.scrollTop = 0;
+    if (shelfContent) shelfContent.scrollTop = 0;
+    requestAnimationFrame(() => {
+      if (reader) reader.scrollTop = 0;
+      if (shelfContent) shelfContent.scrollTop = 0;
+    });
     bumpWinning(2);
   }
 
