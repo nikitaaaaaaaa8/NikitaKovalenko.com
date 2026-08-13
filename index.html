@@ -1638,15 +1638,30 @@
   // konami
   const seq = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
   let progress = 0;
+  function konamiKey(e) {
+    // Prefer physical key codes so layouts / held arrows don't break the code
+    const fromCode = {
+      ArrowUp: "ArrowUp", ArrowDown: "ArrowDown", ArrowLeft: "ArrowLeft", ArrowRight: "ArrowRight",
+      KeyB: "b", KeyA: "a"
+    };
+    if (fromCode[e.code]) return fromCode[e.code];
+    const k = e.key;
+    if (k === "Up" || k === "Down" || k === "Left" || k === "Right") return "Arrow" + k;
+    if (k && k.length === 1) return k.toLowerCase();
+    return k;
+  }
   window.addEventListener("keydown", (e) => {
-    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if (e.repeat) return; // held arrows used to fire extra keydowns and reset the sequence
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (["Shift", "Control", "Alt", "Meta"].includes(e.key)) return;
+    const key = konamiKey(e);
     const wanted = seq[progress];
-    if (key === wanted || (wanted.length === 1 && key === wanted)) {
+    if (key === wanted) {
       progress += 1;
       if (progress === seq.length) {
         progress = 0;
         openWindow("contact");
-        vipRoom.classList.add("show");
+        if (vipRoom) vipRoom.classList.add("show");
         winIndex += 50;
         renderStats();
         save();
@@ -1655,7 +1670,7 @@
     } else {
       progress = key === seq[0] ? 1 : 0;
     }
-  });
+  }, true);
 
   // click anywhere on wallpaper lightly counts
   document.querySelector(".desktop").addEventListener("click", (e) => {
