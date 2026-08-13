@@ -891,6 +891,139 @@
     text-align: center;
   }
 
+
+  /* Paint app */
+  #win-paint {
+    max-width: min(780px, calc(100vw - 24px));
+  }
+  #win-paint .content.paint-content {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+  }
+  .paint-body {
+    display: flex;
+    gap: 8px;
+    min-height: 280px;
+    flex: 1 1 auto;
+  }
+  .paint-tools {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 0 0 auto;
+  }
+  .paint-tool,
+  .paint-size,
+  .paint-act {
+    appearance: none;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(57,255,20,.35);
+    background: rgba(57,255,20,.06);
+    color: var(--green);
+    border-radius: 8px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 10px;
+    line-height: 1;
+    transition: .12s ease;
+  }
+  .paint-tool svg,
+  .paint-act svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
+  .paint-tool:hover,
+  .paint-size:hover,
+  .paint-act:hover {
+    background: rgba(57,255,20,.16);
+    border-color: rgba(57,255,20,.65);
+  }
+  .paint-tool.active,
+  .paint-size.active {
+    background: rgba(57,255,20,.22);
+    border-color: var(--green);
+    box-shadow: 0 0 0 1px rgba(57,255,20,.35), 0 0 10px rgba(57,255,20,.18);
+  }
+  .paint-size { width: 32px; font-size: 10px; color: var(--text); letter-spacing: .02em; }
+  .paint-act { width: auto; min-width: 32px; padding: 0 8px; height: 28px; font-size: 10px; color: var(--text); }
+  .paint-act.danger { color: var(--danger); border-color: rgba(255,77,77,.4); background: rgba(255,77,77,.08); }
+  .paint-stage {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 240px;
+    height: 360px;
+    background: #111;
+    border: 1px solid rgba(57,255,20,.25);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    touch-action: none;
+  }
+  #paint-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    cursor: crosshair;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .paint-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+  }
+  .paint-current {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 2px solid var(--green);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.35);
+    flex: 0 0 auto;
+    background: #000;
+  }
+  .paint-palette {
+    display: grid;
+    grid-template-columns: repeat(12, 16px);
+    gap: 3px;
+    flex: 0 1 auto;
+  }
+  .paint-swatch {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border-radius: 3px;
+    border: 1px solid rgba(255,255,255,.18);
+    cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
+  }
+  .paint-swatch.active {
+    outline: 2px solid var(--green);
+    outline-offset: 1px;
+    border-color: var(--green);
+  }
+  .paint-sizes {
+    display: flex;
+    gap: 4px;
+  }
+  .paint-actions {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+  }
+
+
   @media (max-width: 700px) {
     .ms-board { grid-template-columns: repeat(9, 26px); }
     .ms-cell { width: 26px; height: 26px; font-size: 11px; }
@@ -1062,6 +1195,34 @@
       margin-bottom: 6px;
     }
 
+
+    #win-paint.window.open {
+      max-height: calc(100dvh - 92px);
+    }
+    #win-paint .content.paint-content {
+      max-height: calc(100dvh - 140px);
+      overflow: hidden;
+      padding: 8px;
+    }
+    #win-paint .paint-body {
+      flex-direction: column;
+      min-height: 0;
+      flex: 1 1 auto;
+    }
+    #win-paint .paint-tools {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    #win-paint .paint-stage {
+      min-height: 160px;
+      height: min(42vh, 280px);
+      flex: 1 1 auto;
+    }
+    .paint-palette {
+      grid-template-columns: repeat(8, 16px);
+    }
+    .paint-actions { margin-left: 0; }
+
     #snitch,
     #snitch svg {
       width: 22px;
@@ -1142,6 +1303,10 @@
       <div class="icon" id="icon-weather" tabindex="0" data-open="weather" aria-label="Current weather">
         <div class="glyph" id="weatherGlyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3.2v1.8M12 19v1.8M3.2 12h1.8M19 12h1.8M5.6 5.6l1.3 1.3M17.1 17.1l1.3 1.3M5.6 18.4l1.3-1.3M17.1 6.9l1.3-1.3"/></svg></div>
         <div class="label" id="weatherLabel">Weather</div>
+      </div>
+      <div class="icon" id="icon-paint" tabindex="0" data-open="paint" aria-label="Paint">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.6 12.4c0-4.2 3.4-7.6 7.6-7.6 3.7 0 6.6 2.5 6.6 5.7 0 2-1.3 3.4-2.9 3.4-.9 0-1.5-.6-1.5-1.4 0-.3.1-.7.1-1 0-1.1-.9-1.9-2-1.9-2.4 0-3.5 2-3.5 3.9 0 .9.2 1.7.5 2.5"/><circle cx="8.6" cy="10.3" r="1" fill="currentColor" stroke="none"/><circle cx="12.1" cy="8.5" r="1" fill="currentColor" stroke="none" opacity=".72"/><circle cx="15.6" cy="10.5" r="1" fill="currentColor" stroke="none" opacity=".5"/><path d="M10.6 14.9l6.1-6.1c.7-.7 1.7-.7 2.4 0 .6.7.6 1.7 0 2.4l-6.1 6.1-2.8.6.4-3z"/><path d="M10.8 18.6c-1.4 1.5-3.3 2.1-4.1 1.3-.8-.8-.2-2.7 1.3-4.1"/></svg></div>
+        <div class="label">Paint</div>
       </div>
     </div>
 
@@ -1469,6 +1634,62 @@
       </div>
     </section>
 
+    <section class="window" id="win-paint" style="top:64px; left:150px; width:680px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="paint"></div>
+          <div class="dot min" data-close="paint"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Paint</div>
+      </div>
+      <div class="content paint-content">
+        <div class="paint-body">
+          <div class="paint-tools" role="toolbar" aria-label="Paint tools">
+            <button type="button" class="paint-tool active" data-paint-tool="brush" title="Brush" aria-pressed="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.2 4.8l5 5"/><path d="M15.8 7.2L7 16l-2.4 3.4 3.4-2.4 8.8-8.8c.7-.7.7-1.8 0-2.5-.7-.7-1.8-.7-2.5 0z"/><path d="M6.8 16.4c-1.5 1.6-3.4 2.2-4.1 1.5-.7-.7-.1-2.6 1.5-4.1"/></svg>
+            </button>
+            <button type="button" class="paint-tool" data-paint-tool="eraser" title="Eraser" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.2 16.8L16.5 7.5c.8-.8 2.1-.8 2.9 0l1.1 1.1c.8.8.8 2.1 0 2.9l-8.2 8.2H7.2v-2.9z"/><path d="M9.4 19.7H20"/></svg>
+            </button>
+            <button type="button" class="paint-tool" data-paint-tool="fill" title="Fill" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 13.2l8.2-8.2 6.8 6.8-8.2 8.2H4.5v-6.8z"/><path d="M8.2 9.5l6.8 6.8"/><path d="M17.6 15.2c1.6 0 2.9 1.4 2.9 2.6 0 1.6-1.5 2.6-2.9 3.6-1.4-1-2.9-2-2.9-3.6 0-1.2 1.3-2.6 2.9-2.6z"/></svg>
+            </button>
+            <button type="button" class="paint-tool" data-paint-tool="line" title="Line" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M5 19L19 5"/></svg>
+            </button>
+            <button type="button" class="paint-tool" data-paint-tool="rect" title="Rectangle" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="5" y="6.5" width="14" height="11" rx="1.2"/></svg>
+            </button>
+            <button type="button" class="paint-tool" data-paint-tool="ellipse" title="Ellipse" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><ellipse cx="12" cy="12" rx="8" ry="6"/></svg>
+            </button>
+            <button type="button" class="paint-tool" data-paint-tool="eyedropper" title="Eyedropper" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.2 4.6l4.2 4.2"/><path d="M16.6 6.8L8.4 15l-2.6.8.8-2.6 8.2-8.2c.6-.6 1.6-.6 2.2 0z"/><path d="M7.2 16.4l-2 2"/></svg>
+            </button>
+          </div>
+          <div class="paint-stage">
+            <canvas id="paint-canvas" width="600" height="360" aria-label="Paint canvas"></canvas>
+          </div>
+        </div>
+        <div class="paint-bottom">
+          <div class="paint-current" id="paintCurrent" title="Current color"></div>
+          <div class="paint-palette" id="paintPalette" role="listbox" aria-label="Colors"></div>
+          <div class="paint-sizes" role="group" aria-label="Brush size">
+            <button type="button" class="paint-size" data-paint-size="2">2</button>
+            <button type="button" class="paint-size active" data-paint-size="4">4</button>
+            <button type="button" class="paint-size" data-paint-size="8">8</button>
+            <button type="button" class="paint-size" data-paint-size="16">16</button>
+          </div>
+          <div class="paint-actions">
+            <button type="button" class="paint-act" id="paintUndo" title="Undo last stroke">Undo</button>
+            <button type="button" class="paint-act danger" id="paintClear" title="Clear canvas">Clear</button>
+            <button type="button" class="paint-act" id="paintSave" title="Save PNG">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <div id="desktop-marquee" aria-hidden="true"></div>
   </div>
 
@@ -1490,6 +1711,7 @@
       <button type="button" data-open="games">Games</button>
       <button type="button" data-open="bookshelf">Bookshelf</button>
       <button type="button" data-open="weather">Weather</button>
+      <button type="button" data-open="paint">Paint</button>
       <a data-link="https://dronestuff.io">DroneStuff</a>
       <button type="button" data-open="trash">Trash</button>
     </div>
@@ -1547,7 +1769,8 @@
     minesweeper: document.getElementById("win-minesweeper"),
     snake: document.getElementById("win-snake"),
     tetris: document.getElementById("win-tetris"),
-    weather: document.getElementById("win-weather")
+    weather: document.getElementById("win-weather"),
+    paint: document.getElementById("win-paint")
   };
 
   function save() {
@@ -1689,6 +1912,7 @@
     }
     if (name === "stats") ensureApproxLocation();
     if (typeof onGameWindowOpen === "function") onGameWindowOpen(name);
+    if (name === "paint") onPaintWindowOpen();
   }
 
   let geoPromise = null;
@@ -3165,6 +3389,334 @@
     if (name === "snake") snStop();
     if (name === "tetris") tStop();
   }
+
+  // Paint app — session-only canvas (no localStorage)
+  const paintCanvas = document.getElementById("paint-canvas");
+  const paintCtx = paintCanvas ? paintCanvas.getContext("2d", { willReadFrequently: true }) : null;
+  const paintPaper = "#ffffff";
+  const paintColors = [
+    "#000000", "#808080", "#800000", "#808000", "#008000", "#008080", "#000080", "#800080", "#808040", "#004040", "#0000a0", "#8000ff",
+    "#ffffff", "#c0c0c0", "#ff0000", "#ffff00", "#39ff14", "#00ffff", "#0000ff", "#ff00ff", "#ffff80", "#80ffff", "#8080ff", "#ff80c0"
+  ];
+  const paint = {
+    tool: "brush",
+    color: "#000000",
+    size: 4,
+    drawing: false,
+    pointer: null,
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    lastY: 0,
+    snapshot: null,
+    undo: null,
+    fitted: false
+  };
+
+  function paintHexToUint32(hex) {
+    const h = hex.replace("#", "");
+    const r = parseInt(h.slice(0, 2), 16);
+    const g = parseInt(h.slice(2, 4), 16);
+    const b = parseInt(h.slice(4, 6), 16);
+    return (255 << 24) | (b << 16) | (g << 8) | r;
+  }
+
+  function paintPos(e) {
+    const r = paintCanvas.getBoundingClientRect();
+    const x = (e.clientX - r.left) * (paintCanvas.width / Math.max(1, r.width));
+    const y = (e.clientY - r.top) * (paintCanvas.height / Math.max(1, r.height));
+    return { x, y };
+  }
+
+  function paintPushUndo() {
+    if (!paintCtx) return;
+    try { paint.undo = paintCtx.getImageData(0, 0, paintCanvas.width, paintCanvas.height); }
+    catch (_) { paint.undo = null; }
+  }
+
+  function paintDoUndo() {
+    if (!paintCtx || !paint.undo) return;
+    paintCtx.putImageData(paint.undo, 0, 0);
+    paint.undo = null;
+  }
+
+  function paintFillPaper() {
+    if (!paintCtx) return;
+    paintCtx.save();
+    paintCtx.setTransform(1, 0, 0, 1, 0, 0);
+    paintCtx.globalCompositeOperation = "source-over";
+    paintCtx.fillStyle = paintPaper;
+    paintCtx.fillRect(0, 0, paintCanvas.width, paintCanvas.height);
+    paintCtx.restore();
+  }
+
+  function paintFitCanvas() {
+    if (!paintCanvas || !paintCtx) return;
+    const stage = paintCanvas.parentElement;
+    if (!stage) return;
+    const r = stage.getBoundingClientRect();
+    let w = Math.max(80, Math.floor(r.width));
+    let h = Math.max(80, Math.floor(r.height));
+    const long = Math.max(w, h);
+    if (long > 960) {
+      const s = 960 / long;
+      w = Math.max(80, Math.floor(w * s));
+      h = Math.max(80, Math.floor(h * s));
+    }
+    if (paint.fitted && paintCanvas.width === w && paintCanvas.height === h) return;
+    let prev = null;
+    if (paint.fitted && paintCanvas.width && paintCanvas.height) {
+      try { prev = paintCtx.getImageData(0, 0, paintCanvas.width, paintCanvas.height); }
+      catch (_) { prev = null; }
+    }
+    paintCanvas.width = w;
+    paintCanvas.height = h;
+    paintFillPaper();
+    if (prev) paintCtx.putImageData(prev, 0, 0);
+    paint.fitted = true;
+    paint.undo = null;
+  }
+
+  function onPaintWindowOpen() {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => paintFitCanvas());
+    });
+  }
+
+  function paintSetTool(name) {
+    paint.tool = name;
+    document.querySelectorAll(".paint-tool").forEach(btn => {
+      const on = btn.getAttribute("data-paint-tool") === name;
+      btn.classList.toggle("active", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    if (paintCanvas) {
+      paintCanvas.style.cursor = name === "fill" || name === "eyedropper" ? "cell" : "crosshair";
+    }
+  }
+
+  function paintSetColor(hex) {
+    paint.color = hex;
+    const cur = document.getElementById("paintCurrent");
+    if (cur) cur.style.background = hex;
+    document.querySelectorAll(".paint-swatch").forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute("data-color") === hex);
+    });
+  }
+
+  function paintSetSize(n) {
+    paint.size = n;
+    document.querySelectorAll(".paint-size").forEach(btn => {
+      btn.classList.toggle("active", Number(btn.getAttribute("data-paint-size")) === n);
+    });
+  }
+
+  function paintPrepStroke(eraser) {
+    paintCtx.lineCap = "round";
+    paintCtx.lineJoin = "round";
+    paintCtx.lineWidth = paint.size;
+    paintCtx.strokeStyle = eraser ? paintPaper : paint.color;
+    paintCtx.fillStyle = eraser ? paintPaper : paint.color;
+    paintCtx.globalCompositeOperation = "source-over";
+  }
+
+  function paintDot(x, y, eraser) {
+    paintPrepStroke(eraser);
+    paintCtx.beginPath();
+    paintCtx.arc(x, y, paint.size / 2, 0, Math.PI * 2);
+    paintCtx.fill();
+  }
+
+  function paintDrawShape(x0, y0, x1, y1) {
+    paintPrepStroke(false);
+    if (paint.tool === "line") {
+      paintCtx.beginPath();
+      paintCtx.moveTo(x0, y0);
+      paintCtx.lineTo(x1, y1);
+      paintCtx.stroke();
+    } else if (paint.tool === "rect") {
+      const rx = Math.min(x0, x1);
+      const ry = Math.min(y0, y1);
+      paintCtx.strokeRect(rx + 0.5, ry + 0.5, Math.abs(x1 - x0), Math.abs(y1 - y0));
+    } else if (paint.tool === "ellipse") {
+      const rx = Math.abs(x1 - x0) / 2;
+      const ry = Math.abs(y1 - y0) / 2;
+      if (rx < 0.5 && ry < 0.5) return;
+      paintCtx.beginPath();
+      paintCtx.ellipse((x0 + x1) / 2, (y0 + y1) / 2, Math.max(rx, 0.5), Math.max(ry, 0.5), 0, 0, Math.PI * 2);
+      paintCtx.stroke();
+    }
+  }
+
+  function paintFlood(px, py, hex) {
+    px = px | 0;
+    py = py | 0;
+    const w = paintCanvas.width;
+    const h = paintCanvas.height;
+    if (px < 0 || py < 0 || px >= w || py >= h) return;
+    const img = paintCtx.getImageData(0, 0, w, h);
+    const pix = new Uint32Array(img.data.buffer);
+    const i0 = py * w + px;
+    const target = pix[i0];
+    const repl = paintHexToUint32(hex);
+    if (target === repl) return;
+    const stack = [px, py];
+    while (stack.length) {
+      const y = stack.pop();
+      const x = stack.pop();
+      let lx = x;
+      while (lx >= 0 && pix[y * w + lx] === target) lx--;
+      lx++;
+      let spanUp = false;
+      let spanDown = false;
+      while (lx < w && pix[y * w + lx] === target) {
+        pix[y * w + lx] = repl;
+        if (y > 0) {
+          const up = pix[(y - 1) * w + lx] === target;
+          if (!spanUp && up) { stack.push(lx, y - 1); spanUp = true; }
+          else if (spanUp && !up) spanUp = false;
+        }
+        if (y < h - 1) {
+          const dn = pix[(y + 1) * w + lx] === target;
+          if (!spanDown && dn) { stack.push(lx, y + 1); spanDown = true; }
+          else if (spanDown && !dn) spanDown = false;
+        }
+        lx++;
+      }
+    }
+    paintCtx.putImageData(img, 0, 0);
+  }
+
+  function paintPick(x, y) {
+    x = Math.max(0, Math.min(paintCanvas.width - 1, x | 0));
+    y = Math.max(0, Math.min(paintCanvas.height - 1, y | 0));
+    const p = paintCtx.getImageData(x, y, 1, 1).data;
+    const hex = "#" + [p[0], p[1], p[2]].map(v => v.toString(16).padStart(2, "0")).join("");
+    paintSetColor(hex);
+  }
+
+  function paintEndDraw(e) {
+    if (!paint.drawing) return;
+    if (e && paint.pointer != null && e.pointerId !== paint.pointer) return;
+    const pid = paint.pointer;
+    if (paint.tool === "line" || paint.tool === "rect" || paint.tool === "ellipse") {
+      if (paint.snapshot) paintCtx.putImageData(paint.snapshot, 0, 0);
+      const { x, y } = e ? paintPos(e) : { x: paint.lastX, y: paint.lastY };
+      paintDrawShape(paint.startX, paint.startY, x, y);
+    }
+    paint.drawing = false;
+    paint.pointer = null;
+    paint.snapshot = null;
+    try {
+      if (paintCanvas.hasPointerCapture && pid != null && paintCanvas.hasPointerCapture(pid)) {
+        paintCanvas.releasePointerCapture(pid);
+      }
+    } catch (_) {}
+  }
+
+  if (paintCanvas && paintCtx) {
+    const pal = document.getElementById("paintPalette");
+    if (pal) {
+      paintColors.forEach(hex => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "paint-swatch" + (hex === paint.color ? " active" : "");
+        b.style.background = hex;
+        b.setAttribute("data-color", hex);
+        b.title = hex;
+        b.setAttribute("aria-label", hex);
+        pal.appendChild(b);
+      });
+    }
+    paintSetColor(paint.color);
+
+    document.querySelectorAll(".paint-tool").forEach(btn => {
+      btn.addEventListener("click", () => paintSetTool(btn.getAttribute("data-paint-tool")));
+    });
+    document.querySelectorAll(".paint-size").forEach(btn => {
+      btn.addEventListener("click", () => paintSetSize(Number(btn.getAttribute("data-paint-size"))));
+    });
+    if (pal) {
+      pal.addEventListener("click", (e) => {
+        const sw = e.target.closest(".paint-swatch");
+        if (sw) paintSetColor(sw.getAttribute("data-color"));
+      });
+    }
+    const undoBtn = document.getElementById("paintUndo");
+    const clearBtn = document.getElementById("paintClear");
+    const saveBtn = document.getElementById("paintSave");
+    if (undoBtn) undoBtn.addEventListener("click", paintDoUndo);
+    if (clearBtn) clearBtn.addEventListener("click", () => {
+      paintPushUndo();
+      paintFillPaper();
+    });
+    if (saveBtn) saveBtn.addEventListener("click", () => {
+      const a = document.createElement("a");
+      a.download = "kita-paint.png";
+      a.href = paintCanvas.toDataURL("image/png");
+      a.click();
+    });
+
+    paintCanvas.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0 && e.pointerType === "mouse") return;
+      e.preventDefault();
+      const { x, y } = paintPos(e);
+      if (paint.tool === "eyedropper") {
+        paintPick(x, y);
+        return;
+      }
+      if (paint.tool === "fill") {
+        paintPushUndo();
+        paintFlood(x, y, paint.color);
+        return;
+      }
+      paint.drawing = true;
+      paint.pointer = e.pointerId;
+      paint.startX = paint.lastX = x;
+      paint.startY = paint.lastY = y;
+      paintPushUndo();
+      try { paintCanvas.setPointerCapture(e.pointerId); } catch (_) {}
+      if (paint.tool === "brush" || paint.tool === "eraser") {
+        paintDot(x, y, paint.tool === "eraser");
+        paintCtx.beginPath();
+        paintCtx.moveTo(x, y);
+      } else {
+        try { paint.snapshot = paintCtx.getImageData(0, 0, paintCanvas.width, paintCanvas.height); }
+        catch (_) { paint.snapshot = null; }
+      }
+    });
+
+    paintCanvas.addEventListener("pointermove", (e) => {
+      if (!paint.drawing || e.pointerId !== paint.pointer) return;
+      const { x, y } = paintPos(e);
+      if (paint.tool === "brush" || paint.tool === "eraser") {
+        paintPrepStroke(paint.tool === "eraser");
+        paintCtx.beginPath();
+        paintCtx.moveTo(paint.lastX, paint.lastY);
+        paintCtx.lineTo(x, y);
+        paintCtx.stroke();
+        paint.lastX = x;
+        paint.lastY = y;
+      } else if (paint.snapshot) {
+        paintCtx.putImageData(paint.snapshot, 0, 0);
+        paintDrawShape(paint.startX, paint.startY, x, y);
+        paint.lastX = x;
+        paint.lastY = y;
+      }
+    });
+
+    paintCanvas.addEventListener("pointerup", paintEndDraw);
+    paintCanvas.addEventListener("pointercancel", paintEndDraw);
+    paintCanvas.addEventListener("contextmenu", (e) => e.preventDefault());
+    paintFillPaper();
+  }
+
+  window.addEventListener("resize", () => {
+    if (windows.paint && windows.paint.classList.contains("open")) {
+      requestAnimationFrame(() => paintFitCanvas());
+    }
+  });
+
 
 
 
