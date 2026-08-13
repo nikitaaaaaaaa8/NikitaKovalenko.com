@@ -621,7 +621,11 @@
         <div class="glyph">🗑️</div>
         <div class="label">Trash</div>
       </div>
-      <!-- Drone and Bookshelf icons hidden for now -->
+      <div class="icon" tabindex="0" data-link="https://dronestuff.io" role="link" aria-label="Open DroneStuff.io">
+        <div class="glyph">🚁</div>
+        <div class="label">DroneStuff</div>
+      </div>
+      <!-- Bookshelf icon hidden for now -->
     </div>
 
     <section class="window" id="win-about" style="top:80px; left:140px; width:420px;">
@@ -736,11 +740,11 @@
           <div class="dot min" data-close="drone"></div>
           <div class="dot max"></div>
         </div>
-        <div class="title">Drone_Shots</div>
+        <div class="title">DroneStuff</div>
       </div>
       <div class="content">
-        <p class="green">DRONE ARCHIVE // COMING SOON</p>
-        <p class="muted" style="margin-bottom:12px;">High-resolution drone photography. Replace the placeholders below with your actual shots.</p>
+        <p class="green">DRONESTUFF // LIVE AT DRONESTUFF.IO</p>
+        <p class="muted" style="margin-bottom:12px;">Drone photography portfolio. The desktop icon opens the live site.</p>
 
         <div class="drone-grid">
           <div class="drone-slot">
@@ -1052,14 +1056,24 @@
   }, 1500);
 
   // icons + taskbar
-  document.querySelectorAll("[data-open]").forEach(el => {
+  function activateDesktopControl(el) {
+    const link = el.getAttribute("data-link");
+    if (link) {
+      window.open(link, "_blank", "noopener,noreferrer");
+      return;
+    }
+    const name = el.getAttribute("data-open");
+    if (name) openWindow(name);
+  }
+
+  document.querySelectorAll("[data-open], [data-link]").forEach(el => {
     el.addEventListener("click", () => {
-      openWindow(el.getAttribute("data-open"));
+      activateDesktopControl(el);
     });
     el.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        openWindow(el.getAttribute("data-open"));
+        activateDesktopControl(el);
       }
     });
   });
