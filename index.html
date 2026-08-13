@@ -173,6 +173,85 @@
   .window.open { display: flex !important; flex-direction: column; }
   .window.active { border-color: rgba(57,255,20,.8); box-shadow: var(--shadow), 0 0 0 1px rgba(57,255,20,.15); }
 
+  .resize-handle {
+    position: absolute;
+    z-index: 6;
+    background: transparent;
+    touch-action: none;
+  }
+  .resize-handle.n {
+    top: 0; left: 12px; right: 12px; height: 7px;
+    cursor: ns-resize;
+  }
+  .resize-handle.s {
+    bottom: 0; left: 12px; right: 12px; height: 7px;
+    cursor: ns-resize;
+  }
+  .resize-handle.e {
+    top: 12px; right: 0; bottom: 12px; width: 7px;
+    cursor: ew-resize;
+  }
+  .resize-handle.w {
+    top: 12px; left: 0; bottom: 12px; width: 7px;
+    cursor: ew-resize;
+  }
+  .resize-handle.nw { top: 0; left: 0; width: 10px; height: 10px; cursor: nwse-resize; }
+  .resize-handle.ne { top: 0; right: 0; width: 10px; height: 10px; cursor: nesw-resize; }
+  .resize-handle.sw { bottom: 0; left: 0; width: 10px; height: 10px; cursor: nesw-resize; }
+  .resize-handle.se { bottom: 0; right: 0; width: 10px; height: 10px; cursor: nwse-resize; }
+  .resize-handle.n:hover { box-shadow: inset 0 1px 0 rgba(57,255,20,.45); }
+  .resize-handle.s:hover { box-shadow: inset 0 -1px 0 rgba(57,255,20,.45); }
+  .resize-handle.e:hover { box-shadow: inset -1px 0 0 rgba(57,255,20,.45); }
+  .resize-handle.w:hover { box-shadow: inset 1px 0 0 rgba(57,255,20,.45); }
+
+  .window.user-sized {
+    max-width: none;
+    max-height: none;
+  }
+  .window.user-sized > .content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+  }
+  #win-paint.user-sized {
+    max-width: none;
+    max-height: none;
+  }
+  #win-terminal.user-sized > .content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  #win-terminal.user-sized .terminal {
+    flex: 1 1 auto;
+    min-height: 80px;
+    max-height: none;
+  }
+  #win-bookshelf.user-sized > .content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  #win-bookshelf.user-sized .book-reader {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+  }
+  #win-paint.user-sized > .content.paint-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+  #win-paint.user-sized .paint-body {
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+  #win-paint.user-sized .paint-stage {
+    height: auto;
+    min-height: 80px;
+    flex: 1 1 auto;
+  }
+
   .titlebar {
     display: flex;
     align-items: center;
@@ -181,9 +260,10 @@
     background: linear-gradient(180deg, rgba(57,255,20,.12), rgba(0,0,0,.2));
     border-bottom: 1px solid rgba(57,255,20,.18);
     cursor: grab;
+    flex: 0 0 auto;
   }
   .titlebar:active { cursor: grabbing; }
-  .dots { display: flex; gap: 6px; cursor: pointer; }
+  .dots { display: flex; gap: 6px; cursor: pointer; position: relative; z-index: 7; }
   .dot {
     width: 11px; height: 11px; border-radius: 50%;
     border: 1px solid rgba(255,255,255,.15);
@@ -1061,11 +1141,13 @@
   button, a, [data-open], [data-link], [data-close], [data-book], [data-act] {
     cursor: pointer;
   }
-  body.dragging {
+  body.dragging,
+  body.resizing {
     overflow: hidden;
     touch-action: none;
   }
-  body.dragging .content {
+  body.dragging .content,
+  body.resizing .content {
     pointer-events: none;
   }
   body.marquee-active {
@@ -1102,6 +1184,7 @@
       width: min(520px, calc(100vw - 16px));
       max-width: calc(100vw - 16px);
     }
+    .resize-handle { display: none !important; }
     .window:not([data-moved]) {
       left: 8px;
       right: 8px;
@@ -1834,11 +1917,21 @@
     el.style.width = width + "px";
 
     if (isMobile) {
+      el.classList.remove("user-sized");
+      el.style.height = "";
+      el.style.maxWidth = "";
+      el.style.maxHeight = "";
       const openCount = [...document.querySelectorAll(".window.open")].filter(w => w !== el).length;
       const cascade = Math.min(openCount, 5) * 14;
       el.style.left = margin + "px";
       el.style.top = Math.min(topBar + cascade, Math.max(topBar, window.innerHeight - 120)) + "px";
       return;
+    }
+
+    if (el.classList.contains("user-sized")) {
+      const maxH = Math.max(140, window.innerHeight - 48);
+      const hNow = parseInt(el.style.height, 10) || el.offsetHeight || 0;
+      if (hNow > maxH) el.style.height = maxH + "px";
     }
 
     const fresh = !!(opts && opts.fresh);
@@ -2312,6 +2405,126 @@
     bar.addEventListener("pointerup", endDrag);
     bar.addEventListener("pointercancel", endDrag);
     bar.addEventListener("lostpointercapture", endDrag);
+  });
+
+  // desktop-only window resize (edges + corners)
+  function isKitaMobile() {
+    return window.matchMedia("(max-width: 700px)").matches;
+  }
+
+  function windowMinSize(win) {
+    if (win && win.id === "win-paint") return { minW: 420, minH: 320 };
+    return { minW: 280, minH: 150 };
+  }
+
+  function desktopResizeBounds() {
+    const margin = 8;
+    const taskbar = 40;
+    return {
+      minX: margin,
+      minY: margin,
+      maxX: window.innerWidth - margin,
+      maxY: window.innerHeight - taskbar - margin
+    };
+  }
+
+  function applyUserSize(win, left, top, width, height) {
+    win.style.left = left + "px";
+    win.style.top = top + "px";
+    win.style.width = width + "px";
+    win.style.height = height + "px";
+    win.style.maxWidth = "none";
+    win.style.maxHeight = "none";
+    win.style.right = "auto";
+    win.classList.add("user-sized");
+  }
+
+  function afterUserResize(win) {
+    if (win && win.id === "win-paint" && typeof paintFitCanvas === "function") {
+      paintFitCanvas();
+    }
+  }
+
+  const resizeDirs = ["n", "s", "e", "w", "nw", "ne", "sw", "se"];
+  document.querySelectorAll(".window").forEach(win => {
+    resizeDirs.forEach(dir => {
+      const handle = document.createElement("div");
+      handle.className = "resize-handle " + dir;
+      handle.setAttribute("data-resize", dir);
+      handle.setAttribute("aria-hidden", "true");
+      win.appendChild(handle);
+
+      let resizing = false, activePointer = null, sx = 0, sy = 0, ol = 0, ot = 0, ow = 0, oh = 0;
+      let paintRaf = 0;
+
+      function endResize(e) {
+        if (e && activePointer != null && e.pointerId !== activePointer) return;
+        if (!resizing) return;
+        resizing = false;
+        activePointer = null;
+        document.body.classList.remove("dragging", "resizing");
+        if (paintRaf) { cancelAnimationFrame(paintRaf); paintRaf = 0; }
+        afterUserResize(win);
+      }
+
+      handle.addEventListener("pointerdown", (e) => {
+        if (isKitaMobile()) return;
+        if (e.target.closest(".dot, .content")) return;
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        e.preventDefault();
+        resizing = true;
+        activePointer = e.pointerId;
+        try { handle.setPointerCapture(e.pointerId); } catch (_) {}
+        const rect = win.getBoundingClientRect();
+        sx = e.clientX; sy = e.clientY;
+        ol = rect.left; ot = rect.top; ow = rect.width; oh = rect.height;
+        win.dataset.moved = "1";
+        document.body.classList.add("dragging", "resizing");
+        const id = win.id || "";
+        const name = id.startsWith("win-") ? id.slice(4) : null;
+        if (name && windows[name]) focusWindow(name);
+        applyUserSize(win, ol, ot, ow, oh);
+      });
+
+      handle.addEventListener("pointermove", (e) => {
+        if (!resizing || e.pointerId !== activePointer) return;
+        e.preventDefault();
+        const { minW, minH } = windowMinSize(win);
+        const b = desktopResizeBounds();
+        const px = e.clientX;
+        const py = e.clientY;
+        const right = ol + ow;
+        const bottom = ot + oh;
+        let left = ol, top = ot, width = ow, height = oh;
+
+        if (dir.indexOf("e") !== -1) {
+          width = Math.max(minW, Math.min(px - left, b.maxX - left));
+        }
+        if (dir.indexOf("s") !== -1) {
+          height = Math.max(minH, Math.min(py - top, b.maxY - top));
+        }
+        if (dir.indexOf("w") !== -1) {
+          left = Math.max(b.minX, Math.min(px, right - minW));
+          width = right - left;
+        }
+        if (dir.indexOf("n") !== -1) {
+          top = Math.max(b.minY, Math.min(py, bottom - minH));
+          height = bottom - top;
+        }
+
+        applyUserSize(win, Math.round(left), Math.round(top), Math.round(width), Math.round(height));
+        if (win.id === "win-paint" && !paintRaf) {
+          paintRaf = requestAnimationFrame(() => {
+            paintRaf = 0;
+            afterUserResize(win);
+          });
+        }
+      });
+
+      handle.addEventListener("pointerup", endResize);
+      handle.addEventListener("pointercancel", endResize);
+      handle.addEventListener("lostpointercapture", endResize);
+    });
   });
 
   // interactions
@@ -3824,7 +4037,7 @@
     if (!el) return false;
     if (el.nodeType !== 1) el = el.parentElement;
     if (!el || !el.closest) return false;
-    if (el.closest(".window, .taskbar, .start-menu, .start-btn, .icon, #snitch, #auraMeter, .boot, .toast, button, a, input, textarea, canvas, [data-open], [data-link], [data-close], [data-book], [data-act]")) {
+    if (el.closest(".window, .resize-handle, .taskbar, .start-menu, .start-btn, .icon, #snitch, #auraMeter, .boot, .toast, button, a, input, textarea, canvas, [data-open], [data-link], [data-close], [data-book], [data-act]")) {
       return false;
     }
     return el === document.body
@@ -3886,7 +4099,7 @@
     if (!e.isPrimary) return;
     if (e.button !== 0) return;
     if (e.pointerType !== "mouse" && e.pointerType !== "pen" && e.pointerType !== "touch") return;
-    if (document.body.classList.contains("dragging")) return;
+    if (document.body.classList.contains("dragging") || document.body.classList.contains("resizing")) return;
     if (!marqueeIsEmptyDesktop(e.target)) return;
     marqueeActive = true;
     marqueePointer = e.pointerId;
