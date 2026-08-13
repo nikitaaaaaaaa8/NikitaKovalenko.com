@@ -1078,6 +1078,20 @@
       width: 68px;
     }
   }
+
+  #desktop-marquee {
+    position: fixed;
+    display: none;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    z-index: 5;
+    pointer-events: none;
+    box-sizing: border-box;
+    background: rgba(57, 255, 20, 0.12);
+    border: 1px dotted var(--green);
+  }
 </style>
 </head>
 <body>
@@ -1455,6 +1469,7 @@
       </div>
     </section>
 
+    <div id="desktop-marquee" aria-hidden="true"></div>
   </div>
 
   <div class="taskbar" id="taskbar">
@@ -3151,6 +3166,91 @@
     if (name === "tetris") tStop();
   }
 
+
+
+  // Classic desktop marquee — visual rubber-band only, no icon selection
+  const marquee = document.getElementById("desktop-marquee");
+  const marqueeDesktop = document.getElementById("desktop");
+  let marqueeActive = false;
+  let marqueePointer = null;
+  let marqueeX = 0;
+  let marqueeY = 0;
+
+  function marqueeHide() {
+    marqueeActive = false;
+    marqueePointer = null;
+    if (!marquee) return;
+    marquee.style.display = "none";
+    marquee.style.width = "0px";
+    marquee.style.height = "0px";
+    marquee.style.left = "0px";
+    marquee.style.top = "0px";
+  }
+
+  function marqueeUpdate(x, y) {
+    if (!marquee || !marqueeActive) return;
+    const left = Math.min(marqueeX, x);
+    const top = Math.min(marqueeY, y);
+    const w = Math.abs(x - marqueeX);
+    const h = Math.abs(y - marqueeY);
+    marquee.style.left = left + "px";
+    marquee.style.top = top + "px";
+    marquee.style.width = w + "px";
+    marquee.style.height = h + "px";
+    marquee.style.display = (w < 3 && h < 3) ? "none" : "block";
+  }
+
+  function marqueeIsEmptyDesktop(el) {
+    if (!el) return false;
+    if (el.nodeType !== 1) el = el.parentElement;
+    if (!el || !el.closest) return false;
+    if (el.closest(".window, .taskbar, .start-menu, .start-btn, .icon, #snitch, #auraMeter, .boot, .toast, button, a, input, textarea, canvas, [data-open], [data-link], [data-close], [data-book], [data-act]")) {
+      return false;
+    }
+    return el === document.body
+      || el === document.documentElement
+      || el === marqueeDesktop
+      || el.classList.contains("desktop")
+      || el.classList.contains("icons")
+      || el.classList.contains("wallpaper")
+      || el.classList.contains("scanlines")
+      || el.id === "desktop-marquee";
+  }
+
+  function marqueeEnd(e) {
+    if (!marqueeActive) return;
+    if (e && marqueePointer != null && e.pointerId !== marqueePointer) return;
+    const pid = marqueePointer;
+    try {
+      if (marqueeDesktop && pid != null && marqueeDesktop.hasPointerCapture && marqueeDesktop.hasPointerCapture(pid)) {
+        marqueeDesktop.releasePointerCapture(pid);
+      }
+    } catch (_) {}
+    marqueeHide();
+  }
+
+  document.addEventListener("pointerdown", (e) => {
+    if (marqueeActive) return;
+    if (e.button !== 0) return;
+    if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
+    if (document.body.classList.contains("dragging")) return;
+    if (!marqueeIsEmptyDesktop(e.target)) return;
+    marqueeActive = true;
+    marqueePointer = e.pointerId;
+    marqueeX = e.clientX;
+    marqueeY = e.clientY;
+    try { if (marqueeDesktop) marqueeDesktop.setPointerCapture(e.pointerId); } catch (_) {}
+    marqueeUpdate(e.clientX, e.clientY);
+  });
+
+  document.addEventListener("pointermove", (e) => {
+    if (!marqueeActive || e.pointerId !== marqueePointer) return;
+    marqueeUpdate(e.clientX, e.clientY);
+  });
+
+  document.addEventListener("pointerup", marqueeEnd);
+  document.addEventListener("pointercancel", marqueeEnd);
+  document.addEventListener("lostpointercapture", marqueeEnd);
 
   renderStats();
 })();
