@@ -3857,12 +3857,17 @@
   }
 
   if (snitch) {
-    snitch.addEventListener("click", () => {
+    function catchSnitch(e) {
+      if (e && e.button != null && e.button !== 0) return;
+      if (snitch.style.display !== "block") return;
       snitch.style.display = "none";
       clearTimeout(snitchTimeout);
       bumpWinning(47);
-      showToast("Caught the Snitch! +47 winning");
-    });
+      chipsGive(500);
+      showToast("Caught the Snitch! +47 winning · +500 chips");
+    }
+    snitch.addEventListener("click", catchSnitch);
+    snitch.addEventListener("pointerup", catchSnitch);
 
     // First appearance also after 120s
     scheduleNextSnitch();
@@ -3910,7 +3915,7 @@
         "This website is a fake desktop. Click an icon to open a window. Drag the title bar to move it. The red dot closes it. Drag a box around icons to select them, then drag any selected icon to move the whole pile. Drop the pile on Trash to bin them all.",
         "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Session clicks count every tap or click this visit; a refresh resets them. The Games folder has Minesweeper, Snake, Tetris, and Solitaire. Casino is a fake-chip toy: Blackjack, Slots, and Roulette. You start at 1000 chips; a refresh resets them. Bookshelf is these notes.",
         "Open Terminal and type help, then press Run. Help lists commands and app names; type an app to open it. games and casino open those folders. snow turns the snow off.",
-        "A golden snitch shows up every 120 seconds for 5 seconds. Catch it if you want. Refresh starts a new session.",
+        "A golden snitch shows up every 120 seconds for 5 seconds. Catch it for +47 winning and +500 casino chips. Refresh starts a new session.",
         "There is a Konami code: up, up, down, down, left, right, left, right, B, A. That opens a VIP box, turns on Matrix rain, and turns off the snow."
       ]
     },
