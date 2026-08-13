@@ -249,6 +249,7 @@
 
   .bookshelf {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
     justify-content: center;
     align-items: flex-end;
@@ -315,6 +316,14 @@
     background: linear-gradient(90deg, #1a2e2e, #2a4a4a 40%, #152424);
     height: 170px;
   }
+  .book:nth-child(6) {
+    background: linear-gradient(90deg, #3a2814, #6a4a22 40%, #2a1c10);
+    height: 174px;
+  }
+  .book:nth-child(7) {
+    background: linear-gradient(90deg, #2a1a32, #4a2e5a 40%, #1e1426);
+    height: 160px;
+  }
   .book:hover,
   .book.active {
     transform: translateY(-8px);
@@ -342,7 +351,8 @@
     overflow: hidden;
   }
   .book:nth-child(2) .book-spine,
-  .book:nth-child(5) .book-spine {
+  .book:nth-child(5) .book-spine,
+  .book:nth-child(6) .book-spine {
     font-size: 8px;
     letter-spacing: 0.02em;
     max-height: 148px;
@@ -936,12 +946,15 @@
     .book:nth-child(3) { height: 106px; }
     .book:nth-child(4) { height: 94px; }
     .book:nth-child(5) { height: 110px; }
+    .book:nth-child(6) { height: 114px; }
+    .book:nth-child(7) { height: 102px; }
     .book-spine {
       font-size: 7px;
       max-height: 86px;
     }
     .book:nth-child(2) .book-spine,
-    .book:nth-child(5) .book-spine {
+    .book:nth-child(5) .book-spine,
+    .book:nth-child(6) .book-spine {
       font-size: 6.5px;
       max-height: 96px;
     }
@@ -1210,6 +1223,12 @@
           </div>
           <div class="book" data-book="howto" tabindex="0">
             <div class="book-spine">How Kita OS works</div>
+          </div>
+          <div class="book" data-book="commons" tabindex="0">
+            <div class="book-spine">Tragedy of the commons</div>
+          </div>
+          <div class="book" data-book="dunbar" tabindex="0">
+            <div class="book-spine">Dunbar's number</div>
           </div>
         </div>
         <div class="book-reader" id="bookReader">
@@ -2260,6 +2279,25 @@
         "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Games are Minesweeper, Snake, and Tetris. Terminal takes typed commands. Bookshelf is these notes.",
         "A golden snitch shows up every 40–60 seconds for a few seconds. Catch it if you want. Refresh starts a new session.",
         "There is a Konami code: up, up, down, down, left, right, left, right, B, A. That opens a VIP box, turns on Matrix rain, and turns off the snow."
+      ]
+    },
+    commons: {
+      kicker: "Vol. 06",
+      title: "Tragedy of the commons",
+      paragraphs: [
+        "A village shares one field. Nobody owns it. Everyone’s cows eat there.",
+        "One farmer thinks: one extra cow is a win for me, and the grass can take it. The next farmer thinks the same thing. Then the next. The field still looks fine for a while, so nobody stops.",
+        "Then the grass is gone. All the cows get thin. The farmer who added a cow didn’t mean to wreck the village. They just took a small win that only works if other people don’t.",
+        "That’s the tragedy. A group chat does it with noise. A road does it with traffic. A public API does it with too many requests. The shared thing dies from a pile of reasonable little choices."
+      ]
+    },
+    dunbar: {
+      kicker: "Vol. 07",
+      title: "Dunbar's number",
+      paragraphs: [
+        "Picture a village of about 150 people. You know names, faces, who is decent, who still owes you a tool. You don’t need a handbook. The group lives in your head.",
+        "Now make it 1,500. You can’t hold that. Strangers show up. You invent badges, rules, and a person whose job is “please don’t do that.” The village didn’t get mean. It got too big for memory.",
+        "Robin Dunbar’s number is that ceiling: roughly 150 stable relationships a person can actually keep. A dinner table is not a stadium. A 40-person Discord feels like friends. A 4,000-person one feels like a mall, because it is."
       ]
     }
   };
