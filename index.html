@@ -82,7 +82,7 @@
     left: var(--icon-pad-x);
     right: var(--icon-pad-x);
     display: grid;
-    grid-template-columns: repeat(auto-fill, var(--icon-tile));
+    grid-template-columns: repeat(2, var(--icon-tile));
     grid-auto-flow: row;
     gap: var(--icon-gap-y) var(--icon-gap-x);
     align-content: start;
@@ -4055,7 +4055,7 @@
       kicker: "Vol. 05",
       title: "How Kita OS works",
       paragraphs: [
-        "This website is a fake desktop. Click Start for a list of apps with their icons. Click an icon to open a window. Drag the title bar to move it. The red dot closes it. Icons snap to a grid like old Windows; they cannot stack. Rotate the phone or resize the window and they stay on the grid. Drag a box around icons to select them, then drag any selected icon to move the whole pile. Drop the pile on Trash to bin them all.",
+        "This website is a fake desktop. Click Start for a list of apps with their icons. Click an icon to open a window. Drag the title bar to move it. The red dot closes it. Icons sit in two columns like before; they snap to that grid and cannot stack; rotate keeps the two-column layout. Drag a box around icons to select them, then drag any selected icon to move the whole pile. Drop the pile on Trash to bin them all.",
         "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes. A refresh resets them. The Games folder has Minesweeper, Snake, Tetris, and Solitaire. Casino is a fake-chip toy: Blackjack, Slots, and Roulette. You start at 1000 chips; a refresh resets them. Bookshelf is these notes.",
         "Open Terminal and type help, then press Run. Help lists commands and app names; type an app to open it. games and casino open those folders. snow turns the snow off.",
         "A golden snitch shows up every 120 seconds for 5 seconds. Catch it for +47 winning and +500 casino chips. Refresh starts a new session.",
@@ -6317,7 +6317,7 @@
   document.addEventListener("lostpointercapture", marqueeEnd);
 
 
-  // Desktop icons: XP-style cell grid. Every visible icon owns one cell.
+  // Desktop icons: two-column stock grid. Every visible icon owns one cell.
   const iconsRoot = document.querySelector(".icons");
   const desktopEl = document.getElementById("desktop");
   const recycleBin = [];
@@ -6368,10 +6368,11 @@
     const tb = taskbarHeight();
     const usableW = Math.max(tileW, window.innerWidth - padX * 2);
     const usableH = Math.max(tileH, window.innerHeight - padY - tb - 4);
-    const cols = Math.max(1, Math.floor((usableW + gapX) / cellW));
-    let rows = Math.max(1, Math.floor((usableH + gapY) / cellH));
-    if (icons.length > cols * rows) rows = Math.ceil(icons.length / cols);
-    return { tileW, tileH, gapX, gapY, padX, padY, cellW, cellH, cols, rows, usableW, usableH };
+    const cols = 2;
+    const fitRows = Math.max(1, Math.floor((usableH + gapY) / cellH));
+    const need = Math.max(1, Math.ceil(icons.length / cols));
+    const rows = Math.max(fitRows, need);
+    return { tileW, tileH, gapX, gapY, padX, padY, cellW, cellH, cols, rows, fitRows, usableW, usableH };
   }
 
   function cellToPixel(col, row, m) {
@@ -6386,7 +6387,7 @@
   function placeIconAtCell(el, col, row, m) {
     m = m || gridMetrics();
     col = Math.max(0, Math.min(m.cols - 1, col | 0));
-    row = Math.max(0, Math.min(m.rows - 1, row | 0));
+    row = Math.max(0, row | 0);
     const [x, y] = cellToPixel(col, row, m);
     el.style.left = x + "px";
     el.style.top = y + "px";
@@ -6412,12 +6413,12 @@
 
   function firstFreeCell(occupied, m) {
     m = m || gridMetrics();
-    for (let r = 0; r < m.rows; r++) {
+    for (let r = 0; r < 64; r++) {
       for (let c = 0; c < m.cols; c++) {
         if (!occupied.has(cellKey(c, r))) return [c, r];
       }
     }
-    return [0, 0];
+    return [0, m.rows];
   }
 
   function nearestEmptyCell(x, y, occupied, m) {
@@ -6435,7 +6436,7 @@
         }
       }
     }
-    return best;
+    return best || firstFreeCell(occupied, m);
   }
 
   function reflowDesktopIcons(m) {
@@ -6456,7 +6457,8 @@
       const icon = icons[i];
       const c = parseInt(icon.dataset.gridCol, 10);
       const r = parseInt(icon.dataset.gridRow, 10);
-      if (Number.isNaN(c) || Number.isNaN(r) || c < 0 || r < 0 || c >= m.cols || r >= m.rows) {
+      const keepRows = m.fitRows || m.rows;
+      if (Number.isNaN(c) || Number.isNaN(r) || c < 0 || r < 0 || c >= m.cols || r >= keepRows) {
         return true;
       }
       const k = cellKey(c, r);
