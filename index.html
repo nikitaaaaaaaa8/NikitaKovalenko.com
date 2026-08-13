@@ -25,6 +25,7 @@
     margin: 0;
     height: 100%;
     overflow: hidden;
+    overscroll-behavior: none;
     font-family: var(--font);
     color: var(--text);
     background: #000;
@@ -79,6 +80,7 @@
     grid-auto-flow: row;
     gap: 14px 12px;
     align-content: start;
+    touch-action: none;
   }
 
   .icon {
@@ -208,6 +210,7 @@
     font-size: 13px;
     line-height: 1.5;
     color: var(--text);
+    touch-action: pan-y;
   }
   .muted { color: var(--muted); }
   .danger { color: var(--danger); }
@@ -1065,6 +1068,11 @@
   body.dragging .content {
     pointer-events: none;
   }
+  body.marquee-active {
+    overflow: hidden;
+    touch-action: none;
+    overscroll-behavior: none;
+  }
 
   @media (max-width: 700px) {
     .icons {
@@ -1268,6 +1276,11 @@
     background: rgba(57, 255, 20, 0.12);
     border: 1px dotted var(--green);
   }
+  @media (max-width: 700px) {
+    #desktop-marquee {
+      border-width: 2px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1384,7 +1397,7 @@
       <div class="content">
         <div class="terminal" id="termOut"></div>
         <form class="prompt-row" id="termForm">
-          <input id="termIn" autocomplete="off" spellcheck="false" placeholder="try: help, whoami, winning, email, clear">
+          <input id="termIn" autocomplete="off" spellcheck="false" placeholder="try: help, whoami, winning, clear">
           <button class="btn" type="submit">run</button>
         </form>
       </div>
@@ -2084,15 +2097,13 @@
     if (!cmd) return;
 
     if (cmd === "help") {
-      termPrint("commands: help, whoami, winning, email, clear, sudo, date, kita, scan, confess, coinflip, matrix, aura");
+      termPrint("commands: help, whoami, winning, clear, sudo, date, kita, scan, confess, coinflip, matrix, aura");
     } else if (cmd === "whoami") {
       termPrint("guest@nikitakovalenko.com // temporary main character");
     } else if (cmd === "winning") {
       termPrint("winning index: " + winIndex);
       termPrint("diagnosis: chronic victory");
-    } else if (cmd === "email") {
-      termPrint("winning@nikitakovalenko.com");
-   } else if (cmd === "clear") {
+    } else if (cmd === "clear") {
       termOut.innerHTML = "";
     } else if (cmd === "sudo") {
       termPrint("nice try. kita is root.");
@@ -3743,6 +3754,7 @@
   let marqueeX = 0;
   let marqueeY = 0;
   let justMarqueeSelected = false;
+  let marqueeThreshold = 3;
 
   function desktopIcons() {
     return document.querySelectorAll(".icons .icon");
@@ -3769,7 +3781,7 @@
       return;
     }
     const box = marquee.getBoundingClientRect();
-    if (marquee.style.display === "none" || (box.width < 3 && box.height < 3)) {
+    if (marquee.style.display === "none" || (box.width < marqueeThreshold && box.height < marqueeThreshold)) {
       clearIconSelection();
       return;
     }
@@ -3785,6 +3797,7 @@
   function marqueeHide() {
     marqueeActive = false;
     marqueePointer = null;
+    document.body.classList.remove("marquee-active");
     if (!marquee) return;
     marquee.style.display = "none";
     marquee.style.width = "0px";
@@ -3803,7 +3816,7 @@
     marquee.style.top = top + "px";
     marquee.style.width = w + "px";
     marquee.style.height = h + "px";
-    marquee.style.display = (w < 3 && h < 3) ? "none" : "block";
+    marquee.style.display = (w < marqueeThreshold && h < marqueeThreshold) ? "none" : "block";
     marqueeSelectIntersecting();
   }
 
@@ -3830,7 +3843,7 @@
     const pid = marqueePointer;
     const w = marquee ? parseFloat(marquee.style.width) || 0 : 0;
     const h = marquee ? parseFloat(marquee.style.height) || 0 : 0;
-    const wasDrag = !!(marquee && marquee.style.display === "block" && (w >= 3 || h >= 3));
+    const wasDrag = !!(marquee && marquee.style.display === "block" && (w >= marqueeThreshold || h >= marqueeThreshold));
     if (wasDrag) {
       marqueeSelectIntersecting();
       justMarqueeSelected = !!document.querySelector(".icons .icon.selected");
@@ -3839,6 +3852,7 @@
       justMarqueeSelected = false;
     }
     marqueeActive = false;
+    document.body.classList.remove("marquee-active");
     try {
       if (marqueeDesktop && pid != null && marqueeDesktop.hasPointerCapture && marqueeDesktop.hasPointerCapture(pid)) {
         marqueeDesktop.releasePointerCapture(pid);
@@ -3854,6 +3868,11 @@
     }
   }
 
+  function marqueePreventScroll(e) {
+    if (!marqueeActive) return;
+    e.preventDefault();
+  }
+
   document.addEventListener("pointerdown", (e) => {
     if (marqueeActive) return;
     if (justMarqueeSelected) {
@@ -3864,22 +3883,30 @@
 
   document.addEventListener("pointerdown", (e) => {
     if (marqueeActive) return;
+    if (!e.isPrimary) return;
     if (e.button !== 0) return;
-    if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
+    if (e.pointerType !== "mouse" && e.pointerType !== "pen" && e.pointerType !== "touch") return;
     if (document.body.classList.contains("dragging")) return;
     if (!marqueeIsEmptyDesktop(e.target)) return;
     marqueeActive = true;
     marqueePointer = e.pointerId;
+    marqueeThreshold = e.pointerType === "touch" ? 10 : 3;
     marqueeX = e.clientX;
     marqueeY = e.clientY;
+    document.body.classList.add("marquee-active");
     try { if (marqueeDesktop) marqueeDesktop.setPointerCapture(e.pointerId); } catch (_) {}
+    e.preventDefault();
     marqueeUpdate(e.clientX, e.clientY);
-  });
+  }, { passive: false });
 
   document.addEventListener("pointermove", (e) => {
     if (!marqueeActive || e.pointerId !== marqueePointer) return;
+    e.preventDefault();
     marqueeUpdate(e.clientX, e.clientY);
-  });
+  }, { passive: false });
+
+  document.addEventListener("touchstart", marqueePreventScroll, { passive: false });
+  document.addEventListener("touchmove", marqueePreventScroll, { passive: false });
 
   document.addEventListener("pointerup", marqueeEnd);
   document.addEventListener("pointercancel", marqueeEnd);
