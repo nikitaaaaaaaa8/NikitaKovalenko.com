@@ -811,6 +811,38 @@
     showToast._t = setTimeout(() => toast.classList.remove("show"), 1800);
   }
 
+  function placeWindowOnScreen(el) {
+    if (!el) return;
+    const margin = 8;
+    const isMobile = window.innerWidth <= 700;
+    const topBar = isMobile ? 88 : 16;
+    // Prefer measured width once visible; fall back to inline width
+    const preferred = parseInt(el.style.width, 10) || el.offsetWidth || 360;
+    const maxW = Math.max(200, window.innerWidth - margin * 2);
+    const width = isMobile ? maxW : Math.min(preferred, maxW);
+
+    el.style.right = "auto";
+    el.style.width = width + "px";
+
+    if (isMobile) {
+      const openCount = [...document.querySelectorAll(".window.open")].filter(w => w !== el).length;
+      const cascade = Math.min(openCount, 5) * 14;
+      el.style.left = margin + "px";
+      el.style.top = Math.min(topBar + cascade, Math.max(topBar, window.innerHeight - 120)) + "px";
+      return;
+    }
+
+    // Desktop: keep authored position when it fits; otherwise clamp into view
+    let left = parseFloat(el.style.left);
+    let top = parseFloat(el.style.top);
+    if (Number.isNaN(left)) left = el.getBoundingClientRect().left || 40;
+    if (Number.isNaN(top)) top = el.getBoundingClientRect().top || 40;
+    const maxLeft = Math.max(margin, window.innerWidth - width - margin);
+    const maxTop = Math.max(margin, window.innerHeight - 80);
+    el.style.left = Math.max(margin, Math.min(maxLeft, left)) + "px";
+    el.style.top = Math.max(margin, Math.min(maxTop, top)) + "px";
+  }
+
   function focusWindow(name) {
     const el = windows[name];
     if (!el) return;
@@ -820,7 +852,10 @@
   }
 
   function openWindow(name) {
+    const el = windows[name];
     focusWindow(name);
+    // Fit into the viewport every time an app opens (fixes phone off-screen starts)
+    requestAnimationFrame(() => placeWindowOnScreen(el));
     if (name === "terminal") setTimeout(() => termIn.focus(), 50);
   }
 
@@ -943,6 +978,10 @@
       }
     }, 28000);
   }
+
+  window.addEventListener("resize", () => {
+    document.querySelectorAll(".window.open").forEach(placeWindowOnScreen);
+  });
 
   // boot
   setTimeout(() => {
