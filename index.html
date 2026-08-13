@@ -499,8 +499,13 @@
     gap: 8px;
     justify-content: center;
     align-items: flex-end;
+    align-content: flex-end;
     padding: 18px 14px 0;
     min-height: 200px;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+    z-index: 0;
     background:
       linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.5)),
       repeating-linear-gradient(90deg, #1b1712 0 12px, #16130f 12px 24px);
@@ -602,6 +607,7 @@
     text-align: center;
     white-space: nowrap;
     max-height: 140px;
+    max-width: 100%;
     overflow: hidden;
   }
   .book:nth-child(2) .book-spine,
@@ -1124,7 +1130,36 @@
     border-radius: 6px;
     image-rendering: pixelated;
     max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
     display: block;
+  }
+  #win-tetris.window.open,
+  #win-snake.window.open {
+    max-height: calc(100dvh - 48px);
+  }
+  #win-tetris .content,
+  #win-snake .content {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+  #win-tetris .game-canvas-wrap,
+  #win-snake .game-canvas-wrap {
+    flex: 1 1 auto;
+    min-height: 0;
+    align-items: center;
+  }
+  #win-tetris .game-pad,
+  #win-snake .game-pad,
+  #win-tetris .game-toolbar,
+  #win-snake .game-toolbar,
+  #win-tetris .game-hint,
+  #win-snake .game-hint {
+    flex-shrink: 0;
   }
   .game-pad {
     display: grid;
@@ -1860,6 +1895,9 @@
       width: min(520px, calc(100vw - 16px));
       max-width: calc(100vw - 16px);
     }
+    .window.open {
+      max-height: calc(100dvh - 44px);
+    }
     .resize-handle { display: none !important; }
     .window:not([data-moved]) {
       left: 8px;
@@ -1873,7 +1911,9 @@
     }
     .content {
       padding: 10px 12px;
-      max-height: calc(100vh - 160px);
+      max-height: none;
+      min-height: 0;
+      flex: 1 1 auto;
       overflow: auto;
       -webkit-overflow-scrolling: touch;
     }
@@ -1910,7 +1950,7 @@
     }
     /* Extra room for keyboard: keep input row pinned in view */
     #win-terminal .content {
-      max-height: calc(100vh - 120px);
+      max-height: none;
       display: flex;
       flex-direction: column;
       min-height: 0;
@@ -1927,11 +1967,18 @@
     }
 
     .bookshelf {
-      gap: 6px;
-      padding: 10px 8px 0;
+      gap: 4px;
+      padding: 10px 6px 0;
       min-height: 0;
+      overflow: hidden;
+      flex-wrap: wrap;
+      justify-content: center;
     }
-    .book { width: 32px; }
+    .book {
+      width: 26px;
+      flex: 0 0 26px;
+      max-width: calc((100% - 32px) / 9);
+    }
     .book:nth-child(1) { height: 100px; }
     .book:nth-child(2) { height: 112px; }
     .book:nth-child(3) { height: 106px; }
@@ -1950,22 +1997,23 @@
     .book:nth-child(6) .book-spine,
     .book:nth-child(9) .book-spine {
       font-size: 6.5px;
-      max-height: 96px;
+      max-height: 86px;
     }
 
     #win-bookshelf.window.open {
-      max-height: calc(100dvh - 92px);
+      max-height: calc(100dvh - 44px);
     }
     #win-bookshelf .content {
-      max-height: calc(100dvh - 140px);
+      max-height: none;
       overflow: auto;
       display: flex;
       flex-direction: column;
+      min-height: 0;
     }
     #win-bookshelf .book-reader {
       flex: 1 1 auto;
       min-height: 0;
-      max-height: calc(100dvh - 270px);
+      max-height: none;
       overflow: auto;
       margin-top: 8px;
       padding: 8px 10px;
@@ -1978,11 +2026,18 @@
     }
 
 
+    #win-drone.window.open {
+      max-height: calc(100dvh - 44px);
+    }
+    #win-drone .content {
+      max-height: none;
+      min-height: 0;
+    }
     #win-paint.window.open {
-      max-height: calc(100dvh - 92px);
+      max-height: calc(100dvh - 44px);
     }
     #win-paint .content.paint-content {
-      max-height: calc(100dvh - 140px);
+      max-height: none;
       overflow: hidden;
       padding: 8px;
     }
@@ -2007,10 +2062,10 @@
 
 
     #win-solitaire.window.open {
-      max-height: calc(100dvh - 92px);
+      max-height: calc(100dvh - 44px);
     }
     #win-solitaire .content.sol-content {
-      max-height: calc(100dvh - 140px);
+      max-height: none;
       overflow: auto;
       padding: 8px 8px 10px;
     }
@@ -2032,7 +2087,7 @@
     #win-blackjack.window.open,
     #win-slots.window.open,
     #win-roulette.window.open {
-      max-height: calc(100dvh - 92px);
+      max-height: calc(100dvh - 44px);
     }
 
     #snitch,
@@ -2836,6 +2891,15 @@
     if (winIndexEl) winIndexEl.textContent = String(winIndex);
   }
 
+  let lastSessionClickAt = 0;
+  function countSessionClick() {
+    const now = performance.now();
+    if (now - lastSessionClickAt < 80) return;
+    lastSessionClickAt = now;
+    clicks += 1;
+    renderStats();
+  }
+
   function showToast(msg) {
     toast.textContent = msg;
     toast.classList.add("show");
@@ -2859,28 +2923,33 @@
     el.style.right = "auto";
     el.style.width = width + "px";
 
+    const tb = taskbarHeight();
     if (isMobile) {
       el.classList.remove("user-sized");
       el.style.height = "";
       el.style.maxWidth = "";
-      el.style.maxHeight = "";
       const openCount = [...document.querySelectorAll(".window.open")].filter(w => w !== el).length;
       const cascade = Math.min(openCount, 5) * 14;
       el.style.left = margin + "px";
-      el.style.top = Math.min(topBar + cascade, Math.max(topBar, window.innerHeight - 120)) + "px";
+      let top = topBar + cascade;
+      top = Math.min(top, Math.max(margin, window.innerHeight - tb - 140));
+      el.style.top = top + "px";
+      el.style.maxHeight = Math.max(140, window.innerHeight - tb - top) + "px";
       return;
     }
 
     if (el.classList.contains("user-sized")) {
-      const maxH = Math.max(140, window.innerHeight - 48);
+      const maxH = Math.max(140, window.innerHeight - tb - margin);
       const hNow = parseInt(el.style.height, 10) || el.offsetHeight || 0;
       if (hNow > maxH) el.style.height = maxH + "px";
+    } else {
+      el.style.maxHeight = Math.max(140, window.innerHeight - tb - margin) + "px";
     }
 
     const fresh = !!(opts && opts.fresh);
     const w = el.offsetWidth || width;
     const h = el.offsetHeight || 280;
-    const taskbarRoom = 80;
+    const taskbarRoom = tb + 8;
     const vw = window.innerWidth;
     const vh = window.innerHeight - taskbarRoom;
     const maxLeft = Math.max(margin, vw - w - margin);
@@ -2948,7 +3017,7 @@
     if (!el || window.innerWidth <= 700) return;
     const w = el.offsetWidth || parseInt(el.style.width, 10) || 420;
     const h = el.offsetHeight || 280;
-    const taskbarRoom = 80;
+    const taskbarRoom = taskbarHeight() + 8;
     const left = Math.max(16, Math.round((window.innerWidth - w) / 2));
     const top = Math.max(16, Math.round((window.innerHeight - taskbarRoom - h) / 2));
     el.style.left = left + "px";
@@ -3330,6 +3399,7 @@
           iconSkipClick = false;
           return;
         }
+        countSessionClick();
       }
       activateDesktopControl(el);
     });
@@ -3781,10 +3851,17 @@
     const dx = e.clientX - start.x;
     const dy = e.clientY - start.y;
     const dist = Math.hypot(dx, dy);
-    if (dist >= 12) return;
-    // Capture phase: drag systems still own this pointer. A 3–10px drag
+    // Icon pointerdown always creates iconDrag. A tap that never passed the
+    // 6px mouse / 10px touch drag threshold is still a click-to-open.
+    const iconTap = !!(iconDrag && iconDrag.pointerId === e.pointerId);
+    if (iconTap) {
+      // Same 6px mouse / 10px touch threshold the icon-drag code uses (iconDrag.moved).
+      if (iconDrag.moved) return;
+    } else if (dist >= 12) {
+      return;
+    }
+    // Capture phase: drag systems still own this pointer. Actual drags
     // must not also count as a session click.
-    if (iconDrag && iconDrag.moved) return;
     if (document.body.classList.contains("icon-dragging")) return;
     if (document.body.classList.contains("resizing")) return;
     if (typeof paint !== "undefined" && paint && paint.drawing) return;
@@ -3794,8 +3871,7 @@
       if (mw >= marqueeThreshold || mh >= marqueeThreshold) return;
     }
     if (document.body.classList.contains("dragging") && dist >= 3) return;
-    clicks += 1;
-    renderStats();
+    countSessionClick();
   }, true);
   document.addEventListener("pointercancel", (e) => {
     if (tapStart && e.pointerId === tapStart.id) tapStart = null;
@@ -4195,6 +4271,13 @@
 
   function msReveal(c) {
     if (!msAlive || c.open || c.flag) return;
+    if (!msStarted) {
+      msPlaceMines(c.x, c.y);
+      msStarted = true;
+    }
+    if (!msTimerId) {
+      msTimerId = setInterval(() => { msTimer++; msUpdateStatus(); }, 1000);
+    }
     c.open = true;
     msRevealed++;
     msRenderCell(c);
@@ -4255,17 +4338,24 @@
         const cell = { x, y, mine: false, open: false, flag: false, n: 0, el };
         let pressTimer = 0;
         let longPressed = false;
-        el.addEventListener("click", (e) => {
-          e.preventDefault();
-          if (longPressed) { longPressed = false; return; }
+        let tapHandled = false;
+        function msAct() {
           if (!msAlive) return;
           if (!msStarted) {
             msPlaceMines(x, y);
             msStarted = true;
+          }
+          if (!msTimerId) {
             msTimerId = setInterval(() => { msTimer++; msUpdateStatus(); }, 1000);
           }
           if (msFlagMode) msToggleFlag(cell);
           else msReveal(cell);
+        }
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          if (longPressed) { longPressed = false; tapHandled = false; return; }
+          if (tapHandled) { tapHandled = false; return; }
+          msAct();
         });
         el.addEventListener("contextmenu", (e) => {
           e.preventDefault();
@@ -4273,21 +4363,32 @@
           msToggleFlag(cell);
         });
         el.addEventListener("pointerdown", (e) => {
+          tapHandled = false;
           if (e.pointerType === "touch") {
             longPressed = false;
             pressTimer = setTimeout(() => {
               pressTimer = 0;
               longPressed = true;
+              tapHandled = true;
               if (!msStarted) {
                 msPlaceMines(x, y);
                 msStarted = true;
+              }
+              if (!msTimerId) {
                 msTimerId = setInterval(() => { msTimer++; msUpdateStatus(); }, 1000);
               }
               msToggleFlag(cell);
             }, 420);
           }
         });
-        el.addEventListener("pointerup", () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = 0; } });
+        el.addEventListener("pointerup", (e) => {
+          if (pressTimer) { clearTimeout(pressTimer); pressTimer = 0; }
+          if (longPressed) return;
+          if (!msAlive) return;
+          if (e.pointerType !== "touch" && e.pointerType !== "pen") return;
+          tapHandled = true;
+          msAct();
+        });
         el.addEventListener("pointerleave", () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = 0; } });
         el.addEventListener("pointercancel", () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = 0; } });
         msBoardEl.appendChild(el);
@@ -6491,6 +6592,7 @@
     if (e && e.pointerType === "touch") {
       iconSkipClick = true;
       activateDesktopControl(drag.el);
+      countSessionClick();
     }
   }
 
