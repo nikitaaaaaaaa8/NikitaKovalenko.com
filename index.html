@@ -274,6 +274,43 @@
     text-align: center;
     white-space: nowrap;
   }
+  .book.active {
+    outline: 1px solid #39ff14;
+    box-shadow: 0 0 12px rgba(57,255,20,.35);
+    transform: translateY(-6px);
+  }
+  .book-reader {
+    margin-top: 12px;
+    padding: 12px 12px 10px;
+    border: 1px solid rgba(57,255,20,.22);
+    border-radius: 10px;
+    background: rgba(0,0,0,.35);
+    min-height: 120px;
+  }
+  .book-reader .br-kicker {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .book-reader h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+    color: var(--green);
+    font-weight: 600;
+  }
+  .book-reader .br-body p {
+    margin: 0 0 8px;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #d8f5d8;
+  }
+  .book-reader .br-body p:last-child { margin-bottom: 0; }
+  .book-reader .br-empty {
+    color: var(--muted);
+    font-size: 12px;
+  }
 
   .aura-meter {
     position: absolute;
@@ -1039,22 +1076,33 @@
         <div class="title">Book_Shelf</div>
       </div>
       <div class="content">
-        <p class="green">PERSONAL ARCHIVE // DO NOT TOUCH</p>
+        <p class="green">PUBLIC STACK // INTERNET CULTURE ZINES</p>
+        <p class="muted" style="margin: 0 0 10px; font-size: 11px;">Click a spine. Short essays. Steal the takes, send the link.</p>
         <div class="bookshelf">
-          <div class="book" data-book="1">
+          <div class="book" data-book="art" tabindex="0">
             <div class="book-spine">The art of kita</div>
           </div>
-          <div class="book" data-book="2">
+          <div class="book" data-book="memetics" tabindex="0">
             <div class="book-spine">Memetics 101</div>
           </div>
-          <div class="book" data-book="3">
+          <div class="book" data-book="archive" tabindex="0">
             <div class="book-spine">Rare Kita Archive</div>
           </div>
-          <div class="book" data-book="4">
+          <div class="book" data-book="dummies" tabindex="0">
             <div class="book-spine">Internet culture for dummies</div>
           </div>
         </div>
-        <p class="muted" style="margin-top:12px; font-size:11px;">Click a book to open. PDFs coming later.</p>
+        <div class="book-reader" id="bookReader">
+          <div class="br-empty" id="bookReaderEmpty">Pick a volume. They’re all under two minutes.</div>
+          <div id="bookReaderMain" hidden>
+            <div class="br-kicker" id="bookKicker"></div>
+            <h3 id="bookTitle"></h3>
+            <div class="br-body" id="bookBody"></div>
+            <div class="row" style="margin-top:10px;">
+              <button type="button" class="btn secondary" id="bookCopyLink">Copy essay link</button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1903,20 +1951,113 @@
     scheduleNextSnitch();
   }
 
-  // Bookshelf book clicks (nonsense content for now)
+  // Bookshelf: short internet-culture essays
+  const essays = {
+    art: {
+      kicker: "Vol. 01",
+      title: "The art of kita",
+      paragraphs: [
+        "Most personal sites are résumés wearing a hoodie. Kita OS is the opposite: a desktop you can live in. Icons, windows, a clock that lies about how much time you have. The point is not nostalgia. The point is control.",
+        "If the internet is a mall, this is a locked bedroom with the good posters. You click around like it’s 1998 because that was the last time a homepage felt like a place instead of a funnel.",
+        "The art is simple. Build a room. Put your taste on the walls. Let people rummage. If they don’t get it, they can close the window. That’s a feature."
+      ]
+    },
+    memetics: {
+      kicker: "Vol. 02",
+      title: "Memetics 101",
+      paragraphs: [
+        "A meme is not a joke. A joke is the delivery mechanism. The meme is whatever survives contact with a million bored thumbs.",
+        "Formats mutate on purpose. Caption, then no caption, then the same image used as punctuation. If you have to explain it, the organism already died in your mouth.",
+        "The lesson they don’t print: you don’t “make a meme.” You release a strain. The timeline is the petri dish. Screenshots are fossils. Never sell the rare ones. That’s how they stop being rare."
+      ]
+    },
+    archive: {
+      kicker: "Vol. 03",
+      title: "Rare Kita Archive",
+      paragraphs: [
+        "“Rare” used to mean scarce. Then it meant a jpeg of a frog with a watermark and a fake serial number. The archive is not a museum. It’s a folder someone forgot to delete, which is how all internet history actually works.",
+        "What belongs here: screenshots of websites that no longer boot, usernames that got banned for being early, files named final_FINAL2.zip. The rarest object left online is a page that isn’t trying to convert you.",
+        "If you’re reading this, you already have a copy. That’s the whole archive. Pass it on. Don’t restore it. Don’t mint it. Just keep it weird."
+      ]
+    },
+    dummies: {
+      kicker: "Vol. 04",
+      title: "Internet culture for dummies",
+      paragraphs: [
+        "Lurk first. The timeline can smell a tourist. Don’t announce your arrival. Don’t ask where the joke is. Sit in the back until you can quote it without the citation.",
+        "Screenshot is how we cite. Block is a complete sentence. Ratio is not an argument. If the feed is screaming, that’s your cue to touch grass or at least a different tab.",
+        "Aura is a budget. Spend it on taste, not on dunks. And if a website works like an old computer, you already passed the test. Close this book. Go click something."
+      ]
+    }
+  };
+
+  const bookReaderEmpty = document.getElementById("bookReaderEmpty");
+  const bookReaderMain = document.getElementById("bookReaderMain");
+  const bookKicker = document.getElementById("bookKicker");
+  const bookTitle = document.getElementById("bookTitle");
+  const bookBody = document.getElementById("bookBody");
+  const bookCopyLink = document.getElementById("bookCopyLink");
+  let openEssayId = null;
+
+  function openEssay(id, pushHash) {
+    const essay = essays[id];
+    if (!essay) return;
+    openEssayId = id;
+    document.querySelectorAll("#win-bookshelf .book").forEach(b => {
+      b.classList.toggle("active", b.getAttribute("data-book") === id);
+    });
+    bookKicker.textContent = essay.kicker;
+    bookTitle.textContent = essay.title;
+    bookBody.replaceChildren();
+    essay.paragraphs.forEach(para => {
+      const p = document.createElement("p");
+      p.textContent = para;
+      bookBody.appendChild(p);
+    });
+    if (bookReaderEmpty) bookReaderEmpty.hidden = true;
+    if (bookReaderMain) bookReaderMain.hidden = false;
+    if (pushHash) {
+      try { history.replaceState(null, "", "#book=" + id); } catch (_) {}
+    }
+    bumpWinning(2);
+  }
+
   document.querySelectorAll("#win-bookshelf .book").forEach(book => {
-    book.addEventListener("click", () => {
-      const bookNum = book.getAttribute("data-book");
-      const messages = {
-        "1": "Chapter 1: Never sell your rare Kitas.",
-        "2": "Lesson 4: If you have to explain the meme, you already lost.",
-        "3": "Page 69: This page intentionally left rare.",
-        "4": "Appendix C: How to lose aura in 3 easy steps."
-      };
-      showToast(messages[bookNum] || "This book is cursed.");
-      bumpWinning(3);
+    const go = () => openEssay(book.getAttribute("data-book"), true);
+    book.addEventListener("click", go);
+    book.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
     });
   });
+
+  if (bookCopyLink) {
+    bookCopyLink.addEventListener("click", async () => {
+      if (!openEssayId) return;
+      const url = location.origin + location.pathname + "#book=" + openEssayId;
+      try {
+        await navigator.clipboard.writeText(url);
+        showToast("Essay link copied. Send it to the timeline.");
+      } catch (_) {
+        showToast(url);
+      }
+    });
+  }
+
+  function openEssayFromHash() {
+    const hash = (location.hash || "").replace(/^#/, "");
+    const m = hash.match(/^book=([a-z]+)/i);
+    if (!m) return false;
+    const id = m[1].toLowerCase();
+    if (!essays[id]) return false;
+    unlockBookshelf(false);
+    openWindow("bookshelf");
+    openEssay(id, false);
+    return true;
+  }
+  window.addEventListener("hashchange", () => { openEssayFromHash(); });
+  // Deep links skip the Konami gate so a shared essay actually opens
+  setTimeout(() => { openEssayFromHash(); }, 1600);
+
 
 
 
