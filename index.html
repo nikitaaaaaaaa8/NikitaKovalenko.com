@@ -1373,9 +1373,9 @@
     "your meeting could have been a void.",
     "currently optimizing for aura.",
     "404: humility not found.",
-    "built different. documented never.",
-    "FUCK YOU (affectionate? unclear)"
+    "built different. documented never."
   ];
+  let wisdomIndex = 0;
 
   const boot = document.getElementById("boot");
   const toast = document.getElementById("toast");
@@ -1900,7 +1900,8 @@
   // interactions
   document.getElementById("rageBtn").addEventListener("click", () => {
     bumpWinning(3);
-    wisdom.textContent = lines[Math.floor(Math.random() * lines.length)];
+    wisdom.textContent = lines[wisdomIndex % lines.length];
+    wisdomIndex += 1;
     showToast(wisdom.textContent);
   });
 
