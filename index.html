@@ -1079,8 +1079,8 @@
         <p class="green">PUBLIC STACK // INTERNET CULTURE ZINES</p>
         <p class="muted" style="margin: 0 0 10px; font-size: 11px;">Click a spine. Short essays. Steal the takes, send the link.</p>
         <div class="bookshelf">
-          <div class="book" data-book="art" tabindex="0">
-            <div class="book-spine">The art of kita</div>
+          <div class="book" data-book="meme" tabindex="0">
+            <div class="book-spine">The art of the meme</div>
           </div>
           <div class="book" data-book="memetics" tabindex="0">
             <div class="book-spine">Memetics 101</div>
@@ -1953,13 +1953,13 @@
 
   // Bookshelf: short internet-culture essays
   const essays = {
-    art: {
-      kicker: "Vol. 01",
-      title: "The art of kita",
+    meme: {
+      kicker: "Vol. 01  ·  Foreword",
+      title: "The art of the meme",
       paragraphs: [
-        "Most personal sites are résumés wearing a hoodie. Kita OS is the opposite: a desktop you can live in. Icons, windows, a clock that lies about how much time you have. The point is not nostalgia. The point is control.",
-        "If the internet is a mall, this is a locked bedroom with the good posters. You click around like it’s 1998 because that was the last time a homepage felt like a place instead of a funnel.",
-        "The art is simple. Build a room. Put your taste on the walls. Let people rummage. If they don’t get it, they can close the window. That’s a feature."
+        "A meme used to be a unit of culture that copied itself. An idea with legs. Then it became a frog, then a reaction image, then the way the internet talks when it doesn’t want to say the thing straight.",
+        "Now the meme is the water. Brands hire people to speak it and still sound like tourists. Politics showed up with a starter pack. Even sincerity comes in a format. If it can be screenshot, it can be a joke, which means it can be a weapon, which means it can be a product.",
+        "The art, if there is one, is knowing when you’re using the language and when the language is using you. Everything after that is just captions."
       ]
     },
     memetics: {
@@ -2047,7 +2047,8 @@
     const hash = (location.hash || "").replace(/^#/, "");
     const m = hash.match(/^book=([a-z]+)/i);
     if (!m) return false;
-    const id = m[1].toLowerCase();
+    let id = m[1].toLowerCase();
+    if (id === "art") id = "meme";
     if (!essays[id]) return false;
     unlockBookshelf(false);
     openWindow("bookshelf");
