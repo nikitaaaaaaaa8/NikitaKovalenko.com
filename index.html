@@ -889,14 +889,16 @@
   }
   .start-menu button,
   .start-menu a {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     width: 100%;
     text-align: left;
     border: 0;
     background: transparent;
     color: var(--text);
     font: 12px var(--font);
-    padding: 8px 14px;
+    padding: 8px 12px;
     text-decoration: none;
     cursor: pointer;
   }
@@ -904,6 +906,20 @@
   .start-menu a:hover {
     background: rgba(57,255,20,.16);
     color: var(--green);
+  }
+  .start-menu .start-glyph {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+    color: var(--green);
+  }
+  .start-menu .start-glyph svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+    overflow: visible;
   }
 
   .boot {
@@ -3283,6 +3299,17 @@
       e.stopPropagation();
       if (e.target.closest("[data-open], [data-link]")) setStartOpen(false);
     });
+    startMenu.querySelectorAll("button[data-open], a[data-open], a[data-link]").forEach((row) => {
+      const name = row.getAttribute("data-open");
+      if (!name) return;
+      const src = document.querySelector('.icons .icon[data-open="' + name + '"] .glyph svg');
+      if (!src) return;
+      const wrap = document.createElement("span");
+      wrap.className = "start-glyph";
+      wrap.setAttribute("aria-hidden", "true");
+      wrap.appendChild(src.cloneNode(true));
+      row.insertBefore(wrap, row.firstChild);
+    });
   }
 
   // icons + taskbar
@@ -3942,7 +3969,7 @@
       kicker: "Vol. 05",
       title: "How Kita OS works",
       paragraphs: [
-        "This website is a fake desktop. Click an icon to open a window. Drag the title bar to move it. The red dot closes it. Drag a box around icons to select them, then drag any selected icon to move the whole pile. Drop the pile on Trash to bin them all.",
+        "This website is a fake desktop. Click Start for a list of apps with their icons. Click an icon to open a window. Drag the title bar to move it. The red dot closes it. Drag a box around icons to select them, then drag any selected icon to move the whole pile. Drop the pile on Trash to bin them all.",
         "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes. A refresh resets them. The Games folder has Minesweeper, Snake, Tetris, and Solitaire. Casino is a fake-chip toy: Blackjack, Slots, and Roulette. You start at 1000 chips; a refresh resets them. Bookshelf is these notes.",
         "Open Terminal and type help, then press Run. Help lists commands and app names; type an app to open it. games and casino open those folders. snow turns the snow off.",
         "A golden snitch shows up every 120 seconds for 5 seconds. Catch it for +47 winning and +500 casino chips. Refresh starts a new session.",
