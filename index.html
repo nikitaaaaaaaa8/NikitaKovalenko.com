@@ -2816,8 +2816,8 @@
   }
 
   function renderStats() {
-    clickCountEl.textContent = String(clicks);
-    winIndexEl.textContent = String(winIndex);
+    if (clickCountEl) clickCountEl.textContent = String(clicks);
+    if (winIndexEl) winIndexEl.textContent = String(winIndex);
   }
 
   function showToast(msg) {
@@ -2956,7 +2956,7 @@
     requestAnimationFrame(() => placeWindowOnScreen(el, { fresh: !alreadyOpen }));
     // Skip autofocus on phones — iOS zooms the page when focusing inputs
     if (name === "terminal" && window.innerWidth > 700) {
-      setTimeout(() => termIn.focus(), 50);
+      setTimeout(() => { if (termIn) termIn.focus(); }, 50);
     }
     if (name === "stats") ensureApproxLocation();
     if (typeof onGameWindowOpen === "function") onGameWindowOpen(name);
@@ -3017,7 +3017,7 @@
       const region = (geo.region || "").trim();
       const country = (geo.country || "").trim();
       locEl.textContent = city ? ("near " + city) : (country ? ("near " + country) : "unknown sector");
-      regionEl.textContent = [region, country].filter(Boolean).join(", ") || "—";
+      if (regionEl) regionEl.textContent = [region, country].filter(Boolean).join(", ") || "—";
       if (noteEl && geo.ip) {
         noteEl.textContent = "City guess from IP (" + geo.ip + ") — not GPS. VPNs lie.";
       }
@@ -3160,12 +3160,12 @@
       const meter = document.getElementById("auraMeter");
 
       if (auraActive) {
-        meter.style.display = "block";
+        if (meter) meter.style.display = "block";
         updateAura();
         termPrint("aura meter activated.");
         termPrint("it is already depleting.");
       } else {
-        meter.style.display = "none";
+        if (meter) meter.style.display = "none";
         if (auraInterval) {
           clearInterval(auraInterval);
           auraInterval = null;
@@ -3272,6 +3272,11 @@
       setStartOpen(startMenu.hidden);
     });
   }
+  document.addEventListener("pointerdown", (e) => {
+    if (!startMenu || startMenu.hidden) return;
+    if (e.target.closest && e.target.closest("#startMenu, #startBtn")) return;
+    setStartOpen(false);
+  }, true);
   document.addEventListener("click", () => setStartOpen(false));
   if (startMenu) {
     startMenu.addEventListener("click", (e) => {
@@ -3405,6 +3410,7 @@
     });
 
     function endDrag(e) {
+      if (!dragging) return;
       if (e && activePointer != null && e.pointerId !== activePointer) return;
       dragging = false;
       activePointer = null;
@@ -3414,6 +3420,8 @@
     bar.addEventListener("pointerup", endDrag);
     bar.addEventListener("pointercancel", endDrag);
     bar.addEventListener("lostpointercapture", endDrag);
+    document.addEventListener("pointerup", endDrag);
+    document.addEventListener("pointercancel", endDrag);
   });
 
   // desktop-only window resize (edges + corners)
@@ -3600,10 +3608,16 @@
     bumpWinning(1);
   });
 
-  // clock
+  // clock — always one line ("1:00 AM"), no locale extras
   function tick() {
+    const el = document.getElementById("clock");
+    if (!el) return;
     const d = new Date();
-    document.getElementById("clock").textContent = d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    let h = d.getHours();
+    const m = String(d.getMinutes()).padStart(2, "0");
+    const ampm = h >= 12 ? "PM" : "AM";
+    h = h % 12 || 12;
+    el.textContent = h + ":" + m + " " + ampm;
   }
   tick();
   setInterval(tick, 1000);
@@ -3739,10 +3753,22 @@
     tapStart = null;
     const dx = e.clientX - start.x;
     const dy = e.clientY - start.y;
-    if (Math.hypot(dx, dy) < 12) {
-      clicks += 1;
-      renderStats();
+    const dist = Math.hypot(dx, dy);
+    if (dist >= 12) return;
+    // Capture phase: drag systems still own this pointer. A 3–10px drag
+    // must not also count as a session click.
+    if (iconDrag && iconDrag.moved) return;
+    if (document.body.classList.contains("icon-dragging")) return;
+    if (document.body.classList.contains("resizing")) return;
+    if (typeof paint !== "undefined" && paint && paint.drawing) return;
+    if (marqueeActive) {
+      const mw = marquee ? parseFloat(marquee.style.width) || 0 : 0;
+      const mh = marquee ? parseFloat(marquee.style.height) || 0 : 0;
+      if (mw >= marqueeThreshold || mh >= marqueeThreshold) return;
     }
+    if (document.body.classList.contains("dragging") && dist >= 3) return;
+    clicks += 1;
+    renderStats();
   }, true);
   document.addEventListener("pointercancel", (e) => {
     if (tapStart && e.pointerId === tapStart.id) tapStart = null;
@@ -3834,9 +3860,11 @@
 
   const snitch = document.getElementById("snitch");
   let snitchTimeout;
+  let snitchCatching = false;
 
   function spawnSnitch() {
     if (!snitch) return;
+    snitchCatching = false;
     snitch.style.display = "block";
     snitch.style.left = Math.random() * Math.max(20, window.innerWidth - 60) + "px";
     snitch.style.top = Math.random() * Math.max(20, window.innerHeight - 60) + "px";
@@ -3859,7 +3887,9 @@
   if (snitch) {
     function catchSnitch(e) {
       if (e && e.button != null && e.button !== 0) return;
-      if (snitch.style.display !== "block") return;
+      if (snitchCatching) return;
+      if (!snitch || snitch.style.display !== "block") return;
+      snitchCatching = true;
       snitch.style.display = "none";
       clearTimeout(snitchTimeout);
       bumpWinning(47);
@@ -3913,7 +3943,7 @@
       title: "How Kita OS works",
       paragraphs: [
         "This website is a fake desktop. Click an icon to open a window. Drag the title bar to move it. The red dot closes it. Drag a box around icons to select them, then drag any selected icon to move the whole pile. Drop the pile on Trash to bin them all.",
-        "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Session clicks count every tap or click this visit; a refresh resets them. The Games folder has Minesweeper, Snake, Tetris, and Solitaire. Casino is a fake-chip toy: Blackjack, Slots, and Roulette. You start at 1000 chips; a refresh resets them. Bookshelf is these notes.",
+        "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes. A refresh resets them. The Games folder has Minesweeper, Snake, Tetris, and Solitaire. Casino is a fake-chip toy: Blackjack, Slots, and Roulette. You start at 1000 chips; a refresh resets them. Bookshelf is these notes.",
         "Open Terminal and type help, then press Run. Help lists commands and app names; type an app to open it. games and casino open those folders. snow turns the snow off.",
         "A golden snitch shows up every 120 seconds for 5 seconds. Catch it for +47 winning and +500 casino chips. Refresh starts a new session.",
         "There is a Konami code: up, up, down, down, left, right, left, right, B, A. That opens a VIP box, turns on Matrix rain, and turns off the snow."
@@ -5960,6 +5990,8 @@
 
     paintCanvas.addEventListener("pointerup", paintEndDraw);
     paintCanvas.addEventListener("pointercancel", paintEndDraw);
+    document.addEventListener("pointerup", paintEndDraw);
+    document.addEventListener("pointercancel", paintEndDraw);
     paintCanvas.addEventListener("contextmenu", (e) => e.preventDefault());
     paintFillPaper();
   }
@@ -6198,6 +6230,10 @@
     const first = icons[0].getBoundingClientRect();
     if (first.width < 8) return;
     const rects = icons.map((icon) => icon.getBoundingClientRect());
+    if (icons.length > 1) {
+      const piled = rects.every((r) => Math.abs(r.left - rects[0].left) < 2 && Math.abs(r.top - rects[0].top) < 2);
+      if (piled) return;
+    }
     const desk = desktopEl.getBoundingClientRect();
     iconsRoot.classList.add("icons-free");
     icons.forEach((icon, i) => {
@@ -6521,6 +6557,11 @@
   window.addEventListener("load", () => {
     if (!iconsFrozen) freezeDesktopIcons();
   });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => { if (!iconsFrozen) freezeDesktopIcons(); });
+  }
+  setTimeout(() => { if (!iconsFrozen) freezeDesktopIcons(); }, 120);
+  setTimeout(() => { if (!iconsFrozen) freezeDesktopIcons(); }, 600);
 
   renderStats();
 })();
