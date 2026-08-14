@@ -9,16 +9,63 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script>
 (function () {
-  try {
-    var p = new URLSearchParams(location.search || "");
-    if (p.has("tesla") && p.get("tesla") !== "0") {
-      document.documentElement.classList.add("tesla");
-      return;
+    function teslaLayoutWanted() {
+    function rememberTesla() {
+      try { sessionStorage.setItem("kitaTesla", "1"); } catch (err) {}
     }
-  } catch (e) {}
+    var p, ua, vendor, platform, blob, coarse, hoverNone, hoverHover, pointerFine;
+    var teslaToken, qtOk, uad, brands, i, linuxChrome, notPhone, sw, sh, iw, ih, maxW, minDim, touch, dims;
+    try {
+      p = new URLSearchParams(location.search || "");
+      if (p.has("tesla") && p.get("tesla") === "0") return false;
+      if (p.has("tesla")) { rememberTesla(); return true; }
+    } catch (e0) {}
+    try {
+      if (sessionStorage.getItem("kitaTesla") === "1") return true;
+    } catch (e1) {}
+    try { ua = String(navigator.userAgent || ""); } catch (e2) { ua = ""; }
+    try { vendor = String(navigator.vendor || ""); } catch (e3) { vendor = ""; }
+    try { platform = String(navigator.platform || ""); } catch (e4) { platform = ""; }
+    blob = ua + vendor + platform;
+    try { coarse = matchMedia("(pointer: coarse)").matches; } catch (e5) { coarse = false; }
+    try { hoverNone = matchMedia("(hover: none)").matches; } catch (e6) { hoverNone = false; }
+    try { hoverHover = matchMedia("(hover: hover)").matches; } catch (e7) { hoverHover = false; }
+    try { pointerFine = matchMedia("(pointer: fine)").matches; } catch (e8) { pointerFine = false; }
+    teslaToken = /Tesla|TESLA_AUTO|TeslaMusic/i.test(blob);
+    qtOk = /QtWebEngine/i.test(blob) && !(hoverHover && pointerFine);
+    if (teslaToken || qtOk) { rememberTesla(); return true; }
+    try {
+      uad = navigator.userAgentData;
+      if (uad) {
+        if (/tesla/i.test(String(uad.platform || ""))) { rememberTesla(); return true; }
+        brands = uad.brands || [];
+        for (i = 0; i < brands.length; i++) {
+          if (/tesla/i.test(String((brands[i] && brands[i].brand) || ""))) {
+            rememberTesla();
+            return true;
+          }
+        }
+      }
+    } catch (e9) {}
+    linuxChrome = /X11; Linux|Linux x86_64|Linux aarch64/i.test(ua);
+    notPhone = !/iPhone|iPad|iPod|Android|Macintosh|Windows NT|CrOS|Steam|Deck/i.test(ua);
+    sw = (typeof screen !== "undefined" && screen.width) || 0;
+    sh = (typeof screen !== "undefined" && screen.height) || 0;
+    iw = (typeof innerWidth === "number" && innerWidth) || 0;
+    ih = (typeof innerHeight === "number" && innerHeight) || 0;
+    maxW = Math.max(sw, iw);
+    dims = [sw, iw, sh, ih].filter(function (n) { return n > 0; });
+    minDim = dims.length ? Math.min.apply(null, dims) : 0;
+    touch = ((typeof navigator !== "undefined" && navigator.maxTouchPoints) || 0) > 0;
+    if (linuxChrome && notPhone && coarse && hoverNone && maxW >= 1200 && minDim >= 700 && touch) {
+      rememberTesla();
+      return true;
+    }
+    return false;
+  }
   try {
-    if (/Tesla/i.test(navigator.userAgent || "")) document.documentElement.classList.add("tesla");
-  } catch (e2) {}
+    if (teslaLayoutWanted()) document.documentElement.classList.add("tesla");
+  } catch (eHead) {}
 })();
 </script>
 <style>
@@ -2470,7 +2517,7 @@
     }
   }
 
-  /* Tesla in-car fat-finger layout. Gated by html.tesla (UA /Tesla/i or ?tesla). */
+  /* Tesla in-car fat-finger layout. Gated by html.tesla (auto-detect or ?tesla). */
   html.tesla {
     --icon-tile: 112px;
     --icon-gap-x: 18px;
@@ -3407,12 +3454,59 @@
 
 <script>
 (function () {
-  function teslaLayoutWanted() {
+    function teslaLayoutWanted() {
+    function rememberTesla() {
+      try { sessionStorage.setItem("kitaTesla", "1"); } catch (err) {}
+    }
+    var p, ua, vendor, platform, blob, coarse, hoverNone, hoverHover, pointerFine;
+    var teslaToken, qtOk, uad, brands, i, linuxChrome, notPhone, sw, sh, iw, ih, maxW, minDim, touch, dims;
     try {
-      const p = new URLSearchParams(location.search || "");
-      if (p.has("tesla") && p.get("tesla") !== "0") return true;
-    } catch (e) {}
-    try { return /Tesla/i.test(navigator.userAgent || ""); } catch (e2) { return false; }
+      p = new URLSearchParams(location.search || "");
+      if (p.has("tesla") && p.get("tesla") === "0") return false;
+      if (p.has("tesla")) { rememberTesla(); return true; }
+    } catch (e0) {}
+    try {
+      if (sessionStorage.getItem("kitaTesla") === "1") return true;
+    } catch (e1) {}
+    try { ua = String(navigator.userAgent || ""); } catch (e2) { ua = ""; }
+    try { vendor = String(navigator.vendor || ""); } catch (e3) { vendor = ""; }
+    try { platform = String(navigator.platform || ""); } catch (e4) { platform = ""; }
+    blob = ua + vendor + platform;
+    try { coarse = matchMedia("(pointer: coarse)").matches; } catch (e5) { coarse = false; }
+    try { hoverNone = matchMedia("(hover: none)").matches; } catch (e6) { hoverNone = false; }
+    try { hoverHover = matchMedia("(hover: hover)").matches; } catch (e7) { hoverHover = false; }
+    try { pointerFine = matchMedia("(pointer: fine)").matches; } catch (e8) { pointerFine = false; }
+    teslaToken = /Tesla|TESLA_AUTO|TeslaMusic/i.test(blob);
+    qtOk = /QtWebEngine/i.test(blob) && !(hoverHover && pointerFine);
+    if (teslaToken || qtOk) { rememberTesla(); return true; }
+    try {
+      uad = navigator.userAgentData;
+      if (uad) {
+        if (/tesla/i.test(String(uad.platform || ""))) { rememberTesla(); return true; }
+        brands = uad.brands || [];
+        for (i = 0; i < brands.length; i++) {
+          if (/tesla/i.test(String((brands[i] && brands[i].brand) || ""))) {
+            rememberTesla();
+            return true;
+          }
+        }
+      }
+    } catch (e9) {}
+    linuxChrome = /X11; Linux|Linux x86_64|Linux aarch64/i.test(ua);
+    notPhone = !/iPhone|iPad|iPod|Android|Macintosh|Windows NT|CrOS|Steam|Deck/i.test(ua);
+    sw = (typeof screen !== "undefined" && screen.width) || 0;
+    sh = (typeof screen !== "undefined" && screen.height) || 0;
+    iw = (typeof innerWidth === "number" && innerWidth) || 0;
+    ih = (typeof innerHeight === "number" && innerHeight) || 0;
+    maxW = Math.max(sw, iw);
+    dims = [sw, iw, sh, ih].filter(function (n) { return n > 0; });
+    minDim = dims.length ? Math.min.apply(null, dims) : 0;
+    touch = ((typeof navigator !== "undefined" && navigator.maxTouchPoints) || 0) > 0;
+    if (linuxChrome && notPhone && coarse && hoverNone && maxW >= 1200 && minDim >= 700 && touch) {
+      rememberTesla();
+      return true;
+    }
+    return false;
   }
   let teslaClassLate = false;
   if (!document.documentElement.classList.contains("tesla") && teslaLayoutWanted()) {
@@ -4680,7 +4774,7 @@
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
             "Designed for the computer, but it works on mobile too.",
-            "In a Tesla browser (or if you add ?tesla to the URL) the desktop uses bigger icons and buttons. Phone and computer layouts stay the same."
+            "The desktop auto-detects the Tesla car browser and uses bigger icons and buttons. ?tesla still forces that layout. Phone and computer layouts stay the same."
           ]
         },
         {
