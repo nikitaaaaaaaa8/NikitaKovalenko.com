@@ -269,6 +269,7 @@
     display: none;
   }
   .window.open { display: flex !important; flex-direction: column; }
+  .window.open.minimized { display: none !important; }
   .window.active { border-color: rgba(57,255,20,.8); box-shadow: var(--shadow), 0 0 0 1px rgba(57,255,20,.15); }
 
   .resize-handle {
@@ -893,10 +894,50 @@
   .xp-flag .g { background: #39ff14; }
   .xp-flag .b { background: #1f8f0f; }
   .xp-flag .y { background: #d8ffd0; }
-  .taskbar-mid { flex: 1; }
+  .taskbar-mid {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    gap: 3px;
+    min-width: 0;
+    padding: 3px 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+  .taskbar-mid::-webkit-scrollbar { display: none; }
+  .taskbar-win {
+    flex: 0 1 auto;
+    min-width: 72px;
+    max-width: 140px;
+    margin: 0;
+    padding: 0 8px;
+    border: 1px solid rgba(57,255,20,.28);
+    border-radius: 2px;
+    background: linear-gradient(180deg, #243824 0%, #142014 55%, #0c140c 100%);
+    box-shadow: inset 1px 1px 0 rgba(180,255,160,.22), inset -1px -1px 0 rgba(0,0,0,.45);
+    color: #c8f0c0;
+    font: 11px var(--font);
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    line-height: 1.2;
+  }
+  .taskbar-win:hover { filter: brightness(1.08); }
+  .taskbar-win.active {
+    background: linear-gradient(180deg, #0a160a 0%, #163016 48%, #1a3a18 100%);
+    border-color: rgba(57,255,20,.55);
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,.55), inset 0 0 0 1px rgba(57,255,20,.18);
+    color: var(--green);
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(57,255,20,.35);
+  }
   .tray {
     display: flex;
     align-items: center;
+    gap: 8px;
     padding: 0 10px;
     margin: 3px 3px 3px 0;
     border: 1px solid rgba(57,255,20,.35);
@@ -904,7 +945,27 @@
     box-shadow: inset 1px 1px 0 rgba(57,255,20,.18);
     min-width: 76px;
     justify-content: center;
+    flex-shrink: 0;
   }
+  .tray-speaker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--green);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .tray-speaker svg { width: 16px; height: 16px; display: block; }
+  .tray-speaker .spk-off { display: none; }
+  .tray-speaker.is-muted { color: var(--muted); }
+  .tray-speaker.is-muted .spk-on { display: none; }
+  .tray-speaker.is-muted .spk-off { display: block; }
+  .tray-speaker:hover { filter: brightness(1.15); }
   .clock {
     min-width: 0;
     flex-shrink: 0;
@@ -2167,7 +2228,7 @@
   .titlebar[data-drag]:active { cursor: grabbing; }
   .titlebar[data-drag] .dots,
   .titlebar[data-drag] .dot { cursor: pointer; }
-  button, a, [data-open], [data-link], [data-close], [data-book], [data-act] {
+  button, a, [data-open], [data-link], [data-close], [data-min], [data-book], [data-act] {
     cursor: pointer;
   }
   .icons .icon,
@@ -2266,10 +2327,12 @@
       padding: 8px 10px;
     }
 
-    .taskbar { height: 44px; }
+    .taskbar { height: 44px; flex-wrap: nowrap; }
+    .taskbar-mid { overflow-x: auto; display: flex; }
+    .taskbar-win { min-width: 72px; max-width: 140px; font-size: 11px; }
     .start-menu { bottom: 44px; }
-    .start-btn { font-size: 15px; padding: 0 16px 0 8px; }
-    .clock { font-size: 11px; }
+    .start-btn { font-size: 15px; padding: 0 16px 0 8px; flex-shrink: 0; }
+    .clock { font-size: 11px; white-space: nowrap; }
 
     .terminal {
       height: min(160px, 28vh);
@@ -2562,7 +2625,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="about"></div>
-          <div class="dot min" data-close="about"></div>
+          <div class="dot min" data-min="about"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">About.txt</div>
@@ -2585,7 +2648,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="stats"></div>
-          <div class="dot min" data-close="stats"></div>
+          <div class="dot min" data-min="stats"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Tracker</div>
@@ -2609,7 +2672,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="terminal"></div>
-          <div class="dot min" data-close="terminal"></div>
+          <div class="dot min" data-min="terminal"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">kita@winning:~</div>
@@ -2627,7 +2690,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="contact"></div>
-          <div class="dot min" data-close="contact"></div>
+          <div class="dot min" data-min="contact"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Contact.app</div>
@@ -2651,7 +2714,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="trash"></div>
-          <div class="dot min" data-close="trash"></div>
+          <div class="dot min" data-min="trash"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Trash</div>
@@ -2669,7 +2732,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="drone"></div>
-          <div class="dot min" data-close="drone"></div>
+          <div class="dot min" data-min="drone"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">DroneStuff</div>
@@ -2719,7 +2782,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="bookshelf"></div>
-          <div class="dot min" data-close="bookshelf"></div>
+          <div class="dot min" data-min="bookshelf"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Book_Shelf</div>
@@ -2775,7 +2838,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="weather"></div>
-          <div class="dot min" data-close="weather"></div>
+          <div class="dot min" data-min="weather"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Weather</div>
@@ -2790,7 +2853,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="games"></div>
-          <div class="dot min" data-close="games"></div>
+          <div class="dot min" data-min="games"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Games</div>
@@ -2831,7 +2894,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="casino"></div>
-          <div class="dot min" data-close="casino"></div>
+          <div class="dot min" data-min="casino"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Casino</div>
@@ -2868,7 +2931,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="minesweeper"></div>
-          <div class="dot min" data-close="minesweeper"></div>
+          <div class="dot min" data-min="minesweeper"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Minesweeper</div>
@@ -2890,7 +2953,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="snake"></div>
-          <div class="dot min" data-close="snake"></div>
+          <div class="dot min" data-min="snake"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Snake</div>
@@ -2919,7 +2982,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="tetris"></div>
-          <div class="dot min" data-close="tetris"></div>
+          <div class="dot min" data-min="tetris"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Tetris</div>
@@ -2949,7 +3012,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="solitaire"></div>
-          <div class="dot min" data-close="solitaire"></div>
+          <div class="dot min" data-min="solitaire"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Solitaire</div>
@@ -2992,7 +3055,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="chess"></div>
-          <div class="dot min" data-close="chess"></div>
+          <div class="dot min" data-min="chess"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Chess</div>
@@ -3018,7 +3081,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="pinball"></div>
-          <div class="dot min" data-close="pinball"></div>
+          <div class="dot min" data-min="pinball"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Pinball</div>
@@ -3053,7 +3116,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="paint"></div>
-          <div class="dot min" data-close="paint"></div>
+          <div class="dot min" data-min="paint"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Paint</div>
@@ -3109,7 +3172,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="blackjack"></div>
-          <div class="dot min" data-close="blackjack"></div>
+          <div class="dot min" data-min="blackjack"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Blackjack</div>
@@ -3149,7 +3212,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="slots"></div>
-          <div class="dot min" data-close="slots"></div>
+          <div class="dot min" data-min="slots"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Slots</div>
@@ -3185,7 +3248,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="roulette"></div>
-          <div class="dot min" data-close="roulette"></div>
+          <div class="dot min" data-min="roulette"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Roulette</div>
@@ -3228,7 +3291,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="craps"></div>
-          <div class="dot min" data-close="craps"></div>
+          <div class="dot min" data-min="craps"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Craps</div>
@@ -3265,7 +3328,7 @@
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="baccarat"></div>
-          <div class="dot min" data-close="baccarat"></div>
+          <div class="dot min" data-min="baccarat"></div>
           <div class="dot max"></div>
         </div>
         <div class="title">Baccarat</div>
@@ -3315,8 +3378,12 @@
       <span class="xp-flag" aria-hidden="true"><i class="r"></i><i class="g"></i><i class="b"></i><i class="y"></i></span>
       start
     </button>
-    <div class="taskbar-mid"></div>
+    <div class="taskbar-mid" id="taskbarWindows"></div>
     <div class="tray">
+      <button type="button" class="tray-speaker" id="traySpeaker" aria-label="Mute sound" aria-pressed="false" title="Mute">
+        <svg class="spk-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.2h3.6l4.6-3.6v13l-4.6-3.6H4z" fill="currentColor"/><path d="M16.2 8.4c1.5 1.3 1.5 5.9 0 7.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M18.7 6.1c2.5 2.3 2.5 9.5 0 11.8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <svg class="spk-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.2h3.6l4.6-3.6v13l-4.6-3.6H4z" fill="currentColor"/><path d="M16.4 9.2l5 5M21.4 9.2l-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </button>
       <div class="clock" id="clock">1:00 AM</div>
     </div>
     <div class="start-menu" id="startMenu" hidden>
@@ -3434,7 +3501,7 @@
   }
 
   function placeWindowOnScreen(el, opts) {
-    if (!el) return;
+    if (!el || el.classList.contains("minimized")) return;
     const margin = 8;
     const isMobile = window.innerWidth <= 700;
     const topBar = isMobile ? 88 : 16;
@@ -3453,7 +3520,7 @@
       const maxTop = Math.max(margin, window.innerHeight - tb - 140);
       let top;
       if (opts && opts.fresh) {
-        const openCount = [...document.querySelectorAll(".window.open")].filter(w => w !== el).length;
+        const openCount = [...document.querySelectorAll(".window.open")].filter(w => w !== el && !w.classList.contains("minimized")).length;
         const cascade = Math.min(openCount, 5) * 14;
         el.style.left = margin + "px";
         top = topBar + cascade;
@@ -3506,7 +3573,7 @@
     }
 
     const others = [...document.querySelectorAll(".window.open")]
-      .filter(x => x !== el)
+      .filter(x => x !== el && !x.classList.contains("minimized"))
       .map(x => x.getBoundingClientRect());
 
     const candidates = [];
@@ -3560,10 +3627,12 @@
     const el = windows[name];
     if (!el) return;
     Object.values(windows).forEach(w => { if (w) w.classList.remove("active"); });
+    el.classList.remove("minimized");
     el.classList.add("open", "active");
     el.style.display = ""; // don't let leftover inline display:none trap the window
     el.style.zIndex = String(++z);
     if (name === "pinball") pbStartLoop();
+    syncTaskbar();
   }
 
   function openWindow(name) {
@@ -3705,8 +3774,78 @@
   function closeWindow(name) {
     const el = windows[name];
     if (!el) return;
-    el.classList.remove("open", "active");
+    el.classList.remove("open", "active", "minimized");
     if (typeof onGameWindowClose === "function") onGameWindowClose(name);
+    syncTaskbar();
+  }
+
+  function minimizeWindow(name) {
+    const el = windows[name];
+    if (!el || !el.classList.contains("open") || el.classList.contains("minimized")) return;
+    el.classList.add("minimized");
+    el.classList.remove("active");
+    if (typeof onGameWindowClose === "function") onGameWindowClose(name);
+    let next = null;
+    let nextZ = -Infinity;
+    Object.entries(windows).forEach(([n, w]) => {
+      if (!w || w === el) return;
+      if (!w.classList.contains("open") || w.classList.contains("minimized")) return;
+      const zVal = parseInt(w.style.zIndex, 10) || 0;
+      if (zVal >= nextZ) {
+        nextZ = zVal;
+        next = n;
+      }
+    });
+    if (next) focusWindow(next);
+    else syncTaskbar();
+  }
+
+  function syncTaskbar() {
+    const mid = document.getElementById("taskbarWindows");
+    if (!mid) return;
+    mid.innerHTML = "";
+    document.querySelectorAll(".window.open").forEach(el => {
+      const name = Object.keys(windows).find(n => windows[n] === el);
+      if (!name) return;
+      const titleEl = el.querySelector(".titlebar .title");
+      const label = titleEl ? titleEl.textContent.trim() : name;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "taskbar-win" + (el.classList.contains("active") && !el.classList.contains("minimized") ? " active" : "");
+      btn.textContent = label;
+      btn.title = label;
+      btn.setAttribute("data-task", name);
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleTaskbarWindow(name);
+      });
+      mid.appendChild(btn);
+    });
+  }
+
+  function toggleTaskbarWindow(name) {
+    const el = windows[name];
+    if (!el) return;
+    if (el.classList.contains("open") && !el.classList.contains("minimized") && el.classList.contains("active")) {
+      minimizeWindow(name);
+    } else {
+      openWindow(name);
+    }
+  }
+
+  let audioMuted = false;
+  function kitaAudioAllowed() {
+    return !audioMuted;
+  }
+  window.kitaAudioAllowed = kitaAudioAllowed;
+  function setAudioMuted(on) {
+    audioMuted = !!on;
+    const btn = document.getElementById("traySpeaker");
+    if (!btn) return;
+    btn.classList.toggle("is-muted", audioMuted);
+    btn.setAttribute("aria-pressed", audioMuted ? "true" : "false");
+    btn.setAttribute("aria-label", audioMuted ? "Unmute sound" : "Mute sound");
+    btn.title = audioMuted ? "Unmute" : "Mute";
   }
 
   function bumpWinning(by) {
@@ -3861,7 +4000,7 @@
   }
 
   window.addEventListener("resize", () => {
-    document.querySelectorAll(".window.open").forEach(placeWindowOnScreen);
+    document.querySelectorAll(".window.open").forEach(w => { if (!w.classList.contains("minimized")) placeWindowOnScreen(w); });
   });
 
   // boot
@@ -3950,6 +4089,21 @@
       closeWindow(el.getAttribute("data-close"));
     });
   });
+
+  document.querySelectorAll("[data-min]").forEach(el => {
+    el.addEventListener("click", (e) => {
+      e.stopPropagation();
+      minimizeWindow(el.getAttribute("data-min"));
+    });
+  });
+
+  const traySpeaker = document.getElementById("traySpeaker");
+  if (traySpeaker) {
+    traySpeaker.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setAudioMuted(!audioMuted);
+    });
+  }
 
   const droneLightbox = document.getElementById("droneLightbox");
   const droneLightboxImg = document.getElementById("droneLightboxImg");
@@ -4598,10 +4752,11 @@
         {
           title: "Windows",
           paragraphs: [
-            "Click an icon to open a window. Drag the title bar to move it. The red dot closes it.",
+            "Click an icon to open a window. Drag the title bar to move it. The red dot closes it. The yellow dot minimizes it — the window hides, but its button stays on the taskbar.",
+            "Open windows show as buttons on the taskbar. Click the button to bring a window back, or tuck it away if it is already in front.",
             "On a desktop, not a phone, drag the edges or corners to resize.",
             "The first window, About, opens centered. Later windows try not to sit on top of one already open, and they stay above the taskbar. On a phone, rotate keeps windows where they are; they do not restack.",
-            "Pointer cursor on clickable controls: close, buttons. Grab and drag cursor on title bars."
+            "Pointer cursor on clickable controls: close, minimize, taskbar buttons, buttons. Grab and drag cursor on title bars. The tray speaker mutes audio for this visit."
           ]
         },
         {
@@ -4824,7 +4979,7 @@
 
   // === Games: Minesweeper / Snake / Tetris / Solitaire / Chess / Pinball ===
   function gameWindowOpen(name) {
-    return !!(windows[name] && windows[name].classList.contains("open"));
+    return !!(windows[name] && windows[name].classList.contains("open") && !windows[name].classList.contains("minimized"));
   }
 
   // --- Minesweeper ---
