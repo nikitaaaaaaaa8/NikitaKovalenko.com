@@ -1212,8 +1212,7 @@
   }
   #win-tetris.window.open,
   #win-snake.window.open,
-  #win-chess.window.open,
-  #win-pinball.window.open {
+  #win-chess.window.open {
     max-height: calc(100dvh - 48px);
   }
   #win-tetris .content,
@@ -1387,78 +1386,6 @@
     -webkit-text-stroke: 0.35px rgba(255,255,255,.18);
     text-shadow: 0 1px 0 rgba(255,255,255,.12);
   }
-
-  /* Pinball */
-  #win-pinball {
-    max-width: min(420px, calc(100vw - 24px));
-  }
-  #win-pinball.window.open {
-    max-height: calc(100dvh - 48px);
-  }
-  #win-pinball .content.pb-content {
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    overflow: hidden;
-    flex: 1 1 auto;
-    padding: 10px 12px 12px;
-  }
-  #win-pinball.user-sized > .content.pb-content {
-    max-height: none;
-  }
-  .pb-table-wrap {
-    position: relative;
-    flex: 1 1 auto;
-    min-height: 160px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    touch-action: none;
-  }
-  #pinball-canvas {
-    display: block;
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    background: #050805;
-    border: 1px solid rgba(57,255,20,.35);
-    border-radius: 6px;
-    touch-action: none;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-  .pb-pad {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 8px;
-    flex-shrink: 0;
-    margin-top: 8px;
-  }
-  .pb-pad .btn {
-    min-height: 44px;
-    padding: 8px 10px;
-  }
-  .pb-over {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    background: rgba(0,0,0,.55);
-    border-radius: 6px;
-    z-index: 2;
-  }
-  .pb-over[hidden] { display: none !important; }
-  .pb-over-card {
-    width: min(240px, 86%);
-    padding: 14px 14px 12px;
-    border: 1px solid rgba(57,255,20,.45);
-    background: rgba(10,14,10,.92);
-    border-radius: 10px;
-    text-align: center;
-  }
-  .pb-over-card .green { font-size: 14px; letter-spacing: .06em; text-transform: uppercase; }
-  .pb-over-card p { margin: 8px 0 12px; color: var(--muted); font-size: 12px; }
 
   /* Casino */
   #win-blackjack {
@@ -2173,7 +2100,6 @@
     .chess-board { width: min(100%, calc(100dvh - 200px)); }
     .chess-diff .btn { min-height: 44px; }
     .chess-pc { font-size: clamp(22px, 8vw, 32px); }
-    .pb-pad .btn { min-height: 44px; }
 
     #win-solitaire {
       --sol-cw: 40px;
@@ -2446,8 +2372,7 @@
 
 
     #win-solitaire.window.open,
-    #win-chess.window.open,
-    #win-pinball.window.open {
+    #win-chess.window.open {
       max-height: calc(100dvh - 44px);
     }
     #win-solitaire .content.sol-content {
@@ -2852,10 +2777,6 @@
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20.5h8l.7-3H7.3z"/><path d="M7.5 17.5h9"/><path d="M8.3 17.5l1-6.2h5.4l1 6.2"/><path d="M9.7 11.3c0-1.5.9-2.7 2.3-2.7s2.3 1.2 2.3 2.7"/><circle cx="12" cy="5.6" r="1.25"/><path d="M8.4 8.6h7.2"/></svg></div>
             <div class="gc-meta"><div class="gc-title">Chess</div><div class="gc-desc">You are White · Easy / Medium / Hard</div></div>
           </button>
-          <button type="button" class="game-card" data-open="pinball">
-            <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3.2" width="12" height="17.6" rx="2"/><circle cx="12" cy="8.2" r="1.35" fill="currentColor" stroke="none"/><path d="M8.2 17.2l2.6-1.7"/><path d="M15.8 17.2l-2.6-1.7"/><path d="M16.4 5.2v8.6"/></svg></div>
-            <div class="gc-meta"><div class="gc-title">Pinball</div><div class="gc-desc">3 balls · flippers · drain</div></div>
-          </button>
         </div>
       </div>
     </section>
@@ -3044,41 +2965,6 @@
         </div>
         <div class="chess-board" id="chessBoard" aria-label="Chess board"></div>
         <p class="game-hint">You are White · tap a piece, then a square</p>
-      </div>
-    </section>
-
-    <section class="window" id="win-pinball" style="top:48px; left:210px; width:380px; height:640px;">
-      <div class="titlebar" data-drag>
-        <div class="dots">
-          <div class="dot close" data-close="pinball"></div>
-          <div class="dot min" data-close="pinball"></div>
-          <div class="dot max"></div>
-        </div>
-        <div class="title">Pinball</div>
-      </div>
-      <div class="content pb-content">
-        <div class="game-toolbar">
-          <div class="game-status" id="pbStatus">Score: 0 · Balls: 3</div>
-          <div class="row">
-            <button type="button" class="btn" id="pbNew">New</button>
-          </div>
-        </div>
-        <div class="pb-table-wrap" id="pbTableWrap">
-          <canvas id="pinball-canvas" width="360" height="640" aria-label="Pinball table"></canvas>
-          <div class="pb-over" id="pbOver" hidden>
-            <div class="pb-over-card">
-              <div class="green">Game over</div>
-              <p id="pbOverScore">Score 0</p>
-              <button type="button" class="btn" id="pbOverNew">New</button>
-            </div>
-          </div>
-        </div>
-        <div class="pb-pad" id="pbPad">
-          <button type="button" class="btn" id="pbLeftBtn" aria-label="Left flipper">◀</button>
-          <button type="button" class="btn secondary" id="pbLaunchBtn" aria-label="Launch">LAUNCH</button>
-          <button type="button" class="btn" id="pbRightBtn" aria-label="Right flipper">▶</button>
-        </div>
-        <p class="game-hint">Z or ← / slash or → flip · Space launch</p>
       </div>
     </section>
 
@@ -3430,7 +3316,6 @@
     tetris: document.getElementById("win-tetris"),
     solitaire: document.getElementById("win-solitaire"),
     chess: document.getElementById("win-chess"),
-    pinball: document.getElementById("win-pinball"),
     weather: document.getElementById("win-weather"),
     paint: document.getElementById("win-paint"),
     casino: document.getElementById("win-casino"),
@@ -3601,7 +3486,6 @@
     el.classList.add("open", "active");
     el.style.display = ""; // don't let leftover inline display:none trap the window
     el.style.zIndex = String(++z);
-    if (name === "pinball") pbStartLoop();
   }
 
   function openWindow(name) {
@@ -4125,7 +4009,6 @@
     if (win && win.id === "win-paint") return { minW: 420, minH: 320 };
     if (win && win.id === "win-solitaire") return { minW: 360, minH: 280 };
     if (win && win.id === "win-chess") return { minW: 300, minH: 360 };
-    if (win && win.id === "win-pinball") return { minW: 300, minH: 400 };
     if (win && win.id === "win-blackjack") return { minW: 340, minH: 300 };
     if (win && win.id === "win-slots") return { minW: 300, minH: 280 };
     if (win && win.id === "win-roulette") return { minW: 320, minH: 340 };
@@ -4160,9 +4043,6 @@
   function afterUserResize(win) {
     if (win && win.id === "win-paint" && typeof paintFitCanvas === "function") {
       paintFitCanvas();
-    }
-    if (win && win.id === "win-pinball" && typeof pbFit === "function") {
-      pbFit();
     }
   }
 
@@ -4234,7 +4114,7 @@
         }
 
         applyUserSize(win, Math.round(left), Math.round(top), Math.round(width), Math.round(height));
-        if ((win.id === "win-paint" || win.id === "win-pinball") && !paintRaf) {
+        if (win.id === "win-paint" && !paintRaf) {
           paintRaf = requestAnimationFrame(() => {
             paintRaf = 0;
             afterUserResize(win);
@@ -4678,8 +4558,7 @@
         {
           title: "Games",
           paragraphs: [
-            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), and Pinball.",
-            "Pinball: Z or Left and slash or Right flip, Space launch, 3 balls. The loop only runs while that window is in front."
+            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard)."
           ]
         },
         {
@@ -4884,7 +4763,7 @@
 
 
 
-  // === Games: Minesweeper / Snake / Tetris / Solitaire / Chess / Pinball ===
+  // === Games: Minesweeper / Snake / Tetris / Solitaire / Chess ===
   function gameWindowOpen(name) {
     return !!(windows[name] && windows[name].classList.contains("open"));
   }
@@ -5501,16 +5380,6 @@
       else if (key === " ") tHard();
       else handled = false;
       if (handled) e.preventDefault();
-    }
-    if (gameWindowOpen("pinball") && windows.pinball.classList.contains("active")) {
-      if (pbKeyDown(e)) e.preventDefault();
-    }
-  });
-  window.addEventListener("keyup", (e) => {
-    const tag = (e.target && e.target.tagName) || "";
-    if (tag === "INPUT" || tag === "TEXTAREA") return;
-    if (gameWindowOpen("pinball")) {
-      if (pbKeyUp(e)) e.preventDefault();
     }
   });
 
@@ -6543,558 +6412,6 @@
     });
   });
 
-  // --- Pinball (lightweight 2D, session-only) ---
-  const PB_W = 360, PB_H = 640, PB_R = 7;
-  const pbCanvas = document.getElementById("pinball-canvas");
-  const pbCtx = pbCanvas ? pbCanvas.getContext("2d") : null;
-  const pbStatusEl = document.getElementById("pbStatus");
-  const pbOverEl = document.getElementById("pbOver");
-  const pbOverScoreEl = document.getElementById("pbOverScore");
-  const pbWrap = document.getElementById("pbTableWrap");
-  const pb = {
-    started: false,
-    running: false,
-    raf: 0,
-    last: 0,
-    score: 0,
-    balls: 3,
-    over: false,
-    phase: "wait",
-    gate: false,
-    plunging: false,
-    ball: { x: 338, y: 560, vx: 0, vy: 0, r: PB_R },
-    leftA: 0.48,
-    rightA: Math.PI - 0.48,
-    leftOn: false,
-    rightOn: false,
-    keys: { left: false, right: false },
-    holds: { left: new Set(), right: new Set() },
-    flash: {},
-    cool: {},
-    serveAt: 0
-  };
-  const PB_LEFT_REST = 0.50, PB_LEFT_UP = -0.70;
-  const PB_RIGHT_REST = Math.PI - 0.50, PB_RIGHT_UP = Math.PI + 0.70;
-  const PB_FLIP_LEN = 62;
-  const PB_LP = { x: 98, y: 548 };
-  const PB_RP = { x: 230, y: 548 };
-  const PB_G = 1180;
-  const PB_MAX = 1500;
-
-  function pbNow() { return performance.now(); }
-
-  function pbUpdateStatus() {
-    if (!pbStatusEl) return;
-    if (pb.over) pbStatusEl.textContent = "Game over · " + pb.score;
-    else if (pb.phase === "wait") pbStatusEl.textContent = "Score: " + pb.score + " · Balls: " + pb.balls + " · Launch";
-    else pbStatusEl.textContent = "Score: " + pb.score + " · Balls: " + pb.balls;
-  }
-
-  function pbShowOver(on) {
-    if (!pbOverEl) return;
-    pbOverEl.hidden = !on;
-    if (on && pbOverScoreEl) pbOverScoreEl.textContent = "Score " + pb.score;
-  }
-
-  function pbServe() {
-    pb.phase = "wait";
-    pb.gate = false;
-    pb.plunging = false;
-    pb.ball.x = 338;
-    pb.ball.y = 560;
-    pb.ball.vx = 0;
-    pb.ball.vy = 0;
-    pb.serveAt = 0;
-    pbUpdateStatus();
-  }
-
-  function pbNewGame() {
-    pb.started = true;
-    pb.score = 0;
-    pb.balls = 3;
-    pb.over = false;
-    pb.flash = {};
-    pb.cool = {};
-    pbShowOver(false);
-    pbServe();
-    pbDraw();
-  }
-
-  function pbAddScore(n, id) {
-    pb.score += n;
-    if (id) pb.flash[id] = pbNow() + 120;
-    pbUpdateStatus();
-  }
-
-  function pbLaunch() {
-    if (pb.over || pb.phase !== "wait") return;
-    pb.phase = "live";
-    pb.plunging = true;
-    pb.ball.vx = 0;
-    pb.ball.vy = -1320;
-    pbUpdateStatus();
-  }
-
-  function pbDrain() {
-    if (pb.phase === "dead" || pb.over) return;
-    pb.phase = "dead";
-    pb.plunging = false;
-    pb.ball.vx = 0;
-    pb.ball.vy = 0;
-    pb.balls -= 1;
-    if (pb.balls <= 0) {
-      pb.over = true;
-      pb.phase = "over";
-      pbShowOver(true);
-      pbUpdateStatus();
-      return;
-    }
-    pb.serveAt = pbNow() + 450;
-    pbUpdateStatus();
-  }
-
-  function pbSyncFlip() {
-    pb.leftOn = pb.keys.left || pb.holds.left.size > 0;
-    pb.rightOn = pb.keys.right || pb.holds.right.size > 0;
-  }
-
-  function pbKeyDown(e) {
-    const key = e.key;
-    const code = e.code;
-    let handled = true;
-    if (key === "ArrowLeft" || key === "z" || key === "Z") {
-      if (!e.repeat) { pb.keys.left = true; pbSyncFlip(); }
-    } else if (key === "ArrowRight" || key === "/" || code === "Slash") {
-      if (!e.repeat) { pb.keys.right = true; pbSyncFlip(); }
-    } else if (key === " " || code === "Space") {
-      if (!e.repeat) pbLaunch();
-    } else handled = false;
-    return handled;
-  }
-
-  function pbKeyUp(e) {
-    const key = e.key;
-    const code = e.code;
-    let handled = true;
-    if (key === "ArrowLeft" || key === "z" || key === "Z") {
-      pb.keys.left = false; pbSyncFlip();
-    } else if (key === "ArrowRight" || key === "/" || code === "Slash") {
-      pb.keys.right = false; pbSyncFlip();
-    } else if (key === " " || code === "Space") {
-      /* launch is press, not hold */
-    } else handled = false;
-    return handled;
-  }
-
-  function pbHold(side, id, on) {
-    const set = pb.holds[side];
-    if (!set) return;
-    if (on) set.add(id);
-    else set.delete(id);
-    pbSyncFlip();
-  }
-
-  function pbClampBall() {
-    const b = pb.ball;
-    if (!Number.isFinite(b.x) || !Number.isFinite(b.y) || !Number.isFinite(b.vx) || !Number.isFinite(b.vy)) {
-      b.x = 338; b.y = 560; b.vx = 0; b.vy = 0;
-      pbDrain();
-      return;
-    }
-    const sp = Math.hypot(b.vx, b.vy);
-    if (sp > PB_MAX) {
-      b.vx *= PB_MAX / sp;
-      b.vy *= PB_MAX / sp;
-    }
-  }
-
-  function pbCollideLine(x1, y1, x2, y2, bounce, extra, score, id) {
-    const b = pb.ball;
-    const dx = x2 - x1, dy = y2 - y1;
-    const len2 = dx * dx + dy * dy;
-    if (len2 < 1e-8) return false;
-    const t = Math.max(0, Math.min(1, ((b.x - x1) * dx + (b.y - y1) * dy) / len2));
-    const cx = x1 + dx * t, cy = y1 + dy * t;
-    let nx = b.x - cx, ny = b.y - cy;
-    const dist = Math.hypot(nx, ny);
-    if (dist >= b.r || dist < 1e-8) return false;
-    nx /= dist; ny /= dist;
-    const pen = b.r - dist;
-    b.x += nx * pen;
-    b.y += ny * pen;
-    const vn = b.vx * nx + b.vy * ny;
-    if (vn < 0) {
-      const e = Math.abs(vn) < 55 ? 0.08 : bounce;
-      b.vx -= (1 + e) * vn * nx;
-      b.vy -= (1 + e) * vn * ny;
-      if (extra) {
-        const now = pbNow();
-        if (!id || !pb.cool[id] || now >= pb.cool[id]) {
-          b.vx += extra * nx;
-          b.vy += extra * ny;
-          if (id) pb.cool[id] = now + 140;
-          if (score) pbAddScore(score, id);
-        }
-      }
-    }
-    return true;
-  }
-
-  function pbCollideCircle(cx, cy, cr, bounce, extra, score, id) {
-    const b = pb.ball;
-    let nx = b.x - cx, ny = b.y - cy;
-    const dist = Math.hypot(nx, ny);
-    const min = b.r + cr;
-    if (dist >= min || dist < 1e-8) return false;
-    nx /= dist; ny /= dist;
-    const pen = min - dist;
-    b.x += nx * pen;
-    b.y += ny * pen;
-    const vn = b.vx * nx + b.vy * ny;
-    if (vn < 0) {
-      b.vx -= (1 + bounce) * vn * nx;
-      b.vy -= (1 + bounce) * vn * ny;
-      const now = pbNow();
-      if (!id || !pb.cool[id] || now >= pb.cool[id]) {
-        b.vx += extra * nx;
-        b.vy += extra * ny;
-        if (id) pb.cool[id] = now + 90;
-        if (score) pbAddScore(score, id);
-      }
-    }
-    return true;
-  }
-
-  function pbCollideFlipper(px, py, ang, omega, len) {
-    const b = pb.ball;
-    const x2 = px + Math.cos(ang) * len;
-    const y2 = py + Math.sin(ang) * len;
-    const dx = x2 - px, dy = y2 - py;
-    const t = Math.max(0, Math.min(1, ((b.x - px) * dx + (b.y - py) * dy) / (len * len)));
-    const cx = px + dx * t, cy = py + dy * t;
-    let nx = b.x - cx, ny = b.y - cy;
-    const dist = Math.hypot(nx, ny);
-    const rad = b.r + 3.2;
-    if (dist >= rad || dist < 1e-8) return false;
-    nx /= dist; ny /= dist;
-    const pen = rad - dist;
-    b.x += nx * pen;
-    b.y += ny * pen;
-    const rx = cx - px, ry = cy - py;
-    const svx = -omega * ry;
-    const svy = omega * rx;
-    let rvx = b.vx - svx, rvy = b.vy - svy;
-    const vn = rvx * nx + rvy * ny;
-    if (vn < 0) {
-      const e = Math.abs(vn) < 40 ? 0.05 : 0.22;
-      rvx -= (1 + e) * vn * nx;
-      rvy -= (1 + e) * vn * ny;
-      const approach = -(svx * nx + svy * ny);
-      if (approach > 30) {
-        const kick = Math.min(520, 90 + approach * 0.42);
-        rvx += nx * kick;
-        rvy += ny * kick;
-      }
-      b.vx = rvx + svx;
-      b.vy = rvy + svy;
-    }
-    return true;
-  }
-
-  function pbSteerFlip(cur, target, speed, dt) {
-    if (cur < target) return Math.min(target, cur + speed * dt);
-    if (cur > target) return Math.max(target, cur - speed * dt);
-    return cur;
-  }
-
-  function pbStaticColliders() {
-    const gateY = pb.gate ? 36 : 88;
-    return [
-      { t: "line", x1: 14, y1: 36, x2: 14, y2: 472, bounce: 0.42 },
-      { t: "line", x1: 14, y1: 472, x2: 44, y2: 618, bounce: 0.28 },
-      { t: "line", x1: 54, y1: 428, x2: 112, y2: 508, bounce: 0.2, extra: 520, score: 25, id: "sl" },
-      { t: "line", x1: 316, y1: gateY, x2: 316, y2: 472, bounce: 0.42 },
-      { t: "line", x1: 316, y1: 472, x2: 284, y2: 618, bounce: 0.28 },
-      { t: "line", x1: 274, y1: 428, x2: 216, y2: 508, bounce: 0.2, extra: 520, score: 25, id: "sr" },
-      { t: "line", x1: 14, y1: 36, x2: 300, y2: 36, bounce: 0.4 },
-      { t: "line", x1: 354, y1: 36, x2: 354, y2: 610, bounce: 0.35 },
-      { t: "line", x1: 322, y1: 88, x2: 322, y2: 610, bounce: 0.35 },
-      { t: "line", x1: 354, y1: 42, x2: 300, y2: 28, bounce: 0.35, skipPlunge: true },
-      { t: "circle", x: 104, y: 168, r: 16, bounce: 1.05, extra: 340, score: 100, id: "b1" },
-      { t: "circle", x: 180, y: 132, r: 16, bounce: 1.05, extra: 340, score: 100, id: "b2" },
-      { t: "circle", x: 248, y: 172, r: 16, bounce: 1.05, extra: 340, score: 100, id: "b3" }
-    ];
-  }
-
-  function pbPhysics(dt) {
-    if (pb.over) return;
-    if (pb.phase === "dead") {
-      if (pb.serveAt && pbNow() >= pb.serveAt) pbServe();
-      return;
-    }
-    const leftT = pb.leftOn ? PB_LEFT_UP : PB_LEFT_REST;
-    const rightT = pb.rightOn ? PB_RIGHT_UP : PB_RIGHT_REST;
-    const prevL = pb.leftA, prevR = pb.rightA;
-    pb.leftA = pbSteerFlip(pb.leftA, leftT, pb.leftOn ? 28 : 13, dt);
-    pb.rightA = pbSteerFlip(pb.rightA, rightT, pb.rightOn ? 28 : 13, dt);
-    const lOmega = (pb.leftA - prevL) / Math.max(1e-4, dt);
-    const rOmega = (pb.rightA - prevR) / Math.max(1e-4, dt);
-
-    if (pb.phase === "wait") return;
-
-    const steps = 3;
-    const h = dt / steps;
-    const cols = pbStaticColliders();
-    for (let s = 0; s < steps; s++) {
-      pb.ball.vy += PB_G * h;
-      pb.ball.x += pb.ball.vx * h;
-      pb.ball.y += pb.ball.vy * h;
-      pb.ball.vx *= 0.9992;
-      pb.ball.vy *= 0.9992;
-      if (pb.plunging && pb.ball.y < 78) {
-        pb.ball.vx = -380;
-        pb.plunging = false;
-      }
-      for (let k = 0; k < 3; k++) {
-        for (let i = 0; i < cols.length; i++) {
-          const c = cols[i];
-          if (pb.plunging && c.skipPlunge) continue;
-          if (c.t === "line") pbCollideLine(c.x1, c.y1, c.x2, c.y2, c.bounce, c.extra || 0, c.score || 0, c.id);
-          else pbCollideCircle(c.x, c.y, c.r, c.bounce, c.extra || 0, c.score || 0, c.id);
-        }
-        pbCollideFlipper(PB_LP.x, PB_LP.y, pb.leftA, lOmega, PB_FLIP_LEN);
-        pbCollideFlipper(PB_RP.x, PB_RP.y, pb.rightA, rOmega, PB_FLIP_LEN);
-      }
-      pbClampBall();
-      if (pb.over || pb.phase === "dead") return;
-      if (!pb.gate && pb.ball.x < 310 && pb.ball.y < 400) pb.gate = true;
-      if (pb.ball.y > 628 || pb.ball.x < -24 || pb.ball.x > 384 || pb.ball.y < -30) {
-        pbDrain();
-        return;
-      }
-    }
-  }
-
-  function pbFit() {
-    if (!pbCanvas || !pbWrap || !pbCtx) return;
-    const aw = pbWrap.clientWidth;
-    const ah = pbWrap.clientHeight;
-    if (aw < 20 || ah < 20) return;
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    pbCanvas.width = Math.round(PB_W * dpr);
-    pbCanvas.height = Math.round(PB_H * dpr);
-    const scale = Math.min(aw / PB_W, ah / PB_H);
-    pbCanvas.style.width = Math.floor(PB_W * scale) + "px";
-    pbCanvas.style.height = Math.floor(PB_H * scale) + "px";
-    pbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    pbDraw();
-  }
-
-  function pbGlow(ctx, color, blur) {
-    ctx.shadowColor = color;
-    ctx.shadowBlur = blur;
-  }
-
-  function pbDrawFlipper(ctx, px, py, ang, lit) {
-    const x2 = px + Math.cos(ang) * PB_FLIP_LEN;
-    const y2 = py + Math.sin(ang) * PB_FLIP_LEN;
-    ctx.strokeStyle = lit ? "#b8ff8a" : "#39ff14";
-    ctx.lineWidth = 7;
-    ctx.lineCap = "round";
-    pbGlow(ctx, "#39ff14", lit ? 14 : 8);
-    ctx.beginPath();
-    ctx.moveTo(px, py);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = "#0c140c";
-    ctx.beginPath();
-    ctx.arc(px, py, 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#39ff14";
-    ctx.lineWidth = 1.4;
-    ctx.stroke();
-  }
-
-  function pbDraw() {
-    if (!pbCtx) return;
-    const ctx = pbCtx;
-    ctx.clearRect(0, 0, PB_W, PB_H);
-    const g = ctx.createLinearGradient(0, 0, 0, PB_H);
-    g.addColorStop(0, "#08110a");
-    g.addColorStop(1, "#050805");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, PB_W, PB_H);
-    ctx.fillStyle = "rgba(57,255,20,.035)";
-    ctx.beginPath(); ctx.arc(180, 200, 150, 0, Math.PI * 2); ctx.fill();
-
-    const now = pbNow();
-    const cols = pbStaticColliders();
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    for (let i = 0; i < cols.length; i++) {
-      const c = cols[i];
-      const lit = c.id && pb.flash[c.id] && now < pb.flash[c.id];
-      if (c.t === "line") {
-        ctx.strokeStyle = c.extra ? (lit ? "#e8ffb0" : "#7cff4d") : "rgba(57,255,20,.75)";
-        ctx.lineWidth = c.extra ? 5 : 3;
-        pbGlow(ctx, "#39ff14", c.extra ? 10 : 0);
-        ctx.beginPath();
-        ctx.moveTo(c.x1, c.y1);
-        ctx.lineTo(c.x2, c.y2);
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-      } else {
-        ctx.beginPath();
-        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-        ctx.fillStyle = lit ? "rgba(180,255,120,.55)" : "rgba(57,255,20,.16)";
-        pbGlow(ctx, "#39ff14", lit ? 18 : 10);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-        ctx.strokeStyle = lit ? "#eaffc8" : "#39ff14";
-        ctx.lineWidth = 2.2;
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(c.x, c.y, 4, 0, Math.PI * 2);
-        ctx.fillStyle = "#39ff14";
-        ctx.fill();
-      }
-    }
-
-    ctx.strokeStyle = "rgba(57,255,20,.35)";
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(322, 610); ctx.lineTo(354, 610);
-    ctx.stroke();
-    if (pb.phase === "wait") {
-      ctx.fillStyle = "rgba(57,255,20,.55)";
-      ctx.font = "10px SF Mono, Menlo, Consolas, monospace";
-      ctx.textAlign = "center";
-      ctx.fillText("▲", 338, 600);
-    }
-
-    pbDrawFlipper(ctx, PB_LP.x, PB_LP.y, pb.leftA, pb.leftOn);
-    pbDrawFlipper(ctx, PB_RP.x, PB_RP.y, pb.rightA, pb.rightOn);
-
-    const b = pb.ball;
-    if (pb.phase !== "dead") {
-      pbGlow(ctx, "rgba(232,255,232,.7)", 8);
-      ctx.beginPath();
-      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-      ctx.fillStyle = "#e8ffe8";
-      ctx.fill();
-      ctx.shadowBlur = 0;
-      ctx.strokeStyle = "#39ff14";
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(b.x - 2, b.y - 2.2, 2.1, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255,255,255,.7)";
-      ctx.fill();
-    }
-  }
-
-  function pbLoop(now) {
-    pb.raf = 0;
-    if (!pb.running) return;
-    if (document.hidden || !gameWindowOpen("pinball") || !windows.pinball.classList.contains("active")) {
-      pbStop();
-      return;
-    }
-    const dt = Math.min(0.033, Math.max(0.008, (now - pb.last) / 1000 || 0.016));
-    pb.last = now;
-    pbPhysics(dt);
-    pbDraw();
-    pb.raf = requestAnimationFrame(pbLoop);
-  }
-
-  function pbStop() {
-    pb.running = false;
-    pb.keys.left = false;
-    pb.keys.right = false;
-    pb.holds.left.clear();
-    pb.holds.right.clear();
-    pbSyncFlip();
-    if (pb.raf) {
-      cancelAnimationFrame(pb.raf);
-      pb.raf = 0;
-    }
-  }
-
-  function pbStartLoop() {
-    if (pb.running) return;
-    pb.running = true;
-    pb.last = performance.now();
-    pb.raf = requestAnimationFrame(pbLoop);
-  }
-
-  function pbOnOpen() {
-    if (!pb.started) pbNewGame();
-    else pbUpdateStatus();
-    requestAnimationFrame(() => {
-      pbFit();
-      pbStartLoop();
-    });
-  }
-
-  function pbBindHold(el, side) {
-    if (!el) return;
-    el.addEventListener("pointerdown", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      try { el.setPointerCapture(e.pointerId); } catch (_) {}
-      if (side === "launch") pbLaunch();
-      else pbHold(side, e.pointerId, true);
-    });
-    const off = (e) => {
-      if (side !== "launch") pbHold(side, e.pointerId, false);
-    };
-    el.addEventListener("pointerup", off);
-    el.addEventListener("pointercancel", off);
-    el.addEventListener("lostpointercapture", off);
-  }
-
-  pbBindHold(document.getElementById("pbLeftBtn"), "left");
-  pbBindHold(document.getElementById("pbRightBtn"), "right");
-  pbBindHold(document.getElementById("pbLaunchBtn"), "launch");
-
-  if (pbCanvas) {
-    pbCanvas.addEventListener("pointerdown", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      try { pbCanvas.setPointerCapture(e.pointerId); } catch (_) {}
-      const r = pbCanvas.getBoundingClientRect();
-      const side = (e.clientX - r.left) < r.width * 0.5 ? "left" : "right";
-      pbHold(side, "c" + e.pointerId, true);
-      pbCanvas._pbSide = pbCanvas._pbSide || {};
-      pbCanvas._pbSide[e.pointerId] = side;
-    });
-    const canvasOff = (e) => {
-      const side = pbCanvas._pbSide && pbCanvas._pbSide[e.pointerId];
-      if (side) {
-        pbHold(side, "c" + e.pointerId, false);
-        delete pbCanvas._pbSide[e.pointerId];
-      }
-    };
-    pbCanvas.addEventListener("pointerup", canvasOff);
-    pbCanvas.addEventListener("pointercancel", canvasOff);
-    pbCanvas.addEventListener("lostpointercapture", canvasOff);
-  }
-
-  const pbNewBtn = document.getElementById("pbNew");
-  if (pbNewBtn) pbNewBtn.addEventListener("click", () => { pbNewGame(); pbStartLoop(); });
-  const pbOverNew = document.getElementById("pbOverNew");
-  if (pbOverNew) pbOverNew.addEventListener("click", () => { pbNewGame(); pbStartLoop(); });
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) pbStop();
-    else if (gameWindowOpen("pinball") && windows.pinball.classList.contains("active")) pbStartLoop();
-  });
-  window.addEventListener("resize", () => {
-    if (gameWindowOpen("pinball")) pbFit();
-  });
-
-
   // --- Casino (fake chips, session-only) ---
   const CHIP_START = 1000;
   let chips = CHIP_START;
@@ -7784,8 +7101,6 @@
     } else if (name === "chess") {
       if (!chess.started) chessNewGame(false);
       else chessRender();
-    } else if (name === "pinball") {
-      pbOnOpen();
     } else if (name === "casino" || name === "blackjack" || name === "slots" || name === "roulette" || name === "craps" || name === "baccarat") {
       casinoOnOpen();
     }
@@ -7796,7 +7111,6 @@
     if (name === "snake") snStop();
     if (name === "tetris") tStop();
     if (name === "solitaire") solKillGhost();
-    if (name === "pinball") pbStop();
   }
 
   // Paint app — session-only canvas (no localStorage)
