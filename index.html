@@ -665,6 +665,15 @@
     color: var(--muted);
     font-size: 12px;
   }
+  .book-reader .book-chapter {
+    margin: 1.4em 0 0.45em;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 600;
+  }
+  .book-reader .book-chapter:first-child { margin-top: 0.2em; }
 
   .aura-meter {
     position: absolute;
@@ -2324,6 +2333,7 @@
       padding: 8px 10px;
     }
     #win-bookshelf .book-reader h3 { font-size: 14px; margin-bottom: 6px; }
+    #win-bookshelf .book-reader .book-chapter { font-size: 12px; margin: 1.2em 0 0.4em; }
     #win-bookshelf .book-reader .br-body p {
       font-size: 12px;
       line-height: 1.4;
@@ -4527,12 +4537,65 @@
     howto: {
       kicker: "Vol. 05",
       title: "How Kita OS works",
-      paragraphs: [
-        "This website is a fake desktop. Click Start for a list of apps with their icons. Click an icon to open a window. Drag the title bar to move it. The red dot closes it. Icons sit in two columns like before; they snap to that grid and cannot stack; rotate keeps the two-column layout. Drag a box around icons to select them, then drag any selected icon to move the whole pile. Drop the pile on Trash to bin them all.",
-        "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes. A refresh resets them. The Games folder has Minesweeper, Snake, Tetris, Solitaire, Chess (Easy / Medium / Hard), and Pinball. Pinball: Z or Left and slash or Right flip, Space launch, 3 balls. Casino is a fake-chip toy: Blackjack, Slots, Roulette, Craps (pass line), and Baccarat (Player / Banker / Tie; banker even money). You start at 1000 chips; a refresh resets them. Bookshelf is these notes.",
-        "Open Terminal and type help, then press Run. Help lists commands and app names; type an app to open it. games and casino open those folders. snow turns the snow off.",
-        "A golden snitch shows up every 120 seconds for 5 seconds. Catch it for +47 winning and +500 casino chips. Refresh starts a new session.",
-        "There is a Konami code: up, up, down, down, left, right, left, right, B, A. That opens a VIP box, turns on Matrix rain, and turns off the snow."
+      chapters: [
+        {
+          title: "Desktop",
+          paragraphs: [
+            "This website is a fake desktop. Start, bottom left, lists apps with their icons. The clock, bottom right, is your local time. No seconds.",
+            "Icons sit in two columns. They snap to that grid and cannot stack. Rotate keeps the two-column layout.",
+            "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore.",
+            "Click empty desktop, or anything, after a selection to clear it."
+          ]
+        },
+        {
+          title: "Windows",
+          paragraphs: [
+            "Click an icon to open a window. Drag the title bar to move it. The red dot closes it.",
+            "On a desktop, not a phone, drag the edges or corners to resize.",
+            "The first window, About, opens centered. Later windows try not to sit on top of one already open, and they stay above the taskbar.",
+            "Pointer cursor on clickable controls: close, buttons. Grab and drag cursor on title bars."
+          ]
+        },
+        {
+          title: "Apps",
+          paragraphs: [
+            "Weather shows current conditions from your IP city, via Open-Meteo. Not GPS. Tracker uses the same city guess, plus session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
+            "Paint has a brush, eraser, fill, shapes, a palette, undo, and save.",
+            "DroneStuff is an in-OS gallery of aerials, not a redirect. Click a shot for the lightbox.",
+            "Bookshelf is these notes. Click a spine. The reader scroll resets to the top."
+          ]
+        },
+        {
+          title: "Games",
+          paragraphs: [
+            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), and Pinball.",
+            "Pinball: Z or Left and slash or Right flip, Space launch, 3 balls. The loop only runs while that window is in front."
+          ]
+        },
+        {
+          title: "Casino",
+          paragraphs: [
+            "Casino is a fake-chip toy. One bankroll across Blackjack, Slots, Roulette, Craps (pass line), and Baccarat (Player / Banker / Tie; banker even money).",
+            "You start at 1000 chips. A refresh resets them. One pile, every table."
+          ]
+        },
+        {
+          title: "Terminal",
+          paragraphs: [
+            "Open Terminal and type help, then press Run. Help lists commands and app names. Type an app name to open it.",
+            "games and casino open those folders. Not the inner games. snow turns the snow off.",
+            "The placeholder is try: help. There is no email command."
+          ]
+        },
+        {
+          title: "Secrets",
+          paragraphs: [
+            "Snow is on by default. Type snow in Terminal to stop it. The Konami code turns snow off and starts Matrix rain. You can still see the desktop through it.",
+            "A golden snitch shows up every 120 seconds, on screen for 5 seconds. Catch it for +47 winning and +500 casino chips.",
+            "Konami: up, up, down, down, left, right, left, right, B, A. That opens a VIP box and starts the Matrix rain.",
+            "Refresh starts a new session. Nothing important is saved."
+          ]
+        }
       ]
     },
     commons: {
@@ -4607,6 +4670,17 @@
       const p = document.createElement("p");
       p.textContent = para;
       bookBody.appendChild(p);
+    });
+    (essay.chapters || []).forEach(ch => {
+      const h = document.createElement("h3");
+      h.className = "book-chapter";
+      h.textContent = ch.title;
+      bookBody.appendChild(h);
+      (ch.paragraphs || []).forEach(para => {
+        const p = document.createElement("p");
+        p.textContent = para;
+        bookBody.appendChild(p);
+      });
     });
     if (bookReaderEmpty) bookReaderEmpty.hidden = true;
     if (bookReaderMain) bookReaderMain.hidden = false;
