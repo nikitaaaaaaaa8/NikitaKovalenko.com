@@ -4039,13 +4039,21 @@
   }
   function kitaAnim(el, cls) {
     if (!el) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     el.classList.remove(cls);
     void el.offsetWidth;
     el.classList.add(cls);
-    el.addEventListener("animationend", function done() {
+    let cleared = false;
+    function clear() {
+      if (cleared) return;
+      cleared = true;
       el.classList.remove(cls);
+    }
+    el.addEventListener("animationend", function done() {
+      clear();
       el.removeEventListener("animationend", done);
     });
+    setTimeout(clear, 400);
   }
   function kitaChipFlash(up) {
     document.querySelectorAll("[data-chips]").forEach(function (el) {
@@ -4978,9 +4986,9 @@
           title: "Casino",
           paragraphs: [
             "Casino is a fake-chip toy. One bankroll across Blackjack, Slots, Roulette, Craps (pass line plus odds), and Baccarat (Player / Banker / Tie; banker even money).",
-            "Blackjack has hit, stand, double, split on a pair, and insurance when the dealer shows an ace (pays 2:1). After a hand, Rebet repeats the last bet size.",
+            "Blackjack has hit, stand, double, split on the same rank once (8+8 yes, 10+K no), and insurance when the dealer shows an ace (pays 2:1). After a hand, Rebet repeats the last bet size.",
             "Roulette lets you stack chips on more than one number, plus red/black, odd/even, dozens, and high/low.",
-            "Craps can take true odds behind the pass line after a point. Slots show a paytable. Baccarat keeps a short road of recent Player, Banker, and Tie results.",
+            "Craps can take true odds behind the pass line after a point. Slots show a paytable; reels stop one at a time. Baccarat keeps a short road of recent Player, Banker, and Tie results.",
             "You start at 1000 chips. A refresh resets them. One pile, every table. Tables have light motion and short beeps, mute from the tray speaker."
           ]
         },
@@ -6831,18 +6839,26 @@
   // --- Casino (fake chips, session-only) ---
   const CHIP_START = 1000;
   let chips = CHIP_START;
+  let chipsGen = 0;
 
   function chipsUpdate() {
     document.querySelectorAll("[data-chips]").forEach(el => {
       el.textContent = String(chips);
     });
+    const busy = casinoBusy();
     const tapped = chips <= 0;
     document.querySelectorAll(".casino-tapped").forEach(el => {
       el.hidden = !tapped;
     });
+    document.querySelectorAll("[data-chip-reset]").forEach(el => {
+      el.disabled = busy;
+    });
+    rlSyncSpin();
   }
   function chipsReset() {
+    chipsGen++;
     chips = CHIP_START;
+    casinoClearTables();
     chipsUpdate();
     showToast("Chips restored");
   }
@@ -6914,7 +6930,8 @@
     phase: "bet",
     insure: 0,
     split: false,
-    didHand: false
+    didHand: false,
+    dealing: false
   };
 
   function bjNewDeck() {
@@ -7019,7 +7036,7 @@
     if (bjEls.acts) bjEls.acts.hidden = bj.phase !== "play";
     if (bjEls.insureRow) bjEls.insureRow.hidden = bj.phase !== "insure";
     if (bjEls.bets) {
-      const idle = bj.phase === "bet";
+      const idle = bj.phase === "bet" && !bj.dealing;
       bjEls.bets.querySelectorAll("button, input").forEach(el => {
         if (el.id === "bjRebet") return;
         if (el.id === "bjDeal") el.disabled = !idle || chips < 1;
@@ -7037,6 +7054,13 @@
   }
   function bjSay(t) {
     if (bjEls.msg) bjEls.msg.textContent = t;
+  }
+  function bjUnlockDeal() {
+    setTimeout(function () {
+      bj.dealing = false;
+      if (bj.phase === "bet") bjRender(true);
+      chipsUpdate();
+    }, 280);
   }
   function bjEnd(kind) {
     bj.dealer.forEach(c => { c.face = true; });
@@ -7080,6 +7104,7 @@
     kitaPopMode = "off";
     bjRender(true);
     if (fx) kitaOutcome(fx > 0);
+    bjUnlockDeal();
   }
   function bjDealerHasBJ() {
     return bjIsBJ(bj.dealer.map(c => ({ rank: c.rank, suit: c.suit, face: true })));
@@ -7118,6 +7143,7 @@
       bjRender(true);
       if (bj.insure > 0) kitaOutcome(true);
       else if (!pBJ) kitaOutcome(false);
+      bjUnlockDeal();
       return;
     }
     if (pBJ) { bjEnd("pbj"); return; }
@@ -7126,11 +7152,15 @@
     bjRender(false);
   }
   function bjDeal() {
-    if (bj.phase !== "bet") return;
+    if (bj.phase !== "bet" || bj.dealing) return;
     const bet = bjReadBet();
     bjSetBet(bet);
     if (chips < 1) { bjSay("you're tapped"); return; }
-    if (!chipsTake(bet)) { bjSay("Bet exceeds chips"); showToast("not enough chips"); return; }
+    bj.dealing = true;
+    if (bjEls.deal) bjEls.deal.disabled = true;
+    if (bjEls.rebet) bjEls.rebet.disabled = true;
+    chipsUpdate();
+    if (!chipsTake(bet)) { bj.dealing = false; bjSay("Bet exceeds chips"); showToast("not enough chips"); bjRender(false); return; }
     if (bj.deck.length < 15) bj.deck = bjNewDeck();
     const cards = [bjDraw(true), bjDraw(true)];
     bj.player = cards;
@@ -7152,7 +7182,7 @@
     bjPeekNow();
   }
   function bjRebet() {
-    if (bj.phase !== "bet") return;
+    if (bj.phase !== "bet" || bj.dealing) return;
     bjSetBet(bj.lastBet || bj.bet);
     bjDeal();
   }
@@ -7241,6 +7271,7 @@
     bjRender(true);
     if (parts.some(function (x) { return x.indexOf("+") !== -1; })) kitaOutcome(true);
     else if (parts.every(function (x) { return /bust|lose/.test(x); })) kitaOutcome(false);
+    bjUnlockDeal();
   }
   function bjDealerPlay() {
     bj.dealer.forEach(c => { c.face = true; });
@@ -7359,9 +7390,14 @@
     if (tick) setTimeout(() => { el.classList.remove("tick"); }, 110);
   }
   function slotSetBet(n) {
+    if (slotBusy) return;
     slotBet = Math.max(1, Math.floor(Number(n) || 5));
+    slotSyncBets();
+  }
+  function slotSyncBets() {
     document.querySelectorAll("[data-slot-bet]").forEach(btn => {
       btn.setAttribute("aria-pressed", btn.getAttribute("data-slot-bet") === String(slotBet) ? "true" : "false");
+      btn.disabled = !!slotBusy;
     });
   }
   function slotPay(a, b, c, bet) {
@@ -7375,14 +7411,25 @@
   function slotSpin() {
     if (slotBusy) return;
     if (chips < 1) { if (slotMsg) slotMsg.textContent = "you're tapped"; return; }
-    if (!chipsTake(slotBet)) { showToast("not enough chips"); return; }
     slotBusy = true;
     if (slotSpinBtn) slotSpinBtn.disabled = true;
+    slotSyncBets();
+    chipsUpdate();
+    if (!chipsTake(slotBet)) {
+      slotBusy = false;
+      slotSyncBets();
+      chipsUpdate();
+      showToast("not enough chips");
+      return;
+    }
+    const stake = slotBet;
+    const gen = chipsGen;
     if (slotMsg) slotMsg.textContent = "Good luck";
     const result = [slotPick(), slotPick(), slotPick()];
     const stops = [8, 16, 24];
     let tick = 0;
     const iv = setInterval(() => {
+      if (gen !== chipsGen) { clearInterval(iv); return; }
       tick++;
       for (let i = 0; i < 3; i++) {
         if (tick < stops[i]) slotShow(i, slotPick(), true);
@@ -7393,18 +7440,21 @@
       }
       if (tick >= stops[2]) {
         clearInterval(iv);
-        const win = slotPay(result[0], result[1], result[2], slotBet);
+        if (gen !== chipsGen) return;
+        const win = slotPay(result[0], result[1], result[2], stake);
         if (win) {
           chipsGive(win);
           kitaOutcome(true);
           kitaAnim(document.querySelector("#win-slots .slot-reels"), "kita-win");
-          if (slotMsg) slotMsg.textContent = win === slotBet ? "Pair. Even." : ("+" + win);
+          if (slotMsg) slotMsg.textContent = win === stake ? "Pair. Even." : ("+" + (win - stake));
         } else {
           kitaOutcome(false);
           if (slotMsg) slotMsg.textContent = "No line";
         }
         slotBusy = false;
+        slotSyncBets();
         if (slotSpinBtn) slotSpinBtn.disabled = chips < 1;
+        chipsUpdate();
       }
     }, 85);
   }
@@ -7450,12 +7500,19 @@
     });
     rlLabel();
   }
+  function rlSyncSpin() {
+    if (!rlSpinBtn) return;
+    const t = rlTotal();
+    rlSpinBtn.disabled = !!rlBusy || t === 0 || t > chips;
+  }
   function rlAdd(kind, n) {
     if (rlBusy) return;
+    if (rlTotal() + rlBetAmt > chips) { showToast("not enough chips"); return; }
     const k = rlKey(kind, n);
     rlStack[k] = (rlStack[k] || 0) + rlBetAmt;
     rlPaint();
     rlLabel();
+    rlSyncSpin();
     kitaChipSnd();
     const sel = kind === "num"
       ? document.querySelector('[data-rl-num="' + n + '"]')
@@ -7467,6 +7524,7 @@
     rlStack = Object.create(null);
     rlPaint();
     rlLabel();
+    rlSyncSpin();
   }
   function rlPaint() {
     document.querySelectorAll("[data-rl-num]").forEach(btn => {
@@ -7539,9 +7597,13 @@
     const total = rlTotal();
     if (!total) { if (rlMsg) rlMsg.textContent = "Place a bet"; return; }
     if (chips < 1) { if (rlMsg) rlMsg.textContent = "you're tapped"; return; }
-    if (!chipsTake(total)) { showToast("not enough chips"); return; }
+    if (total > chips) { showToast("not enough chips"); rlSyncSpin(); return; }
     rlBusy = true;
     if (rlSpinBtn) rlSpinBtn.disabled = true;
+    chipsUpdate();
+    if (!chipsTake(total)) { rlBusy = false; rlSyncSpin(); chipsUpdate(); showToast("not enough chips"); return; }
+    const gen = chipsGen;
+    const stake = total;
     const n = Math.floor(Math.random() * 37);
     const idx = RL_ORDER.indexOf(n);
     const pocket = 360 / 37;
@@ -7569,18 +7631,23 @@
         pay += p;
         hits.push(k.indexOf("num:") === 0 ? String(k.slice(4)) : (RL_OUT_LABEL[k.slice(4)] || k.slice(4)));
       }
+      if (gen !== chipsGen) return;
       if (pay) {
         chipsGive(pay);
         kitaOutcome(true);
-        if (rlMsg) rlMsg.textContent = "+" + pay + (hits.length ? (" · " + hits.join(", ")) : "");
+        const net = pay - stake;
+        if (rlMsg) rlMsg.textContent = (net > 0 ? "+" : "") + net + (hits.length ? (" · " + hits.join(", ")) : "");
       } else {
         kitaOutcome(false);
         if (rlMsg) rlMsg.textContent = "No hit";
       }
       const hitBtn = document.querySelector('[data-rl-num="' + n + '"]');
       kitaAnim(hitBtn, "kita-flash");
+      rlStack = Object.create(null);
+      rlPaint();
       rlBusy = false;
-      if (rlSpinBtn) rlSpinBtn.disabled = chips < 1;
+      rlSyncSpin();
+      chipsUpdate();
     }, 1500);
   }
   rlBuild();
@@ -7597,6 +7664,7 @@
   if (rlClearBtn) rlClearBtn.addEventListener("click", rlClear);
   rlPaint();
   rlLabel();
+  rlSyncSpin();
 
 
 
@@ -7716,23 +7784,35 @@
     cr.rolling = false;
     crShowPoint();
     crSyncBets();
+    chipsUpdate();
   }
   function crRoll() {
     if (cr.rolling) return;
-    if (!cr.down) {
-      if (!chipsTake(cr.bet)) { crSay("Bet exceeds chips"); showToast("not enough chips"); return; }
-      cr.down = cr.bet;
-    }
     cr.rolling = true;
     crSyncBets();
+    chipsUpdate();
+    if (!cr.down) {
+      if (!chipsTake(cr.bet)) {
+        cr.rolling = false;
+        crSyncBets();
+        chipsUpdate();
+        crSay("Bet exceeds chips");
+        showToast("not enough chips");
+        return;
+      }
+      cr.down = cr.bet;
+    }
+    const gen = chipsGen;
     kitaBeep(700, 0.035, "square");
     setTimeout(function () { kitaBeep(560, 0.035, "square"); }, 45);
     let ticks = 0;
     const id = setInterval(() => {
+      if (gen !== chipsGen) { clearInterval(id); return; }
       crShowDice(1 + (Math.random() * 6 | 0), 1 + (Math.random() * 6 | 0), true);
       ticks++;
       if (ticks >= 6) {
         clearInterval(id);
+        if (gen !== chipsGen) return;
         crResolve(1 + (Math.random() * 6 | 0), 1 + (Math.random() * 6 | 0));
       }
     }, 55);
@@ -7875,9 +7955,18 @@
   }
   function bacDeal() {
     if (bac.busy) return;
-    if (!chipsTake(bac.bet)) { bacSay("Bet exceeds chips"); showToast("not enough chips"); return; }
     bac.busy = true;
     bacSync();
+    chipsUpdate();
+    if (!chipsTake(bac.bet)) {
+      bac.busy = false;
+      bacSync();
+      chipsUpdate();
+      bacSay("Bet exceeds chips");
+      showToast("not enough chips");
+      return;
+    }
+    const gen = chipsGen;
     if (bac.deck.length < 16) bac.deck = bacNewDeck();
     bac.player = [bacDraw(), bacDraw()];
     bac.banker = [bacDraw(), bacDraw()];
@@ -7888,6 +7977,7 @@
     const b2 = bacTotal(bac.banker);
     const natural = p2 >= 8 || b2 >= 8;
     setTimeout(() => {
+      if (gen !== chipsGen) return;
       if (!natural) {
         let pThird = null;
         if (p2 <= 5) {
@@ -7902,6 +7992,7 @@
       bacSettle();
       bac.busy = false;
       bacSync();
+      chipsUpdate();
     }, 280);
   }
   document.querySelectorAll("[data-bac-side]").forEach(btn => {
@@ -7913,6 +8004,38 @@
   if (bacEls.deal) bacEls.deal.addEventListener("click", bacDeal);
   bacSync();
 
+  function casinoBusy() {
+    return !!(slotBusy || rlBusy || cr.rolling || bac.busy || bj.phase !== "bet" || bj.dealing);
+  }
+  function casinoClearTables() {
+    slotBusy = false;
+    slotSyncBets();
+    if (slotSpinBtn) slotSpinBtn.disabled = chips < 1;
+    rlBusy = false;
+    rlStack = Object.create(null);
+    rlPaint();
+    rlLabel();
+    rlSyncSpin();
+    cr.down = 0;
+    cr.odds = 0;
+    cr.point = 0;
+    cr.rolling = false;
+    crShowPoint();
+    crSyncBets();
+    bac.busy = false;
+    bacSync();
+    bj.dealing = false;
+    bj.phase = "bet";
+    bj.player = [];
+    bj.hands = [];
+    bj.handI = 0;
+    bj.dealer = [];
+    bj.insure = 0;
+    bj.split = false;
+    kitaPopMode = "off";
+    bjSay("Place a bet");
+    bjRender(false);
+  }
 
   function onGameWindowOpen(name) {
     if (name === "minesweeper") {
