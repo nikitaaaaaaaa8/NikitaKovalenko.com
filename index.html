@@ -7,6 +7,20 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="/favicon.png" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>
+(function () {
+  try {
+    var p = new URLSearchParams(location.search || "");
+    if (p.has("tesla") && p.get("tesla") !== "0") {
+      document.documentElement.classList.add("tesla");
+      return;
+    }
+  } catch (e) {}
+  try {
+    if (/Tesla/i.test(navigator.userAgent || "")) document.documentElement.classList.add("tesla");
+  } catch (e2) {}
+})();
+</script>
 <style>
   :root {
     --green: #39ff14;
@@ -2455,6 +2469,124 @@
       border-width: 2px;
     }
   }
+
+  /* Tesla in-car fat-finger layout. Gated by html.tesla (UA /Tesla/i or ?tesla). */
+  html.tesla {
+    --icon-tile: 112px;
+    --icon-gap-x: 18px;
+    --icon-gap-y: 18px;
+    --icon-pad-x: 22px;
+    --icon-pad-y: 22px;
+  }
+  html.tesla .icon {
+    padding: 10px 6px;
+  }
+  html.tesla .icon .glyph {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 10px;
+  }
+  html.tesla .icon .glyph svg {
+    width: 34px;
+    height: 34px;
+  }
+  html.tesla .icon .label {
+    font-size: 13px;
+  }
+  html.tesla .dots { gap: 8px; }
+  html.tesla .dot {
+    width: 22px;
+    height: 22px;
+  }
+  html.tesla .titlebar {
+    padding: 10px 14px;
+    min-height: 40px;
+  }
+  html.tesla .title {
+    font-size: 14px;
+  }
+  html.tesla .taskbar { height: 56px; }
+  html.tesla .start-menu { bottom: 56px; width: min(320px, 92vw); }
+  html.tesla .start-btn {
+    font-size: 20px;
+    padding: 0 22px 0 14px;
+  }
+  html.tesla .xp-flag {
+    width: 22px;
+    height: 22px;
+  }
+  html.tesla .tray {
+    min-width: 110px;
+    gap: 10px;
+    padding: 0 12px;
+  }
+  html.tesla .clock {
+    font-size: 14px;
+  }
+  html.tesla .tray-speaker {
+    width: 44px;
+    height: 44px;
+  }
+  html.tesla .tray-speaker svg {
+    width: 24px;
+    height: 24px;
+  }
+  html.tesla .start-head {
+    padding: 14px 16px;
+    font-size: 16px;
+  }
+  html.tesla .start-menu button,
+  html.tesla .start-menu a {
+    min-height: 48px;
+    font-size: 15px;
+    padding: 12px 16px;
+  }
+  html.tesla .start-menu .start-glyph {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+  }
+  html.tesla .start-menu .start-glyph svg {
+    width: 22px;
+    height: 22px;
+  }
+  html.tesla .game-card {
+    padding: 16px 18px;
+    min-height: 72px;
+    gap: 14px;
+  }
+  html.tesla .game-card .gc-glyph {
+    width: 52px;
+    height: 52px;
+  }
+  html.tesla .game-card .gc-glyph svg {
+    width: 30px;
+    height: 30px;
+  }
+  html.tesla .game-card .gc-title { font-size: 15px; }
+  html.tesla .game-card .gc-desc { font-size: 13px; }
+  html.tesla .btn {
+    min-height: 44px;
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+  html.tesla .book {
+    width: 48px;
+  }
+  html.tesla .book-spine {
+    font-size: 11px;
+  }
+  html.tesla .book:nth-child(2) .book-spine,
+  html.tesla .book:nth-child(5) .book-spine,
+  html.tesla .book:nth-child(6) .book-spine,
+  html.tesla .book:nth-child(9) .book-spine {
+    font-size: 10px;
+  }
+  html.tesla .book-tab {
+    min-height: 40px;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
 </style>
 </head>
 <body>
@@ -3275,6 +3407,19 @@
 
 <script>
 (function () {
+  function teslaLayoutWanted() {
+    try {
+      const p = new URLSearchParams(location.search || "");
+      if (p.has("tesla") && p.get("tesla") !== "0") return true;
+    } catch (e) {}
+    try { return /Tesla/i.test(navigator.userAgent || ""); } catch (e2) { return false; }
+  }
+  let teslaClassLate = false;
+  if (!document.documentElement.classList.contains("tesla") && teslaLayoutWanted()) {
+    document.documentElement.classList.add("tesla");
+    teslaClassLate = true;
+  }
+
   const lines = [
     "too much winning. come back never.",
     "this is my website now.",
@@ -4534,13 +4679,14 @@
             "Icons sit in two columns. They snap to that grid and cannot stack. Rotate keeps the two-column layout.",
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
-            "Designed for the computer, but it works on mobile too."
+            "Designed for the computer, but it works on mobile too.",
+            "In a Tesla browser (or if you add ?tesla to the URL) the desktop uses bigger icons and buttons. Phone and computer layouts stay the same."
           ]
         },
         {
           title: "Windows",
           paragraphs: [
-            "Click an icon to open a window. Drag the title bar to move it. The yellow and red dots close the window.",
+            "Click an icon to open a window. Drag the title bar to move it. The yellow and red dots close the window. In a Tesla those close dots are larger.",
             "On a desktop, not a phone, drag the edges or corners to resize.",
             "On a computer, About opens centered. On a phone it opens full-width at the top. Later windows try not to sit on top of one already open, and they stay above the taskbar. On a phone, rotate keeps windows where they are; they do not restack.",
             "Pointer cursor on clickable controls: close, buttons. Grab and drag cursor on title bars. The tray speaker mutes audio for this visit."
@@ -8168,6 +8314,7 @@
   window.addEventListener("orientationchange", onGridViewportChange);
 
   initDesktopGrid();
+  if (teslaClassLate) onGridViewportChange();
 
   renderStats();
 })();
