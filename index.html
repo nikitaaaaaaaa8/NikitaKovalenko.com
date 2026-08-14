@@ -1208,6 +1208,7 @@
   #win-chess .content.chess-content {
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
     padding: 10px 12px 12px;
@@ -1239,11 +1240,19 @@
     border-color: var(--green);
     color: var(--green);
   }
+  .chess-toolbar,
+  #win-chess .game-hint {
+    flex-shrink: 0;
+  }
   .chess-board {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
     width: min(100%, calc(100dvh - 220px));
     max-width: 100%;
+    max-height: 100%;
     aspect-ratio: 1;
     margin: 0 auto;
     border: 1px solid rgba(57,255,20,.35);
@@ -3497,6 +3506,7 @@
     el.classList.add("open", "active");
     el.style.display = ""; // don't let leftover inline display:none trap the window
     el.style.zIndex = String(++z);
+    if (name === "pinball") pbStartLoop();
   }
 
   function openWindow(name) {
@@ -4032,6 +4042,9 @@
     if (win && win.id === "win-paint" && typeof paintFitCanvas === "function") {
       paintFitCanvas();
     }
+    if (win && win.id === "win-pinball" && typeof pbFit === "function") {
+      pbFit();
+    }
   }
 
   const resizeDirs = ["n", "s", "e", "w", "nw", "ne", "sw", "se"];
@@ -4102,7 +4115,7 @@
         }
 
         applyUserSize(win, Math.round(left), Math.round(top), Math.round(width), Math.round(height));
-        if (win.id === "win-paint" && !paintRaf) {
+        if ((win.id === "win-paint" || win.id === "win-pinball") && !paintRaf) {
           paintRaf = requestAnimationFrame(() => {
             paintRaf = 0;
             afterUserResize(win);
@@ -5274,7 +5287,7 @@
   window.addEventListener("keyup", (e) => {
     const tag = (e.target && e.target.tagName) || "";
     if (tag === "INPUT" || tag === "TEXTAREA") return;
-    if (gameWindowOpen("pinball") && windows.pinball.classList.contains("active")) {
+    if (gameWindowOpen("pinball")) {
       if (pbKeyUp(e)) e.preventDefault();
     }
   });
@@ -6177,7 +6190,7 @@
     for (let i = 0; i < 64; i++) {
       const el = cells[i];
       const p = chess.st.b[i];
-      const light = ((i >> 3) + (i & 7)) & 1;
+      const light = !(((i >> 3) + (i & 7)) & 1);
       el.className = "chess-sq" + (light ? " light" : " dark");
       if (i === chess.sel) el.classList.add("sel");
       if (i === chess.lastFrom || i === chess.lastTo) el.classList.add("last");
@@ -6457,6 +6470,11 @@
 
   function pbClampBall() {
     const b = pb.ball;
+    if (!Number.isFinite(b.x) || !Number.isFinite(b.y) || !Number.isFinite(b.vx) || !Number.isFinite(b.vy)) {
+      b.x = 344; b.y = 568; b.vx = 0; b.vy = 0;
+      pbDrain();
+      return;
+    }
     const sp = Math.hypot(b.vx, b.vy);
     if (sp > PB_MAX) {
       b.vx *= PB_MAX / sp;
@@ -6617,6 +6635,7 @@
         pbCollideFlipper(PB_RP.x, PB_RP.y, pb.rightA, rOmega, PB_FLIP_LEN);
       }
       pbClampBall();
+      if (pb.over || pb.phase === "dead") return;
       if (!pb.gate && pb.ball.x < 310 && pb.ball.y < 400) pb.gate = true;
       if (pb.ball.y > 628 || pb.ball.x < -24 || pb.ball.x > 384 || pb.ball.y < -30) {
         pbDrain();
@@ -6747,8 +6766,8 @@
   function pbLoop(now) {
     pb.raf = 0;
     if (!pb.running) return;
-    if (document.hidden || !gameWindowOpen("pinball")) {
-      pb.running = false;
+    if (document.hidden || !gameWindowOpen("pinball") || !windows.pinball.classList.contains("active")) {
+      pbStop();
       return;
     }
     const dt = Math.min(0.033, Math.max(0.008, (now - pb.last) / 1000 || 0.016));
@@ -6760,6 +6779,11 @@
 
   function pbStop() {
     pb.running = false;
+    pb.keys.left = false;
+    pb.keys.right = false;
+    pb.holds.left.clear();
+    pb.holds.right.clear();
+    pbSyncFlip();
     if (pb.raf) {
       cancelAnimationFrame(pb.raf);
       pb.raf = 0;
@@ -6833,7 +6857,7 @@
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) pbStop();
-    else if (gameWindowOpen("pinball")) pbStartLoop();
+    else if (gameWindowOpen("pinball") && windows.pinball.classList.contains("active")) pbStartLoop();
   });
   window.addEventListener("resize", () => {
     if (gameWindowOpen("pinball")) pbFit();
