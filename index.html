@@ -954,24 +954,12 @@
   .xp-flag .g { background: #39ff14; }
   .xp-flag .b { background: #1f8f0f; }
   .xp-flag .y { background: #d8ffd0; }
-  .taskbar-mid {
-    flex: 1;
-    display: flex;
-    align-items: stretch;
-    gap: 3px;
-    min-width: 0;
-    padding: 3px 4px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: none;
-  }
-  .taskbar-mid::-webkit-scrollbar { display: none; }
   .tray {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 0 10px;
-    margin: 3px 3px 3px 0;
+    margin: 3px 3px 3px auto;
     border: 1px solid rgba(57,255,20,.35);
     background: linear-gradient(180deg, #142014 0%, #0a100a 100%);
     box-shadow: inset 1px 1px 0 rgba(57,255,20,.18);
@@ -2524,7 +2512,6 @@
     }
 
     .taskbar { height: 44px; flex-wrap: nowrap; }
-    .taskbar-mid { overflow-x: auto; display: flex; }
     .start-menu { bottom: 44px; }
     .start-btn { font-size: 15px; padding: 0 16px 0 8px; flex-shrink: 0; }
     .clock { font-size: 11px; white-space: nowrap; }
@@ -3716,7 +3703,6 @@
       <span class="xp-flag" aria-hidden="true"><i class="r"></i><i class="g"></i><i class="b"></i><i class="y"></i></span>
       start
     </button>
-    <div class="taskbar-mid" id="taskbarWindows"></div>
     <div class="tray">
       <button type="button" class="tray-speaker" id="traySpeaker" aria-label="Mute sound" aria-pressed="false" title="Mute">
         <svg class="spk-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.2h3.6l4.6-3.6v13l-4.6-3.6H4z" fill="currentColor"/><path d="M16.2 8.4c1.5 1.3 1.5 5.9 0 7.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M18.7 6.1c2.5 2.3 2.5 9.5 0 11.8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
@@ -3899,7 +3885,7 @@
   }
 
   function placeWindowOnScreen(el, opts) {
-    if (!el || el.classList.contains("minimized")) return;
+    if (!el) return;
     const margin = 8;
     const isMobile = window.innerWidth <= 700;
     const topBar = isMobile ? 88 : 16;
@@ -3918,7 +3904,7 @@
       const maxTop = Math.max(margin, window.innerHeight - tb - 140);
       let top;
       if (opts && opts.fresh) {
-        const openCount = [...document.querySelectorAll(".window.open")].filter(w => w !== el && !w.classList.contains("minimized")).length;
+        const openCount = [...document.querySelectorAll(".window.open")].filter(w => w !== el).length;
         const cascade = Math.min(openCount, 5) * 14;
         el.style.left = margin + "px";
         top = topBar + cascade;
@@ -3971,7 +3957,7 @@
     }
 
     const others = [...document.querySelectorAll(".window.open")]
-      .filter(x => x !== el && !x.classList.contains("minimized"))
+      .filter(x => x !== el)
       .map(x => x.getBoundingClientRect());
 
     const candidates = [];
@@ -4025,7 +4011,6 @@
     const el = windows[name];
     if (!el) return;
     Object.values(windows).forEach(w => { if (w) w.classList.remove("active"); });
-    el.classList.remove("minimized");
     el.classList.add("open", "active");
     el.style.display = ""; // don't let leftover inline display:none trap the window
     el.style.zIndex = String(++z);
@@ -4170,7 +4155,7 @@
   function closeWindow(name) {
     const el = windows[name];
     if (!el) return;
-    el.classList.remove("open", "active", "minimized");
+    el.classList.remove("open", "active");
     if (typeof onGameWindowClose === "function") onGameWindowClose(name);
   }
 
@@ -4417,7 +4402,7 @@
   }
 
   window.addEventListener("resize", () => {
-    document.querySelectorAll(".window.open").forEach(w => { if (!w.classList.contains("minimized")) placeWindowOnScreen(w); });
+    document.querySelectorAll(".window.open").forEach(w => { placeWindowOnScreen(w); });
   });
 
   // boot
@@ -7266,21 +7251,13 @@
     pipesSetStatus();
   }
 
-  function pipesReducedMotion() {
-    return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  }
-
   function pipesCheck() {
     const f = pipesFlow();
     pipes.wet = f.wet;
     pipes.dist = f.dist;
     if (f.win && !pipes.won) {
       pipes.won = true;
-      if (pipesReducedMotion()) {
-        pipesRender();
-      } else {
-        pipesRender();
-      }
+      pipesRender();
       bumpWinning(10);
       showToast("Pipes connected. +10 winning");
     } else {
