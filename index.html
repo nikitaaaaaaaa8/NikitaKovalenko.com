@@ -1392,6 +1392,7 @@
   }
   #win-slots { max-width: min(420px, calc(100vw - 24px)); }
   #win-roulette { max-width: min(480px, calc(100vw - 24px)); }
+  #win-craps { max-width: min(420px, calc(100vw - 24px)); }
   #win-casino { max-width: min(400px, calc(100vw - 24px)); }
   .casino-content { padding: 10px 12px 12px; }
   .casino-bar {
@@ -1479,10 +1480,62 @@
     min-width: 88px;
     font-size: 14px;
   }
+  .cr-felt {
+    background:
+      radial-gradient(ellipse at 50% 30%, #145214 0%, #0b3d0b 42%, #071a07 100%);
+    border: 1px solid rgba(57,255,20,.22);
+    border-radius: 10px;
+    padding: 14px 12px 12px;
+    text-align: center;
+  }
+  .cr-point {
+    color: var(--green);
+    font-size: 12px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .cr-dice {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin: 8px 0 10px;
+  }
+  .cr-die {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    border: 1px solid rgba(57,255,20,.5);
+    background: linear-gradient(180deg, rgba(57,255,20,.16), rgba(0,0,0,.55));
+    color: var(--green);
+    font-size: 28px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 0 12px rgba(57,255,20,.12);
+  }
+  .cr-die.spin { animation: cr-shake .12s linear infinite; }
+  @keyframes cr-shake {
+    0% { transform: translate(0,0) rotate(0); }
+    50% { transform: translate(1px,-1px) rotate(-4deg); }
+    100% { transform: translate(0,0) rotate(0); }
+  }
+  .cr-total { color: var(--text); font-size: 13px; min-height: 18px; }
+  .cr-msg { color: var(--green); font-size: 12px; margin-top: 8px; min-height: 16px; }
+  .cr-bets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    align-items: center;
+  }
+  .cr-bets .btn { min-height: 44px; }
+
   .bj-bets .btn[aria-pressed="true"],
   .slot-bets .btn[aria-pressed="true"],
   .rl-amt .btn[aria-pressed="true"],
-  .rl-outside .btn[aria-pressed="true"] {
+  .rl-outside .btn[aria-pressed="true"],
+  .cr-bets .btn[aria-pressed="true"] {
     background: rgba(57,255,20,.18);
     border-color: var(--green);
   }
@@ -2288,7 +2341,8 @@
     #win-casino.window.open,
     #win-blackjack.window.open,
     #win-slots.window.open,
-    #win-roulette.window.open {
+    #win-roulette.window.open,
+    #win-craps.window.open {
       max-height: calc(100dvh - 44px);
     }
 
@@ -2697,6 +2751,10 @@
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="2.2"/><path d="M12 3.8v2.2M12 18v2.2M3.8 12h2.2M18 12h2.2"/><path d="M6.2 6.2l1.5 1.5M16.3 16.3l1.5 1.5M6.2 17.8l1.5-1.5M16.3 7.7l1.5-1.5"/></svg></div>
             <div class="gc-meta"><div class="gc-title">Roulette</div><div class="gc-desc">European · red/black · 0–36</div></div>
           </button>
+          <button type="button" class="game-card" data-open="craps">
+            <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8" width="8.2" height="8.2" rx="1.4"/><rect x="12.3" y="8" width="8.2" height="8.2" rx="1.4"/><circle cx="6.2" cy="10.8" r="0.7" fill="currentColor" stroke="none"/><circle cx="8.9" cy="13.4" r="0.7" fill="currentColor" stroke="none"/><circle cx="16.4" cy="12.1" r="0.7" fill="currentColor" stroke="none"/></svg></div>
+            <div class="gc-meta"><div class="gc-title">Craps</div><div class="gc-desc">Pass line · come-out then point</div></div>
+          </button>
         </div>
       </div>
     </section>
@@ -3061,6 +3119,43 @@
       </div>
     </section>
 
+    <section class="window" id="win-craps" style="top:56px; left:160px; width:400px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="craps"></div>
+          <div class="dot min" data-close="craps"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Craps</div>
+      </div>
+      <div class="content casino-content">
+        <div class="casino-bar">
+          <div class="game-status">Chips: <span data-chips>1000</span></div>
+          <div class="casino-tapped" hidden>
+            <span>you're tapped</span>
+            <button type="button" class="btn" data-chip-reset>Reset chips</button>
+          </div>
+        </div>
+        <p class="muted casino-fun">for fun</p>
+        <div class="cr-felt">
+          <div class="cr-point" id="crPoint">Come-out</div>
+          <div class="cr-dice" aria-hidden="true">
+            <div class="cr-die" id="crD1">·</div>
+            <div class="cr-die" id="crD2">·</div>
+          </div>
+          <div class="cr-total" id="crTotal"></div>
+          <div class="cr-msg" id="crMsg">Pass line · bet then roll</div>
+        </div>
+        <div class="cr-bets">
+          <button type="button" class="btn" data-cr-bet="25" aria-pressed="true">25</button>
+          <button type="button" class="btn" data-cr-bet="50" aria-pressed="false">50</button>
+          <button type="button" class="btn" data-cr-bet="100" aria-pressed="false">100</button>
+          <button type="button" class="btn" id="crRoll">Roll</button>
+        </div>
+        <p class="game-hint">Come-out 7/11 win · 2/3/12 lose · then hit the point before 7</p>
+      </div>
+    </section>
+
     <div id="desktop-marquee" aria-hidden="true"></div>
   </div>
 
@@ -3153,7 +3248,8 @@
     casino: document.getElementById("win-casino"),
     blackjack: document.getElementById("win-blackjack"),
     slots: document.getElementById("win-slots"),
-    roulette: document.getElementById("win-roulette")
+    roulette: document.getElementById("win-roulette"),
+    craps: document.getElementById("win-craps")
   };
 
   function save() {
@@ -3808,6 +3904,7 @@
     if (win && win.id === "win-blackjack") return { minW: 340, minH: 300 };
     if (win && win.id === "win-slots") return { minW: 300, minH: 280 };
     if (win && win.id === "win-roulette") return { minW: 320, minH: 340 };
+    if (win && win.id === "win-craps") return { minW: 300, minH: 280 };
     if (win && win.id === "win-casino") return { minW: 280, minH: 220 };
     return { minW: 280, minH: 150 };
   }
@@ -4322,7 +4419,7 @@
       title: "How Kita OS works",
       paragraphs: [
         "This website is a fake desktop. Click Start for a list of apps with their icons. Click an icon to open a window. Drag the title bar to move it. The red dot closes it. Icons sit in two columns like before; they snap to that grid and cannot stack; rotate keeps the two-column layout. Drag a box around icons to select them, then drag any selected icon to move the whole pile. Drop the pile on Trash to bin them all.",
-        "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes. A refresh resets them. The Games folder has Minesweeper, Snake, Tetris, Solitaire, Chess (Easy / Medium / Hard), and Pinball. Pinball: Z or Left and slash or Right flip, Space launch, 3 balls. Casino is a fake-chip toy: Blackjack, Slots, and Roulette. You start at 1000 chips; a refresh resets them. Bookshelf is these notes.",
+        "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes. A refresh resets them. The Games folder has Minesweeper, Snake, Tetris, Solitaire, Chess (Easy / Medium / Hard), and Pinball. Pinball: Z or Left and slash or Right flip, Space launch, 3 balls. Casino is a fake-chip toy: Blackjack, Slots, Roulette, and Craps (pass line). You start at 1000 chips; a refresh resets them. Bookshelf is these notes.",
         "Open Terminal and type help, then press Run. Help lists commands and app names; type an app to open it. games and casino open those folders. snow turns the snow off.",
         "A golden snitch shows up every 120 seconds for 5 seconds. Catch it for +47 winning and +500 casino chips. Refresh starts a new session.",
         "There is a Konami code: up, up, down, down, left, right, left, right, B, A. That opens a VIP box, turns on Matrix rain, and turns off the snow."
@@ -7067,6 +7164,109 @@
   rlSelect("red", null);
 
 
+  // --- Craps (pass line, session chips) ---
+  const crEls = {
+    d1: document.getElementById("crD1"),
+    d2: document.getElementById("crD2"),
+    total: document.getElementById("crTotal"),
+    point: document.getElementById("crPoint"),
+    msg: document.getElementById("crMsg"),
+    roll: document.getElementById("crRoll")
+  };
+  const cr = { bet: 25, down: 0, point: 0, rolling: false };
+
+  function crPip(n) {
+    return "⚀⚁⚂⚃⚄⚅".charAt(Math.max(1, Math.min(6, n)) - 1);
+  }
+  function crSay(t) {
+    if (crEls.msg) crEls.msg.textContent = t;
+  }
+  function crShowPoint() {
+    if (!crEls.point) return;
+    crEls.point.textContent = cr.point ? ("Point " + cr.point) : "Come-out";
+  }
+  function crSyncBets() {
+    document.querySelectorAll("[data-cr-bet]").forEach(btn => {
+      const n = Number(btn.getAttribute("data-cr-bet"));
+      btn.setAttribute("aria-pressed", n === cr.bet ? "true" : "false");
+      btn.disabled = !!(cr.down || cr.rolling);
+    });
+    if (crEls.roll) crEls.roll.disabled = !!cr.rolling;
+  }
+  function crSetBet(n) {
+    if (cr.down || cr.rolling) return;
+    n = Math.floor(Number(n) || 0);
+    if (n < 1) return;
+    cr.bet = n;
+    crSyncBets();
+  }
+  function crShowDice(a, b, spin) {
+    if (crEls.d1) {
+      crEls.d1.textContent = crPip(a);
+      crEls.d1.classList.toggle("spin", !!spin);
+    }
+    if (crEls.d2) {
+      crEls.d2.textContent = crPip(b);
+      crEls.d2.classList.toggle("spin", !!spin);
+    }
+    if (crEls.total) crEls.total.textContent = spin ? "" : ("Total " + (a + b));
+  }
+  function crResolve(a, b) {
+    const tot = a + b;
+    crShowDice(a, b, false);
+    if (!cr.point) {
+      if (tot === 7 || tot === 11) {
+        chipsGive(cr.down * 2);
+        crSay("Pass · " + tot + " on the come-out. +" + cr.down);
+        cr.down = 0;
+      } else if (tot === 2 || tot === 3 || tot === 12) {
+        crSay("Craps " + tot + " · pass line loses");
+        cr.down = 0;
+      } else {
+        cr.point = tot;
+        crSay("Point is " + tot + " · roll it before 7");
+      }
+    } else if (tot === 7) {
+      crSay("Seven-out · point " + cr.point + " lost");
+      cr.down = 0;
+      cr.point = 0;
+    } else if (tot === cr.point) {
+      chipsGive(cr.down * 2);
+      crSay("Hit " + tot + " · pass line wins +" + cr.down);
+      cr.down = 0;
+      cr.point = 0;
+    } else {
+      crSay(tot + " · point " + cr.point + " still on");
+    }
+    cr.rolling = false;
+    crShowPoint();
+    crSyncBets();
+  }
+  function crRoll() {
+    if (cr.rolling) return;
+    if (!cr.down) {
+      if (!chipsTake(cr.bet)) { crSay("Bet exceeds chips"); showToast("not enough chips"); return; }
+      cr.down = cr.bet;
+    }
+    cr.rolling = true;
+    crSyncBets();
+    let ticks = 0;
+    const id = setInterval(() => {
+      crShowDice(1 + (Math.random() * 6 | 0), 1 + (Math.random() * 6 | 0), true);
+      ticks++;
+      if (ticks >= 6) {
+        clearInterval(id);
+        crResolve(1 + (Math.random() * 6 | 0), 1 + (Math.random() * 6 | 0));
+      }
+    }, 55);
+  }
+  document.querySelectorAll("[data-cr-bet]").forEach(btn => {
+    btn.addEventListener("click", () => crSetBet(btn.getAttribute("data-cr-bet")));
+  });
+  if (crEls.roll) crEls.roll.addEventListener("click", crRoll);
+  crSyncBets();
+
+
   function onGameWindowOpen(name) {
     if (name === "minesweeper") {
       if (!msGrid.length) msReset();
@@ -7090,7 +7290,7 @@
       else chessRender();
     } else if (name === "pinball") {
       pbOnOpen();
-    } else if (name === "casino" || name === "blackjack" || name === "slots" || name === "roulette") {
+    } else if (name === "casino" || name === "blackjack" || name === "slots" || name === "roulette" || name === "craps") {
       casinoOnOpen();
     }
   }
