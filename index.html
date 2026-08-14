@@ -1273,7 +1273,8 @@
   }
   #win-tetris.window.open,
   #win-snake.window.open,
-  #win-chess.window.open {
+  #win-chess.window.open,
+  #win-pipes.window.open {
     max-height: calc(100dvh - 48px);
   }
   #win-tetris .content,
@@ -1446,6 +1447,160 @@
     color: #121212;
     -webkit-text-stroke: 0.35px rgba(255,255,255,.18);
     text-shadow: 0 1px 0 rgba(255,255,255,.12);
+  }
+
+  /* Pipes */
+  #win-pipes {
+    max-width: min(460px, calc(100vw - 24px));
+  }
+  #win-pipes.window.open {
+    max-height: calc(100dvh - 48px);
+  }
+  #win-pipes .content.pipes-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    padding: 10px 12px 12px;
+  }
+  .pipes-toolbar,
+  #win-pipes .game-hint {
+    flex-shrink: 0;
+  }
+  .pipes-stage {
+    --pipes-n: 6;
+    display: grid;
+    grid-template-columns: 16px 1fr 16px;
+    gap: 4px;
+    align-items: stretch;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    width: min(100%, calc(100dvh - 220px));
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  .pipes-board {
+    display: grid;
+    grid-template-columns: repeat(var(--pipes-n), 1fr);
+    grid-template-rows: repeat(var(--pipes-n), 1fr);
+    gap: 3px;
+    min-width: 0;
+    min-height: 0;
+    aspect-ratio: 1;
+    border: 1px solid rgba(57,255,20,.35);
+    border-radius: 8px;
+    padding: 4px;
+    background: #050805;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.35);
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .pipes-rail {
+    display: grid;
+    grid-template-rows: repeat(var(--pipes-n), 1fr);
+    gap: 3px;
+    padding: 4px 0;
+    min-width: 0;
+  }
+  .pipes-blob {
+    width: 100%;
+    height: 56%;
+    align-self: center;
+    background: rgba(57,255,20,.18);
+    box-shadow: none;
+    opacity: 0;
+  }
+  .pipes-src .pipes-blob {
+    border-radius: 999px 3px 3px 999px;
+  }
+  .pipes-snk .pipes-blob {
+    border-radius: 3px 999px 999px 3px;
+  }
+  .pipes-blob.on {
+    opacity: 1;
+    background: #39ff14;
+    box-shadow: 0 0 10px rgba(57,255,20,.7);
+  }
+  .pipe-tile {
+    appearance: none;
+    position: relative;
+    border: 1px solid rgba(57,255,20,.22);
+    padding: 0;
+    margin: 0;
+    border-radius: 5px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    min-width: 0;
+    min-height: 0;
+    aspect-ratio: 1;
+    background: rgba(57,255,20,.06);
+    color: var(--green);
+    -webkit-tap-highlight-color: transparent;
+    font: inherit;
+    touch-action: manipulation;
+  }
+  .pipe-tile:hover:not(:disabled) {
+    background: rgba(57,255,20,.14);
+    border-color: rgba(57,255,20,.5);
+  }
+  .pipe-tile:active:not(:disabled) {
+    transform: scale(.96);
+  }
+  .pipe-tile:disabled { cursor: default; }
+  .pipe-tile.src {
+    box-shadow: inset 0 0 0 2px rgba(57,255,20,.55);
+  }
+  .pipe-tile.snk {
+    box-shadow: inset 0 0 0 2px rgba(57,255,20,.55);
+  }
+  .pipe-tile svg {
+    width: 88%;
+    height: 88%;
+    display: block;
+    pointer-events: none;
+  }
+  .pipe-arm {
+    fill: none;
+    stroke: #5d7a4e;
+    stroke-width: 7.4;
+    stroke-linecap: round;
+    transition: stroke .22s ease, filter .22s ease;
+  }
+  .pipe-hub {
+    fill: #5d7a4e;
+    transition: fill .22s ease, filter .22s ease;
+  }
+  .pipe-tile.wet .pipe-arm {
+    stroke: #39ff14;
+    filter: drop-shadow(0 0 3px rgba(57,255,20,.65));
+  }
+  .pipe-tile.wet .pipe-hub {
+    fill: #39ff14;
+    filter: drop-shadow(0 0 3px rgba(57,255,20,.65));
+  }
+  .pipe-tile.wet svg {
+    animation: pipe-wet .32s ease both;
+    animation-delay: var(--wet-delay, 0ms);
+  }
+  @keyframes pipe-wet {
+    from { filter: brightness(.7); }
+    to { filter: drop-shadow(0 0 5px rgba(57,255,20,.55)); }
+  }
+  @keyframes pipes-pulse {
+    50% { filter: brightness(1.35); box-shadow: 0 0 16px rgba(57,255,20,.95); }
+  }
+  .pipes-stage.won .pipes-blob.on {
+    animation: pipes-pulse .9s ease-in-out 2;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pipe-tile.wet svg,
+    .pipes-stage.won .pipes-blob.on { animation: none !important; }
+    .pipe-arm, .pipe-hub { transition: none; }
+    .pipe-tile:active:not(:disabled) { transform: none; }
   }
 
   /* Casino */
@@ -2242,6 +2397,8 @@
     .chess-board { width: min(100%, calc(100dvh - 200px)); }
     .chess-diff .btn { min-height: 44px; }
     .chess-pc { font-size: clamp(22px, 8vw, 32px); }
+    .pipes-stage { width: min(100%, calc(100dvh - 190px)); grid-template-columns: 12px 1fr 12px; }
+    .pipe-tile { min-height: 36px; }
 
     #win-solitaire {
       --sol-cw: 40px;
@@ -2514,7 +2671,8 @@
 
 
     #win-solitaire.window.open,
-    #win-chess.window.open {
+    #win-chess.window.open,
+    #win-pipes.window.open {
       max-height: calc(100dvh - 44px);
     }
     #win-solitaire .content.sol-content {
@@ -2715,6 +2873,16 @@
     font-size: 12px;
     padding: 8px 12px;
   }
+  html.tesla #win-pipes {
+    max-width: min(520px, calc(100vw - 24px));
+  }
+  html.tesla .pipes-stage {
+    grid-template-columns: 20px 1fr 20px;
+    width: min(100%, calc(100dvh - 200px));
+  }
+  html.tesla .pipes-board { gap: 4px; padding: 5px; }
+  html.tesla .pipe-tile { min-height: 44px; border-radius: 6px; }
+  html.tesla .pipe-arm { stroke-width: 8.2; }
 </style>
 </head>
 <body>
@@ -3037,6 +3205,10 @@
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20.5h8l.7-3H7.3z"/><path d="M7.5 17.5h9"/><path d="M8.3 17.5l1-6.2h5.4l1 6.2"/><path d="M9.7 11.3c0-1.5.9-2.7 2.3-2.7s2.3 1.2 2.3 2.7"/><circle cx="12" cy="5.6" r="1.25"/><path d="M8.4 8.6h7.2"/></svg></div>
             <div class="gc-meta"><div class="gc-title">Chess</div><div class="gc-desc">You are White · Easy / Medium / Hard</div></div>
           </button>
+          <button type="button" class="game-card" data-open="pipes">
+            <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h6a2 2 0 0 1 2 2v6"/><path d="M12 16h8"/><path d="M8 4v4"/><circle cx="12" cy="10" r="1.15" fill="currentColor" stroke="none"/><circle cx="12" cy="16" r="1.15" fill="currentColor" stroke="none"/></svg></div>
+            <div class="gc-meta"><div class="gc-title">Pipes</div><div class="gc-desc">Rotate tiles · source to sink</div></div>
+          </button>
         </div>
       </div>
     </section>
@@ -3225,6 +3397,32 @@
         </div>
         <div class="chess-board" id="chessBoard" aria-label="Chess board"></div>
         <p class="game-hint">You are White · tap a piece, then a square</p>
+      </div>
+    </section>
+
+    <section class="window" id="win-pipes" style="top:52px; left:210px; width:400px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="pipes"></div>
+          <div class="dot min" data-close="pipes"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Pipes</div>
+      </div>
+      <div class="content pipes-content">
+        <div class="game-toolbar pipes-toolbar">
+          <div class="game-status" id="pipesStatus">6×6 · 0 moves</div>
+          <div class="row">
+            <button type="button" class="btn secondary" id="pipesNew">New</button>
+            <button type="button" class="btn" id="pipesNext">Next</button>
+          </div>
+        </div>
+        <div class="pipes-stage" id="pipesStage">
+          <div class="pipes-rail pipes-src" id="pipesSrc" aria-hidden="true"></div>
+          <div class="pipes-board" id="pipesBoard" aria-label="Pipes board"></div>
+          <div class="pipes-rail pipes-snk" id="pipesSnk" aria-hidden="true"></div>
+        </div>
+        <p class="game-hint">Tap a tile to rotate · connect the green water in to the out</p>
       </div>
     </section>
 
@@ -3660,6 +3858,7 @@
     tetris: document.getElementById("win-tetris"),
     solitaire: document.getElementById("win-solitaire"),
     chess: document.getElementById("win-chess"),
+    pipes: document.getElementById("win-pipes"),
     weather: document.getElementById("win-weather"),
     paint: document.getElementById("win-paint"),
     casino: document.getElementById("win-casino"),
@@ -4429,6 +4628,7 @@
     if (win && win.id === "win-paint") return { minW: 420, minH: 320 };
     if (win && win.id === "win-solitaire") return { minW: 360, minH: 280 };
     if (win && win.id === "win-chess") return { minW: 300, minH: 360 };
+    if (win && win.id === "win-pipes") return { minW: 300, minH: 360 };
     if (win && win.id === "win-blackjack") return { minW: 340, minH: 300 };
     if (win && win.id === "win-slots") return { minW: 300, minH: 280 };
     if (win && win.id === "win-roulette") return { minW: 320, minH: 340 };
@@ -4979,7 +5179,7 @@
         {
           title: "Games",
           paragraphs: [
-            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard)."
+            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), and Pipes. Pipes: click tiles to rotate them until a path connects start to end."
           ]
         },
         {
@@ -5187,7 +5387,7 @@
 
 
 
-  // === Games: Minesweeper / Snake / Tetris / Solitaire / Chess ===
+  // === Games: Minesweeper / Snake / Tetris / Solitaire / Chess / Pipes ===
   function gameWindowOpen(name) {
     return !!(windows[name] && windows[name].classList.contains("open"));
   }
@@ -6836,6 +7036,328 @@
     });
   });
 
+  // --- Pipes (plumber tile puzzle) ---
+  const PIPES_N = 1, PIPES_E = 2, PIPES_S = 4, PIPES_W = 8;
+  const PIPES_MASK = {
+    I: [PIPES_E | PIPES_W, PIPES_N | PIPES_S, PIPES_E | PIPES_W, PIPES_N | PIPES_S],
+    L: [PIPES_N | PIPES_E, PIPES_E | PIPES_S, PIPES_S | PIPES_W, PIPES_W | PIPES_N],
+    T: [PIPES_N | PIPES_E | PIPES_S, PIPES_E | PIPES_S | PIPES_W, PIPES_S | PIPES_W | PIPES_N, PIPES_W | PIPES_N | PIPES_E],
+    X: [15, 15, 15, 15]
+  };
+  const PIPES_DIRS = [
+    { bit: PIPES_N, dx: 0, dy: -1, opp: PIPES_S },
+    { bit: PIPES_E, dx: 1, dy: 0, opp: PIPES_W },
+    { bit: PIPES_S, dx: 0, dy: 1, opp: PIPES_N },
+    { bit: PIPES_W, dx: -1, dy: 0, opp: PIPES_E }
+  ];
+  const pipesBoardEl = document.getElementById("pipesBoard");
+  const pipesStageEl = document.getElementById("pipesStage");
+  const pipesSrcEl = document.getElementById("pipesSrc");
+  const pipesSnkEl = document.getElementById("pipesSnk");
+  const pipesStatusEl = document.getElementById("pipesStatus");
+  const pipes = {
+    n: 6,
+    grid: [],
+    sy: 0,
+    ey: 0,
+    moves: 0,
+    won: false,
+    started: false,
+    wet: [],
+    dist: []
+  };
+
+  function pipesMaskOf(t) {
+    return PIPES_MASK[t.kind][t.rot & 3];
+  }
+
+  function pipesBitCount(m) {
+    return (m & 1) + ((m >> 1) & 1) + ((m >> 2) & 1) + ((m >> 3) & 1);
+  }
+
+  function pipesKindFor(m) {
+    const b = pipesBitCount(m);
+    if (b >= 4) return "X";
+    if (b === 3) return "T";
+    if (b <= 1) return "I";
+    if (m === 5 || m === 10) return "I";
+    return "L";
+  }
+
+  function pipesRotFor(kind, m) {
+    for (let r = 0; r < 4; r++) if (PIPES_MASK[kind][r] === m) return r;
+    for (let r = 0; r < 4; r++) if ((PIPES_MASK[kind][r] & m) === m) return r;
+    return 0;
+  }
+
+  function pipesAddCell(seen, cells, n, x, y) {
+    const k = y * n + x;
+    if (seen.has(k)) return;
+    seen.add(k);
+    cells.push({ x: x, y: y });
+  }
+
+  function pipesCarve(n) {
+    const sy = 1 + ((Math.random() * (n - 2)) | 0);
+    const ey = 1 + ((Math.random() * (n - 2)) | 0);
+    const points = [{ x: 0, y: sy }];
+    const hops = 1 + ((Math.random() * 3) | 0);
+    for (let i = 0; i < hops; i++) {
+      points.push({ x: 1 + ((Math.random() * (n - 2)) | 0), y: (Math.random() * n) | 0 });
+    }
+    points.push({ x: n - 1, y: ey });
+    const cells = [];
+    const seen = new Set();
+    pipesAddCell(seen, cells, n, points[0].x, points[0].y);
+    for (let i = 0; i < points.length - 1; i++) {
+      let x = points[i].x, y = points[i].y;
+      const t = points[i + 1];
+      const hv = Math.random() < 0.5;
+      if (hv) {
+        while (x !== t.x) { x += x < t.x ? 1 : -1; pipesAddCell(seen, cells, n, x, y); }
+        while (y !== t.y) { y += y < t.y ? 1 : -1; pipesAddCell(seen, cells, n, x, y); }
+      } else {
+        while (y !== t.y) { y += y < t.y ? 1 : -1; pipesAddCell(seen, cells, n, x, y); }
+        while (x !== t.x) { x += x < t.x ? 1 : -1; pipesAddCell(seen, cells, n, x, y); }
+      }
+    }
+    const spurs = (Math.random() * 3) | 0;
+    for (let s = 0; s < spurs; s++) {
+      const base = cells[(Math.random() * cells.length) | 0];
+      const d = PIPES_DIRS[(Math.random() * 4) | 0];
+      const nx = base.x + d.dx, ny = base.y + d.dy;
+      if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue;
+      if (seen.has(ny * n + nx)) continue;
+      pipesAddCell(seen, cells, n, nx, ny);
+    }
+    return { cells: cells, seen: seen, sy: sy, ey: ey };
+  }
+
+  function pipesNeed(n, carved) {
+    const need = new Array(n * n).fill(0);
+    for (let c = 0; c < carved.cells.length; c++) {
+      const cell = carved.cells[c];
+      const i = cell.y * n + cell.x;
+      for (let d = 0; d < PIPES_DIRS.length; d++) {
+        const dir = PIPES_DIRS[d];
+        const nx = cell.x + dir.dx, ny = cell.y + dir.dy;
+        if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue;
+        if (carved.seen.has(ny * n + nx)) need[i] |= dir.bit;
+      }
+    }
+    need[carved.sy * n] |= PIPES_W;
+    need[carved.ey * n + (n - 1)] |= PIPES_E;
+    return need;
+  }
+
+  function pipesFlow() {
+    const n = pipes.n;
+    const start = pipes.sy * n;
+    const end = pipes.ey * n + (n - 1);
+    const wet = new Array(n * n).fill(false);
+    const dist = new Array(n * n).fill(-1);
+    const sm = pipesMaskOf(pipes.grid[start]);
+    if (!(sm & PIPES_W)) return { wet: wet, dist: dist, win: false };
+    const q = [start];
+    wet[start] = true;
+    dist[start] = 0;
+    while (q.length) {
+      const i = q.shift();
+      const x = i % n, y = (i / n) | 0;
+      const mask = pipesMaskOf(pipes.grid[i]);
+      for (let d = 0; d < PIPES_DIRS.length; d++) {
+        const dir = PIPES_DIRS[d];
+        if (!(mask & dir.bit)) continue;
+        const nx = x + dir.dx, ny = y + dir.dy;
+        if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue;
+        const j = ny * n + nx;
+        if (wet[j]) continue;
+        if (!(pipesMaskOf(pipes.grid[j]) & dir.opp)) continue;
+        wet[j] = true;
+        dist[j] = dist[i] + 1;
+        q.push(j);
+      }
+    }
+    const win = !!(wet[end] && (pipesMaskOf(pipes.grid[end]) & PIPES_E));
+    return { wet: wet, dist: dist, win: win };
+  }
+
+  function pipesSvg(mask) {
+    let d = "";
+    if (mask & PIPES_N) d += "<path class=\"pipe-arm\" d=\"M20 20 V3\"/>";
+    if (mask & PIPES_E) d += "<path class=\"pipe-arm\" d=\"M20 20 H37\"/>";
+    if (mask & PIPES_S) d += "<path class=\"pipe-arm\" d=\"M20 20 V37\"/>";
+    if (mask & PIPES_W) d += "<path class=\"pipe-arm\" d=\"M20 20 H3\"/>";
+    return "<svg viewBox=\"0 0 40 40\" aria-hidden=\"true\">" + d + "<circle class=\"pipe-hub\" cx=\"20\" cy=\"20\" r=\"5.1\"/></svg>";
+  }
+
+  function pipesKindName(kind) {
+    if (kind === "I") return "straight pipe";
+    if (kind === "L") return "elbow pipe";
+    if (kind === "T") return "tee pipe";
+    return "cross pipe";
+  }
+
+  function pipesSetStatus() {
+    if (!pipesStatusEl) return;
+    if (pipes.won) pipesStatusEl.textContent = "Connected · " + pipes.moves + " moves";
+    else pipesStatusEl.textContent = pipes.n + "×" + pipes.n + " · " + pipes.moves + " moves";
+  }
+
+  function pipesRenderRails() {
+    const n = pipes.n;
+    function fill(el, onRow) {
+      if (!el) return;
+      if (el.childElementCount !== n) {
+        el.innerHTML = "";
+        for (let i = 0; i < n; i++) {
+          const b = document.createElement("div");
+          b.className = "pipes-blob";
+          el.appendChild(b);
+        }
+      }
+      for (let i = 0; i < n; i++) {
+        el.children[i].classList.toggle("on", i === onRow);
+      }
+    }
+    fill(pipesSrcEl, pipes.sy);
+    fill(pipesSnkEl, pipes.ey);
+  }
+
+  function pipesRender() {
+    if (!pipesBoardEl || !pipes.grid.length) return;
+    const n = pipes.n;
+    if (pipesStageEl) {
+      pipesStageEl.style.setProperty("--pipes-n", String(n));
+      pipesStageEl.classList.toggle("won", pipes.won);
+    }
+    pipesBoardEl.style.gridTemplateColumns = "repeat(" + n + ", 1fr)";
+    pipesBoardEl.style.gridTemplateRows = "repeat(" + n + ", 1fr)";
+    const start = pipes.sy * n;
+    const end = pipes.ey * n + (n - 1);
+    if (pipesBoardEl.childElementCount !== n * n) {
+      pipesBoardEl.innerHTML = "";
+      for (let i = 0; i < n * n; i++) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "pipe-tile";
+        btn.setAttribute("data-i", String(i));
+        pipesBoardEl.appendChild(btn);
+      }
+    }
+    const cells = pipesBoardEl.children;
+    for (let i = 0; i < n * n; i++) {
+      const t = pipes.grid[i];
+      const el = cells[i];
+      const mask = pipesMaskOf(t);
+      el.className = "pipe-tile" + (i === start ? " src" : "") + (i === end ? " snk" : "") + (pipes.wet[i] ? " wet" : "");
+      el.disabled = !!pipes.won;
+      el.innerHTML = pipesSvg(mask);
+      const delay = pipes.won && pipes.dist[i] >= 0 ? (pipes.dist[i] * 55) : 0;
+      el.style.setProperty("--wet-delay", delay + "ms");
+      let label = pipesKindName(t.kind);
+      if (i === start) label = "source, " + label;
+      if (i === end) label = "sink, " + label;
+      if (pipes.won) label += ", connected";
+      else label += ", click to rotate";
+      el.setAttribute("aria-label", label);
+    }
+    pipesRenderRails();
+    pipesSetStatus();
+  }
+
+  function pipesReducedMotion() {
+    return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+
+  function pipesCheck() {
+    const f = pipesFlow();
+    pipes.wet = f.wet;
+    pipes.dist = f.dist;
+    if (f.win && !pipes.won) {
+      pipes.won = true;
+      if (pipesReducedMotion()) {
+        pipesRender();
+      } else {
+        pipesRender();
+      }
+      bumpWinning(10);
+      showToast("Pipes connected. +10 winning");
+    } else {
+      pipesRender();
+    }
+  }
+
+  function pipesNewGame(toastOn, bump) {
+    if (bump && pipes.won && pipes.n < 8) pipes.n += 1;
+    const n = pipes.n;
+    let carved = pipesCarve(n);
+    let need = pipesNeed(n, carved);
+    let grid = new Array(n * n);
+    function fillFrom(needMap) {
+      for (let i = 0; i < n * n; i++) {
+        if (needMap[i]) {
+          const kind = pipesKindFor(needMap[i]);
+          grid[i] = { kind: kind, rot: pipesRotFor(kind, needMap[i]) };
+        } else {
+          const r = Math.random();
+          const kind = r < 0.45 ? "I" : r < 0.85 ? "L" : "T";
+          grid[i] = { kind: kind, rot: (Math.random() * 4) | 0 };
+        }
+      }
+    }
+    fillFrom(need);
+    pipes.grid = grid;
+    pipes.sy = carved.sy;
+    pipes.ey = carved.ey;
+    pipes.won = false;
+    pipes.wet = [];
+    pipes.dist = [];
+    let ok = pipesFlow().win;
+    let rebuild = 0;
+    while (!ok && rebuild < 8) {
+      carved = pipesCarve(n);
+      need = pipesNeed(n, carved);
+      fillFrom(need);
+      pipes.sy = carved.sy;
+      pipes.ey = carved.ey;
+      ok = pipesFlow().win;
+      rebuild++;
+    }
+    let tries = 0;
+    do {
+      for (let i = 0; i < grid.length; i++) grid[i].rot = (Math.random() * 4) | 0;
+      tries++;
+    } while (pipesFlow().win && tries < 16);
+    if (pipesFlow().win) grid[pipes.sy * n].rot = (grid[pipes.sy * n].rot + 1) & 3;
+    pipes.moves = 0;
+    pipes.won = false;
+    pipes.wet = [];
+    pipes.dist = [];
+    pipes.started = true;
+    pipesRender();
+    if (toastOn) showToast("New pipes · " + n + "×" + n);
+  }
+
+  function pipesOnClick(e) {
+    const btn = e.target.closest(".pipe-tile");
+    if (!btn || pipes.won || !pipes.grid.length) return;
+    const i = +btn.getAttribute("data-i");
+    if (i !== i || !pipes.grid[i]) return;
+    pipes.grid[i].rot = (pipes.grid[i].rot + 1) & 3;
+    pipes.moves += 1;
+    pipesCheck();
+  }
+
+  if (pipesBoardEl) {
+    pipesBoardEl.addEventListener("click", pipesOnClick);
+    pipesBoardEl.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
+  }
+  const pipesNewBtn = document.getElementById("pipesNew");
+  if (pipesNewBtn) pipesNewBtn.addEventListener("click", function () { pipesNewGame(true, false); });
+  const pipesNextBtn = document.getElementById("pipesNext");
+  if (pipesNextBtn) pipesNextBtn.addEventListener("click", function () { pipesNewGame(true, true); });
+
   // --- Casino (fake chips, session-only) ---
   const CHIP_START = 1000;
   let chips = CHIP_START;
@@ -8066,6 +8588,9 @@
     } else if (name === "chess") {
       if (!chess.started) chessNewGame(false);
       else chessRender();
+    } else if (name === "pipes") {
+      if (!pipes.started) pipesNewGame(false, false);
+      else pipesRender();
     } else if (name === "casino" || name === "blackjack" || name === "slots" || name === "roulette" || name === "craps" || name === "baccarat") {
       casinoOnOpen();
     }
