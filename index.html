@@ -1329,29 +1329,34 @@
     overflow: hidden;
     padding: 10px 12px 12px;
   }
-  .chess-toolbar {
+  .chess-toolbar,
+  .pipes-toolbar {
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
   }
-  .chess-controls {
+  .chess-controls,
+  .pipes-controls {
     margin-top: 0;
     width: 100%;
     justify-content: space-between;
     align-items: center;
   }
-  .chess-diff {
+  .chess-diff,
+  .pipes-diff {
     display: flex;
     gap: 6px;
     flex: 1 1 auto;
   }
-  .chess-diff .btn {
+  .chess-diff .btn,
+  .pipes-diff .btn {
     flex: 1 1 0;
     min-height: 40px;
     min-width: 56px;
     padding: 8px 8px;
   }
-  .chess-diff .btn[aria-pressed="true"] {
+  .chess-diff .btn[aria-pressed="true"],
+  .pipes-diff .btn[aria-pressed="true"] {
     background: rgba(57,255,20,.18);
     border-color: var(--green);
     color: var(--green);
@@ -1439,7 +1444,7 @@
 
   /* Pipes */
   #win-pipes {
-    max-width: min(460px, calc(100vw - 24px));
+    max-width: min(520px, calc(100vw - 24px));
   }
   #win-pipes.window.open {
     max-height: calc(100dvh - 48px);
@@ -1457,25 +1462,29 @@
     flex-shrink: 0;
   }
   .pipes-stage {
-    --pipes-n: 6;
+    --pipes-n: 7;
     display: grid;
-    grid-template-columns: 16px 1fr 16px;
+    grid-template-columns: minmax(8px, 16px) minmax(0, 1fr) minmax(8px, 16px);
     gap: 4px;
     align-items: stretch;
     flex: 1 1 auto;
     min-width: 0;
     min-height: 0;
-    width: min(100%, calc(100dvh - 220px));
+    width: min(100%, calc(100dvh - 240px));
     max-width: 100%;
+    max-height: 100%;
     margin: 0 auto;
   }
   .pipes-board {
     display: grid;
-    grid-template-columns: repeat(var(--pipes-n), 1fr);
-    grid-template-rows: repeat(var(--pipes-n), 1fr);
+    grid-template-columns: repeat(var(--pipes-n), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--pipes-n), minmax(0, 1fr));
     gap: 3px;
     min-width: 0;
     min-height: 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
     aspect-ratio: 1;
     border: 1px solid rgba(57,255,20,.35);
     border-radius: 8px;
@@ -1488,10 +1497,11 @@
   }
   .pipes-rail {
     display: grid;
-    grid-template-rows: repeat(var(--pipes-n), 1fr);
+    grid-template-rows: repeat(var(--pipes-n), minmax(0, 1fr));
     gap: 3px;
     padding: 4px 0;
     min-width: 0;
+    min-height: 0;
   }
   .pipes-blob {
     width: 100%;
@@ -2383,10 +2393,11 @@
     .ms-cell { width: 26px; height: 26px; font-size: 11px; }
     .game-pad { max-width: 200px; }
     .chess-board { width: min(100%, calc(100dvh - 200px)); }
-    .chess-diff .btn { min-height: 44px; }
+    .chess-diff .btn,
+    .pipes-diff .btn { min-height: 44px; }
     .chess-pc { font-size: clamp(22px, 8vw, 32px); }
-    .pipes-stage { width: min(100%, calc(100dvh - 190px)); grid-template-columns: 12px 1fr 12px; }
-    .pipe-tile { min-height: 36px; }
+    .pipes-stage { width: min(100%, calc(100dvh - 210px)); grid-template-columns: minmax(8px, 12px) minmax(0, 1fr) minmax(8px, 12px); }
+    .pipe-tile { min-height: 0; }
 
     #win-solitaire {
       --sol-cw: 40px;
@@ -2861,15 +2872,16 @@
     padding: 8px 12px;
   }
   html.tesla #win-pipes {
-    max-width: min(520px, calc(100vw - 24px));
+    max-width: min(600px, calc(100vw - 24px));
   }
   html.tesla .pipes-stage {
-    grid-template-columns: 20px 1fr 20px;
-    width: min(100%, calc(100dvh - 200px));
+    grid-template-columns: minmax(12px, 20px) minmax(0, 1fr) minmax(12px, 20px);
+    width: min(100%, calc(100dvh - 220px));
   }
   html.tesla .pipes-board { gap: 4px; padding: 5px; }
-  html.tesla .pipe-tile { min-height: 44px; border-radius: 6px; }
+  html.tesla .pipe-tile { min-height: 0; border-radius: 6px; }
   html.tesla .pipe-arm { stroke-width: 8.2; }
+  html.tesla .pipes-diff .btn { min-height: 48px; min-width: 64px; }
 </style>
 </head>
 <body>
@@ -3194,7 +3206,7 @@
           </button>
           <button type="button" class="game-card" data-open="pipes">
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h6a2 2 0 0 1 2 2v6"/><path d="M12 16h8"/><path d="M8 4v4"/><circle cx="12" cy="10" r="1.15" fill="currentColor" stroke="none"/><circle cx="12" cy="16" r="1.15" fill="currentColor" stroke="none"/></svg></div>
-            <div class="gc-meta"><div class="gc-title">Pipes</div><div class="gc-desc">Rotate tiles · source to sink</div></div>
+            <div class="gc-meta"><div class="gc-title">Pipes</div><div class="gc-desc">Rotate tiles · Easy / Medium / Hard</div></div>
           </button>
         </div>
       </div>
@@ -3398,10 +3410,14 @@
       </div>
       <div class="content pipes-content">
         <div class="game-toolbar pipes-toolbar">
-          <div class="game-status" id="pipesStatus">6×6 · 0 moves</div>
-          <div class="row">
-            <button type="button" class="btn secondary" id="pipesNew">New</button>
-            <button type="button" class="btn" id="pipesNext">Next</button>
+          <div class="game-status" id="pipesStatus">7×7 · 0 moves</div>
+          <div class="row pipes-controls">
+            <div class="pipes-diff" role="group" aria-label="Difficulty">
+              <button type="button" class="btn secondary" data-pipes-diff="easy" aria-pressed="true">Easy</button>
+              <button type="button" class="btn secondary" data-pipes-diff="medium" aria-pressed="false">Medium</button>
+              <button type="button" class="btn secondary" data-pipes-diff="hard" aria-pressed="false">Hard</button>
+            </div>
+            <button type="button" class="btn" id="pipesNew">New</button>
           </div>
         </div>
         <div class="pipes-stage" id="pipesStage">
@@ -5164,7 +5180,7 @@
         {
           title: "Games",
           paragraphs: [
-            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), and Pipes. Pipes: click tiles to rotate them until a path connects start to end."
+            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), and Pipes. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked."
           ]
         },
         {
@@ -7035,13 +7051,15 @@
     { bit: PIPES_S, dx: 0, dy: 1, opp: PIPES_N },
     { bit: PIPES_W, dx: -1, dy: 0, opp: PIPES_E }
   ];
+  const PIPES_SIZE = { easy: 7, medium: 10, hard: 13 };
   const pipesBoardEl = document.getElementById("pipesBoard");
   const pipesStageEl = document.getElementById("pipesStage");
   const pipesSrcEl = document.getElementById("pipesSrc");
   const pipesSnkEl = document.getElementById("pipesSnk");
   const pipesStatusEl = document.getElementById("pipesStatus");
   const pipes = {
-    n: 6,
+    n: 7,
+    diff: "easy",
     grid: [],
     sy: 0,
     ey: 0,
@@ -7051,6 +7069,12 @@
     wet: [],
     dist: []
   };
+
+  function pipesSyncDiff() {
+    document.querySelectorAll("[data-pipes-diff]").forEach(btn => {
+      btn.setAttribute("aria-pressed", btn.getAttribute("data-pipes-diff") === pipes.diff ? "true" : "false");
+    });
+  }
 
   function pipesMaskOf(t) {
     return PIPES_MASK[t.kind][t.rot & 3];
@@ -7216,8 +7240,8 @@
       pipesStageEl.style.setProperty("--pipes-n", String(n));
       pipesStageEl.classList.toggle("won", pipes.won);
     }
-    pipesBoardEl.style.gridTemplateColumns = "repeat(" + n + ", 1fr)";
-    pipesBoardEl.style.gridTemplateRows = "repeat(" + n + ", 1fr)";
+    pipesBoardEl.style.gridTemplateColumns = "repeat(" + n + ", minmax(0, 1fr))";
+    pipesBoardEl.style.gridTemplateRows = "repeat(" + n + ", minmax(0, 1fr))";
     const start = pipes.sy * n;
     const end = pipes.ey * n + (n - 1);
     if (pipesBoardEl.childElementCount !== n * n) {
@@ -7265,8 +7289,8 @@
     }
   }
 
-  function pipesNewGame(toastOn, bump) {
-    if (bump && pipes.won && pipes.n < 8) pipes.n += 1;
+  function pipesNewGame(toastOn) {
+    pipes.n = PIPES_SIZE[pipes.diff] || 7;
     const n = pipes.n;
     let carved = pipesCarve(n);
     let need = pipesNeed(n, carved);
@@ -7331,9 +7355,14 @@
     pipesBoardEl.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
   }
   const pipesNewBtn = document.getElementById("pipesNew");
-  if (pipesNewBtn) pipesNewBtn.addEventListener("click", function () { pipesNewGame(true, false); });
-  const pipesNextBtn = document.getElementById("pipesNext");
-  if (pipesNextBtn) pipesNextBtn.addEventListener("click", function () { pipesNewGame(true, true); });
+  if (pipesNewBtn) pipesNewBtn.addEventListener("click", function () { pipesNewGame(true); });
+  document.querySelectorAll("[data-pipes-diff]").forEach(btn => {
+    btn.addEventListener("click", function () {
+      pipes.diff = btn.getAttribute("data-pipes-diff") || "easy";
+      pipesSyncDiff();
+      pipesNewGame(true);
+    });
+  });
 
   // --- Casino (fake chips, session-only) ---
   const CHIP_START = 1000;
@@ -8566,7 +8595,7 @@
       if (!chess.started) chessNewGame(false);
       else chessRender();
     } else if (name === "pipes") {
-      if (!pipes.started) pipesNewGame(false, false);
+      if (!pipes.started) pipesNewGame(false);
       else pipesRender();
     } else if (name === "casino" || name === "blackjack" || name === "slots" || name === "roulette" || name === "craps" || name === "baccarat") {
       casinoOnOpen();
