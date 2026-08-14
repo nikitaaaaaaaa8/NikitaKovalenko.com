@@ -900,68 +900,6 @@
     transform: translateX(-50%) translateY(0);
   }
 
-  #kita-dock {
-    position: fixed;
-    right: 10px;
-    bottom: 50px;
-    z-index: 70;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 5px;
-    max-width: min(240px, 68vw);
-    pointer-events: none;
-    font-size: 11px;
-    line-height: 1.25;
-    color: var(--green);
-  }
-  #kita-tape {
-    width: 100%;
-    padding: 5px 7px;
-    border: 1px solid rgba(57,255,20,.28);
-    border-radius: 7px;
-    background: rgba(0,0,0,.78);
-    color: rgba(216,255,208,.78);
-    font-size: 10px;
-  }
-  #kita-tape div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  #kita-tug {
-    display: flex;
-    width: 88px;
-    height: 4px;
-    border-radius: 2px;
-    overflow: hidden;
-    background: rgba(255,255,255,.08);
-  }
-  #kita-tug i { display: block; min-width: 0; }
-  #kita-tug-w { background: #39ff14; }
-  #kita-tug-l { background: #ff4d4d; }
-  #kita-statue {
-    max-width: 100%;
-    padding: 7px 10px;
-    border: 1px solid rgba(57,255,20,.45);
-    border-radius: 8px;
-    background: rgba(0,0,0,.9);
-    opacity: 0;
-    transform: translateY(12px);
-    transition: opacity .2s ease, transform .2s ease;
-  }
-  #kita-statue.show { opacity: 1; transform: none; }
-  .kita-jp {
-    margin: 0 0 6px;
-    font-size: 10px;
-    color: var(--green);
-    letter-spacing: .02em;
-  }
-  @media (max-width: 700px) {
-    #kita-dock { bottom: 56px; left: 10px; right: auto; align-items: flex-start; }
-  }
-  html.tesla #kita-dock { bottom: 68px; }
-  @media (prefers-reduced-motion: reduce) {
-    #kita-statue { transform: none; transition: opacity .15s linear; }
-    #kita-statue.show { transform: none; }
-  }
-
   .taskbar {
     position: fixed;
     left: 0;
@@ -2875,7 +2813,6 @@
         <div class="stat"><span>Network region</span><span class="muted" id="geoRegion">—</span></div>
         <div class="stat"><span>Session clicks</span><span class="green" id="clickCount">0</span></div>
         <div class="stat"><span>Tracker index</span><span class="green" id="winIndex">100</span></div>
-        <div class="stat" id="kitaNowRow" hidden><span>Just now</span><span class="green" id="kitaNow">—</span></div>
         <div class="stat"><span>Emails answered</span><span class="danger">0</span></div>
         <div class="stat"><span>System stability</span><span class="muted">cosmetic only</span></div>
         <p class="muted" style="margin: 8px 0 0; font-size: 11px;" id="geoNote">City guess from IP — not GPS. VPNs lie.</p>
@@ -3612,11 +3549,6 @@
   </div>
 
   <div class="toast" id="toast"></div>
-  <div id="kita-dock" aria-live="polite">
-    <div id="kita-tape" hidden></div>
-    <div id="kita-tug" hidden><i id="kita-tug-w"></i><i id="kita-tug-l"></i></div>
-    <div id="kita-statue" role="status"></div>
-  </div>
   <div id="droneLightbox" hidden role="dialog" aria-modal="true" aria-label="DroneStuff photo">
     <img id="droneLightboxImg" alt="">
     <div class="drone-lightbox-cap" id="droneLightboxCap"></div>
@@ -4131,128 +4063,8 @@
   function kitaOutcome(win, gained) {
     if (win) { kitaWinSnd(); kitaChipFlash(true); }
     else { kitaLoseSnd(); kitaChipFlash(false); }
-    if (typeof kitaOnSettle === "function") kitaOnSettle(!!win, gained);
   }
   document.addEventListener("pointerdown", function () { if (kitaAudioAllowed()) kitaACGet(); }, true);
-
-  const kitaCasIds = ["casino","blackjack","slots","roulette","craps","baccarat"];
-  const kitaFakeActs = ["just hit jackpot","hit 777","bought insurance","hit a natural","let it ride","hit a streak"];
-  let kitaTapeLines = [];
-  let kitaTugW = 0, kitaTugL = 0, kitaJp = "", kitaRealAt = 0, kitaFakeT = 0, kitaJpHint = "";
-  const kitaStatueEl = document.getElementById("kita-statue");
-  const kitaTapeEl = document.getElementById("kita-tape");
-  const kitaTugEl = document.getElementById("kita-tug");
-  const kitaTugWEl = document.getElementById("kita-tug-w");
-  const kitaTugLEl = document.getElementById("kita-tug-l");
-  const kitaNowEl = document.getElementById("kitaNow");
-  const kitaNowRow = document.getElementById("kitaNowRow");
-
-  function kitaCasOpen() {
-    return kitaCasIds.some(function (n) {
-      const el = windows[n];
-      return el && el.classList.contains("open") && !el.classList.contains("minimized");
-    });
-  }
-  function kitaStatueBeep() {
-    if (typeof kitaAudioAllowed === "function" && kitaAudioAllowed() && typeof kitaBeep === "function") kitaBeep(900, 0.045, "sine");
-  }
-  function kitaStatue(msg, real) {
-    if (!kitaStatueEl || !msg) return;
-    kitaStatueEl.textContent = msg;
-    kitaStatueEl.classList.add("show");
-    clearTimeout(kitaStatue._t);
-    kitaStatue._t = setTimeout(function () { kitaStatueEl.classList.remove("show"); }, 3000);
-    if (real) kitaRealAt = Date.now();
-    kitaStatueBeep();
-  }
-  function kitaNow(label) {
-    if (kitaNowEl) kitaNowEl.textContent = "just now · " + label;
-    if (kitaNowRow) kitaNowRow.hidden = false;
-  }
-  function kitaMoment(label, msg) {
-    kitaNow(label);
-    kitaStatue(msg, true);
-  }
-  function kitaTapePaint() {
-    if (!kitaTapeEl) return;
-    const on = kitaCasOpen() && kitaTapeLines.length;
-    kitaTapeEl.hidden = !on;
-    kitaTapeEl.replaceChildren();
-    if (!on) return;
-    kitaTapeLines.forEach(function (t) {
-      const d = document.createElement("div");
-      d.textContent = t;
-      kitaTapeEl.appendChild(d);
-    });
-  }
-  function kitaTapePush(line) {
-    kitaTapeLines.unshift(line);
-    if (kitaTapeLines.length > 5) kitaTapeLines.length = 5;
-    kitaTapePaint();
-  }
-  function kitaTugPaint() {
-    if (!kitaTugEl) return;
-    const on = kitaCasOpen();
-    kitaTugEl.hidden = !on;
-    if (!on) return;
-    const t = kitaTugW + kitaTugL;
-    if (kitaTugWEl) kitaTugWEl.style.flex = String(t ? kitaTugW : 1);
-    if (kitaTugLEl) kitaTugLEl.style.flex = String(t ? kitaTugL : 1);
-  }
-  function kitaSetJp(text) {
-    kitaJp = text || "";
-    document.querySelectorAll("[data-last-jp]").forEach(function (el) {
-      el.hidden = !kitaJp;
-      el.textContent = kitaJp ? ("last jackpot · " + kitaJp) : "";
-    });
-  }
-  function kitaBigWin(label) { kitaJpHint = label; }
-  function kitaOnSettle(win, gained) {
-    if (win) kitaTugW += 1; else kitaTugL += 1;
-    kitaTugPaint();
-    const hint = kitaJpHint;
-    kitaJpHint = "";
-    if (win && (hint || (gained | 0) >= 50)) kitaSetJp(hint || ("+" + (gained | 0) + " chips"));
-  }
-  function kitaEnsureJpSlots() {
-    document.querySelectorAll(".casino-content .casino-bar").forEach(function (bar) {
-      if (bar.parentNode.querySelector("[data-last-jp]")) return;
-      const d = document.createElement("div");
-      d.className = "kita-jp";
-      d.setAttribute("data-last-jp", "");
-      d.hidden = true;
-      bar.insertAdjacentElement("afterend", d);
-    });
-    const fun = document.querySelector("#win-casino .casino-fun");
-    if (fun && !document.querySelector("#win-casino [data-last-jp]")) {
-      const d = document.createElement("div");
-      d.className = "kita-jp";
-      d.setAttribute("data-last-jp", "");
-      d.hidden = true;
-      fun.insertAdjacentElement("afterend", d);
-    }
-    if (kitaJp) kitaSetJp(kitaJp);
-  }
-  function kitaFakeFire() {
-    if (!kitaCasOpen()) return;
-    if (Date.now() - kitaRealAt < 3500) { kitaFakeT = setTimeout(kitaFakeFire, 4000); return; }
-    const msg = "user " + (1 + (Math.random() * 180 | 0)) + " " + kitaFakeActs[Math.random() * kitaFakeActs.length | 0];
-    kitaStatue(msg, false);
-    kitaTapePush(msg);
-    kitaFakeSched();
-  }
-  function kitaFakeSched() {
-    clearTimeout(kitaFakeT);
-    if (!kitaCasOpen()) return;
-    kitaFakeT = setTimeout(kitaFakeFire, 12000 + Math.random() * 13000);
-  }
-  function kitaCasinoWatch() {
-    kitaEnsureJpSlots();
-    kitaTapePaint();
-    kitaTugPaint();
-    if (kitaCasOpen()) { if (!kitaFakeT) kitaFakeSched(); }
-    else { clearTimeout(kitaFakeT); kitaFakeT = 0; }
-  }
 
   function bumpWinning(by) {
     winIndex += by;
@@ -4890,7 +4702,6 @@
     renderStats();
     save();
     showToast(matrix ? "VIP Winning Room unlocked. Matrix on, snow off." : "VIP Winning Room unlocked");
-    kitaMoment("VIP / Matrix", matrix ? "VIP Winning Room unlocked. Matrix on, snow off." : "VIP Winning Room unlocked");
   }
 
   // konami
@@ -5089,7 +4900,6 @@
       bumpWinning(47);
       chipsGive(500);
       showToast("Caught the Snitch! +47 winning · +500 chips");
-      kitaMoment("snitch caught", "Caught the Snitch! +47 winning · +500 chips");
     }
     snitch.addEventListener("click", catchSnitch);
     snitch.addEventListener("pointerup", catchSnitch);
@@ -5160,7 +4970,7 @@
         {
           title: "Apps",
           paragraphs: [
-            "Weather shows current conditions from your IP city, via Open-Meteo. Not GPS. Tracker uses the same city guess, plus session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes. Tracker also keeps a just-now line for the last real Kita moment this visit.",
+            "Weather shows current conditions from your IP city, via Open-Meteo. Not GPS. Tracker uses the same city guess, plus session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
             "Paint has a brush, eraser, fill, shapes, a palette, undo, and save.",
             "DroneStuff is an in-OS gallery of aerials, not a redirect. Click a shot for the lightbox.",
             "Bookshelf is these notes. Click a spine. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters."
@@ -5178,9 +4988,8 @@
             "Casino is a fake-chip toy. One bankroll across Blackjack, Slots, Roulette, Craps (pass line plus odds), and Baccarat (Player / Banker / Tie; banker even money).",
             "Blackjack has hit, stand, double, split on the same rank once (8+8 yes, 10+K no), and insurance when the dealer shows an ace (pays 2:1). After a hand, Rebet repeats the last bet size.",
             "Roulette lets you stack chips on more than one number, plus red/black, odd/even, dozens, and high/low.",
-            "Craps can take true odds behind the pass line after a point. Slots show a paytable; reels stop one at a time. Baccarat keeps a short road of recent Player, Banker, and Tie results.",
-            "You start at 1000 chips. A refresh resets them. One pile, every table. Tables have light motion and short beeps, mute from the tray speaker.",
-            "A small corner statue toasts fake other players while Casino or a table is open, every 12–25 seconds. A live tape keeps the last few of those lines. Two 7s that miss 777 flash so-close — payouts stay the same. A red/green bar is winning vs losing settles this visit. Last jackpot under the chip pile is your last big win: slots 777, a blackjack natural, or 50+ chips. Refresh clears it."
+            "Craps can take true odds behind the pass line after a point. Slots show a paytable; reels stop one at a time. Two 7s that miss 777 flash so-close — payouts stay the same. Baccarat keeps a short road of recent Player, Banker, and Tie results.",
+            "You start at 1000 chips. A refresh resets them. One pile, every table. Tables have light motion and short beeps, mute from the tray speaker."
           ]
         },
         {
@@ -5197,7 +5006,6 @@
             "Snow is on by default. Type snow in Terminal to stop it. The Konami code turns snow off and starts Matrix rain. You can still see the desktop through it.",
             "A golden snitch shows up every 120 seconds, on screen for 5 seconds. Catch it for +47 winning and +500 casino chips.",
             "Konami: up, up, down, down, left, right, left, right, B, A. That opens a VIP box and starts the Matrix rain.",
-            "The same statue toasts real Kita moments: catching the snitch, Konami VIP / Matrix, a Solitaire win, a chess checkmate you win, or a Minesweeper clear. Tracker shows a just-now line for the last of those.",
             "Refresh starts a new session. Nothing important is saved."
           ]
         }
@@ -5503,7 +5311,6 @@
       msStopTimer();
       msUpdateStatus();
       showToast("Minesweeper cleared. +10 winning");
-      kitaMoment("minesweeper", "Minesweeper cleared. +10 winning");
       bumpWinning(10);
     } else {
       msUpdateStatus();
@@ -6166,7 +5973,6 @@
       sol.won = true;
       if (solEls.win) solEls.win.hidden = false;
       showToast("Solitaire cleared. +10 winning");
-      kitaMoment("solitaire", "Solitaire cleared. +10 winning");
       bumpWinning(10);
     }
   }
@@ -6944,7 +6750,6 @@
         winIndex += 12;
         renderStats();
         showToast("Checkmate. +12 winning");
-        kitaMoment("checkmate", "Checkmate. +12 winning");
       } else showToast("Checkmate");
     } else {
       chessSetStatus("Stalemate", "stale");
@@ -7272,7 +7077,6 @@
       chipsGive(pay);
       bjSay("Blackjack. +" + (pay - stake));
       fx = 1;
-      kitaBigWin("blackjack natural");
     } else if (kind === "dbj") {
       bjSay("Dealer blackjack.");
       fx = -1;
@@ -7642,7 +7446,6 @@
         const jack = result[0].id === "seven" && result[1].id === "seven" && result[2].id === "seven";
         const near = sevens === 2 && !jack;
         const reels = document.querySelector("#win-slots .slot-reels");
-        if (jack) kitaBigWin("777 · 20×");
         if (win) {
           chipsGive(win);
           kitaOutcome(true, win - stake);
@@ -8265,7 +8068,6 @@
       else chessRender();
     } else if (name === "casino" || name === "blackjack" || name === "slots" || name === "roulette" || name === "craps" || name === "baccarat") {
       casinoOnOpen();
-      kitaCasinoWatch();
     }
   }
 
@@ -8274,7 +8076,6 @@
     if (name === "snake") snStop();
     if (name === "tetris") tStop();
     if (name === "solitaire") solKillGhost();
-    kitaCasinoWatch();
   }
 
   // Paint app — session-only canvas (no localStorage)
@@ -8688,7 +8489,7 @@
     if (!el) return false;
     if (el.nodeType !== 1) el = el.parentElement;
     if (!el || !el.closest) return false;
-    if (el.closest(".window, .resize-handle, .taskbar, .start-menu, .start-btn, .icon, #snitch, #auraMeter, .boot, .toast, #kita-dock, #droneLightbox, button, a, input, textarea, canvas, [data-open], [data-link], [data-close], [data-book], [data-act]")) {
+    if (el.closest(".window, .resize-handle, .taskbar, .start-menu, .start-btn, .icon, #snitch, #auraMeter, .boot, .toast, #droneLightbox, button, a, input, textarea, canvas, [data-open], [data-link], [data-close], [data-book], [data-act]")) {
       return false;
     }
     return el === document.body
