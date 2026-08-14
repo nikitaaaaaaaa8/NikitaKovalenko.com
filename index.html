@@ -1393,6 +1393,11 @@
   #win-slots { max-width: min(420px, calc(100vw - 24px)); }
   #win-roulette { max-width: min(480px, calc(100vw - 24px)); }
   #win-craps { max-width: min(420px, calc(100vw - 24px)); }
+  #win-baccarat {
+    --sol-cw: 52px;
+    --sol-ch: 72px;
+    max-width: min(520px, calc(100vw - 24px));
+  }
   #win-casino { max-width: min(400px, calc(100vw - 24px)); }
   .casino-content { padding: 10px 12px 12px; }
   .casino-bar {
@@ -1531,11 +1536,49 @@
   }
   .cr-bets .btn { min-height: 44px; }
 
+  .bac-felt {
+    background:
+      radial-gradient(ellipse at 50% 30%, #145214 0%, #0b3d0b 42%, #071a07 100%);
+    border: 1px solid rgba(57,255,20,.22);
+    border-radius: 10px;
+    padding: 10px 10px 12px;
+  }
+  .bac-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .bac-label {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .bac-label span { color: var(--green); }
+  .bac-msg {
+    text-align: center;
+    color: var(--green);
+    font-size: 12px;
+    margin-top: 10px;
+    min-height: 16px;
+  }
+  .bac-sides, .bac-bets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    align-items: center;
+  }
+  .bac-sides .btn, .bac-bets .btn { min-height: 44px; }
+
   .bj-bets .btn[aria-pressed="true"],
   .slot-bets .btn[aria-pressed="true"],
   .rl-amt .btn[aria-pressed="true"],
   .rl-outside .btn[aria-pressed="true"],
-  .cr-bets .btn[aria-pressed="true"] {
+  .cr-bets .btn[aria-pressed="true"],
+  .bac-sides .btn[aria-pressed="true"],
+  .bac-bets .btn[aria-pressed="true"] {
     background: rgba(57,255,20,.18);
     border-color: var(--green);
   }
@@ -2334,7 +2377,8 @@
       font-size: 16px;
       flex: 1;
     }
-    #win-blackjack {
+    #win-blackjack,
+    #win-baccarat {
       --sol-cw: 44px;
       --sol-ch: 62px;
     }
@@ -2342,7 +2386,8 @@
     #win-blackjack.window.open,
     #win-slots.window.open,
     #win-roulette.window.open,
-    #win-craps.window.open {
+    #win-craps.window.open,
+    #win-baccarat.window.open {
       max-height: calc(100dvh - 44px);
     }
 
@@ -2755,6 +2800,10 @@
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8" width="8.2" height="8.2" rx="1.4"/><rect x="12.3" y="8" width="8.2" height="8.2" rx="1.4"/><circle cx="6.2" cy="10.8" r="0.7" fill="currentColor" stroke="none"/><circle cx="8.9" cy="13.4" r="0.7" fill="currentColor" stroke="none"/><circle cx="16.4" cy="12.1" r="0.7" fill="currentColor" stroke="none"/></svg></div>
             <div class="gc-meta"><div class="gc-title">Craps</div><div class="gc-desc">Pass line · come-out then point</div></div>
           </button>
+          <button type="button" class="game-card" data-open="baccarat">
+            <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.8" y="5.2" width="7.4" height="10.4" rx="1.2"/><rect x="12.8" y="8.4" width="7.4" height="10.4" rx="1.2"/><path d="M6.4 8.4h2.2M16.4 11.6h2.2"/></svg></div>
+            <div class="gc-meta"><div class="gc-title">Baccarat</div><div class="gc-desc">Player · Banker · Tie · even money</div></div>
+          </button>
         </div>
       </div>
     </section>
@@ -3156,6 +3205,52 @@
       </div>
     </section>
 
+    <section class="window" id="win-baccarat" style="top:52px; left:130px; width:460px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="baccarat"></div>
+          <div class="dot min" data-close="baccarat"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Baccarat</div>
+      </div>
+      <div class="content casino-content">
+        <div class="casino-bar">
+          <div class="game-status">Chips: <span data-chips>1000</span></div>
+          <div class="casino-tapped" hidden>
+            <span>you're tapped</span>
+            <button type="button" class="btn" data-chip-reset>Reset chips</button>
+          </div>
+        </div>
+        <p class="muted casino-fun">for fun</p>
+        <div class="bac-felt">
+          <div class="bac-row">
+            <div>
+              <div class="bac-label">Player <span id="bacPTot"></span></div>
+              <div class="bj-hand" id="bacPlayer"></div>
+            </div>
+            <div>
+              <div class="bac-label">Banker <span id="bacBTot"></span></div>
+              <div class="bj-hand" id="bacBanker"></div>
+            </div>
+          </div>
+          <div class="bac-msg" id="bacMsg">Pick a side, then deal</div>
+        </div>
+        <div class="bac-sides">
+          <button type="button" class="btn" data-bac-side="player" aria-pressed="true">Player</button>
+          <button type="button" class="btn" data-bac-side="banker" aria-pressed="false">Banker</button>
+          <button type="button" class="btn" data-bac-side="tie" aria-pressed="false">Tie 8:1</button>
+        </div>
+        <div class="bac-bets">
+          <button type="button" class="btn" data-bac-bet="25" aria-pressed="true">25</button>
+          <button type="button" class="btn" data-bac-bet="50" aria-pressed="false">50</button>
+          <button type="button" class="btn" data-bac-bet="100" aria-pressed="false">100</button>
+          <button type="button" class="btn" id="bacDeal">Deal</button>
+        </div>
+        <p class="game-hint">Tableau draw · banker even money, no commission · tie 8:1 · player/banker ties push</p>
+      </div>
+    </section>
+
     <div id="desktop-marquee" aria-hidden="true"></div>
   </div>
 
@@ -3249,7 +3344,8 @@
     blackjack: document.getElementById("win-blackjack"),
     slots: document.getElementById("win-slots"),
     roulette: document.getElementById("win-roulette"),
-    craps: document.getElementById("win-craps")
+    craps: document.getElementById("win-craps"),
+    baccarat: document.getElementById("win-baccarat")
   };
 
   function save() {
@@ -3905,6 +4001,7 @@
     if (win && win.id === "win-slots") return { minW: 300, minH: 280 };
     if (win && win.id === "win-roulette") return { minW: 320, minH: 340 };
     if (win && win.id === "win-craps") return { minW: 300, minH: 280 };
+    if (win && win.id === "win-baccarat") return { minW: 320, minH: 300 };
     if (win && win.id === "win-casino") return { minW: 280, minH: 220 };
     return { minW: 280, minH: 150 };
   }
@@ -4419,7 +4516,7 @@
       title: "How Kita OS works",
       paragraphs: [
         "This website is a fake desktop. Click Start for a list of apps with their icons. Click an icon to open a window. Drag the title bar to move it. The red dot closes it. Icons sit in two columns like before; they snap to that grid and cannot stack; rotate keeps the two-column layout. Drag a box around icons to select them, then drag any selected icon to move the whole pile. Drop the pile on Trash to bin them all.",
-        "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes. A refresh resets them. The Games folder has Minesweeper, Snake, Tetris, Solitaire, Chess (Easy / Medium / Hard), and Pinball. Pinball: Z or Left and slash or Right flip, Space launch, 3 balls. Casino is a fake-chip toy: Blackjack, Slots, Roulette, and Craps (pass line). You start at 1000 chips; a refresh resets them. Bookshelf is these notes.",
+        "Weather guesses your city from IP, then shows current conditions. Tracker uses the same location guess. Neither is GPS. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes. A refresh resets them. The Games folder has Minesweeper, Snake, Tetris, Solitaire, Chess (Easy / Medium / Hard), and Pinball. Pinball: Z or Left and slash or Right flip, Space launch, 3 balls. Casino is a fake-chip toy: Blackjack, Slots, Roulette, Craps (pass line), and Baccarat (Player / Banker / Tie; banker even money). You start at 1000 chips; a refresh resets them. Bookshelf is these notes.",
         "Open Terminal and type help, then press Run. Help lists commands and app names; type an app to open it. games and casino open those folders. snow turns the snow off.",
         "A golden snitch shows up every 120 seconds for 5 seconds. Catch it for +47 winning and +500 casino chips. Refresh starts a new session.",
         "There is a Konami code: up, up, down, down, left, right, left, right, B, A. That opens a VIP box, turns on Matrix rain, and turns off the snow."
@@ -7267,6 +7364,150 @@
   crSyncBets();
 
 
+  // --- Baccarat (tableau, session chips, banker even money) ---
+  const bacEls = {
+    player: document.getElementById("bacPlayer"),
+    banker: document.getElementById("bacBanker"),
+    pTot: document.getElementById("bacPTot"),
+    bTot: document.getElementById("bacBTot"),
+    msg: document.getElementById("bacMsg"),
+    deal: document.getElementById("bacDeal")
+  };
+  const bac = { bet: 25, side: "player", busy: false, deck: [], player: [], banker: [] };
+
+  function bacSay(t) {
+    if (bacEls.msg) bacEls.msg.textContent = t;
+  }
+  function bacVal(card) {
+    return card.rank >= 10 ? 0 : card.rank;
+  }
+  function bacTotal(hand) {
+    let s = 0;
+    for (let i = 0; i < hand.length; i++) s += bacVal(hand[i]);
+    return s % 10;
+  }
+  function bacNewDeck() {
+    const d = [];
+    for (let s = 0; s < 4; s++) {
+      for (let r = 1; r <= 13; r++) d.push({ suit: SOL_SUITS[s], rank: r, face: true });
+    }
+    for (let i = d.length - 1; i > 0; i--) {
+      const j = (Math.random() * (i + 1)) | 0;
+      const t = d[i]; d[i] = d[j]; d[j] = t;
+    }
+    return d;
+  }
+  function bacDraw() {
+    if (bac.deck.length < 8) bac.deck = bacNewDeck();
+    return bac.deck.pop();
+  }
+  function bacSync() {
+    document.querySelectorAll("[data-bac-side]").forEach(btn => {
+      btn.setAttribute("aria-pressed", btn.getAttribute("data-bac-side") === bac.side ? "true" : "false");
+      btn.disabled = !!bac.busy;
+    });
+    document.querySelectorAll("[data-bac-bet]").forEach(btn => {
+      const n = Number(btn.getAttribute("data-bac-bet"));
+      btn.setAttribute("aria-pressed", n === bac.bet ? "true" : "false");
+      btn.disabled = !!bac.busy;
+    });
+    if (bacEls.deal) bacEls.deal.disabled = !!bac.busy;
+  }
+  function bacSetSide(side) {
+    if (bac.busy) return;
+    bac.side = side;
+    bacSync();
+  }
+  function bacSetBet(n) {
+    if (bac.busy) return;
+    n = Math.floor(Number(n) || 0);
+    if (n < 1) return;
+    bac.bet = n;
+    bacSync();
+  }
+  function bacRender() {
+    if (bacEls.player) {
+      bacEls.player.innerHTML = "";
+      bac.player.forEach(c => bacEls.player.appendChild(bjMakeCard(c)));
+    }
+    if (bacEls.banker) {
+      bacEls.banker.innerHTML = "";
+      bac.banker.forEach(c => bacEls.banker.appendChild(bjMakeCard(c)));
+    }
+    if (bacEls.pTot) bacEls.pTot.textContent = bac.player.length ? String(bacTotal(bac.player)) : "";
+    if (bacEls.bTot) bacEls.bTot.textContent = bac.banker.length ? String(bacTotal(bac.banker)) : "";
+  }
+  function bacBankerDraws(bankTwo, playerThird) {
+    if (playerThird == null) return bankTwo <= 5;
+    const t = bacVal(playerThird);
+    if (bankTwo <= 2) return true;
+    if (bankTwo === 3) return t !== 8;
+    if (bankTwo === 4) return t >= 2 && t <= 7;
+    if (bankTwo === 5) return t >= 4 && t <= 7;
+    if (bankTwo === 6) return t === 6 || t === 7;
+    return false;
+  }
+  function bacSettle() {
+    const pt = bacTotal(bac.player);
+    const bt = bacTotal(bac.banker);
+    const bet = bac.bet;
+    if (pt === bt) {
+      if (bac.side === "tie") {
+        chipsGive(bet * 9);
+        bacSay("Tie " + pt + " · 8:1 +" + (bet * 8));
+      } else {
+        chipsGive(bet);
+        bacSay("Tie " + pt + " · " + bac.side + " pushes");
+      }
+      return;
+    }
+    const winner = pt > bt ? "player" : "banker";
+    if (bac.side === winner) {
+      chipsGive(bet * 2);
+      bacSay((winner === "player" ? "Player" : "Banker") + " " + (winner === "player" ? pt : bt) + " beats " + (winner === "player" ? bt : pt) + " · even money +" + bet);
+    } else if (bac.side === "tie") {
+      bacSay((winner === "player" ? "Player" : "Banker") + " wins · tie bet loses");
+    } else {
+      bacSay((winner === "player" ? "Player" : "Banker") + " " + (winner === "player" ? pt : bt) + " beats " + (winner === "player" ? bt : pt) + " · " + bac.side + " loses");
+    }
+  }
+  function bacDeal() {
+    if (bac.busy) return;
+    if (!chipsTake(bac.bet)) { bacSay("Bet exceeds chips"); showToast("not enough chips"); return; }
+    bac.busy = true;
+    bacSync();
+    if (bac.deck.length < 16) bac.deck = bacNewDeck();
+    bac.player = [bacDraw(), bacDraw()];
+    bac.banker = [bacDraw(), bacDraw()];
+    bacRender();
+    const p2 = bacTotal(bac.player);
+    const b2 = bacTotal(bac.banker);
+    const natural = p2 >= 8 || b2 >= 8;
+    setTimeout(() => {
+      if (!natural) {
+        let pThird = null;
+        if (p2 <= 5) {
+          pThird = bacDraw();
+          bac.player.push(pThird);
+        }
+        if (bacBankerDraws(b2, pThird)) bac.banker.push(bacDraw());
+        bacRender();
+      }
+      bacSettle();
+      bac.busy = false;
+      bacSync();
+    }, 280);
+  }
+  document.querySelectorAll("[data-bac-side]").forEach(btn => {
+    btn.addEventListener("click", () => bacSetSide(btn.getAttribute("data-bac-side")));
+  });
+  document.querySelectorAll("[data-bac-bet]").forEach(btn => {
+    btn.addEventListener("click", () => bacSetBet(btn.getAttribute("data-bac-bet")));
+  });
+  if (bacEls.deal) bacEls.deal.addEventListener("click", bacDeal);
+  bacSync();
+
+
   function onGameWindowOpen(name) {
     if (name === "minesweeper") {
       if (!msGrid.length) msReset();
@@ -7290,7 +7531,7 @@
       else chessRender();
     } else if (name === "pinball") {
       pbOnOpen();
-    } else if (name === "casino" || name === "blackjack" || name === "slots" || name === "roulette" || name === "craps") {
+    } else if (name === "casino" || name === "blackjack" || name === "slots" || name === "roulette" || name === "craps" || name === "baccarat") {
       casinoOnOpen();
     }
   }
