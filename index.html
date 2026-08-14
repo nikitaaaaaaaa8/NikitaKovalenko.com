@@ -1537,7 +1537,7 @@
     min-height: 18px;
     margin-top: 4px;
   }
-  .bj-bets, .bj-acts, .slot-bets, .rl-outside, .rl-amt {
+  .bj-bets, .bj-acts, .bj-insure, .slot-bets, .rl-outside, .rl-amt {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -1548,6 +1548,15 @@
     min-height: 44px;
     min-width: 88px;
     font-size: 14px;
+  }
+  .bj-insure[hidden] { display: none !important; }
+  .bj-hand-box {
+    border-radius: 8px;
+    padding: 4px 2px 6px;
+  }
+  .bj-hand-box.active {
+    outline: 1px solid rgba(57,255,20,.5);
+    background: rgba(57,255,20,.06);
   }
   .cr-felt {
     background:
@@ -1599,6 +1608,7 @@
     align-items: center;
   }
   .cr-bets .btn { min-height: 44px; }
+  .cr-odds-note { color: var(--green); font-size: 11px; min-height: 14px; margin-top: 4px; }
 
   .bac-felt {
     background:
@@ -1635,6 +1645,26 @@
     align-items: center;
   }
   .bac-sides .btn, .bac-bets .btn { min-height: 44px; }
+  .bac-road {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+    min-height: 22px;
+  }
+  .bac-bead {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    color: #fff;
+  }
+  .bac-bead.P { background: #2a6ad6; }
+  .bac-bead.B { background: #c62828; }
+  .bac-bead.T { background: #1b8a1b; }
 
   .bj-bets .btn[aria-pressed="true"],
   .slot-bets .btn[aria-pressed="true"],
@@ -1696,6 +1726,20 @@
     font-size: 10px;
     text-align: center;
   }
+  .slot-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px 12px;
+    margin: 8px 0 0;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .slot-table div {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .slot-table b { color: var(--green); font-weight: 700; }
 
   .rl-wheel-wrap {
     display: flex;
@@ -1786,6 +1830,17 @@
   .rl-nums button.sel,
   .rl-zero.sel {
     box-shadow: 0 0 0 2px var(--green);
+  }
+  .rl-chip {
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1.15;
+  }
+  .rl-outside .btn .rl-chip {
+    display: inline;
+    margin-left: 6px;
   }
   .rl-msg {
     text-align: center;
@@ -3224,8 +3279,10 @@
         <div class="bj-felt">
           <div class="bj-label">Dealer <span id="bjDealerTotal"></span></div>
           <div class="bj-hand" id="bjDealer"></div>
-          <div class="bj-label">You <span id="bjPlayerTotal"></span></div>
-          <div class="bj-hand" id="bjPlayer"></div>
+          <div id="bjPlayerArea">
+            <div class="bj-label">You <span id="bjPlayerTotal"></span></div>
+            <div class="bj-hand" id="bjPlayer"></div>
+          </div>
           <div class="bj-msg" id="bjMsg">Place a bet</div>
         </div>
         <div class="bj-bets" id="bjBets">
@@ -3234,11 +3291,17 @@
           <button type="button" class="btn" data-bj-bet="100" aria-pressed="false">100</button>
           <input id="bjBetIn" type="number" min="1" max="1000" value="25" aria-label="Bet amount">
           <button type="button" class="btn" id="bjDeal">Deal</button>
+          <button type="button" class="btn secondary" id="bjRebet" hidden>Rebet</button>
         </div>
         <div class="bj-acts" id="bjActs" hidden>
           <button type="button" class="btn bj-big" id="bjHit">Hit</button>
           <button type="button" class="btn bj-big" id="bjStand">Stand</button>
           <button type="button" class="btn secondary" id="bjDouble">Double</button>
+          <button type="button" class="btn secondary" id="bjSplit">Split</button>
+        </div>
+        <div class="bj-insure" id="bjInsure" hidden>
+          <button type="button" class="btn" id="bjInsYes">Yes</button>
+          <button type="button" class="btn" id="bjInsNo">No</button>
         </div>
       </div>
     </section>
@@ -3269,7 +3332,13 @@
           </div>
           <div class="slot-msg" id="slotMsg">Spin when ready</div>
         </div>
-        <p class="muted slot-pay">3×7 20× · 3 same 6× · 2×7 2× · pair 1×</p>
+        <div class="slot-table" id="slotTable">
+          <div><span>7 7 7</span><b>20×</b></div>
+          <div><span>♦ ♦ ♦</span><b>12×</b></div>
+          <div><span>3 same</span><b>6×</b></div>
+          <div><span>two 7s</span><b>2×</b></div>
+          <div><span>any pair</span><b>1×</b></div>
+        </div>
         <div class="slot-bets">
           <button type="button" class="btn" data-slot-bet="5" aria-pressed="true">5</button>
           <button type="button" class="btn" data-slot-bet="10" aria-pressed="false">10</button>
@@ -3312,13 +3381,21 @@
           <button type="button" class="btn" data-rl-out="odd">Odd</button>
           <button type="button" class="btn" data-rl-out="even">Even</button>
         </div>
+        <div class="rl-outside">
+          <button type="button" class="btn" data-rl-out="d1">1–12</button>
+          <button type="button" class="btn" data-rl-out="d2">13–24</button>
+          <button type="button" class="btn" data-rl-out="d3">25–36</button>
+          <button type="button" class="btn" data-rl-out="low">Low</button>
+          <button type="button" class="btn" data-rl-out="high">High</button>
+        </div>
         <div class="rl-amt">
           <button type="button" class="btn" data-rl-bet="10" aria-pressed="true">10</button>
           <button type="button" class="btn" data-rl-bet="25" aria-pressed="false">25</button>
           <button type="button" class="btn" data-rl-bet="50" aria-pressed="false">50</button>
+          <button type="button" class="btn secondary" id="rlClear">Clear bets</button>
           <button type="button" class="btn" id="rlSpin">Spin</button>
         </div>
-        <div class="rl-msg" id="rlMsg">Pick red/black, odd/even, or a number</div>
+        <div class="rl-msg" id="rlMsg">Pick numbers or outside — click again to stack</div>
       </div>
     </section>
 
@@ -3354,8 +3431,9 @@
           <button type="button" class="btn" data-cr-bet="50" aria-pressed="false">50</button>
           <button type="button" class="btn" data-cr-bet="100" aria-pressed="false">100</button>
           <button type="button" class="btn" id="crRoll">Roll</button>
+          <button type="button" class="btn secondary" id="crOdds" hidden>Odds</button>
         </div>
-        <p class="game-hint">Come-out 7/11 win · 2/3/12 lose · then hit the point before 7</p>
+        <p class="game-hint">Come-out 7/11 win · 2/3/12 lose · then hit the point before 7 · odds after the point</p>
       </div>
     </section>
 
@@ -3389,6 +3467,7 @@
             </div>
           </div>
           <div class="bac-msg" id="bacMsg">Pick a side, then deal</div>
+          <div class="bac-road" id="bacRoad" aria-label="Recent results"></div>
         </div>
         <div class="bac-sides">
           <button type="button" class="btn" data-bac-side="player" aria-pressed="true">Player</button>
@@ -4804,7 +4883,10 @@
         {
           title: "Casino",
           paragraphs: [
-            "Casino is a fake-chip toy. One bankroll across Blackjack, Slots, Roulette, Craps (pass line), and Baccarat (Player / Banker / Tie; banker even money).",
+            "Casino is a fake-chip toy. One bankroll across Blackjack, Slots, Roulette, Craps (pass line plus odds), and Baccarat (Player / Banker / Tie; banker even money).",
+            "Blackjack has hit, stand, double, split on a pair, and insurance when the dealer shows an ace (pays 2:1). After a hand, Rebet repeats the last bet size.",
+            "Roulette lets you stack chips on more than one number, plus red/black, odd/even, dozens, and high/low.",
+            "Craps can take true odds behind the pass line after a point. Slots show a paytable. Baccarat keeps a short road of recent Player, Banker, and Tie results.",
             "You start at 1000 chips. A refresh resets them. One pile, every table."
           ]
         },
@@ -6708,23 +6790,35 @@
   const bjEls = {
     dealer: document.getElementById("bjDealer"),
     player: document.getElementById("bjPlayer"),
+    playerArea: document.getElementById("bjPlayerArea"),
     dTotal: document.getElementById("bjDealerTotal"),
     pTotal: document.getElementById("bjPlayerTotal"),
     msg: document.getElementById("bjMsg"),
     bets: document.getElementById("bjBets"),
     acts: document.getElementById("bjActs"),
+    insureRow: document.getElementById("bjInsure"),
     deal: document.getElementById("bjDeal"),
     hit: document.getElementById("bjHit"),
     stand: document.getElementById("bjStand"),
     dbl: document.getElementById("bjDouble"),
+    splitBtn: document.getElementById("bjSplit"),
+    rebet: document.getElementById("bjRebet"),
+    insYes: document.getElementById("bjInsYes"),
+    insNo: document.getElementById("bjInsNo"),
     betIn: document.getElementById("bjBetIn")
   };
   let bj = {
     deck: [],
     player: [],
+    hands: [],
+    handI: 0,
     dealer: [],
     bet: 25,
-    phase: "bet"
+    lastBet: 25,
+    phase: "bet",
+    insure: 0,
+    split: false,
+    didHand: false
   };
 
   function bjNewDeck() {
@@ -6757,6 +6851,9 @@
   function bjIsBJ(hand) {
     return hand.length === 2 && bjTotal(hand) === 21;
   }
+  function bjNatural(hand) {
+    return !bj.split && bjIsBJ(hand);
+  }
   function bjReadBet() {
     const n = Math.floor(Number(bjEls.betIn && bjEls.betIn.value) || bj.bet || 25);
     return Math.max(1, n);
@@ -6768,17 +6865,47 @@
       btn.setAttribute("aria-pressed", btn.getAttribute("data-bj-bet") === String(bj.bet) ? "true" : "false");
     });
   }
+  function bjActive() {
+    return bj.hands[bj.handI] || bj.hands[0] || { cards: bj.player, bet: bj.bet };
+  }
+  function bjCanSplit() {
+    if (bj.phase !== "play" || bj.split || bj.hands.length !== 1) return false;
+    const h = bj.hands[0];
+    if (!h || h.cards.length !== 2) return false;
+    if (h.cards[0].rank !== h.cards[1].rank) return false;
+    return chips >= bj.bet;
+  }
+  function bjFillPlayer() {
+    const area = bjEls.playerArea;
+    if (!area) return;
+    area.replaceChildren();
+    const hands = bj.hands.length ? bj.hands : [{ cards: bj.player || [], bet: bj.bet }];
+    const multi = hands.length > 1;
+    hands.forEach((h, i) => {
+      const box = document.createElement("div");
+      box.className = "bj-hand-box" + (multi && i === bj.handI && bj.phase === "play" ? " active" : "");
+      const lab = document.createElement("div");
+      lab.className = "bj-label";
+      const t = h.cards.length ? bjTotal(h.cards) : 0;
+      lab.textContent = (multi ? ("Hand " + (i + 1) + (bj.phase === "play" ? " of 2" : "")) : "You") + (t ? " · " + t : "");
+      const row = document.createElement("div");
+      row.className = "bj-hand";
+      if (i === 0) row.id = "bjPlayer";
+      h.cards.forEach(c => row.appendChild(bjMakeCard({ id: c.id, suit: c.suit, rank: c.rank, face: true })));
+      box.appendChild(lab);
+      box.appendChild(row);
+      area.appendChild(box);
+    });
+    bjEls.player = document.getElementById("bjPlayer");
+  }
   function bjRender(reveal) {
     if (!bjEls.dealer) return;
     bjEls.dealer.replaceChildren();
-    bjEls.player.replaceChildren();
     bj.dealer.forEach(c => {
       const show = { id: c.id, suit: c.suit, rank: c.rank, face: reveal ? true : c.face };
       bjEls.dealer.appendChild(bjMakeCard(show));
     });
-    bj.player.forEach(c => bjEls.player.appendChild(bjMakeCard({ id: c.id, suit: c.suit, rank: c.rank, face: true })));
-    const pT = bj.player.length ? bjTotal(bj.player) : 0;
-    if (bjEls.pTotal) bjEls.pTotal.textContent = pT ? "· " + pT : "";
+    bjFillPlayer();
     if (bjEls.dTotal) {
       if (!bj.dealer.length) bjEls.dTotal.textContent = "";
       else if (reveal) bjEls.dTotal.textContent = "· " + bjTotal(bj.dealer);
@@ -6788,14 +6915,23 @@
       }
     }
     if (bjEls.acts) bjEls.acts.hidden = bj.phase !== "play";
+    if (bjEls.insureRow) bjEls.insureRow.hidden = bj.phase !== "insure";
     if (bjEls.bets) {
-      const idle = bj.phase !== "play";
+      const idle = bj.phase === "bet";
       bjEls.bets.querySelectorAll("button, input").forEach(el => {
+        if (el.id === "bjRebet") return;
         if (el.id === "bjDeal") el.disabled = !idle || chips < 1;
         else el.disabled = !idle;
       });
     }
-    if (bjEls.dbl) bjEls.dbl.disabled = !(bj.phase === "play" && bj.player.length === 2 && chips >= bj.bet);
+    const h = bjActive();
+    if (bjEls.dbl) bjEls.dbl.disabled = !(bj.phase === "play" && h.cards.length === 2 && chips >= h.bet);
+    if (bjEls.splitBtn) bjEls.splitBtn.disabled = !bjCanSplit();
+    if (bjEls.rebet) {
+      const show = bj.phase === "bet" && bj.didHand && chips >= (bj.lastBet || 1) && chips >= 1;
+      bjEls.rebet.hidden = !show;
+      bjEls.rebet.disabled = !show;
+    }
   }
   function bjSay(t) {
     if (bjEls.msg) bjEls.msg.textContent = t;
@@ -6803,77 +6939,253 @@
   function bjEnd(kind) {
     bj.dealer.forEach(c => { c.face = true; });
     bj.phase = "bet";
-    const p = bjTotal(bj.player);
+    bj.didHand = true;
+    const hand = (bj.hands[0] && bj.hands[0].cards) || bj.player;
+    const stake = (bj.hands[0] && bj.hands[0].bet) || bj.bet;
+    bj.player = hand;
+    const p = bjTotal(hand);
     const d = bjTotal(bj.dealer);
     if (kind === "pbj") {
-      const pay = bj.bet + Math.floor(bj.bet * 3 / 2);
+      const pay = stake + Math.floor(stake * 3 / 2);
       chipsGive(pay);
-      bjSay("Blackjack. +" + (pay - bj.bet));
+      bjSay("Blackjack. +" + (pay - stake));
     } else if (kind === "dbj") {
       bjSay("Dealer blackjack.");
     } else if (kind === "pushbj") {
-      chipsGive(bj.bet);
+      chipsGive(stake);
       bjSay("Two blackjacks. Push.");
     } else if (kind === "bust") {
       bjSay("Bust. " + p);
     } else if (kind === "dbust") {
-      chipsGive(bj.bet * 2);
+      chipsGive(stake * 2);
       bjSay("Dealer busts. You " + p);
     } else if (p > d) {
-      chipsGive(bj.bet * 2);
+      chipsGive(stake * 2);
       bjSay("You " + p + " · dealer " + d);
     } else if (p < d) {
       bjSay("You " + p + " · dealer " + d);
     } else {
-      chipsGive(bj.bet);
+      chipsGive(stake);
       bjSay("Push. " + p);
     }
     bjRender(true);
   }
+  function bjDealerHasBJ() {
+    return bjIsBJ(bj.dealer.map(c => ({ rank: c.rank, suit: c.suit, face: true })));
+  }
+  function bjPlayPrompt() {
+    return bjCanSplit() ? "Hit, stand, double, or split" : "Hit, stand, or double";
+  }
+  function bjPeekNow() {
+    const pBJ = bjNatural(bj.hands[0] ? bj.hands[0].cards : bj.player);
+    const dBJ = bjDealerHasBJ();
+    if (pBJ && dBJ) { bjEnd("pushbj"); return; }
+    if (pBJ) { bjEnd("pbj"); return; }
+    if (dBJ) { bjEnd("dbj"); return; }
+    bj.phase = "play";
+    bjSay(bjPlayPrompt());
+    bjRender(false);
+  }
+  function bjPeekAfterInsure(broke) {
+    const pBJ = bjNatural(bj.hands[0] ? bj.hands[0].cards : bj.player);
+    const dBJ = bjDealerHasBJ();
+    if (dBJ) {
+      bj.dealer.forEach(c => { c.face = true; });
+      bj.phase = "bet";
+      bj.didHand = true;
+      let msg = "Dealer blackjack.";
+      if (bj.insure > 0) {
+        chipsGive(bj.insure * 3);
+        msg = "Dealer blackjack. Insurance +" + (bj.insure * 2);
+      }
+      if (pBJ) {
+        chipsGive(bj.bet);
+        msg = bj.insure > 0 ? (msg + ". Main push.") : "Two blackjacks. Push.";
+      }
+      bjSay(msg);
+      bjRender(true);
+      return;
+    }
+    if (pBJ) { bjEnd("pbj"); return; }
+    bj.phase = "play";
+    bjSay(broke ? ("not enough for insurance. " + bjPlayPrompt()) : bjPlayPrompt());
+    bjRender(false);
+  }
   function bjDeal() {
-    if (bj.phase === "play") return;
+    if (bj.phase !== "bet") return;
     const bet = bjReadBet();
     bjSetBet(bet);
     if (chips < 1) { bjSay("you're tapped"); return; }
     if (!chipsTake(bet)) { bjSay("Bet exceeds chips"); showToast("not enough chips"); return; }
     if (bj.deck.length < 15) bj.deck = bjNewDeck();
-    bj.player = [bjDraw(true), bjDraw(true)];
+    const cards = [bjDraw(true), bjDraw(true)];
+    bj.player = cards;
+    bj.hands = [{ cards: cards, bet: bet }];
+    bj.handI = 0;
     bj.dealer = [bjDraw(true), bjDraw(false)];
-    bj.phase = "play";
-    const pBJ = bjIsBJ(bj.player);
-    const dBJ = bjIsBJ(bj.dealer.map(c => ({ rank: c.rank, suit: c.suit, face: true })));
-    if (pBJ && dBJ) { bjEnd("pushbj"); return; }
-    if (pBJ) { bjEnd("pbj"); return; }
-    if (dBJ) { bjEnd("dbj"); return; }
-    bjSay("Hit, stand, or double");
+    bj.insure = 0;
+    bj.split = false;
+    bj.lastBet = bet;
+    const up = bj.dealer[0];
+    if (up && up.rank === 1) {
+      bj.phase = "insure";
+      bjSay("Dealer ace. Insurance?");
+      bjRender(false);
+      return;
+    }
+    bjPeekNow();
+  }
+  function bjRebet() {
+    if (bj.phase !== "bet") return;
+    bjSetBet(bj.lastBet || bj.bet);
+    bjDeal();
+  }
+  function bjInsureYes() {
+    if (bj.phase !== "insure") return;
+    const amt = Math.max(1, Math.floor(bj.bet / 2));
+    if (chips < amt) {
+      bj.insure = 0;
+      bjPeekAfterInsure(true);
+      return;
+    }
+    chipsTake(amt);
+    bj.insure = amt;
+    bjPeekAfterInsure(false);
+  }
+  function bjInsureNo() {
+    if (bj.phase !== "insure") return;
+    bj.insure = 0;
+    bjPeekAfterInsure(false);
+  }
+  function bjNextHand() {
+    if (bj.handI >= bj.hands.length - 1) {
+      bjDealerPlay();
+      return;
+    }
+    bj.handI++;
+    const h = bj.hands[bj.handI];
+    bj.player = h.cards;
+    const t = bjTotal(h.cards);
+    if (t === 21) {
+      bjDealerPlay();
+      return;
+    }
+    bjSay("Hand 2 of 2 · " + t);
     bjRender(false);
   }
   function bjHit() {
     if (bj.phase !== "play") return;
-    bj.player.push(bjDraw(true));
-    const t = bjTotal(bj.player);
-    if (t > 21) { bjEnd("bust"); return; }
+    const h = bjActive();
+    h.cards.push(bjDraw(true));
+    bj.player = h.cards;
+    const t = bjTotal(h.cards);
+    if (t > 21) {
+      if (bj.hands.length > 1) {
+        if (bj.handI === 0) {
+          bjSay("Hand 1 bust. " + t);
+          bjNextHand();
+          return;
+        }
+        bjDealerPlay();
+        return;
+      }
+      bjEnd("bust");
+      return;
+    }
     if (t === 21) { bjStand(); return; }
-    bjSay("You " + t);
+    bjSay(bj.hands.length > 1 ? ("Hand " + (bj.handI + 1) + " of 2 · " + t) : ("You " + t));
     bjRender(false);
+  }
+  function bjResolveSplit() {
+    bj.phase = "bet";
+    bj.didHand = true;
+    const d = bjTotal(bj.dealer);
+    const dBust = d > 21;
+    const parts = [];
+    bj.hands.forEach((h, i) => {
+      const p = bjTotal(h.cards);
+      const label = "Hand " + (i + 1);
+      if (p > 21) {
+        parts.push(label + " bust");
+      } else if (dBust || p > d) {
+        chipsGive(h.bet * 2);
+        parts.push(label + " +" + h.bet);
+      } else if (p < d) {
+        parts.push(label + " lose");
+      } else {
+        chipsGive(h.bet);
+        parts.push(label + " push");
+      }
+    });
+    bjSay((dBust ? "Dealer busts" : ("Dealer " + d)) + ". " + parts.join(" · "));
+    bj.player = bj.hands[0].cards;
+    bjRender(true);
   }
   function bjDealerPlay() {
     bj.dealer.forEach(c => { c.face = true; });
-    while (bjTotal(bj.dealer) < 17) bj.dealer.push(bjDraw(true));
-    if (bjTotal(bj.dealer) > 21) bjEnd("dbust");
-    else bjEnd("show");
+    const live = bj.hands.some(h => bjTotal(h.cards) <= 21);
+    if (live) {
+      while (bjTotal(bj.dealer) < 17) bj.dealer.push(bjDraw(true));
+    }
+    if (bj.hands.length <= 1) {
+      const p = bjTotal((bj.hands[0] && bj.hands[0].cards) || bj.player);
+      if (p > 21) bjEnd("bust");
+      else if (bjTotal(bj.dealer) > 21) bjEnd("dbust");
+      else bjEnd("show");
+      return;
+    }
+    bjResolveSplit();
   }
   function bjStand() {
     if (bj.phase !== "play") return;
+    if (bj.hands.length > 1 && bj.handI === 0) {
+      bjNextHand();
+      return;
+    }
     bjDealerPlay();
   }
   function bjDouble() {
-    if (bj.phase !== "play" || bj.player.length !== 2) return;
+    if (bj.phase !== "play") return;
+    const h = bjActive();
+    if (!h || h.cards.length !== 2) return;
+    if (!chipsTake(h.bet)) { showToast("not enough chips"); return; }
+    h.bet *= 2;
+    h.cards.push(bjDraw(true));
+    bj.player = h.cards;
+    if (bjTotal(h.cards) > 21) {
+      if (bj.hands.length > 1) {
+        if (bj.handI === 0) { bjNextHand(); return; }
+        bjDealerPlay();
+        return;
+      }
+      bjEnd("bust");
+      return;
+    }
+    bjStand();
+  }
+  function bjSplit() {
+    if (!bjCanSplit()) return;
     if (!chipsTake(bj.bet)) { showToast("not enough chips"); return; }
-    bj.bet *= 2;
-    bj.player.push(bjDraw(true));
-    if (bjTotal(bj.player) > 21) { bjEnd("bust"); return; }
-    bjDealerPlay();
+    const h = bj.hands[0];
+    const a = h.cards[0];
+    const b = h.cards[1];
+    bj.split = true;
+    bj.hands = [
+      { cards: [a, bjDraw(true)], bet: bj.bet },
+      { cards: [b, bjDraw(true)], bet: bj.bet }
+    ];
+    bj.handI = 0;
+    bj.player = bj.hands[0].cards;
+    if (a.rank === 1) {
+      bjDealerPlay();
+      return;
+    }
+    if (bjTotal(bj.player) === 21) {
+      bjNextHand();
+      return;
+    }
+    bjSay("Hand 1 of 2");
+    bjRender(false);
   }
   document.querySelectorAll("[data-bj-bet]").forEach(btn => {
     btn.addEventListener("click", () => bjSetBet(btn.getAttribute("data-bj-bet")));
@@ -6885,6 +7197,11 @@
   if (bjEls.hit) bjEls.hit.addEventListener("click", bjHit);
   if (bjEls.stand) bjEls.stand.addEventListener("click", bjStand);
   if (bjEls.dbl) bjEls.dbl.addEventListener("click", bjDouble);
+  if (bjEls.splitBtn) bjEls.splitBtn.addEventListener("click", bjSplit);
+  if (bjEls.rebet) bjEls.rebet.addEventListener("click", bjRebet);
+  if (bjEls.insYes) bjEls.insYes.addEventListener("click", bjInsureYes);
+  if (bjEls.insNo) bjEls.insNo.addEventListener("click", bjInsureNo);
+
 
   const SLOT_SYMS = [
     { id: "seven", t: "7", w: 3, cls: "s7" },
@@ -6938,7 +7255,7 @@
     if (slotSpinBtn) slotSpinBtn.disabled = true;
     if (slotMsg) slotMsg.textContent = "Good luck";
     const result = [slotPick(), slotPick(), slotPick()];
-    const stops = [10, 14, 18];
+    const stops = [8, 16, 24];
     let tick = 0;
     const iv = setInterval(() => {
       tick++;
@@ -6956,7 +7273,7 @@
         slotBusy = false;
         if (slotSpinBtn) slotSpinBtn.disabled = chips < 1;
       }
-    }, 70);
+    }, 85);
   }
   document.querySelectorAll("[data-slot-bet]").forEach(btn => {
     btn.addEventListener("click", () => slotSetBet(btn.getAttribute("data-slot-bet")));
@@ -6972,13 +7289,26 @@
   const rlWheel = document.getElementById("rlWheel");
   const rlSpinBtn = document.getElementById("rlSpin");
   let rlBetAmt = 10;
-  let rlPick = { kind: "red", n: null };
+  let rlStack = Object.create(null);
   let rlBusy = false;
   let rlAngle = 0;
+  const RL_OUT_LABEL = {
+    red: "Red", black: "Black", odd: "Odd", even: "Even",
+    d1: "1–12", d2: "13–24", d3: "25–36",
+    low: "Low", high: "High"
+  };
 
   function rlColor(n) {
     if (n === 0) return "green";
     return RL_RED[n] ? "red" : "black";
+  }
+  function rlKey(kind, n) {
+    return kind === "num" ? "num:" + n : "out:" + kind;
+  }
+  function rlTotal() {
+    let t = 0;
+    for (const k in rlStack) t += rlStack[k];
+    return t;
   }
   function rlSetAmt(n) {
     rlBetAmt = Math.max(1, Math.floor(Number(n) || 10));
@@ -6987,20 +7317,52 @@
     });
     rlLabel();
   }
-  function rlSelect(kind, n) {
-    rlPick = { kind: kind, n: n == null ? null : n };
-    document.querySelectorAll("[data-rl-out]").forEach(btn => {
-      btn.setAttribute("aria-pressed", btn.getAttribute("data-rl-out") === kind ? "true" : "false");
-    });
-    document.querySelectorAll("[data-rl-num]").forEach(btn => {
-      btn.classList.toggle("sel", kind === "num" && Number(btn.getAttribute("data-rl-num")) === n);
-    });
+  function rlAdd(kind, n) {
+    if (rlBusy) return;
+    const k = rlKey(kind, n);
+    rlStack[k] = (rlStack[k] || 0) + rlBetAmt;
+    rlPaint();
     rlLabel();
+  }
+  function rlClear() {
+    if (rlBusy) return;
+    rlStack = Object.create(null);
+    rlPaint();
+    rlLabel();
+  }
+  function rlPaint() {
+    document.querySelectorAll("[data-rl-num]").forEach(btn => {
+      const n = Number(btn.getAttribute("data-rl-num"));
+      const amt = rlStack["num:" + n] || 0;
+      btn.classList.toggle("sel", amt > 0);
+      btn.textContent = "";
+      btn.appendChild(document.createTextNode(String(n)));
+      if (amt) {
+        const s = document.createElement("span");
+        s.className = "rl-chip";
+        s.textContent = String(amt);
+        btn.appendChild(s);
+      }
+    });
+    document.querySelectorAll("[data-rl-out]").forEach(btn => {
+      const kind = btn.getAttribute("data-rl-out");
+      const amt = rlStack["out:" + kind] || 0;
+      btn.setAttribute("aria-pressed", amt > 0 ? "true" : "false");
+      const label = RL_OUT_LABEL[kind] || kind;
+      btn.textContent = "";
+      btn.appendChild(document.createTextNode(label));
+      if (amt) {
+        const s = document.createElement("span");
+        s.className = "rl-chip";
+        s.textContent = String(amt);
+        btn.appendChild(s);
+      }
+    });
   }
   function rlLabel() {
     if (!rlMsg) return;
-    if (rlPick.kind === "num") rlMsg.textContent = "Straight " + rlPick.n + " · " + rlBetAmt + " chips";
-    else rlMsg.textContent = rlPick.kind + " · " + rlBetAmt + " chips";
+    const t = rlTotal();
+    rlMsg.textContent = t ? (t + " on the felt") : "Pick numbers or outside — click again to stack";
   }
   function rlBuild() {
     if (!rlNums || rlNums.childElementCount) return;
@@ -7010,28 +7372,36 @@
       b.textContent = String(n);
       b.setAttribute("data-rl-num", String(n));
       b.className = rlColor(n);
-      b.addEventListener("click", () => rlSelect("num", n));
+      b.addEventListener("click", () => rlAdd("num", n));
       rlNums.appendChild(b);
     }
   }
-  function rlWon(n) {
-    if (rlPick.kind === "num") return n === rlPick.n;
+  function rlWonKey(k, n) {
+    if (k.indexOf("num:") === 0) return n === Number(k.slice(4));
     if (n === 0) return false;
-    if (rlPick.kind === "red") return !!RL_RED[n];
-    if (rlPick.kind === "black") return !RL_RED[n];
-    if (rlPick.kind === "odd") return n % 2 === 1;
-    if (rlPick.kind === "even") return n % 2 === 0;
+    const kind = k.slice(4);
+    if (kind === "red") return !!RL_RED[n];
+    if (kind === "black") return !RL_RED[n];
+    if (kind === "odd") return n % 2 === 1;
+    if (kind === "even") return n % 2 === 0;
+    if (kind === "low") return n >= 1 && n <= 18;
+    if (kind === "high") return n >= 19 && n <= 36;
+    if (kind === "d1") return n >= 1 && n <= 12;
+    if (kind === "d2") return n >= 13 && n <= 24;
+    if (kind === "d3") return n >= 25 && n <= 36;
     return false;
   }
-  function rlPayout(n) {
-    if (!rlWon(n)) return 0;
-    if (rlPick.kind === "num") return rlBetAmt * 36;
-    return rlBetAmt * 2;
+  function rlPayOne(k, amt) {
+    if (k.indexOf("num:") === 0) return amt * 36;
+    if (k === "out:d1" || k === "out:d2" || k === "out:d3") return amt * 3;
+    return amt * 2;
   }
   function rlSpin() {
     if (rlBusy) return;
+    const total = rlTotal();
+    if (!total) { if (rlMsg) rlMsg.textContent = "Place a bet"; return; }
     if (chips < 1) { if (rlMsg) rlMsg.textContent = "you're tapped"; return; }
-    if (!chipsTake(rlBetAmt)) { showToast("not enough chips"); return; }
+    if (!chipsTake(total)) { showToast("not enough chips"); return; }
     rlBusy = true;
     if (rlSpinBtn) rlSpinBtn.disabled = true;
     const n = Math.floor(Math.random() * 37);
@@ -7051,10 +7421,18 @@
         rlResult.className = "rl-result " + col;
         rlResult.textContent = n + " " + col;
       }
-      const pay = rlPayout(n);
+      let pay = 0;
+      const hits = [];
+      for (const k in rlStack) {
+        if (!rlWonKey(k, n)) continue;
+        const amt = rlStack[k];
+        const p = rlPayOne(k, amt);
+        pay += p;
+        hits.push(k.indexOf("num:") === 0 ? String(k.slice(4)) : (RL_OUT_LABEL[k.slice(4)] || k.slice(4)));
+      }
       if (pay) {
         chipsGive(pay);
-        if (rlMsg) rlMsg.textContent = "+" + pay;
+        if (rlMsg) rlMsg.textContent = "+" + pay + (hits.length ? (" · " + hits.join(", ")) : "");
       } else if (rlMsg) rlMsg.textContent = "No hit";
       rlBusy = false;
       if (rlSpinBtn) rlSpinBtn.disabled = chips < 1;
@@ -7062,15 +7440,19 @@
   }
   rlBuild();
   document.querySelectorAll("[data-rl-out]").forEach(btn => {
-    btn.addEventListener("click", () => rlSelect(btn.getAttribute("data-rl-out"), null));
+    btn.addEventListener("click", () => rlAdd(btn.getAttribute("data-rl-out"), null));
   });
   document.querySelectorAll("[data-rl-bet]").forEach(btn => {
     btn.addEventListener("click", () => rlSetAmt(btn.getAttribute("data-rl-bet")));
   });
   const rlZero = document.getElementById("rlZero");
-  if (rlZero) rlZero.addEventListener("click", () => rlSelect("num", 0));
+  if (rlZero) rlZero.addEventListener("click", () => rlAdd("num", 0));
   if (rlSpinBtn) rlSpinBtn.addEventListener("click", rlSpin);
-  rlSelect("red", null);
+  const rlClearBtn = document.getElementById("rlClear");
+  if (rlClearBtn) rlClearBtn.addEventListener("click", rlClear);
+  rlPaint();
+  rlLabel();
+
 
 
   // --- Craps (pass line, session chips) ---
@@ -7080,9 +7462,10 @@
     total: document.getElementById("crTotal"),
     point: document.getElementById("crPoint"),
     msg: document.getElementById("crMsg"),
-    roll: document.getElementById("crRoll")
+    roll: document.getElementById("crRoll"),
+    odds: document.getElementById("crOdds")
   };
-  const cr = { bet: 25, down: 0, point: 0, rolling: false };
+  const cr = { bet: 25, down: 0, odds: 0, point: 0, rolling: false };
 
   function crPip(n) {
     return "⚀⚁⚂⚃⚄⚅".charAt(Math.max(1, Math.min(6, n)) - 1);
@@ -7092,7 +7475,23 @@
   }
   function crShowPoint() {
     if (!crEls.point) return;
-    crEls.point.textContent = cr.point ? ("Point " + cr.point) : "Come-out";
+    crEls.point.textContent = cr.point
+      ? ("Point " + cr.point + (cr.odds ? (" · odds " + cr.odds) : ""))
+      : "Come-out";
+  }
+  function crOddsWin(point, odds) {
+    if (point === 4 || point === 10) return odds * 2;
+    if (point === 5 || point === 9) return Math.floor(odds * 3 / 2);
+    if (point === 6 || point === 8) return Math.floor(odds * 6 / 5);
+    return 0;
+  }
+  function crTakeOdds() {
+    if (cr.rolling || !cr.point || !cr.down || cr.odds) return;
+    if (!chipsTake(cr.down)) { crSay("not enough for odds"); showToast("not enough chips"); return; }
+    cr.odds = cr.down;
+    crSay("Odds " + cr.odds + " behind " + cr.point);
+    crShowPoint();
+    crSyncBets();
   }
   function crSyncBets() {
     document.querySelectorAll("[data-cr-bet]").forEach(btn => {
@@ -7101,6 +7500,11 @@
       btn.disabled = !!(cr.down || cr.rolling);
     });
     if (crEls.roll) crEls.roll.disabled = !!cr.rolling;
+    if (crEls.odds) {
+      const offer = !!(cr.point && cr.down && !cr.odds);
+      crEls.odds.hidden = !offer;
+      crEls.odds.disabled = !offer || cr.rolling || chips < cr.down;
+    }
   }
   function crSetBet(n) {
     if (cr.down || cr.rolling) return;
@@ -7128,9 +7532,11 @@
         chipsGive(cr.down * 2);
         crSay("Pass · " + tot + " on the come-out. +" + cr.down);
         cr.down = 0;
+        cr.odds = 0;
       } else if (tot === 2 || tot === 3 || tot === 12) {
         crSay("Craps " + tot + " · pass line loses");
         cr.down = 0;
+        cr.odds = 0;
       } else {
         cr.point = tot;
         crSay("Point is " + tot + " · roll it before 7");
@@ -7138,11 +7544,18 @@
     } else if (tot === 7) {
       crSay("Seven-out · point " + cr.point + " lost");
       cr.down = 0;
+      cr.odds = 0;
       cr.point = 0;
     } else if (tot === cr.point) {
       chipsGive(cr.down * 2);
-      crSay("Hit " + tot + " · pass line wins +" + cr.down);
+      let extra = 0;
+      if (cr.odds) {
+        extra = crOddsWin(cr.point, cr.odds);
+        chipsGive(cr.odds + extra);
+      }
+      crSay("Hit " + tot + " · pass +" + cr.down + (extra ? (" · odds +" + extra) : ""));
       cr.down = 0;
+      cr.odds = 0;
       cr.point = 0;
     } else {
       crSay(tot + " · point " + cr.point + " still on");
@@ -7173,6 +7586,7 @@
     btn.addEventListener("click", () => crSetBet(btn.getAttribute("data-cr-bet")));
   });
   if (crEls.roll) crEls.roll.addEventListener("click", crRoll);
+  if (crEls.odds) crEls.odds.addEventListener("click", crTakeOdds);
   crSyncBets();
 
 
@@ -7185,7 +7599,7 @@
     msg: document.getElementById("bacMsg"),
     deal: document.getElementById("bacDeal")
   };
-  const bac = { bet: 25, side: "player", busy: false, deck: [], player: [], banker: [] };
+  const bac = { bet: 25, side: "player", busy: false, deck: [], player: [], banker: [], road: [] };
 
   function bacSay(t) {
     if (bacEls.msg) bacEls.msg.textContent = t;
@@ -7259,10 +7673,27 @@
     if (bankTwo === 6) return t === 6 || t === 7;
     return false;
   }
+  function bacPaintRoad() {
+    const el = document.getElementById("bacRoad");
+    if (!el) return;
+    el.replaceChildren();
+    bac.road.forEach(m => {
+      const b = document.createElement("span");
+      b.className = "bac-bead " + m;
+      b.textContent = m;
+      el.appendChild(b);
+    });
+  }
+  function bacPushRoad(mark) {
+    bac.road.push(mark);
+    if (bac.road.length > 20) bac.road.shift();
+    bacPaintRoad();
+  }
   function bacSettle() {
     const pt = bacTotal(bac.player);
     const bt = bacTotal(bac.banker);
     const bet = bac.bet;
+    bacPushRoad(pt === bt ? "T" : (pt > bt ? "P" : "B"));
     if (pt === bt) {
       if (bac.side === "tie") {
         chipsGive(bet * 9);
