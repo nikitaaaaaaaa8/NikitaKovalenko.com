@@ -3450,11 +3450,21 @@
       el.classList.remove("user-sized");
       el.style.height = "";
       el.style.maxWidth = "";
-      const openCount = [...document.querySelectorAll(".window.open")].filter(w => w !== el).length;
-      const cascade = Math.min(openCount, 5) * 14;
-      el.style.left = margin + "px";
-      let top = topBar + cascade;
-      top = Math.min(top, Math.max(margin, window.innerHeight - tb - 140));
+      const maxTop = Math.max(margin, window.innerHeight - tb - 140);
+      let top;
+      if (opts && opts.fresh) {
+        const openCount = [...document.querySelectorAll(".window.open")].filter(w => w !== el).length;
+        const cascade = Math.min(openCount, 5) * 14;
+        el.style.left = margin + "px";
+        top = topBar + cascade;
+      } else {
+        let left = parseFloat(el.style.left);
+        top = parseFloat(el.style.top);
+        if (Number.isNaN(left)) left = el.getBoundingClientRect().left || margin;
+        if (Number.isNaN(top)) top = el.getBoundingClientRect().top || topBar;
+        el.style.left = left + "px";
+      }
+      top = Math.min(Math.max(margin, top), maxTop);
       el.style.top = top + "px";
       el.style.maxHeight = Math.max(140, window.innerHeight - tb - top) + "px";
       return;
@@ -4590,7 +4600,7 @@
           paragraphs: [
             "Click an icon to open a window. Drag the title bar to move it. The red dot closes it.",
             "On a desktop, not a phone, drag the edges or corners to resize.",
-            "The first window, About, opens centered. Later windows try not to sit on top of one already open, and they stay above the taskbar.",
+            "The first window, About, opens centered. Later windows try not to sit on top of one already open, and they stay above the taskbar. On a phone, rotate keeps windows where they are; they do not restack.",
             "Pointer cursor on clickable controls: close, buttons. Grab and drag cursor on title bars."
           ]
         },
