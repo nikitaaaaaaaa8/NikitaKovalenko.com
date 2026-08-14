@@ -675,6 +675,32 @@
   }
   .book-reader .book-chapter:first-child { margin-top: 0.2em; }
 
+  .book-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 0 0 10px;
+  }
+  .book-tabs[hidden] { display: none; }
+  .book-tab {
+    font: inherit;
+    font-size: 10px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 5px 8px;
+    min-height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid rgba(57,255,20,.28);
+    background: transparent;
+    color: var(--muted);
+  }
+  .book-tab.active, .book-tab[aria-selected="true"] {
+    color: #041204;
+    background: var(--green);
+    border-color: var(--green);
+  }
+
   .aura-meter {
     position: absolute;
     top: 80px;
@@ -2334,6 +2360,16 @@
     }
     #win-bookshelf .book-reader h3 { font-size: 14px; margin-bottom: 6px; }
     #win-bookshelf .book-reader .book-chapter { font-size: 12px; margin: 1.2em 0 0.4em; }
+    #win-bookshelf .book-reader .book-tabs {
+      overflow-x: auto;
+      flex-wrap: wrap;
+      -webkit-overflow-scrolling: touch;
+    }
+    #win-bookshelf .book-reader .book-tab {
+      min-height: 32px;
+      font-size: 10px;
+      padding: 6px 8px;
+    }
     #win-bookshelf .book-reader .br-body p {
       font-size: 12px;
       line-height: 1.4;
@@ -2725,6 +2761,7 @@
           <div id="bookReaderMain" hidden>
             <div class="br-kicker" id="bookKicker"></div>
             <h3 id="bookTitle"></h3>
+            <div class="book-tabs" id="bookChapters" hidden role="tablist"></div>
             <div class="br-body" id="bookBody"></div>
             <div class="row" style="margin-top:10px;">
               <button type="button" class="btn secondary" id="bookCopyLink">Copy essay link</button>
@@ -4562,7 +4599,7 @@
             "Weather shows current conditions from your IP city, via Open-Meteo. Not GPS. Tracker uses the same city guess, plus session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
             "Paint has a brush, eraser, fill, shapes, a palette, undo, and save.",
             "DroneStuff is an in-OS gallery of aerials, not a redirect. Click a shot for the lightbox.",
-            "Bookshelf is these notes. Click a spine. The reader scroll resets to the top."
+            "Bookshelf is these notes. Click a spine. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters."
           ]
         },
         {
@@ -4646,19 +4683,23 @@
   const bookReaderMain = document.getElementById("bookReaderMain");
   const bookKicker = document.getElementById("bookKicker");
   const bookTitle = document.getElementById("bookTitle");
+  const bookChapters = document.getElementById("bookChapters");
   const bookBody = document.getElementById("bookBody");
   const bookCopyLink = document.getElementById("bookCopyLink");
   let openEssayId = null;
 
-  function openEssay(id, pushHash) {
-    const essay = essays[id];
-    if (!essay) return;
-    openEssayId = id;
-    document.querySelectorAll("#win-bookshelf .book").forEach(b => {
-      b.classList.toggle("active", b.getAttribute("data-book") === id);
+  function resetReaderScroll() {
+    const reader = document.getElementById("bookReader");
+    const shelfContent = document.querySelector("#win-bookshelf .content");
+    if (reader) reader.scrollTop = 0;
+    if (shelfContent) shelfContent.scrollTop = 0;
+    requestAnimationFrame(() => {
+      if (reader) reader.scrollTop = 0;
+      if (shelfContent) shelfContent.scrollTop = 0;
     });
-    bookKicker.textContent = essay.kicker || "";
-    bookTitle.textContent = essay.title;
+  }
+
+  function renderEssayBody(essay, chapterIndex) {
     bookBody.replaceChildren();
     if (essay.image) {
       const img = document.createElement("img");
@@ -4671,27 +4712,61 @@
       p.textContent = para;
       bookBody.appendChild(p);
     });
-    (essay.chapters || []).forEach(ch => {
-      const h = document.createElement("h3");
-      h.className = "book-chapter";
-      h.textContent = ch.title;
-      bookBody.appendChild(h);
+    if (essay.chapters && essay.chapters.length) {
+      const ch = essay.chapters[chapterIndex] || essay.chapters[0];
       (ch.paragraphs || []).forEach(para => {
         const p = document.createElement("p");
         p.textContent = para;
         bookBody.appendChild(p);
       });
+    }
+  }
+
+  function showChapter(index) {
+    const essay = essays[openEssayId];
+    if (!essay || !essay.chapters || !essay.chapters.length) return;
+    if (bookChapters) {
+      bookChapters.querySelectorAll(".book-tab").forEach((btn, i) => {
+        const on = i === index;
+        btn.classList.toggle("active", on);
+        btn.setAttribute("aria-selected", on ? "true" : "false");
+      });
+    }
+    renderEssayBody(essay, index);
+    resetReaderScroll();
+  }
+
+  function openEssay(id, pushHash) {
+    const essay = essays[id];
+    if (!essay) return;
+    openEssayId = id;
+    document.querySelectorAll("#win-bookshelf .book").forEach(b => {
+      b.classList.toggle("active", b.getAttribute("data-book") === id);
     });
+    bookKicker.textContent = essay.kicker || "";
+    bookTitle.textContent = essay.title;
+    if (bookChapters) {
+      bookChapters.replaceChildren();
+      if (essay.chapters && essay.chapters.length) {
+        bookChapters.hidden = false;
+        essay.chapters.forEach((ch, i) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "book-tab" + (i === 0 ? " active" : "");
+          btn.setAttribute("role", "tab");
+          btn.setAttribute("aria-selected", i === 0 ? "true" : "false");
+          btn.textContent = ch.title;
+          btn.addEventListener("click", () => showChapter(i));
+          bookChapters.appendChild(btn);
+        });
+      } else {
+        bookChapters.hidden = true;
+      }
+    }
+    renderEssayBody(essay, 0);
     if (bookReaderEmpty) bookReaderEmpty.hidden = true;
     if (bookReaderMain) bookReaderMain.hidden = false;
-    const reader = document.getElementById("bookReader");
-    const shelfContent = document.querySelector("#win-bookshelf .content");
-    if (reader) reader.scrollTop = 0;
-    if (shelfContent) shelfContent.scrollTop = 0;
-    requestAnimationFrame(() => {
-      if (reader) reader.scrollTop = 0;
-      if (shelfContent) shelfContent.scrollTop = 0;
-    });
+    resetReaderScroll();
     bumpWinning(2);
   }
 
