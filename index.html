@@ -6654,7 +6654,8 @@
     over: false,
     phase: "wait",
     gate: false,
-    ball: { x: 344, y: 560, vx: 0, vy: 0, r: PB_R },
+    plunging: false,
+    ball: { x: 338, y: 560, vx: 0, vy: 0, r: PB_R },
     leftA: 0.48,
     rightA: Math.PI - 0.48,
     leftOn: false,
@@ -6691,8 +6692,9 @@
   function pbServe() {
     pb.phase = "wait";
     pb.gate = false;
-    pb.ball.x = 344;
-    pb.ball.y = 568;
+    pb.plunging = false;
+    pb.ball.x = 338;
+    pb.ball.y = 560;
     pb.ball.vx = 0;
     pb.ball.vy = 0;
     pb.serveAt = 0;
@@ -6720,14 +6722,16 @@
   function pbLaunch() {
     if (pb.over || pb.phase !== "wait") return;
     pb.phase = "live";
-    pb.ball.vx = -30;
-    pb.ball.vy = -1080;
+    pb.plunging = true;
+    pb.ball.vx = 0;
+    pb.ball.vy = -1320;
     pbUpdateStatus();
   }
 
   function pbDrain() {
     if (pb.phase === "dead" || pb.over) return;
     pb.phase = "dead";
+    pb.plunging = false;
     pb.ball.vx = 0;
     pb.ball.vy = 0;
     pb.balls -= 1;
@@ -6786,7 +6790,7 @@
   function pbClampBall() {
     const b = pb.ball;
     if (!Number.isFinite(b.x) || !Number.isFinite(b.y) || !Number.isFinite(b.vx) || !Number.isFinite(b.vy)) {
-      b.x = 344; b.y = 568; b.vx = 0; b.vy = 0;
+      b.x = 338; b.y = 560; b.vx = 0; b.vy = 0;
       pbDrain();
       return;
     }
@@ -6897,7 +6901,7 @@
   }
 
   function pbStaticColliders() {
-    const gateY = pb.gate ? 36 : 112;
+    const gateY = pb.gate ? 36 : 88;
     return [
       { t: "line", x1: 14, y1: 36, x2: 14, y2: 472, bounce: 0.42 },
       { t: "line", x1: 14, y1: 472, x2: 44, y2: 618, bounce: 0.28 },
@@ -6905,10 +6909,10 @@
       { t: "line", x1: 316, y1: gateY, x2: 316, y2: 472, bounce: 0.42 },
       { t: "line", x1: 316, y1: 472, x2: 284, y2: 618, bounce: 0.28 },
       { t: "line", x1: 274, y1: 428, x2: 216, y2: 508, bounce: 0.2, extra: 520, score: 25, id: "sr" },
-      { t: "line", x1: 14, y1: 36, x2: 348, y2: 36, bounce: 0.4 },
-      { t: "line", x1: 348, y1: 36, x2: 348, y2: 610, bounce: 0.35 },
-      { t: "line", x1: 332, y1: 112, x2: 332, y2: 610, bounce: 0.35 },
-      { t: "line", x1: 348, y1: 50, x2: 316, y2: 36, bounce: 0.2 },
+      { t: "line", x1: 14, y1: 36, x2: 300, y2: 36, bounce: 0.4 },
+      { t: "line", x1: 354, y1: 36, x2: 354, y2: 610, bounce: 0.35 },
+      { t: "line", x1: 322, y1: 88, x2: 322, y2: 610, bounce: 0.35 },
+      { t: "line", x1: 354, y1: 42, x2: 300, y2: 28, bounce: 0.35, skipPlunge: true },
       { t: "circle", x: 104, y: 168, r: 16, bounce: 1.05, extra: 340, score: 100, id: "b1" },
       { t: "circle", x: 180, y: 132, r: 16, bounce: 1.05, extra: 340, score: 100, id: "b2" },
       { t: "circle", x: 248, y: 172, r: 16, bounce: 1.05, extra: 340, score: 100, id: "b3" }
@@ -6940,9 +6944,14 @@
       pb.ball.y += pb.ball.vy * h;
       pb.ball.vx *= 0.9992;
       pb.ball.vy *= 0.9992;
+      if (pb.plunging && pb.ball.y < 78) {
+        pb.ball.vx = -380;
+        pb.plunging = false;
+      }
       for (let k = 0; k < 3; k++) {
         for (let i = 0; i < cols.length; i++) {
           const c = cols[i];
+          if (pb.plunging && c.skipPlunge) continue;
           if (c.t === "line") pbCollideLine(c.x1, c.y1, c.x2, c.y2, c.bounce, c.extra || 0, c.score || 0, c.id);
           else pbCollideCircle(c.x, c.y, c.r, c.bounce, c.extra || 0, c.score || 0, c.id);
         }
@@ -7048,13 +7057,13 @@
     ctx.strokeStyle = "rgba(57,255,20,.35)";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(332, 610); ctx.lineTo(348, 610);
+    ctx.moveTo(322, 610); ctx.lineTo(354, 610);
     ctx.stroke();
     if (pb.phase === "wait") {
       ctx.fillStyle = "rgba(57,255,20,.55)";
       ctx.font = "10px SF Mono, Menlo, Consolas, monospace";
       ctx.textAlign = "center";
-      ctx.fillText("▲", 340, 600);
+      ctx.fillText("▲", 338, 600);
     }
 
     pbDrawFlipper(ctx, PB_LP.x, PB_LP.y, pb.leftA, pb.leftOn);
