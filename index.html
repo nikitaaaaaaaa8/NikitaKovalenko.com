@@ -2118,6 +2118,31 @@
   .bac-bead.P { background: #2a6ad6; }
   .bac-bead.B { background: #c62828; }
   .bac-bead.T { background: #1b8a1b; }
+  .rl-road {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 8px 0 0;
+    padding: 5px 6px;
+    min-height: 28px;
+    border-radius: 4px;
+    background: rgba(0, 12, 0, .35);
+    border: 1px solid rgba(212, 197, 122, .22);
+  }
+  .rl-bead {
+    min-width: 22px;
+    height: 20px;
+    padding: 0 4px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    color: #fff;
+  }
+  .rl-bead.red { background: #c62828; }
+  .rl-bead.black { background: #1a1a1a; }
+  .rl-bead.green { background: #1b8a1b; }
 
   .bj-bets .btn[aria-pressed="true"],
   .slot-bets .btn[aria-pressed="true"],
@@ -4585,6 +4610,7 @@
             <div class="rl-hub" id="rlHub">0</div>
           </div>
           <div class="rl-result" id="rlResult">European wheel · single zero</div>
+          <div class="rl-road" id="rlRoad" aria-label="Recent spins"></div>
         </div>
         <div class="rl-felt" id="rlFelt">
           <div class="rl-top">
@@ -4622,6 +4648,7 @@
           <button type="button" class="btn" id="rlSpin">Spin</button>
         </div>
         <div class="rl-msg" id="rlMsg">Pick numbers or outside — click again to stack</div>
+        <p class="game-hint">straight 35:1 · dozens and columns 2:1 · even money 1:1 · 0 kills outside</p>
       </div>
     </section>
 
@@ -6362,7 +6389,7 @@
           paragraphs: [
             "Casino is a fake-chip toy. One bankroll across Blackjack, Slots, Roulette, Craps (pass line plus odds), and Baccarat (Player / Banker / Tie; banker even money).",
             "Blackjack sits on a rectangular green felt — dealer up top, you below, chips on the rail. Hit, stand, double, split on the same rank once (8+8 yes, 10+K no), and insurance when the dealer shows an ace (pays 2:1). Cards deal one at a time. After a hand, Rebet repeats the last bet size.",
-            "Roulette is a real rectangular felt, 12 numbers across and 3 down (plus 0). Outside bets — red, black, odd, even, 1–18, 19–36, dozens, and column 2to1 — sit on the table. Stack chips on a spot; click again to add.",
+            "Roulette is a real rectangular felt, 12 numbers across and 3 down (plus 0). Outside bets — red, black, odd, even, 1–18, 19–36, dozens, and column 2to1 — sit on the table. Stack chips on a spot; click again to add. Straight pays 35:1, dozens and columns 2:1, even money 1:1. Zero kills outside bets. After a spin it names the hits and the odds. A short road of recent numbers sits under the wheel.",
             "Craps rolls two dice in a glass dome. The dome shakes, the dice bounce, then they land on the roll. Pass line plus true odds after a point. Slots is a 3-row machine with five paylines. One bet covers every line; each hit pays its best award and they add up. A line draws through a hit. Reels stop one at a time. 777 pays 20×, three diamonds 12×, any other three-of-a-kind 6×, two 7s 2×. Other pairs do not pay. Two 7s that miss 777 flash so-close — that line still pays 2×. Baccarat sits on the same green felt as Blackjack, with Player and Banker zones and a short road along the edge. Cards deal one at a time.",
             "You start at 1000 chips. A refresh resets them. One pile, every table. Tables have light motion and short beeps, mute from the tray speaker."
           ]
@@ -9599,6 +9626,19 @@
     low: "1–18", high: "19–36",
     c1: "2to1", c2: "2to1", c3: "2to1"
   };
+  const RL_HIT_LABEL = {
+    red: "RED", black: "BLACK", odd: "ODD", even: "EVEN",
+    d1: "1st 12", d2: "2nd 12", d3: "3rd 12",
+    low: "1–18", high: "19–36",
+    c1: "2to1 col 1", c2: "2to1 col 2", c3: "2to1 col 3"
+  };
+  const RL_OUT_ODDS = {
+    red: "1:1", black: "1:1", odd: "1:1", even: "1:1",
+    low: "1:1", high: "1:1",
+    d1: "2:1", d2: "2:1", d3: "2:1",
+    c1: "2:1", c2: "2:1", c3: "2:1"
+  };
+  let rlHist = [];
 
   function rlColor(n) {
     if (n === 0) return "green";
@@ -9717,6 +9757,27 @@
     if (k === "out:d1" || k === "out:d2" || k === "out:d3" || k === "out:c1" || k === "out:c2" || k === "out:c3") return amt * 3;
     return amt * 2;
   }
+  function rlHitLine(k) {
+    if (k.indexOf("num:") === 0) return "straight " + k.slice(4) + " 35:1";
+    const kind = k.slice(4);
+    return (RL_HIT_LABEL[kind] || RL_OUT_LABEL[kind] || kind) + " " + (RL_OUT_ODDS[kind] || "");
+  }
+  function rlPaintRoad() {
+    const el = document.getElementById("rlRoad");
+    if (!el) return;
+    el.replaceChildren();
+    rlHist.forEach(function (n, i) {
+      const b = document.createElement("span");
+      b.className = "rl-bead " + rlColor(n) + (i === rlHist.length - 1 ? " kita-pop" : "");
+      b.textContent = String(n);
+      el.appendChild(b);
+    });
+  }
+  function rlPushRoad(n) {
+    rlHist.push(n);
+    if (rlHist.length > 16) rlHist.shift();
+    rlPaintRoad();
+  }
   function rlSpin() {
     if (rlBusy) return;
     const total = rlTotal();
@@ -9756,17 +9817,19 @@
         const amt = rlStack[k];
         const p = rlPayOne(k, amt);
         pay += p;
-        hits.push(k.indexOf("num:") === 0 ? String(k.slice(4)) : (RL_OUT_LABEL[k.slice(4)] || k.slice(4)));
+        hits.push(rlHitLine(k));
       }
       if (gen !== chipsGen) return;
+      rlPushRoad(n);
+      const landed = n + " " + col;
       if (pay) {
         chipsGive(pay);
         const net = pay - stake;
         kitaOutcome(true, net);
-        if (rlMsg) rlMsg.textContent = (net > 0 ? "+" : "") + net + (hits.length ? (" · " + hits.join(", ")) : "");
+        if (rlMsg) rlMsg.textContent = landed + ". " + hits.join(", ") + ". " + (net > 0 ? "+" : "") + net;
       } else {
         kitaOutcome(false);
-        if (rlMsg) rlMsg.textContent = "No hit";
+        if (rlMsg) rlMsg.textContent = landed + ". No hit";
       }
       const hitBtn = document.querySelector('[data-rl-num="' + n + '"]');
       kitaAnim(hitBtn, "kita-flash");
