@@ -10727,14 +10727,9 @@
     }).catch(function () {});
   }
 
-  function kitaHitAfterPlay(p, id) {
+  function kitaHitVlc(id) {
     const viewId = id ? "vlc:" + id : "";
-    if (!kitaViewIdOk(viewId)) return;
-    if (p && typeof p.then === "function") {
-      p.then(function () { kitaHitView(viewId); }).catch(function () {});
-      return;
-    }
-    kitaHitView(viewId);
+    if (kitaViewIdOk(viewId)) kitaHitView(viewId);
   }
 
   // VLC — Fight / Football / Basketball. Session-only. No localStorage.
@@ -10841,7 +10836,7 @@
       const starting = !!(v.paused || v.ended || !same);
       const p = v.play();
       if (p && typeof p.catch === "function") p.catch(function () { vlcSetPlayLabel(); });
-      if (starting) kitaHitAfterPlay(p, tape.id);
+      if (starting) kitaHitVlc(tape.id);
     }
     vlcUpdateTime();
   }
@@ -10880,7 +10875,7 @@
     if (v.paused) {
       const p = v.play();
       if (p && typeof p.catch === "function") p.catch(function () { vlcSetPlayLabel(); });
-      kitaHitAfterPlay(p, vlc.id);
+      kitaHitVlc(vlc.id);
     } else {
       v.pause();
     }
