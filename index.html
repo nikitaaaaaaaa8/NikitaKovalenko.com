@@ -1607,7 +1607,7 @@
     --sol-ch: 72px;
     max-width: min(580px, calc(100vw - 24px));
   }
-  #win-slots { max-width: min(420px, calc(100vw - 24px)); }
+  #win-slots { max-width: min(460px, calc(100vw - 24px)); }
   #win-roulette { max-width: min(560px, calc(100vw - 24px)); }
   #win-craps { max-width: min(480px, calc(100vw - 24px)); }
   #win-baccarat {
@@ -1937,35 +1937,65 @@
   }
 
   .slot-machine {
-    background: #050805;
-    border: 1px solid rgba(57,255,20,.28);
-    border-radius: 12px;
-    padding: 14px 12px 12px;
+    background:
+      linear-gradient(180deg, #244a1c 0%, #122010 42%, #0a140a 100%);
+    border: 3px solid #2f5530;
+    border-radius: 16px;
+    padding: 8px 10px 10px;
+    box-shadow:
+      inset 0 1px 0 rgba(57,255,20,.28),
+      inset 0 -3px 12px rgba(0,0,0,.55),
+      0 8px 18px rgba(0,0,0,.4);
+  }
+  .slot-marquee {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    color: var(--green);
+    text-shadow: 0 0 8px rgba(57,255,20,.5);
+    padding: 2px 0 8px;
+  }
+  .slot-screen {
+    position: relative;
+    background: #010302;
+    border: 5px solid #1a1c1a;
+    border-radius: 8px;
+    box-shadow:
+      inset 0 0 18px rgba(0,0,0,.85),
+      0 0 0 2px #3a5a32,
+      0 0 10px rgba(57,255,20,.12);
+    padding: 6px;
   }
   .slot-reels {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 5px;
+    position: relative;
   }
   .slot-reel {
-    height: 84px;
-    border-radius: 10px;
+    min-height: 0;
+    border-radius: 8px;
     border: 1px solid rgba(57,255,20,.4);
     background: linear-gradient(180deg, rgba(57,255,20,.12), rgba(0,0,0,.55));
     display: grid;
-    place-items: center;
+    grid-template-rows: repeat(3, 1fr);
     overflow: hidden;
   }
   .slot-sym {
-    font-size: 28px;
+    font-size: 24px;
     line-height: 1;
     color: var(--green);
     font-weight: 700;
     letter-spacing: .04em;
+    display: grid;
+    place-items: center;
+    min-height: 48px;
+    height: 48px;
   }
-  .slot-sym.s7 { color: #ff4d4d; font-size: 34px; }
-  .slot-sym.sd { color: var(--green); font-size: 32px; }
-  .slot-sym.sb { font-size: 18px; }
+  .slot-sym.s7 { color: #ff4d4d; font-size: 28px; }
+  .slot-sym.sd { color: var(--green); font-size: 26px; }
+  .slot-sym.sb { font-size: 14px; }
   .slot-sym.tick {
     animation: slot-tick .1s ease;
   }
@@ -1973,9 +2003,26 @@
     0% { transform: translateY(-10px); opacity: .45; }
     100% { transform: translateY(0); opacity: 1; }
   }
+  .slot-lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: visible;
+  }
+  .slot-lines line {
+    stroke: #39ff14;
+    stroke-width: 3;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 0 4px #39ff14);
+    opacity: .92;
+  }
   .slot-msg {
     text-align: center;
-    margin-top: 10px;
+    margin-top: 8px;
     font-size: 12px;
     color: var(--green);
     min-height: 16px;
@@ -1990,7 +2037,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 3px 12px;
     margin: 8px 0 0;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--muted);
   }
   .slot-table div {
@@ -1999,6 +2046,25 @@
     gap: 8px;
   }
   .slot-table b { color: var(--green); font-weight: 700; }
+  .slot-table .slot-lines-note {
+    grid-column: 1 / -1;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .slot-machine .slot-bets {
+    margin-top: 8px;
+    justify-content: center;
+  }
+  .slot-bets .btn {
+    min-height: 44px;
+    min-width: 48px;
+  }
+  #slotSpin {
+    min-width: 92px;
+    font-weight: 700;
+    font-size: 14px;
+  }
 
   .rl-wheel-wrap {
     display: flex;
@@ -2893,6 +2959,15 @@
     #crD1 { --dx: -24px; }
     #crD2 { --dx: 24px; }
     .bj-felt, .bac-felt, .cr-felt { padding: 8px 8px 6px; border-width: 2px; }
+    .slot-sym {
+      min-height: 42px;
+      height: 42px;
+      font-size: 20px;
+    }
+    .slot-sym.s7 { font-size: 24px; }
+    .slot-sym.sd { font-size: 22px; }
+    .slot-bets .btn { min-height: 48px; }
+    #slotSpin { flex: 1; min-height: 48px; }
 
     #snitch,
     #snitch svg {
@@ -3125,6 +3200,19 @@
   html.tesla .bj-rail .btn,
   html.tesla .bac-rail .btn,
   html.tesla .cr-rail .btn { min-height: 48px; }
+  html.tesla #win-slots {
+    max-width: min(520px, calc(100vw - 24px));
+  }
+  html.tesla .slot-marquee { font-size: 14px; }
+  html.tesla .slot-sym {
+    min-height: 56px;
+    height: 56px;
+    font-size: 28px;
+  }
+  html.tesla .slot-sym.s7 { font-size: 32px; }
+  html.tesla .slot-sym.sd { font-size: 30px; }
+  html.tesla .slot-table { font-size: 12px; }
+  html.tesla #slotSpin { min-height: 52px; min-width: 110px; font-size: 16px; }
 </style>
 </head>
 <body>
@@ -3474,7 +3562,7 @@
           </button>
           <button type="button" class="game-card" data-open="slots">
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><rect x="5.5" y="8" width="3.6" height="8" rx="0.8"/><rect x="10.2" y="8" width="3.6" height="8" rx="0.8"/><rect x="14.9" y="8" width="3.6" height="8" rx="0.8"/></svg></div>
-            <div class="gc-meta"><div class="gc-title">Slots</div><div class="gc-desc">Three reels · Kita symbols</div></div>
+            <div class="gc-meta"><div class="gc-title">Slots</div><div class="gc-desc">3-row · five paylines</div></div>
           </button>
           <button type="button" class="game-card" data-open="roulette">
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="2.2"/><path d="M12 3.8v2.2M12 18v2.2M3.8 12h2.2M18 12h2.2"/><path d="M6.2 6.2l1.5 1.5M16.3 16.3l1.5 1.5M6.2 17.8l1.5-1.5M16.3 7.7l1.5-1.5"/></svg></div>
@@ -3780,7 +3868,7 @@
       </div>
     </section>
 
-    <section class="window" id="win-slots" style="top:72px; left:170px; width:380px;">
+    <section class="window" id="win-slots" style="top:72px; left:170px; width:400px;">
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="slots"></div>
@@ -3799,25 +3887,42 @@
         </div>
         <p class="muted casino-fun">for fun</p>
         <div class="slot-machine">
-          <div class="slot-reels">
-            <div class="slot-reel"><div class="slot-sym ss" id="slotR0">■</div></div>
-            <div class="slot-reel"><div class="slot-sym sd" id="slotR1">♦</div></div>
-            <div class="slot-reel"><div class="slot-sym s7" id="slotR2">7</div></div>
+          <div class="slot-marquee">KITA SLOTS</div>
+          <div class="slot-screen">
+            <div class="slot-reels">
+              <div class="slot-reel">
+                <div class="slot-sym ss" id="slotC00">■</div>
+                <div class="slot-sym sd" id="slotC01">♦</div>
+                <div class="slot-sym s7" id="slotC02">7</div>
+              </div>
+              <div class="slot-reel">
+                <div class="slot-sym sd" id="slotC10">♦</div>
+                <div class="slot-sym s7" id="slotC11">7</div>
+                <div class="slot-sym ss" id="slotC12">■</div>
+              </div>
+              <div class="slot-reel">
+                <div class="slot-sym s7" id="slotC20">7</div>
+                <div class="slot-sym ss" id="slotC21">■</div>
+                <div class="slot-sym sd" id="slotC22">♦</div>
+              </div>
+            </div>
+            <svg class="slot-lines" id="slotLines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
           </div>
           <div class="slot-msg" id="slotMsg">Spin when ready</div>
-        </div>
-        <div class="slot-table" id="slotTable">
-          <div><span>7 7 7</span><b>20×</b></div>
-          <div><span>♦ ♦ ♦</span><b>12×</b></div>
-          <div><span>3 same</span><b>6×</b></div>
-          <div><span>two 7s</span><b>2×</b></div>
-          <div><span>any pair</span><b>1×</b></div>
-        </div>
-        <div class="slot-bets">
-          <button type="button" class="btn" data-slot-bet="5" aria-pressed="true">5</button>
-          <button type="button" class="btn" data-slot-bet="10" aria-pressed="false">10</button>
-          <button type="button" class="btn" data-slot-bet="25" aria-pressed="false">25</button>
-          <button type="button" class="btn" id="slotSpin">Spin</button>
+          <div class="slot-table" id="slotTable">
+            <div><span>7 7 7</span><b>20×</b></div>
+            <div><span>♦ ♦ ♦</span><b>12×</b></div>
+            <div><span>3 same</span><b>6×</b></div>
+            <div><span>two 7s</span><b>2×</b></div>
+            <div><span>any pair</span><b>1×</b></div>
+            <div class="slot-lines-note">One bet · 5 lines · pay each hit</div>
+          </div>
+          <div class="slot-bets">
+            <button type="button" class="btn" data-slot-bet="5" aria-pressed="true">5</button>
+            <button type="button" class="btn" data-slot-bet="10" aria-pressed="false">10</button>
+            <button type="button" class="btn" data-slot-bet="25" aria-pressed="false">25</button>
+            <button type="button" class="btn" id="slotSpin">Spin</button>
+          </div>
         </div>
       </div>
     </section>
@@ -4920,7 +5025,7 @@
     if (win && win.id === "win-chess") return { minW: 300, minH: 360 };
     if (win && win.id === "win-pipes") return { minW: 300, minH: 360 };
     if (win && win.id === "win-blackjack") return { minW: 340, minH: 300 };
-    if (win && win.id === "win-slots") return { minW: 300, minH: 280 };
+    if (win && win.id === "win-slots") return { minW: 320, minH: 380 };
     if (win && win.id === "win-roulette") return { minW: 360, minH: 340 };
     if (win && win.id === "win-craps") return { minW: 300, minH: 280 };
     if (win && win.id === "win-baccarat") return { minW: 320, minH: 300 };
@@ -5478,7 +5583,7 @@
             "Casino is a fake-chip toy. One bankroll across Blackjack, Slots, Roulette, Craps (pass line plus odds), and Baccarat (Player / Banker / Tie; banker even money).",
             "Blackjack sits on a rectangular green felt — dealer up top, you below, chips on the rail. Hit, stand, double, split on the same rank once (8+8 yes, 10+K no), and insurance when the dealer shows an ace (pays 2:1). Cards deal one at a time. After a hand, Rebet repeats the last bet size.",
             "Roulette is a real rectangular felt. Outside bets — red, black, odd, even, 1–18, 19–36, dozens, and column 2to1 — sit on the table. Stack chips on a spot; click again to add.",
-            "Craps rolls two dice in a glass dome. The dome shakes, the dice bounce, then they land on the roll. Pass line plus true odds after a point. Slots show a paytable; reels stop one at a time. Two 7s that miss 777 flash so-close — payouts stay the same. Baccarat sits on a rectangular felt with Player and Banker zones and a short road along the edge. Cards deal one at a time.",
+            "Craps rolls two dice in a glass dome. The dome shakes, the dice bounce, then they land on the roll. Pass line plus true odds after a point. Slots is a 3-row machine with five paylines. One bet covers every line; each hit pays and they add up. A line draws through a hit. Reels stop one at a time. Two 7s that miss 777 flash so-close — payouts stay the same. Baccarat sits on a rectangular felt with Player and Banker zones and a short road along the edge. Cards deal one at a time.",
             "You start at 1000 chips. A refresh resets them. One pile, every table. Tables have light motion and short beeps, mute from the tray speaker."
           ]
         },
@@ -8276,25 +8381,61 @@
   ];
   const SLOT_BAG = [];
   SLOT_SYMS.forEach(s => { for (let i = 0; i < s.w; i++) SLOT_BAG.push(s); });
-  const slotEls = [
-    document.getElementById("slotR0"),
-    document.getElementById("slotR1"),
-    document.getElementById("slotR2")
-  ];
+  const slotEls = [0, 1, 2].map(function (reel) {
+    return [0, 1, 2].map(function (row) {
+      return document.getElementById("slotC" + reel + row);
+    });
+  });
   const slotMsg = document.getElementById("slotMsg");
   const slotSpinBtn = document.getElementById("slotSpin");
+  const slotLinesSvg = document.getElementById("slotLines");
+  const SLOT_LINES = [
+    { id: "top", cells: [[0, 0], [1, 0], [2, 0]] },
+    { id: "mid", cells: [[0, 1], [1, 1], [2, 1]] },
+    { id: "bot", cells: [[0, 2], [1, 2], [2, 2]] },
+    { id: "dd", cells: [[0, 0], [1, 1], [2, 2]] },
+    { id: "du", cells: [[0, 2], [1, 1], [2, 0]] }
+  ];
   let slotBet = 5;
   let slotBusy = false;
 
   function slotPick() {
     return SLOT_BAG[Math.floor(Math.random() * SLOT_BAG.length)];
   }
-  function slotShow(i, sym, tick) {
-    const el = slotEls[i];
+  function slotShow(reel, row, sym, tick) {
+    const el = slotEls[reel] && slotEls[reel][row];
     if (!el) return;
     el.textContent = sym.t;
     el.className = "slot-sym " + sym.cls + (tick ? " tick" : "");
     if (tick) setTimeout(() => { el.classList.remove("tick"); }, 110);
+  }
+  function slotShowReel(reel, syms, tick) {
+    for (let row = 0; row < 3; row++) slotShow(reel, row, syms[row], tick);
+  }
+  function slotClearLines() {
+    if (!slotLinesSvg) return;
+    while (slotLinesSvg.firstChild) slotLinesSvg.removeChild(slotLinesSvg.firstChild);
+  }
+  function slotDrawLines(hitLines) {
+    slotClearLines();
+    if (!slotLinesSvg || !hitLines.length) return;
+    const wr = slotLinesSvg.getBoundingClientRect();
+    if (wr.width < 2 || wr.height < 2) return;
+    slotLinesSvg.setAttribute("viewBox", "0 0 100 100");
+    slotLinesSvg.setAttribute("preserveAspectRatio", "none");
+    hitLines.forEach(function (line) {
+      const aEl = slotEls[line.cells[0][0]] && slotEls[line.cells[0][0]][line.cells[0][1]];
+      const cEl = slotEls[line.cells[2][0]] && slotEls[line.cells[2][0]][line.cells[2][1]];
+      if (!aEl || !cEl) return;
+      const a = aEl.getBoundingClientRect();
+      const c = cEl.getBoundingClientRect();
+      const ln = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      ln.setAttribute("x1", ((a.left + a.width / 2 - wr.left) / wr.width * 100).toFixed(2));
+      ln.setAttribute("y1", ((a.top + a.height / 2 - wr.top) / wr.height * 100).toFixed(2));
+      ln.setAttribute("x2", ((c.left + c.width / 2 - wr.left) / wr.width * 100).toFixed(2));
+      ln.setAttribute("y2", ((c.top + c.height / 2 - wr.top) / wr.height * 100).toFixed(2));
+      slotLinesSvg.appendChild(ln);
+    });
   }
   function slotSetBet(n) {
     if (slotBusy) return;
@@ -8307,13 +8448,33 @@
       btn.disabled = !!slotBusy;
     });
   }
-  function slotPay(a, b, c, bet) {
+  function slotLinePay(a, b, c, bet) {
     if (a.id === "seven" && b.id === "seven" && c.id === "seven") return bet * 20;
     if (a.id === b.id && b.id === c.id) return a.id === "dia" ? bet * 12 : bet * 6;
     const sevens = [a, b, c].filter(s => s.id === "seven").length;
     if (sevens === 2) return bet * 2;
     if (a.id === b.id || b.id === c.id || a.id === c.id) return bet;
     return 0;
+  }
+  function slotEval(grid, bet) {
+    let total = 0;
+    const hits = [];
+    let near = false;
+    let jack = false;
+    SLOT_LINES.forEach(function (line) {
+      const a = grid[line.cells[0][0]][line.cells[0][1]];
+      const b = grid[line.cells[1][0]][line.cells[1][1]];
+      const c = grid[line.cells[2][0]][line.cells[2][1]];
+      const pay = slotLinePay(a, b, c, bet);
+      const sevens = [a, b, c].filter(function (x) { return x.id === "seven"; }).length;
+      if (sevens === 3) jack = true;
+      if (sevens === 2) near = true;
+      if (pay > 0) {
+        total += pay;
+        hits.push(line);
+      }
+    });
+    return { win: total, hits: hits, near: near, jack: jack };
   }
   function slotSpin() {
     if (slotBusy) return;
@@ -8331,33 +8492,40 @@
     }
     const stake = slotBet;
     const gen = chipsGen;
+    slotClearLines();
     if (slotMsg) slotMsg.textContent = "Good luck";
-    const result = [slotPick(), slotPick(), slotPick()];
+    const result = [0, 1, 2].map(function () {
+      return [slotPick(), slotPick(), slotPick()];
+    });
     const stops = [8, 16, 24];
     let tick = 0;
     const iv = setInterval(() => {
-      if (gen !== chipsGen) { clearInterval(iv); return; }
+      if (gen !== chipsGen) { clearInterval(iv); slotClearLines(); return; }
       tick++;
       for (let i = 0; i < 3; i++) {
-        if (tick < stops[i]) slotShow(i, slotPick(), true);
+        if (tick < stops[i]) slotShowReel(i, [slotPick(), slotPick(), slotPick()], true);
         else if (tick === stops[i]) {
-          slotShow(i, result[i], true);
+          slotShowReel(i, result[i], true);
           kitaBeep(520 + i * 80, 0.035, "square");
         }
       }
       if (tick >= stops[2]) {
         clearInterval(iv);
         if (gen !== chipsGen) return;
-        const win = slotPay(result[0], result[1], result[2], stake);
-        const sevens = [result[0], result[1], result[2]].filter(function (x) { return x.id === "seven"; }).length;
-        const jack = result[0].id === "seven" && result[1].id === "seven" && result[2].id === "seven";
-        const near = sevens === 2 && !jack;
+        const ev = slotEval(result, stake);
+        const win = ev.win;
+        const near = ev.near;
+        const jack = ev.jack;
         const reels = document.querySelector("#win-slots .slot-reels");
+        if (ev.hits.length) slotDrawLines(ev.hits);
         if (win) {
           chipsGive(win);
           kitaOutcome(true, win - stake);
           kitaAnim(reels, jack ? "kita-win" : (near ? "kita-shake" : "kita-win"));
-          if (slotMsg) slotMsg.textContent = (win === stake ? "Pair. Even." : ("+" + (win - stake))) + (near ? " · so close" : "");
+          let msg = win === stake ? "Pair. Even." : ("+" + (win - stake));
+          if (ev.hits.length > 1) msg += " · " + ev.hits.length + " lines";
+          if (near) msg += " · so close";
+          if (slotMsg) slotMsg.textContent = msg;
         } else {
           kitaOutcome(false);
           if (slotMsg) slotMsg.textContent = near ? "so close" : "No line";
@@ -9012,6 +9180,7 @@
   }
   function casinoClearTables() {
     slotBusy = false;
+    slotClearLines();
     slotSyncBets();
     if (slotSpinBtn) slotSpinBtn.disabled = chips < 1;
     rlBusy = false;
