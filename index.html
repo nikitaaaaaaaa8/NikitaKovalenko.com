@@ -4762,6 +4762,7 @@
   let confessionMode = false;
   let auraActive = false;
   let auraValue = 87;
+  let termToyGen = 0;
 
   function termPrint(text, cls) {
     const line = document.createElement("div");
@@ -4771,9 +4772,38 @@
     termOut.scrollTop = termOut.scrollHeight;
   }
 
+  function termReducedMotion() {
+    return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+
+  function termPrintLines(lines) {
+    for (let i = 0; i < lines.length; i++) termPrint(lines[i]);
+  }
+
+  function termPrintChain(lines, gap, done, gen) {
+    if (termReducedMotion() || !gap) {
+      termPrintLines(lines);
+      if (done) done();
+      return;
+    }
+    let i = 0;
+    function tick() {
+      if (gen !== termToyGen) return;
+      if (i >= lines.length) {
+        if (done) done();
+        return;
+      }
+      termPrint(lines[i++]);
+      setTimeout(tick, gap);
+    }
+    tick();
+  }
+
   function runCommand(raw) {
     const input = raw.trim();
     const cmd = input.toLowerCase();
+    termToyGen += 1;
+    const toyGen = termToyGen;
     termPrint("> " + input, "green");
     if (!cmd) return;
 
@@ -4796,20 +4826,94 @@
     } else if (cmd === "fuck you") {
       termPrint("noted. added to brand guidelines.");
     } else if (cmd === "scan") {
-      termPrint("scanning local system...");
-      termPrint("threats detected: 0");
-      termPrint("winning signature: confirmed");
-      termPrint("user ego level: dangerously high");
+      const banner = [
+        "  +------------------------------+",
+        "  | KITA AV // kitadefender 1.0  |",
+        "  | winning-signature engine     |",
+        "  | if it wins, it is clean      |",
+        "  +------------------------------+",
+        "       .--.    sniffing",
+        "      (o_o)    the heap",
+        "       >^<",
+        "      /|||\\"
+      ];
+      const walks = [
+        "scanning C:\\Windows\\System32\\drivers\\...",
+        "scanning C:\\Users\\Guest\\AppData\\Roaming\\Kita\\...",
+        "scanning /Users/guest/Library/Preferences/...",
+        "scanning C:\\Program Files\\Kita\\bin\\...",
+        "scanning /opt/kita/var/ego/...",
+        "scanning C:\\Windows\\Temp\\unsigned\\...",
+        "checking boot sector...",
+        "checking aura heap..."
+      ];
+      const threatPool = [
+        "ego.sys",
+        "unsigned winning.dll",
+        "no-spoon.exe",
+        "chronic-victory.rootkit",
+        "aura-leak.tmp",
+        "main-character.sys",
+        "brand-guidelines.trojan",
+        "confidence.overflow"
+      ];
+      const roll = Math.random();
+      const nThreats = roll < 0.18 ? 0 : (roll < 0.62 ? 1 : 2);
+      const pool = threatPool.slice();
+      const found = [];
+      for (let t = 0; t < nThreats; t++) {
+        const idx = Math.floor(Math.random() * pool.length);
+        found.push(pool.splice(idx, 1)[0]);
+      }
+      const tail = ["threats detected: " + nThreats];
+      for (let t = 0; t < found.length; t++) tail.push("  - " + found[t]);
+      tail.push("winning signature: confirmed");
+      tail.push("user ego level: dangerously high");
+      termPrintLines(banner);
+      termPrintChain(walks.concat(tail), 90, null, toyGen);
     } else if (cmd === "coinflip") {
-      termPrint(Math.random() > 0.5 ? "heads" : "tails");
+      const heads = Math.random() > 0.5;
+      const flipFrame = [
+        "        (",
+        "       ( )",
+        "        '",
+        "    flipping..."
+      ];
+      const land = heads ? [
+        "       _____",
+        "     /       \\",
+        "    |  HEADS  |",
+        "     \\_______/"
+      ] : [
+        "       _____",
+        "     /       \\",
+        "    |  TAILS  |",
+        "     \\_______/"
+      ];
+      const result = heads ? "heads" : "tails";
+      if (termReducedMotion()) {
+        termPrintLines(land);
+        termPrint(result);
+      } else {
+        termPrintLines(flipFrame);
+        setTimeout(function () {
+          if (toyGen !== termToyGen) return;
+          termPrintLines(land);
+          termPrint(result);
+        }, 320);
+      }
     } else if (cmd === "confess") {
       confessionMode = true;
       termPrint("the terminal is listening.");
       termPrint("type your confession.");
     } else if (cmd === "matrix") {
-      termPrint("entering the matrix...");
-      termPrint("there is no spoon.");
-      termPrint("there is only winning.");
+      if (matrixOn) {
+        stopMatrix();
+        termPrint("rain off.");
+      } else {
+        const on = startMatrix();
+        termPrint(on ? "rain on." : "rain off.");
+      }
     } else if (cmd === "snow") {
       if (!snowing) {
         termPrint("snow is already off.");
@@ -5378,6 +5482,15 @@
     return true;
   }
 
+  function stopMatrix() {
+    matrixOn = false;
+    if (matrixRaf) cancelAnimationFrame(matrixRaf);
+    matrixRaf = 0;
+    matrixCols = [];
+    if (matrixCanvas) matrixCanvas.style.display = "none";
+    if (matrixCtx) matrixCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  }
+
   window.addEventListener("resize", () => {
     if (matrixOn) resizeMatrix();
   });
@@ -5684,16 +5797,17 @@
           title: "Terminal",
           paragraphs: [
             "Open Terminal and type help, then press Run. Help lists commands and app names. Type an app name to open it.",
-            "games and casino open those folders. Not the inner games. snow turns the snow off.",
+            "games and casino open those folders. Not the inner games. snow turns the snow off. matrix toggles the rain. Konami still unlocks VIP.",
+            "scan drops a short Kita AV banner, walks fake paths, and may find a threat or two. coinflip shows a coin, then heads or tails.",
             "The placeholder is try: help. There is no email command."
           ]
         },
         {
           title: "Secrets",
           paragraphs: [
-            "Snow is on by default. Type snow in Terminal to stop it. The Konami code turns snow off and starts Matrix rain. You can still see the desktop through it.",
+            "Snow is on by default. Type snow in Terminal to stop it. Type matrix to toggle the Matrix rain. Konami still unlocks VIP. You can still see the desktop through it.",
             "A golden snitch shows up every 120 seconds, on screen for 5 seconds. Catch it for +47 winning and +500 casino chips.",
-            "Konami: up, up, down, down, left, right, left, right, B, A. That opens a VIP box and starts the Matrix rain.",
+            "Konami: up, up, down, down, left, right, left, right, B, A. That opens a VIP box and starts the Matrix rain. matrix only toggles the rain.",
             "Refresh starts a new session. Nothing important is saved."
           ]
         }
