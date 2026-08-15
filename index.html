@@ -1605,15 +1605,15 @@
   #win-blackjack {
     --sol-cw: 52px;
     --sol-ch: 72px;
-    max-width: min(560px, calc(100vw - 24px));
+    max-width: min(580px, calc(100vw - 24px));
   }
   #win-slots { max-width: min(420px, calc(100vw - 24px)); }
   #win-roulette { max-width: min(560px, calc(100vw - 24px)); }
-  #win-craps { max-width: min(420px, calc(100vw - 24px)); }
+  #win-craps { max-width: min(480px, calc(100vw - 24px)); }
   #win-baccarat {
     --sol-cw: 52px;
     --sol-ch: 72px;
-    max-width: min(520px, calc(100vw - 24px));
+    max-width: min(540px, calc(100vw - 24px));
   }
   #win-casino { max-width: min(400px, calc(100vw - 24px)); }
   .casino-content { padding: 10px 12px 12px; }
@@ -1652,26 +1652,56 @@
     border-radius: 8px;
     padding: 8px;
   }
-  .bj-felt {
+  .bj-felt,
+  .bac-felt,
+  .cr-felt {
+    --felt-nap:
+      repeating-linear-gradient(90deg, transparent 0 2px, rgba(0,0,0,.035) 2px 3px),
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.018) 3px 4px);
     background:
-      radial-gradient(ellipse at 50% 30%, #145214 0%, #0b3d0b 42%, #071a07 100%);
-    border: 1px solid rgba(57,255,20,.22);
-    border-radius: 10px;
-    padding: 10px 10px 12px;
+      var(--felt-nap),
+      radial-gradient(ellipse at 50% 28%, #176017 0%, #0c4010 46%, #08240a 100%);
+    border: 3px solid #3d2a14;
+    box-shadow:
+      inset 0 0 0 1px rgba(212, 197, 122, .32),
+      inset 0 0 48px rgba(0,0,0,.28);
+    border-radius: 8px;
+    padding: 10px 10px 8px;
   }
-  .bj-label {
+  .cr-felt { text-align: center; padding: 12px 12px 8px; }
+  .bj-zone,
+  .bac-zone {
+    border: 1.5px solid rgba(212, 197, 122, .4);
+    border-radius: 6px;
+    padding: 8px 8px 10px;
+    min-height: calc(var(--sol-ch) + 28px);
+    background: rgba(0, 16, 0, .14);
+  }
+  .bj-zone-dealer { margin-bottom: 10px; }
+  #bjPlayerArea {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .bac-zone-player { border-color: rgba(80, 140, 220, .5); }
+  .bac-zone-banker { border-color: rgba(200, 70, 70, .5); }
+  .bj-label,
+  .bac-label {
     font-size: 10px;
-    color: rgba(216,255,208,.7);
-    letter-spacing: .06em;
+    color: #d4c57a;
+    letter-spacing: .12em;
     text-transform: uppercase;
-    margin: 4px 0 6px;
+    margin: 0 0 6px;
+    text-align: center;
   }
+  .bac-label span { color: #e8ffe8; }
   .bj-hand {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
     min-height: var(--sol-ch);
     align-items: flex-start;
+    justify-content: center;
   }
   .bj-hand .sol-card {
     cursor: default;
@@ -1683,12 +1713,23 @@
     margin: 4px 0 8px;
     min-height: 14px;
   }
-  .bj-msg {
+  .bj-msg,
+  .bac-msg {
     text-align: center;
     font-size: 12px;
     color: var(--green);
     min-height: 18px;
-    margin-top: 4px;
+    margin-top: 8px;
+  }
+  .bj-rail,
+  .bac-rail,
+  .cr-rail {
+    margin-top: 10px;
+    padding: 8px 8px 6px;
+    border-radius: 0 0 4px 4px;
+    background: linear-gradient(180deg, #4a3420 0%, #2a1c10 100%);
+    box-shadow: inset 0 1px 0 rgba(212, 197, 122, .25);
+    border-top: 1px solid rgba(212, 197, 122, .28);
   }
   .bj-bets, .bj-acts, .bj-insure, .slot-bets, .rl-amt {
     display: flex;
@@ -1697,6 +1738,14 @@
     margin-top: 10px;
     align-items: center;
   }
+  .bj-felt .bj-bets,
+  .bj-felt .bj-acts,
+  .bj-felt .bj-insure,
+  .bac-felt .bac-sides,
+  .bac-felt .bac-bets,
+  .cr-felt .cr-bets {
+    margin-top: 6px;
+  }
   .bj-acts .bj-big {
     min-height: 44px;
     min-width: 88px;
@@ -1704,91 +1753,145 @@
   }
   .bj-insure[hidden] { display: none !important; }
   .bj-hand-box {
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 4px 2px 6px;
+    flex: 1 1 140px;
   }
   .bj-hand-box.active {
-    outline: 1px solid rgba(57,255,20,.5);
-    background: rgba(57,255,20,.06);
-  }
-  .cr-felt {
-    background:
-      radial-gradient(ellipse at 50% 30%, #145214 0%, #0b3d0b 42%, #071a07 100%);
-    border: 1px solid rgba(57,255,20,.22);
-    border-radius: 10px;
-    padding: 14px 12px 12px;
-    text-align: center;
+    outline: 1.5px solid #d4c57a;
+    background: rgba(212, 197, 122, .08);
   }
   .cr-point {
-    color: var(--green);
+    color: #d4c57a;
     font-size: 12px;
-    letter-spacing: .06em;
+    letter-spacing: .1em;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
-  .cr-dice {
-    display: flex;
-    justify-content: center;
-    gap: 14px;
-    margin: 8px 0 10px;
+  .cr-dome {
+    --dome: min(220px, 72vw);
+    width: var(--dome);
+    height: var(--dome);
+    margin: 4px auto 8px;
+    position: relative;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 64%, #0a2a0a 0%, #071807 68%, #041004 100%);
+    box-shadow:
+      0 8px 18px rgba(0,0,0,.45),
+      inset 0 -18px 28px rgba(0,0,0,.35);
+    overflow: hidden;
+  }
+  .cr-dome-inner {
+    position: absolute;
+    inset: 16%;
+    z-index: 1;
   }
   .cr-die {
-    width: 56px;
-    height: 56px;
+    --dx: 0px;
+    --dy: 8px;
+    --rot: 0deg;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 58px;
+    height: 58px;
+    margin: -29px 0 0 -29px;
     border-radius: 10px;
-    border: 1px solid rgba(57,255,20,.5);
-    background: linear-gradient(180deg, rgba(57,255,20,.16), rgba(0,0,0,.55));
-    color: var(--green);
-    font-size: 28px;
-    font-weight: 700;
+    background: linear-gradient(145deg, #fff8ee 0%, #e8e0d4 55%, #cfc6b8 100%);
+    border: 1px solid rgba(40, 28, 12, .35);
+    box-shadow:
+      0 3px 6px rgba(0,0,0,.35),
+      inset 0 1px 0 rgba(255,255,255,.7);
     display: grid;
-    place-items: center;
-    box-shadow: 0 0 12px rgba(57,255,20,.12);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 3px;
+    padding: 7px;
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
+    transition: transform .08s linear;
   }
-  .cr-die.spin { animation: cr-shake .12s linear infinite; }
-  @keyframes cr-shake {
+  #crD1 { --dx: -28px; --dy: 10px; --rot: -8deg; }
+  #crD2 { --dx: 28px; --dy: 10px; --rot: 6deg; }
+  .cr-die i {
+    display: block;
+    border-radius: 50%;
+    background: #1a1208;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,.12);
+    opacity: 0;
+  }
+  .cr-die[data-face="1"] i:nth-child(5),
+  .cr-die[data-face="2"] i:nth-child(1),
+  .cr-die[data-face="2"] i:nth-child(9),
+  .cr-die[data-face="3"] i:nth-child(1),
+  .cr-die[data-face="3"] i:nth-child(5),
+  .cr-die[data-face="3"] i:nth-child(9),
+  .cr-die[data-face="4"] i:nth-child(1),
+  .cr-die[data-face="4"] i:nth-child(3),
+  .cr-die[data-face="4"] i:nth-child(7),
+  .cr-die[data-face="4"] i:nth-child(9),
+  .cr-die[data-face="5"] i:nth-child(1),
+  .cr-die[data-face="5"] i:nth-child(3),
+  .cr-die[data-face="5"] i:nth-child(5),
+  .cr-die[data-face="5"] i:nth-child(7),
+  .cr-die[data-face="5"] i:nth-child(9),
+  .cr-die[data-face="6"] i:nth-child(1),
+  .cr-die[data-face="6"] i:nth-child(3),
+  .cr-die[data-face="6"] i:nth-child(4),
+  .cr-die[data-face="6"] i:nth-child(6),
+  .cr-die[data-face="6"] i:nth-child(7),
+  .cr-die[data-face="6"] i:nth-child(9) { opacity: 1; }
+  .cr-dome-glass {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+    background:
+      radial-gradient(ellipse at 32% 22%, rgba(255,255,255,.42) 0%, rgba(255,255,255,.08) 28%, transparent 46%),
+      radial-gradient(circle at 50% 50%, transparent 58%, rgba(180,220,180,.12) 72%, rgba(255,255,255,.2) 100%);
+    box-shadow:
+      inset 0 0 0 3px rgba(210, 230, 210, .22),
+      inset 0 -10px 24px rgba(255,255,255,.08);
+  }
+  .cr-dome-rim {
+    position: absolute;
+    left: 6%;
+    right: 6%;
+    bottom: 3%;
+    height: 14%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at 50% 40%, #c9b56b 0%, #6a5428 55%, #3d2a14 100%);
+    box-shadow: 0 2px 4px rgba(0,0,0,.4);
+    z-index: 3;
+    pointer-events: none;
+  }
+  .cr-dome.shaking { animation: cr-dome-rattle .11s linear infinite; }
+  .cr-die.bounce { transition: transform .07s linear; }
+  @keyframes cr-dome-rattle {
     0% { transform: translate(0,0) rotate(0); }
-    50% { transform: translate(1px,-1px) rotate(-4deg); }
+    25% { transform: translate(-5px, 2px) rotate(-1.4deg); }
+    50% { transform: translate(5px, -3px) rotate(1.2deg); }
+    75% { transform: translate(-3px, -2px) rotate(-.8deg); }
     100% { transform: translate(0,0) rotate(0); }
   }
   .cr-total { color: var(--text); font-size: 13px; min-height: 18px; }
-  .cr-msg { color: var(--green); font-size: 12px; margin-top: 8px; min-height: 16px; }
+  .cr-msg { color: var(--green); font-size: 12px; margin-top: 6px; min-height: 16px; }
   .cr-bets {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 10px;
     align-items: center;
+    justify-content: center;
   }
   .cr-bets .btn { min-height: 44px; }
   .cr-odds-note { color: var(--green); font-size: 11px; min-height: 14px; margin-top: 4px; }
 
-  .bac-felt {
-    background:
-      radial-gradient(ellipse at 50% 30%, #145214 0%, #0b3d0b 42%, #071a07 100%);
-    border: 1px solid rgba(57,255,20,.22);
-    border-radius: 10px;
-    padding: 10px 10px 12px;
-  }
   .bac-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
-  }
-  .bac-label {
-    color: var(--muted);
-    font-size: 11px;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .bac-label span { color: var(--green); }
-  .bac-msg {
-    text-align: center;
-    color: var(--green);
-    font-size: 12px;
-    margin-top: 10px;
-    min-height: 16px;
   }
   .bac-sides, .bac-bets {
     display: flex;
@@ -1802,8 +1905,12 @@
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    margin-top: 8px;
-    min-height: 22px;
+    margin: 0 0 8px;
+    padding: 5px 6px;
+    min-height: 28px;
+    border-radius: 4px;
+    background: rgba(0, 12, 0, .35);
+    border: 1px solid rgba(212, 197, 122, .22);
   }
   .bac-bead {
     width: 20px;
@@ -2087,7 +2194,8 @@
   @keyframes kita-chip-flash { 50% { opacity: .65; } }
   @media (prefers-reduced-motion: reduce) {
     .kita-pop, .kita-flash, .kita-shake, .kita-win, .kita-chip-up, .kita-chip-dn,
-    .slot-sym.tick, .cr-die.spin { animation: none !important; }
+    .slot-sym.tick, .cr-die.spin, .cr-dome.shaking { animation: none !important; }
+    .cr-die { transition: none !important; }
   }
 
   /* Solitaire */
@@ -2780,6 +2888,11 @@
       min-height: 36px;
       font-size: 8px;
     }
+    .cr-dome { --dome: min(196px, 68vw); }
+    .cr-die { width: 50px; height: 50px; margin: -25px 0 0 -25px; padding: 6px; }
+    #crD1 { --dx: -24px; }
+    #crD2 { --dx: 24px; }
+    .bj-felt, .bac-felt, .cr-felt { padding: 8px 8px 6px; border-width: 2px; }
 
     #snitch,
     #snitch svg {
@@ -2990,6 +3103,28 @@
     font-size: 11px;
   }
   html.tesla .rl-chip { font-size: 10px; }
+  html.tesla #win-blackjack,
+  html.tesla #win-baccarat {
+    max-width: min(640px, calc(100vw - 24px));
+    --sol-cw: 56px;
+    --sol-ch: 78px;
+  }
+  html.tesla #win-craps {
+    max-width: min(560px, calc(100vw - 24px));
+  }
+  html.tesla .cr-dome { --dome: min(260px, 56vw); }
+  html.tesla .cr-die {
+    width: 68px;
+    height: 68px;
+    margin: -34px 0 0 -34px;
+    padding: 8px;
+    gap: 4px;
+  }
+  html.tesla #crD1 { --dx: -32px; }
+  html.tesla #crD2 { --dx: 32px; }
+  html.tesla .bj-rail .btn,
+  html.tesla .bac-rail .btn,
+  html.tesla .cr-rail .btn { min-height: 48px; }
 </style>
 </head>
 <body>
@@ -3126,12 +3261,12 @@
         <div class="title">Contact.app</div>
       </div>
       <div class="content">
-        <p>Business, chaos, or accidental brilliance:</p>
+        <p>Got something? Write me.</p>
         <p class="green" id="emailText">winning@nikitakovalenko.com</p>
        <p class="muted">Auto-reply is currently on strike. The inbox still works.</p>
         <div class="row">
           <button class="btn" id="copyEmail">Copy email</button>
-          <a class="btn secondary" href="mailto:winning@nikitakovalenko.com">Open mail app</a>
+          <a class="btn secondary" href="mailto:winning@nikitakovalenko.com?subject=you%27re%20the%20man">Open mail app</a>
         </div>
         <div class="secret" id="vipRoom">
           <div class="green">VIP WINNING ROOM UNLOCKED</div>
@@ -3593,7 +3728,7 @@
       </div>
     </section>
 
-    <section class="window" id="win-blackjack" style="top:52px; left:110px; width:480px;">
+    <section class="window" id="win-blackjack" style="top:52px; left:110px; width:520px;">
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="blackjack"></div>
@@ -3612,31 +3747,35 @@
         </div>
         <p class="muted casino-fun">for fun</p>
         <div class="bj-felt">
-          <div class="bj-label">Dealer <span id="bjDealerTotal"></span></div>
-          <div class="bj-hand" id="bjDealer"></div>
-          <div id="bjPlayerArea">
+          <div class="bj-zone bj-zone-dealer">
+            <div class="bj-label">Dealer <span id="bjDealerTotal"></span></div>
+            <div class="bj-hand" id="bjDealer"></div>
+          </div>
+          <div class="bj-zone bj-zone-player" id="bjPlayerArea">
             <div class="bj-label">You <span id="bjPlayerTotal"></span></div>
             <div class="bj-hand" id="bjPlayer"></div>
           </div>
           <div class="bj-msg" id="bjMsg">Place a bet</div>
-        </div>
-        <div class="bj-bets" id="bjBets">
-          <button type="button" class="btn" data-bj-bet="25" aria-pressed="true">25</button>
-          <button type="button" class="btn" data-bj-bet="50" aria-pressed="false">50</button>
-          <button type="button" class="btn" data-bj-bet="100" aria-pressed="false">100</button>
-          <input id="bjBetIn" type="number" min="1" max="1000" value="25" aria-label="Bet amount">
-          <button type="button" class="btn" id="bjDeal">Deal</button>
-          <button type="button" class="btn secondary" id="bjRebet" hidden>Rebet</button>
-        </div>
-        <div class="bj-acts" id="bjActs" hidden>
-          <button type="button" class="btn bj-big" id="bjHit">Hit</button>
-          <button type="button" class="btn bj-big" id="bjStand">Stand</button>
-          <button type="button" class="btn secondary" id="bjDouble">Double</button>
-          <button type="button" class="btn secondary" id="bjSplit">Split</button>
-        </div>
-        <div class="bj-insure" id="bjInsure" hidden>
-          <button type="button" class="btn" id="bjInsYes">Yes</button>
-          <button type="button" class="btn" id="bjInsNo">No</button>
+          <div class="bj-rail">
+            <div class="bj-bets" id="bjBets">
+              <button type="button" class="btn" data-bj-bet="25" aria-pressed="true">25</button>
+              <button type="button" class="btn" data-bj-bet="50" aria-pressed="false">50</button>
+              <button type="button" class="btn" data-bj-bet="100" aria-pressed="false">100</button>
+              <input id="bjBetIn" type="number" min="1" max="1000" value="25" aria-label="Bet amount">
+              <button type="button" class="btn" id="bjDeal">Deal</button>
+              <button type="button" class="btn secondary" id="bjRebet" hidden>Rebet</button>
+            </div>
+            <div class="bj-acts" id="bjActs" hidden>
+              <button type="button" class="btn bj-big" id="bjHit">Hit</button>
+              <button type="button" class="btn bj-big" id="bjStand">Stand</button>
+              <button type="button" class="btn secondary" id="bjDouble">Double</button>
+              <button type="button" class="btn secondary" id="bjSplit">Split</button>
+            </div>
+            <div class="bj-insure" id="bjInsure" hidden>
+              <button type="button" class="btn" id="bjInsYes">Yes</button>
+              <button type="button" class="btn" id="bjInsNo">No</button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -3747,7 +3886,7 @@
       </div>
     </section>
 
-    <section class="window" id="win-craps" style="top:56px; left:160px; width:400px;">
+    <section class="window" id="win-craps" style="top:56px; left:160px; width:440px;">
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="craps"></div>
@@ -3767,25 +3906,31 @@
         <p class="muted casino-fun">for fun</p>
         <div class="cr-felt">
           <div class="cr-point" id="crPoint">Come-out</div>
-          <div class="cr-dice" aria-hidden="true">
-            <div class="cr-die" id="crD1">·</div>
-            <div class="cr-die" id="crD2">·</div>
+          <div class="cr-dome" id="crDome" aria-hidden="true">
+            <div class="cr-dome-inner">
+              <div class="cr-die" id="crD1" data-face="0"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="cr-die" id="crD2" data-face="0"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+            <div class="cr-dome-glass"></div>
+            <div class="cr-dome-rim"></div>
           </div>
           <div class="cr-total" id="crTotal"></div>
           <div class="cr-msg" id="crMsg">Pass line · bet then roll</div>
-        </div>
-        <div class="cr-bets">
-          <button type="button" class="btn" data-cr-bet="25" aria-pressed="true">25</button>
-          <button type="button" class="btn" data-cr-bet="50" aria-pressed="false">50</button>
-          <button type="button" class="btn" data-cr-bet="100" aria-pressed="false">100</button>
-          <button type="button" class="btn" id="crRoll">Roll</button>
-          <button type="button" class="btn secondary" id="crOdds" hidden>Odds</button>
+          <div class="cr-rail">
+            <div class="cr-bets">
+              <button type="button" class="btn" data-cr-bet="25" aria-pressed="true">25</button>
+              <button type="button" class="btn" data-cr-bet="50" aria-pressed="false">50</button>
+              <button type="button" class="btn" data-cr-bet="100" aria-pressed="false">100</button>
+              <button type="button" class="btn" id="crRoll">Roll</button>
+              <button type="button" class="btn secondary" id="crOdds" hidden>Odds</button>
+            </div>
+          </div>
         </div>
         <p class="game-hint">Come-out 7/11 win · 2/3/12 lose · then hit the point before 7 · odds after the point</p>
       </div>
     </section>
 
-    <section class="window" id="win-baccarat" style="top:52px; left:130px; width:460px;">
+    <section class="window" id="win-baccarat" style="top:52px; left:130px; width:500px;">
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="baccarat"></div>
@@ -3804,29 +3949,31 @@
         </div>
         <p class="muted casino-fun">for fun</p>
         <div class="bac-felt">
+          <div class="bac-road" id="bacRoad" aria-label="Recent results"></div>
           <div class="bac-row">
-            <div>
+            <div class="bac-zone bac-zone-player">
               <div class="bac-label">Player <span id="bacPTot"></span></div>
               <div class="bj-hand" id="bacPlayer"></div>
             </div>
-            <div>
+            <div class="bac-zone bac-zone-banker">
               <div class="bac-label">Banker <span id="bacBTot"></span></div>
               <div class="bj-hand" id="bacBanker"></div>
             </div>
           </div>
           <div class="bac-msg" id="bacMsg">Pick a side, then deal</div>
-          <div class="bac-road" id="bacRoad" aria-label="Recent results"></div>
-        </div>
-        <div class="bac-sides">
-          <button type="button" class="btn" data-bac-side="player" aria-pressed="true">Player</button>
-          <button type="button" class="btn" data-bac-side="banker" aria-pressed="false">Banker</button>
-          <button type="button" class="btn" data-bac-side="tie" aria-pressed="false">Tie 8:1</button>
-        </div>
-        <div class="bac-bets">
-          <button type="button" class="btn" data-bac-bet="25" aria-pressed="true">25</button>
-          <button type="button" class="btn" data-bac-bet="50" aria-pressed="false">50</button>
-          <button type="button" class="btn" data-bac-bet="100" aria-pressed="false">100</button>
-          <button type="button" class="btn" id="bacDeal">Deal</button>
+          <div class="bac-rail">
+            <div class="bac-sides">
+              <button type="button" class="btn" data-bac-side="player" aria-pressed="true">Player</button>
+              <button type="button" class="btn" data-bac-side="banker" aria-pressed="false">Banker</button>
+              <button type="button" class="btn" data-bac-side="tie" aria-pressed="false">Tie 8:1</button>
+            </div>
+            <div class="bac-bets">
+              <button type="button" class="btn" data-bac-bet="25" aria-pressed="true">25</button>
+              <button type="button" class="btn" data-bac-bet="50" aria-pressed="false">50</button>
+              <button type="button" class="btn" data-bac-bet="100" aria-pressed="false">100</button>
+              <button type="button" class="btn" id="bacDeal">Deal</button>
+            </div>
+          </div>
         </div>
         <p class="game-hint">Tableau draw · banker even money, no commission · tie 8:1 · player/banker ties push</p>
       </div>
@@ -5329,9 +5476,9 @@
           title: "Casino",
           paragraphs: [
             "Casino is a fake-chip toy. One bankroll across Blackjack, Slots, Roulette, Craps (pass line plus odds), and Baccarat (Player / Banker / Tie; banker even money).",
-            "Blackjack has hit, stand, double, split on the same rank once (8+8 yes, 10+K no), and insurance when the dealer shows an ace (pays 2:1). Cards deal one at a time. After a hand, Rebet repeats the last bet size.",
+            "Blackjack sits on a rectangular green felt — dealer up top, you below, chips on the rail. Hit, stand, double, split on the same rank once (8+8 yes, 10+K no), and insurance when the dealer shows an ace (pays 2:1). Cards deal one at a time. After a hand, Rebet repeats the last bet size.",
             "Roulette is a real rectangular felt. Outside bets — red, black, odd, even, 1–18, 19–36, dozens, and column 2to1 — sit on the table. Stack chips on a spot; click again to add.",
-            "Craps can take true odds behind the pass line after a point. Slots show a paytable; reels stop one at a time. Two 7s that miss 777 flash so-close — payouts stay the same. Baccarat keeps a short road of recent Player, Banker, and Tie results. Cards deal one at a time.",
+            "Craps rolls two dice in a glass dome. The dome shakes, the dice bounce, then they land on the roll. Pass line plus true odds after a point. Slots show a paytable; reels stop one at a time. Two 7s that miss 777 flash so-close — payouts stay the same. Baccarat sits on a rectangular felt with Player and Banker zones and a short road along the edge. Cards deal one at a time.",
             "You start at 1000 chips. A refresh resets them. One pile, every table. Tables have light motion and short beeps, mute from the tray speaker."
           ]
         },
@@ -8445,6 +8592,7 @@
   const crEls = {
     d1: document.getElementById("crD1"),
     d2: document.getElementById("crD2"),
+    dome: document.getElementById("crDome"),
     total: document.getElementById("crTotal"),
     point: document.getElementById("crPoint"),
     msg: document.getElementById("crMsg"),
@@ -8453,8 +8601,24 @@
   };
   const cr = { bet: 25, down: 0, odds: 0, point: 0, rolling: false };
 
-  function crPip(n) {
-    return "⚀⚁⚂⚃⚄⚅".charAt(Math.max(1, Math.min(6, n)) - 1);
+  function crReduced() {
+    return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+  function crFace(el, n) {
+    if (!el) return;
+    el.dataset.face = String(Math.max(0, Math.min(6, n | 0)));
+  }
+  function crNudgeDie(el) {
+    if (!el) return;
+    el.style.setProperty("--dx", (((Math.random() * 56) | 0) - 28) + "px");
+    el.style.setProperty("--dy", (((Math.random() * 40) | 0) - 22) + "px");
+    el.style.setProperty("--rot", (((Math.random() * 160) | 0) - 80) + "deg");
+  }
+  function crParkDie(el, side) {
+    if (!el) return;
+    el.style.setProperty("--dx", (side < 0 ? -28 : 28) + "px");
+    el.style.setProperty("--dy", "10px");
+    el.style.setProperty("--rot", (side < 0 ? -8 : 6) + "deg");
   }
   function crSay(t) {
     if (crEls.msg) crEls.msg.textContent = t;
@@ -8500,16 +8664,14 @@
     crSyncBets();
   }
   function crShowDice(a, b, spin) {
-    if (crEls.d1) {
-      crEls.d1.textContent = crPip(a);
-      crEls.d1.classList.toggle("spin", !!spin);
-    }
-    if (crEls.d2) {
-      crEls.d2.textContent = crPip(b);
-      crEls.d2.classList.toggle("spin", !!spin);
-    }
+    crFace(crEls.d1, a);
+    crFace(crEls.d2, b);
+    if (crEls.d1) crEls.d1.classList.toggle("spin", !!spin);
+    if (crEls.d2) crEls.d2.classList.toggle("spin", !!spin);
     if (crEls.total) crEls.total.textContent = spin ? "" : ("Total " + (a + b));
     if (!spin) {
+      crParkDie(crEls.d1, -1);
+      crParkDie(crEls.d2, 1);
       kitaAnim(crEls.d1, "kita-shake");
       kitaAnim(crEls.d2, "kita-shake");
     }
@@ -8577,20 +8739,37 @@
       }
       cr.down = cr.bet;
     }
+    const a = 1 + (Math.random() * 6 | 0);
+    const b = 1 + (Math.random() * 6 | 0);
     const gen = chipsGen;
+    if (crReduced()) {
+      crResolve(a, b);
+      return;
+    }
     kitaBeep(700, 0.035, "square");
     setTimeout(function () { kitaBeep(560, 0.035, "square"); }, 45);
+    if (crEls.dome) crEls.dome.classList.add("shaking");
+    if (crEls.d1) crEls.d1.classList.add("bounce");
+    if (crEls.d2) crEls.d2.classList.add("bounce");
+    const dur = 1000 + ((Math.random() * 401) | 0);
+    const start = Date.now();
     let ticks = 0;
     const id = setInterval(() => {
       if (gen !== chipsGen) { clearInterval(id); return; }
+      crNudgeDie(crEls.d1);
+      crNudgeDie(crEls.d2);
       crShowDice(1 + (Math.random() * 6 | 0), 1 + (Math.random() * 6 | 0), true);
       ticks++;
-      if (ticks >= 6) {
+      if (ticks % 3 === 0) kitaBeep(480 + ((Math.random() * 200) | 0), 0.025, "square");
+      if (Date.now() - start >= dur) {
         clearInterval(id);
         if (gen !== chipsGen) return;
-        crResolve(1 + (Math.random() * 6 | 0), 1 + (Math.random() * 6 | 0));
+        if (crEls.dome) crEls.dome.classList.remove("shaking");
+        if (crEls.d1) crEls.d1.classList.remove("bounce");
+        if (crEls.d2) crEls.d2.classList.remove("bounce");
+        crResolve(a, b);
       }
-    }, 55);
+    }, 70);
   }
   document.querySelectorAll("[data-cr-bet]").forEach(btn => {
     btn.addEventListener("click", () => crSetBet(btn.getAttribute("data-cr-bet")));
@@ -8844,6 +9023,9 @@
     cr.odds = 0;
     cr.point = 0;
     cr.rolling = false;
+    if (crEls.dome) crEls.dome.classList.remove("shaking");
+    if (crEls.d1) crEls.d1.classList.remove("bounce");
+    if (crEls.d2) crEls.d2.classList.remove("bounce");
     crShowPoint();
     crSyncBets();
     bac.busy = false;
