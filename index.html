@@ -2740,7 +2740,7 @@
 
   /* VLC player */
   #win-vlc {
-    max-width: min(760px, calc(100vw - 24px));
+    max-width: min(720px, calc(100vw - 24px));
   }
   #win-vlc .content.vlc-content {
     padding: 0;
@@ -2783,13 +2783,13 @@
   .vlc-stage {
     position: relative;
     flex: 1 1 auto;
-    min-height: 220px;
-    height: 280px;
-    background:
-      radial-gradient(ellipse at 50% 42%, #2a2118 0%, #121212 62%, #0a0a0a 100%);
+    min-height: 260px;
+    height: min(48vh, 380px);
+    background: #000;
     overflow: hidden;
   }
-  .vlc-stage video {
+  .vlc-stage video,
+  #vlcVideo {
     display: block;
     width: 100%;
     height: 100%;
@@ -2883,12 +2883,15 @@
     flex-direction: column;
     gap: 2px;
   }
-  .vlc-row:hover { border-color: #f27c00; background: #221a12; }
-  .vlc-row.active {
-    border-color: #f27c00;
-    background: #2a1c10;
-    box-shadow: inset 0 0 0 1px rgba(242,124,0,.35);
+  .vlc-row:hover { border-color: var(--green); background: rgba(57,255,20,.08); }
+  .vlc-row.active,
+  .vlc-row.active:hover {
+    border-color: var(--green);
+    background: rgba(57,255,20,.2);
+    color: var(--green);
+    box-shadow: inset 0 0 0 1px rgba(57,255,20,.35);
   }
+  .vlc-row.active .vlc-row-title { color: var(--green); }
   .vlc-row-title { font-size: 13px; color: #f3efe6; }
   .vlc-row-sub { font-size: 11px; color: #8a8070; }
   .vlc-chrome {
@@ -2899,30 +2902,8 @@
     background: linear-gradient(180deg, #2a2a2a, #141414);
     border-top: 1px solid #3a3a3a;
   }
-  .vlc-play {
-    appearance: none;
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
-    padding: 0;
-    border-radius: 10px;
-    border: 1px solid #f27c00;
-    background: #2a1808;
-    color: #ffb14a;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    font: inherit;
-  }
-  .vlc-play svg { width: 20px; height: 20px; display: block; }
-  .vlc-play:hover { background: #3a220c; }
-  .vlc-play:disabled {
-    opacity: .4;
-    cursor: default;
-    border-color: #555;
-    color: #888;
-    background: #1a1a1a;
+  .vlc-play.btn {
+    min-width: 72px;
   }
   .vlc-times {
     flex: 0 0 auto;
@@ -3699,7 +3680,7 @@
         <div class="label">Casino</div>
       </div>
       <div class="icon" id="icon-vlc" tabindex="0" data-open="vlc" aria-label="VLC">
-        <div class="glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#e86a00" d="M3.6 20.15h16.8c.55 0 .85-.62.52-1.08L13.15 3.7c-.48-.8-1.82-.8-2.3 0L3.08 19.07c-.33.46-.03 1.08.52 1.08z"/><path fill="#f4efe6" d="M8.05 14.05h7.9l.95 2.55H7.1z"/><path fill="#f4efe6" d="M9.5 9.35h5l.8 2.2H8.7z"/><path fill="#c45500" d="M3.15 19.55h17.7c.48 0 .78.55.5 1l-.45.7H3.1l-.45-.7c-.28-.45.02-1 .5-1z"/><path fill="#ffb14a" opacity=".55" d="M11.15 4.55h1.7l.4 1.25h-2.5z"/></svg></div>
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.8L4.6 20.2h14.8L12 3.8z"/><path d="M8.2 14.2h7.6"/><path d="M9.4 11.2h5.2"/><path d="M10.8 16.4l3.4 2-3.4 2v-4z" fill="currentColor" stroke="none"/></svg></div>
         <div class="label">VLC</div>
       </div>
     </div>
@@ -4246,41 +4227,45 @@
       </div>
     </section>
 
-    <section class="window" id="win-vlc" style="top:56px; left:130px; width:720px;">
+    <section class="window" id="win-vlc" style="top:56px; left:160px; width:680px;">
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="vlc"></div>
           <div class="dot min" data-close="vlc"></div>
           <div class="dot max"></div>
         </div>
-        <div class="title vlc-win-title"><span class="vlc-cone-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#e86a00" d="M3.6 20.15h16.8c.55 0 .85-.62.52-1.08L13.15 3.7c-.48-.8-1.82-.8-2.3 0L3.08 19.07c-.33.46-.03 1.08.52 1.08z"/><path fill="#f4efe6" d="M8.05 14.05h7.9l.95 2.55H7.1z"/><path fill="#f4efe6" d="M9.5 9.35h5l.8 2.2H8.7z"/><path fill="#c45500" d="M3.15 19.55h17.7c.48 0 .78.55.5 1l-.45.7H3.1l-.45-.7c-.28-.45.02-1 .5-1z"/><path fill="#ffb14a" opacity=".55" d="M11.15 4.55h1.7l.4 1.25h-2.5z"/></svg></span>VLC media player</div>
+        <div class="title vlc-win-title"><span class="vlc-cone-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#ff8a1d" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.8L4.6 20.2h14.8L12 3.8z"/><path d="M8.2 14.2h7.6"/><path d="M9.4 11.2h5.2"/><path d="M10.8 16.4l3.4 2-3.4 2v-4z" fill="#ff8a1d" stroke="none"/></svg></span>VLC</div>
       </div>
       <div class="content vlc-content">
         <div class="vlc-body">
           <div class="vlc-main">
             <div class="vlc-stage" id="vlcStage">
-              <div class="vlc-empty" id="vlcEmpty">
-                <div class="vlc-empty-cone"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#e86a00" d="M3.6 20.15h16.8c.55 0 .85-.62.52-1.08L13.15 3.7c-.48-.8-1.82-.8-2.3 0L3.08 19.07c-.33.46-.03 1.08.52 1.08z"/><path fill="#f4efe6" d="M8.05 14.05h7.9l.95 2.55H7.1z"/><path fill="#f4efe6" d="M9.5 9.35h5l.8 2.2H8.7z"/><path fill="#c45500" d="M3.15 19.55h17.7c.48 0 .78.55.5 1l-.45.7H3.1l-.45-.7c-.28-.45.02-1 .5-1z"/><path fill="#ffb14a" opacity=".55" d="M11.15 4.55h1.7l.4 1.25h-2.5z"/></svg></div>
-                <p class="vlc-drop">Drop tapes later</p>
-                <p class="vlc-parked">Tapes play when parked.</p>
-              </div>
+              <video id="vlcVideo" playsinline webkit-playsinline></video>
             </div>
           </div>
           <aside class="vlc-playlist" aria-label="Playlist">
             <div class="vlc-pl-head">Playlist</div>
-            <div class="vlc-pl-list" id="vlcPlaylist"></div>
+            <div class="vlc-pl-list" id="vlcPlaylist">
+              <button type="button" class="btn vlc-row active" data-vlc-id="fight" data-vlc-src="/videos/fight.mp4">
+                <span class="vlc-row-title">Fight</span>
+                <span class="vlc-row-sub">UFC · 30s</span>
+              </button>
+              <button type="button" class="btn vlc-row" data-vlc-id="football" data-vlc-src="/videos/football.mp4">
+                <span class="vlc-row-title">Football</span>
+                <span class="vlc-row-sub">Packers · 40s</span>
+              </button>
+            </div>
           </aside>
         </div>
         <div class="vlc-chrome">
-          <button type="button" class="vlc-play" id="vlcPlay" aria-label="Play" disabled>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.8v12.4L18.4 12z" fill="currentColor"/></svg>
-          </button>
+          <button type="button" class="btn vlc-play" id="vlcPlay" aria-label="Play">Play</button>
+          <input type="range" class="vlc-seek" id="vlcSeek" min="0" max="1000" value="0" step="1" aria-label="Seek">
           <div class="vlc-times" id="vlcTime">0:00 / 0:00</div>
-          <input type="range" class="vlc-seek" id="vlcSeek" min="0" max="1000" value="0" step="1" disabled aria-label="Seek">
           <div class="vlc-vol-wrap" title="Volume">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.2h3.6l4.6-3.6v13l-4.6-3.6H4z" fill="currentColor"/><path d="M16.2 8.4c1.5 1.3 1.5 5.9 0 7.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-            <input type="range" class="vlc-vol" id="vlcVol" min="0" max="100" value="80" step="1" aria-label="Volume">
+            <input type="range" class="vlc-vol" id="vlcVol" min="0" max="1" value="1" step="0.01" aria-label="Volume">
           </div>
+          <button type="button" class="btn secondary" id="vlcFs" aria-label="Fullscreen">Full</button>
         </div>
       </div>
     </section>
@@ -6157,7 +6142,7 @@
           paragraphs: [
             "Weather shows current conditions from your IP city, via Open-Meteo. Not GPS. Tracker uses the same city guess, plus session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
             "Paint has a brush, eraser, fill, shapes, a palette, undo, and save.",
-            "VLC is a player for fight and soccer tapes. The playlist stays empty until those files are on the machine.",
+            "VLC is an in-OS player with Fight and Football. Not a redirect.",
             "DroneStuff is an in-OS gallery of aerials, not a redirect. Click a shot for the lightbox.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Open mail app prefills the subject “you're the man.”"
@@ -6182,7 +6167,7 @@
         {
           title: "Terminal",
           paragraphs: [
-            "Open Terminal and type help, then press Run. Help lists commands and app names. Type an app name to open it.",
+            "Open Terminal and type help, then press Run. Help lists commands and app names. Type an app name to open it. vlc opens the player (folder-level app).",
             "games and casino open those folders. Not the inner games. snow turns the snow off. matrix toggles the rain. Konami still unlocks VIP.",
             "scan drops a short Kita AV banner, walks fake paths, and may find a threat or two. coinflip shows a coin, then heads or tails.",
             "The placeholder is try: help. There is no email command."
@@ -9857,21 +9842,18 @@
   }
 
 
-  // VLC — fight / soccer tapes. Session-only. Playlist is not saved.
+  // VLC — Fight / Football. Session-only. No localStorage.
   const vlcTapes = [
     { id: "fight", title: "Fight", src: "/videos/fight.mp4" },
-    { id: "soccer", title: "Soccer", src: "/videos/soccer.mp4" }
+    { id: "football", title: "Football", src: "/videos/football.mp4" }
   ];
   const vlc = {
     id: "",
-    video: null,
-    volume: 0.8,
-    seeking: false,
-    gen: 0
+    seeking: false
   };
 
-  function vlcIsTesla() {
-    return document.documentElement.classList.contains("tesla");
+  function vlcVideoEl() {
+    return document.getElementById("vlcVideo");
   }
 
   function vlcFmt(sec) {
@@ -9882,229 +9864,148 @@
     return m + ":" + String(r).padStart(2, "0");
   }
 
-  function vlcEls() {
-    return {
-      stage: document.getElementById("vlcStage"),
-      empty: document.getElementById("vlcEmpty"),
-      list: document.getElementById("vlcPlaylist"),
-      play: document.getElementById("vlcPlay"),
-      seek: document.getElementById("vlcSeek"),
-      time: document.getElementById("vlcTime"),
-      vol: document.getElementById("vlcVol")
-    };
-  }
-
   function vlcApplyMute() {
-    if (!vlc.video) return;
-    const silent = !kitaAudioAllowed() || vlc.volume <= 0;
-    vlc.video.muted = silent;
-    vlc.video.volume = Math.max(0, Math.min(1, vlc.volume));
+    const v = vlcVideoEl();
+    if (!v) return;
+    v.muted = !window.kitaAudioAllowed();
   }
 
-  function vlcSetPlayIcon(playing) {
-    const btn = vlcEls().play;
-    if (!btn) return;
-    btn.setAttribute("aria-label", playing ? "Pause" : "Play");
-    btn.innerHTML = playing
-      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.4v14H7zM13.6 5H17v14h-3.4z" fill="currentColor"/></svg>'
-      : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.8v12.4L18.4 12z" fill="currentColor"/></svg>';
+  function vlcSetPlayLabel() {
+    const btn = document.getElementById("vlcPlay");
+    const v = vlcVideoEl();
+    const playing = !!(v && !v.paused && !v.ended && v.getAttribute("src"));
+    if (btn) {
+      btn.textContent = playing ? "Pause" : "Play";
+      btn.setAttribute("aria-label", playing ? "Pause" : "Play");
+    }
   }
 
   function vlcUpdateTime() {
-    const els = vlcEls();
-    const v = vlc.video;
+    const v = vlcVideoEl();
+    const timeEl = document.getElementById("vlcTime");
+    const seek = document.getElementById("vlcSeek");
     const dur = v && isFinite(v.duration) ? v.duration : 0;
     const cur = v ? v.currentTime || 0 : 0;
-    if (els.time) els.time.textContent = vlcFmt(cur) + " / " + vlcFmt(dur);
-    if (els.seek && !vlc.seeking) {
-      els.seek.value = dur ? String(Math.round((cur / dur) * 1000)) : "0";
+    if (timeEl) timeEl.textContent = vlcFmt(cur) + " / " + vlcFmt(dur);
+    if (seek && !vlc.seeking) {
+      seek.value = dur ? String(Math.round((cur / dur) * 1000)) : "0";
     }
-  }
-
-  function vlcShowEmpty() {
-    const els = vlcEls();
-    if (els.stage) els.stage.classList.remove("has-video");
-    if (els.play) els.play.disabled = true;
-    if (els.seek) {
-      els.seek.disabled = true;
-      els.seek.value = "0";
-    }
-    if (els.time) els.time.textContent = "0:00 / 0:00";
-    vlcSetPlayIcon(false);
-  }
-
-  function vlcDetach() {
-    const v = vlc.video;
-    vlc.video = null;
-    if (v) {
-      try { v.pause(); } catch (e1) {}
-      try { v.removeAttribute("src"); v.load(); } catch (e2) {}
-      if (v.parentNode) v.parentNode.removeChild(v);
-    }
-    vlcShowEmpty();
-  }
-
-  function vlcReady(v) {
-    const els = vlcEls();
-    if (!els.stage || vlc.video !== v) return;
-    if (!v.parentNode) els.stage.appendChild(v);
-    els.stage.classList.add("has-video");
-    if (els.play) els.play.disabled = vlcIsTesla();
-    if (els.seek) els.seek.disabled = vlcIsTesla();
     vlcApplyMute();
-    vlcUpdateTime();
-    const tape = vlcTapes.find(function (t) { return t.id === vlc.id; });
-    if (tape && els.list) {
-      const row = els.list.querySelector('[data-vlc-id="' + tape.id + '"]');
-      const sub = row && row.querySelector(".vlc-row-sub");
-      if (sub) sub.textContent = vlcFmt(v.duration);
-    }
+    vlcSetPlayLabel();
   }
 
-  function vlcFail(gen) {
-    if (gen !== vlc.gen) return;
-    vlcDetach();
-    const els = vlcEls();
-    const row = els.list && els.list.querySelector('[data-vlc-id="' + vlc.id + '"]');
-    const sub = row && row.querySelector(".vlc-row-sub");
-    if (sub) sub.textContent = "no file yet";
-  }
-
-  function vlcAttach(tape) {
-    vlc.gen += 1;
-    const gen = vlc.gen;
-    vlc.id = tape ? tape.id : "";
-    vlcDetach();
-    vlc.id = tape ? tape.id : "";
-    const els = vlcEls();
-    if (els.list) {
-      els.list.querySelectorAll(".vlc-row").forEach(function (row) {
-        row.classList.toggle("active", !!(tape && row.getAttribute("data-vlc-id") === tape.id));
-      });
-    }
-    if (!tape || !tape.src) return;
-    if (vlcIsTesla()) {
-      vlcShowEmpty();
-      return;
-    }
-    const v = document.createElement("video");
-    v.setAttribute("playsinline", "");
-    v.setAttribute("webkit-playsinline", "");
-    v.setAttribute("controlslist", "nodownload noplaybackrate noremoteplayback");
-    v.preload = "metadata";
-    v.controls = false;
-    v.autoplay = false;
-    v.disablePictureInPicture = true;
-    function onErr() {
-      if (gen !== vlc.gen) return;
-      vlcFail(gen);
-    }
-    function onMeta() {
-      if (gen !== vlc.gen) return;
-      if (!v.duration || !isFinite(v.duration)) {
-        onErr();
-        return;
-      }
-      vlc.video = v;
-      vlcReady(v);
-    }
-    v.addEventListener("error", onErr);
-    v.addEventListener("loadedmetadata", onMeta);
-    v.addEventListener("timeupdate", function () { if (gen === vlc.gen) vlcUpdateTime(); });
-    v.addEventListener("ended", function () {
-      if (gen !== vlc.gen) return;
-      try { v.pause(); } catch (e3) {}
-      vlcSetPlayIcon(false);
-      vlcUpdateTime();
+  function vlcMarkActive(id) {
+    document.querySelectorAll(".vlc-row").forEach(function (row) {
+      row.classList.toggle("active", row.getAttribute("data-vlc-id") === id);
     });
-    v.addEventListener("play", function () { if (gen === vlc.gen) vlcSetPlayIcon(true); });
-    v.addEventListener("pause", function () { if (gen === vlc.gen) vlcSetPlayIcon(false); });
-    vlc.video = v;
-    if (els.stage) els.stage.appendChild(v);
-    v.src = tape.src;
-    try { v.load(); } catch (e4) { onErr(); }
   }
 
-  function vlcTogglePlay() {
-    if (vlcIsTesla()) {
-      showToast("Tapes play when parked.");
-      return;
+  function vlcLoad(tape, play) {
+    const v = vlcVideoEl();
+    if (!v || !tape) return;
+    const same = vlc.id === tape.id && v.getAttribute("src") === tape.src;
+    vlc.id = tape.id;
+    vlcMarkActive(tape.id);
+    if (!same) {
+      v.src = tape.src;
+      try { v.load(); } catch (eLoad) {}
     }
-    const v = vlc.video;
-    if (!v || !v.getAttribute("src")) return;
-    if (v.paused) {
+    vlcApplyMute();
+    if (play) {
       const p = v.play();
-      if (p && typeof p.catch === "function") {
-        p.catch(function () { vlcSetPlayIcon(false); });
-      }
-    } else {
-      v.pause();
+      if (p && typeof p.catch === "function") p.catch(function () { vlcSetPlayLabel(); });
     }
+    vlcUpdateTime();
   }
 
-  function vlcRenderPlaylist() {
-    const els = vlcEls();
-    if (!els.list) return;
-    els.list.innerHTML = "";
-    vlcTapes.forEach(function (tape) {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "vlc-row" + (vlc.id === tape.id ? " active" : "");
-      btn.setAttribute("data-vlc-id", tape.id);
-      const title = document.createElement("span");
-      title.className = "vlc-row-title";
-      title.textContent = tape.title;
-      const sub = document.createElement("span");
-      sub.className = "vlc-row-sub";
-      sub.textContent = "no file yet";
-      btn.appendChild(title);
-      btn.appendChild(sub);
-      btn.addEventListener("click", function () { vlcAttach(tape); });
-      els.list.appendChild(btn);
-    });
+  function vlcEnsureLoaded() {
+    const v = vlcVideoEl();
+    if (!v) return;
+    if (!v.getAttribute("src")) vlcLoad(vlcTapes[0], false);
   }
 
   function vlcOnOpen() {
-    vlcRenderPlaylist();
-    const els = vlcEls();
-    if (els.vol) els.vol.value = String(Math.round(vlc.volume * 100));
+    vlcEnsureLoaded();
+    const vol = document.getElementById("vlcVol");
+    const v = vlcVideoEl();
+    if (vol && v) vol.value = String(v.volume);
     vlcApplyMute();
-    if (vlc.video && vlc.video.parentNode) vlcReady(vlc.video);
-    else vlcShowEmpty();
+    vlcUpdateTime();
   }
 
   function vlcOnClose() {
-    if (vlc.video) {
-      try { vlc.video.pause(); } catch (e5) {}
-      vlcSetPlayIcon(false);
+    const v = vlcVideoEl();
+    if (!v) return;
+    try { v.pause(); } catch (eClose) {}
+    vlcSetPlayLabel();
+  }
+
+  function vlcTogglePlay() {
+    vlcEnsureLoaded();
+    const v = vlcVideoEl();
+    if (!v || !v.getAttribute("src")) return;
+    vlcApplyMute();
+    if (v.paused) {
+      const p = v.play();
+      if (p && typeof p.catch === "function") p.catch(function () { vlcSetPlayLabel(); });
+    } else {
+      v.pause();
     }
+    vlcSetPlayLabel();
   }
 
   (function initVlc() {
-    vlcRenderPlaylist();
-    const els = vlcEls();
-    if (els.play) {
-      els.play.addEventListener("click", function (e) {
+    const v = vlcVideoEl();
+    const play = document.getElementById("vlcPlay");
+    const seek = document.getElementById("vlcSeek");
+    const vol = document.getElementById("vlcVol");
+    const fs = document.getElementById("vlcFs");
+    if (play) {
+      play.addEventListener("click", function (e) {
         e.preventDefault();
         vlcTogglePlay();
       });
     }
-    if (els.seek) {
-      els.seek.addEventListener("pointerdown", function () { vlc.seeking = true; });
-      els.seek.addEventListener("pointerup", function () { vlc.seeking = false; });
-      els.seek.addEventListener("input", function () {
-        const v = vlc.video;
+    if (seek) {
+      seek.addEventListener("pointerdown", function () { vlc.seeking = true; });
+      seek.addEventListener("pointerup", function () { vlc.seeking = false; });
+      seek.addEventListener("input", function () {
         if (!v || !isFinite(v.duration) || !v.duration) return;
-        v.currentTime = (Number(els.seek.value) / 1000) * v.duration;
+        v.currentTime = (Number(seek.value) / 1000) * v.duration;
         vlcUpdateTime();
       });
     }
-    if (els.vol) {
-      els.vol.addEventListener("input", function () {
-        vlc.volume = Math.max(0, Math.min(1, Number(els.vol.value) / 100));
+    if (vol) {
+      vol.addEventListener("input", function () {
+        if (!v) return;
+        v.volume = Math.max(0, Math.min(1, Number(vol.value)));
         vlcApplyMute();
       });
     }
+    if (fs) {
+      fs.addEventListener("click", function () {
+        if (!v) return;
+        if (v.requestFullscreen) v.requestFullscreen();
+        else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+        else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+      });
+    }
+    document.querySelectorAll(".vlc-row").forEach(function (row) {
+      row.addEventListener("click", function () {
+        const id = row.getAttribute("data-vlc-id");
+        const tape = vlcTapes.find(function (t) { return t.id === id; });
+        if (tape) vlcLoad(tape, true);
+      });
+    });
+    if (v) {
+      v.addEventListener("timeupdate", vlcUpdateTime);
+      v.addEventListener("play", function () { vlcApplyMute(); vlcSetPlayLabel(); });
+      v.addEventListener("pause", vlcSetPlayLabel);
+      v.addEventListener("ended", vlcSetPlayLabel);
+      v.addEventListener("loadedmetadata", vlcUpdateTime);
+    }
+    const tray = document.getElementById("traySpeaker");
+    if (tray) tray.addEventListener("click", function () { vlcApplyMute(); });
   })();
 
   // Paint app — session-only canvas (no localStorage)
