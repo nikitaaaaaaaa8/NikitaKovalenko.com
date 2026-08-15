@@ -423,7 +423,7 @@
   #win-vlc.user-sized .vlc-stage {
     height: auto;
     min-height: 0;
-    flex: 0 0 auto;
+    flex: 0 1 auto;
   }
 
   .titlebar {
@@ -2850,6 +2850,8 @@
     padding: 0;
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
     overflow: hidden;
     background: #121212;
     color: #e8e4dc;
@@ -2881,20 +2883,27 @@
   .vlc-main {
     flex: 1 1 auto;
     min-width: 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
   .vlc-stage {
+    --vlc-aw: 1;
+    --vlc-ah: 1;
     position: relative;
-    flex: 0 0 auto;
-    width: min(100%, 360px);
-    aspect-ratio: 1 / 1;
+    flex: 0 1 auto;
+    width: min(100%, 360px, calc(min(56vh, 420px) * var(--vlc-aw) / var(--vlc-ah)));
+    aspect-ratio: var(--vlc-aw) / var(--vlc-ah);
     height: auto;
     margin: 0 auto;
     max-height: min(56vh, 420px);
     background: #000;
     overflow: hidden;
+  }
+  .vlc-stage.is-portrait {
+    width: min(100%, 280px, calc(min(68vh, 560px) * var(--vlc-aw) / var(--vlc-ah)));
+    max-height: min(68vh, 560px);
   }
   .vlc-stage video,
   #vlcVideo {
@@ -3001,6 +3010,7 @@
     align-items: center;
     gap: 10px;
     padding: 8px 10px;
+    flex: 0 0 auto;
     background: linear-gradient(180deg, #2a2a2a, #141414);
     border-top: 1px solid #3a3a3a;
   }
@@ -3365,13 +3375,17 @@
       flex: 1 1 auto;
     }
     #win-vlc .vlc-stage {
-      width: min(260px, 70vw);
-      aspect-ratio: 1 / 1;
+      width: min(260px, 70vw, calc(min(42vh, 300px) * var(--vlc-aw) / var(--vlc-ah)));
+      aspect-ratio: var(--vlc-aw) / var(--vlc-ah);
       height: auto;
-      max-height: min(56vh, 420px);
+      max-height: min(42vh, 300px);
       min-height: 0;
-      flex: 0 0 auto;
+      flex: 0 1 auto;
       margin: 0 auto;
+    }
+    #win-vlc .vlc-stage.is-portrait {
+      width: min(220px, 48vw, calc(min(48vh, 380px) * var(--vlc-aw) / var(--vlc-ah)));
+      max-height: min(48vh, 380px);
     }
     #win-vlc .vlc-playlist {
       flex: 0 0 auto;
@@ -3719,10 +3733,14 @@
     max-width: min(560px, calc(100vw - 24px));
   }
   html.tesla .vlc-stage {
-    width: min(100%, 360px);
-    aspect-ratio: 1 / 1;
+    width: min(100%, 360px, calc(min(56vh, 420px) * var(--vlc-aw) / var(--vlc-ah)));
+    aspect-ratio: var(--vlc-aw) / var(--vlc-ah);
     height: auto;
     max-height: min(56vh, 420px);
+  }
+  html.tesla .vlc-stage.is-portrait {
+    width: min(100%, 300px, calc(min(64vh, 540px) * var(--vlc-aw) / var(--vlc-ah)));
+    max-height: min(64vh, 540px);
   }
   html.tesla .vlc-row {
     min-height: 56px;
@@ -4452,6 +4470,10 @@
               <button type="button" class="btn vlc-row" data-vlc-id="football" data-vlc-src="/videos/football.mp4">
                 <span class="vlc-row-title">Football</span>
                 <span class="vlc-row-sub">Packers · 40s</span>
+              </button>
+              <button type="button" class="btn vlc-row" data-vlc-id="basketball" data-vlc-src="/videos/Basketball.mp4">
+                <span class="vlc-row-title">Basketball</span>
+                <span class="vlc-row-sub">15s</span>
               </button>
             </div>
           </aside>
@@ -6343,7 +6365,7 @@
           paragraphs: [
             "Weather shows current conditions from your IP city, via Open-Meteo. Not GPS. Tracker uses the same city guess, plus session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
             "Paint has a brush, eraser, fill, shapes, a palette, undo, and save.",
-            "VLC is an in-OS player with Fight and Football. Not a redirect.",
+            "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect.",
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Open mail app prefills the subject “you're the man.”"
@@ -10585,10 +10607,11 @@
   }
 
 
-  // VLC — Fight / Football. Session-only. No localStorage.
+  // VLC — Fight / Football / Basketball. Session-only. No localStorage.
   const vlcTapes = [
     { id: "fight", title: "Fight", src: "/videos/fight.mp4" },
-    { id: "football", title: "Football", src: "/videos/football.mp4" }
+    { id: "football", title: "Football", src: "/videos/football.mp4" },
+    { id: "basketball", title: "Basketball", src: "/videos/Basketball.mp4", aw: 9, ah: 16 }
   ];
   const vlc = {
     id: "",
@@ -10648,6 +10671,29 @@
     if (stage) stage.classList.add("has-video");
   }
 
+  function vlcActiveTape() {
+    return vlcTapes.find(function (t) { return t.id === vlc.id; }) || null;
+  }
+
+  function vlcApplyAspect(opts) {
+    const stage = document.getElementById("vlcStage");
+    const v = vlcVideoEl();
+    const tape = vlcActiveTape();
+    if (!stage) return;
+    const preferTape = !!(opts && opts.preferTape);
+    const w = (!preferTape && v && v.videoWidth) || (tape && tape.aw) || 0;
+    const h = (!preferTape && v && v.videoHeight) || (tape && tape.ah) || 0;
+    if (w > 0 && h > 0) {
+      stage.style.setProperty("--vlc-aw", String(w));
+      stage.style.setProperty("--vlc-ah", String(h));
+      stage.classList.toggle("is-portrait", w / h < 0.92);
+    } else {
+      stage.style.setProperty("--vlc-aw", "1");
+      stage.style.setProperty("--vlc-ah", "1");
+      stage.classList.remove("is-portrait");
+    }
+  }
+
   function vlcLoad(tape, play) {
     const v = vlcVideoEl();
     if (!v || !tape) return;
@@ -10659,6 +10705,7 @@
       try { v.load(); } catch (eLoad) {}
     }
     vlcMarkStage();
+    vlcApplyAspect({ preferTape: !same });
     vlcApplyMute();
     if (play) {
       const p = v.play();
@@ -10680,6 +10727,7 @@
     const v = vlcVideoEl();
     if (vol && v) vol.value = String(v.volume);
     if (v && v.getAttribute("src")) vlcMarkStage();
+    vlcApplyAspect();
     vlcApplyMute();
     vlcUpdateTime();
   }
@@ -10753,7 +10801,10 @@
       v.addEventListener("play", function () { vlcApplyMute(); vlcSetPlayLabel(); });
       v.addEventListener("pause", vlcSetPlayLabel);
       v.addEventListener("ended", vlcSetPlayLabel);
-      v.addEventListener("loadedmetadata", vlcUpdateTime);
+      v.addEventListener("loadedmetadata", function () {
+        vlcApplyAspect();
+        vlcUpdateTime();
+      });
     }
     const tray = document.getElementById("traySpeaker");
     if (tray) tray.addEventListener("click", function () { vlcApplyMute(); });
