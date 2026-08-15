@@ -4015,8 +4015,7 @@
             <div><span>♦ ♦ ♦</span><b>12×</b></div>
             <div><span>3 same</span><b>6×</b></div>
             <div><span>two 7s</span><b>2×</b></div>
-            <div><span>any pair</span><b>1×</b></div>
-            <div class="slot-lines-note">One bet · 5 lines · pay each hit</div>
+            <div class="slot-lines-note">One bet · 5 lines · best award per line</div>
           </div>
           <div class="slot-bets">
             <button type="button" class="btn" data-slot-bet="5" aria-pressed="true">5</button>
@@ -5798,7 +5797,7 @@
             "Casino is a fake-chip toy. One bankroll across Blackjack, Slots, Roulette, Craps (pass line plus odds), and Baccarat (Player / Banker / Tie; banker even money).",
             "Blackjack sits on a rectangular green felt — dealer up top, you below, chips on the rail. Hit, stand, double, split on the same rank once (8+8 yes, 10+K no), and insurance when the dealer shows an ace (pays 2:1). Cards deal one at a time. After a hand, Rebet repeats the last bet size.",
             "Roulette is a real rectangular felt. Outside bets — red, black, odd, even, 1–18, 19–36, dozens, and column 2to1 — sit on the table. Stack chips on a spot; click again to add.",
-            "Craps rolls two dice in a glass dome. The dome shakes, the dice bounce, then they land on the roll. Pass line plus true odds after a point. Slots is a 3-row machine with five paylines. One bet covers every line; each hit pays and they add up. A line draws through a hit. Reels stop one at a time. Two 7s that miss 777 flash so-close — payouts stay the same. Baccarat sits on a rectangular felt with Player and Banker zones and a short road along the edge. Cards deal one at a time.",
+            "Craps rolls two dice in a glass dome. The dome shakes, the dice bounce, then they land on the roll. Pass line plus true odds after a point. Slots is a 3-row machine with five paylines. One bet covers every line; each hit pays its best award and they add up. A line draws through a hit. Reels stop one at a time. 777 pays 20×, three diamonds 12×, any other three-of-a-kind 6×, two 7s 2×. Other pairs do not pay. Two 7s that miss 777 flash so-close — that line still pays 2×. Baccarat sits on a rectangular felt with Player and Banker zones and a short road along the edge. Cards deal one at a time.",
             "You start at 1000 chips. A refresh resets them. One pile, every table. Tables have light motion and short beeps, mute from the tray speaker."
           ]
         },
@@ -8669,7 +8668,6 @@
     if (a.id === b.id && b.id === c.id) return a.id === "dia" ? bet * 12 : bet * 6;
     const sevens = [a, b, c].filter(s => s.id === "seven").length;
     if (sevens === 2) return bet * 2;
-    if (a.id === b.id || b.id === c.id || a.id === c.id) return bet;
     return 0;
   }
   function slotEval(grid, bet) {
@@ -8738,7 +8736,7 @@
           chipsGive(win);
           kitaOutcome(true, win - stake);
           kitaAnim(reels, jack ? "kita-win" : (near ? "kita-shake" : "kita-win"));
-          let msg = win === stake ? "Pair. Even." : ("+" + (win - stake));
+          let msg = "+" + (win - stake);
           if (ev.hits.length > 1) msg += " · " + ev.hits.length + " lines";
           if (near) msg += " · so close";
           if (slotMsg) slotMsg.textContent = msg;
