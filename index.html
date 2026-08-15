@@ -1485,6 +1485,9 @@
   .g2048-cell.v512 { background: rgba(180,140,255,.36); color: #d2b8ff; font-size: clamp(13px, 3.6vw, 22px); }
   .g2048-cell.v1024 { background: rgba(57,255,20,.42); color: #39ff14; font-size: clamp(12px, 3.2vw, 18px); }
   .g2048-cell.v2048 { background: #39ff14; color: #041204; font-size: clamp(12px, 3.2vw, 18px); box-shadow: 0 0 16px rgba(57,255,20,.45); }
+  .g2048-cell.vbig { background: #39ff14; color: #041204; font-size: clamp(11px, 2.8vw, 16px); box-shadow: 0 0 18px rgba(57,255,20,.55); }
+  .g2048-cell.v4096 { filter: brightness(1.08); }
+  .g2048-cell.v8192 { filter: brightness(1.16); }
 
   /* Chess */
   #win-chess {
@@ -5457,11 +5460,15 @@
         termPrint(on ? "rain on." : "rain off.");
       }
     } else if (cmd === "snow") {
-      if (!snowing) {
-        termPrint("snow is already off.");
-      } else {
+      if (snowing) {
+        snowWanted = false;
         stopSnow();
         termPrint("snow stopped.");
+      } else {
+        snowWanted = true;
+        stopMatrix();
+        const on = startSnow();
+        termPrint(on ? "snow on." : "snow stays off.");
       }
     } else if (cmd === "aura") {
       auraActive = !auraActive;
@@ -6036,6 +6043,7 @@
     matrixCols = [];
     if (matrixCanvas) matrixCanvas.style.display = "none";
     if (matrixCtx) matrixCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    if (snowWanted && !snowing) startSnow();
   }
 
   window.addEventListener("resize", () => {
@@ -6159,6 +6167,8 @@
       a: 0.35 + Math.random() * 0.45
     };
   }
+
+  let snowWanted = true;
 
   function startSnow() {
     if (!snowCanvas || snowing) return false;
@@ -6299,7 +6309,7 @@
           title: "Desktop",
           paragraphs: [
             "This website is a fake desktop. Start, bottom left, lists apps with their icons. The clock, bottom right, is your local time. No seconds.",
-            "Icons sit in two columns. They snap to that grid and cannot stack. Rotate keeps the two-column layout.",
+            "Icons sit in two columns. They snap to that grid and cannot stack. A short window adds a column so the last icon stays above the taskbar. Rotate keeps that layout.",
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
             "Designed for the computer, but it works on mobile too.",
@@ -6319,7 +6329,7 @@
           title: "Apps",
           paragraphs: [
             "Weather shows current conditions from your IP city, via Open-Meteo. Not GPS. Tracker uses the same city guess, plus session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
-            "Paint has a brush, eraser, fill, shapes, a palette, undo, and save.",
+            "Paint has a brush, eraser, fill, shapes, a palette, undo, and save. Resize keeps the picture and undo.",
             "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
@@ -6329,7 +6339,7 @@
         {
           title: "Games",
           paragraphs: [
-            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, and 2048. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best."
+            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, and 2048. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome."
           ]
         },
         {
@@ -6346,7 +6356,7 @@
           title: "Terminal",
           paragraphs: [
             "Open Terminal and type help, then press Run. Help lists commands and app names. Type an app name to open it. vlc opens the player (folder-level app).",
-            "games and casino open those folders. Not the inner games. snow turns the snow off. matrix toggles the rain. Konami still unlocks VIP.",
+            "games and casino open those folders. Not the inner games. snow toggles the snow. matrix toggles the rain. Matrix off puts snow back unless you already stopped it. Konami still unlocks VIP.",
             "scan drops a short Kita AV banner, walks fake paths, and may find a threat or two. coinflip shows a coin, then heads or tails.",
             "The placeholder is try: help. There is no email command."
           ]
@@ -6354,7 +6364,7 @@
         {
           title: "Secrets",
           paragraphs: [
-            "Snow is on by default. Type snow in Terminal to stop it. Type matrix to toggle the Matrix rain. Konami still unlocks VIP. You can still see the desktop through it.",
+            "Snow is on by default. Type snow in Terminal to toggle it. Type matrix to toggle the Matrix rain. Matrix off puts snow back unless you already stopped it. Konami still unlocks VIP. You can still see the desktop through it.",
             "A golden snitch shows up every 120 seconds, on screen for 5 seconds. Catch it for +47 winning and +500 casino chips.",
             "Konami: up, up, down, down, left, right, left, right, B, A. That opens a VIP box and starts the Matrix rain. matrix only toggles the rain.",
             "Refresh starts a new session. Nothing important is saved."
@@ -6731,13 +6741,6 @@
         let tapHandled = false;
         function msAct() {
           if (!msAlive) return;
-          if (!msStarted) {
-            msPlaceMines(x, y);
-            msStarted = true;
-          }
-          if (!msTimerId) {
-            msTimerId = setInterval(() => { msTimer++; msUpdateStatus(); }, 1000);
-          }
           if (msFlagMode) msToggleFlag(cell);
           else msReveal(cell);
         }
@@ -6760,13 +6763,6 @@
               pressTimer = 0;
               longPressed = true;
               tapHandled = true;
-              if (!msStarted) {
-                msPlaceMines(x, y);
-                msStarted = true;
-              }
-              if (!msTimerId) {
-                msTimerId = setInterval(() => { msTimer++; msUpdateStatus(); }, 1000);
-              }
               msToggleFlag(cell);
             }, 420);
           }
@@ -6827,13 +6823,21 @@
 
   function snPlaceFood() {
     const taken = new Set(snSnake.map(p => p.x + "," + p.y));
-    let x, y, guard = 0;
-    do {
-      x = Math.floor(Math.random() * SN_COLS);
-      y = Math.floor(Math.random() * SN_ROWS);
-      guard++;
-    } while (taken.has(x + "," + y) && guard < 400);
-    snFood = { x, y };
+    const empty = [];
+    for (let y = 0; y < SN_ROWS; y++) {
+      for (let x = 0; x < SN_COLS; x++) {
+        if (!taken.has(x + "," + y)) empty.push({ x: x, y: y });
+      }
+    }
+    if (!empty.length) {
+      snFood = { x: -1, y: -1 };
+      snAlive = false;
+      snStop();
+      snUpdateStatus();
+      showToast("Board full. Score " + snScore);
+      return;
+    }
+    snFood = empty[Math.floor(Math.random() * empty.length)];
   }
 
   function snDraw() {
@@ -6877,11 +6881,13 @@
     if (nx < 0 || ny < 0 || nx >= SN_COLS || ny >= SN_ROWS) {
       snAlive = false; snStop(); snUpdateStatus(); showToast("Snake crashed. Score " + snScore); return;
     }
-    if (snSnake.some(p => p.x === nx && p.y === ny)) {
+    const willEat = nx === snFood.x && ny === snFood.y;
+    const body = willEat ? snSnake : snSnake.slice(0, -1);
+    if (body.some(p => p.x === nx && p.y === ny)) {
       snAlive = false; snStop(); snUpdateStatus(); showToast("Snake crashed. Score " + snScore); return;
     }
     snSnake.unshift({ x: nx, y: ny });
-    if (nx === snFood.x && ny === snFood.y) {
+    if (willEat) {
       snScore += 1;
       snPlaceFood();
     } else {
@@ -8659,7 +8665,7 @@
         const v = g2048.grid[y][x];
         const el = cells[y * 4 + x];
         el.textContent = v ? String(v) : "";
-        el.className = "g2048-cell" + (v ? " v" + Math.min(v, 2048) : "");
+        el.className = "g2048-cell" + (v ? " v" + v + (v > 2048 ? " vbig" : "") : "");
       }
     }
     g2048UpdateStatus();
@@ -10551,8 +10557,11 @@
       });
     }
     if (seek) {
+      function vlcSeekEnd() { vlc.seeking = false; }
       seek.addEventListener("pointerdown", function () { vlc.seeking = true; });
-      seek.addEventListener("pointerup", function () { vlc.seeking = false; });
+      seek.addEventListener("pointerup", vlcSeekEnd);
+      seek.addEventListener("pointercancel", vlcSeekEnd);
+      seek.addEventListener("change", vlcSeekEnd);
       seek.addEventListener("input", function () {
         if (!v || !isFinite(v.duration) || !v.duration) return;
         v.currentTime = (Number(seek.value) / 1000) * v.duration;
@@ -10671,15 +10680,36 @@
     if (paint.fitted && paintCanvas.width === w && paintCanvas.height === h) return;
     let prev = null;
     if (paint.fitted && paintCanvas.width && paintCanvas.height) {
-      try { prev = paintCtx.getImageData(0, 0, paintCanvas.width, paintCanvas.height); }
-      catch (_) { prev = null; }
+      try {
+        const tmp = document.createElement("canvas");
+        tmp.width = paintCanvas.width;
+        tmp.height = paintCanvas.height;
+        tmp.getContext("2d").drawImage(paintCanvas, 0, 0);
+        prev = tmp;
+      } catch (_) { prev = null; }
     }
+    const oldUndo = paint.undo;
     paintCanvas.width = w;
     paintCanvas.height = h;
     paintFillPaper();
-    if (prev) paintCtx.putImageData(prev, 0, 0);
+    if (prev) paintCtx.drawImage(prev, 0, 0, w, h);
     paint.fitted = true;
-    paint.undo = null;
+    if (oldUndo && (oldUndo.width !== w || oldUndo.height !== h)) {
+      try {
+        const u = document.createElement("canvas");
+        u.width = oldUndo.width;
+        u.height = oldUndo.height;
+        u.getContext("2d").putImageData(oldUndo, 0, 0);
+        const scaled = document.createElement("canvas");
+        scaled.width = w;
+        scaled.height = h;
+        const sctx = scaled.getContext("2d");
+        sctx.fillStyle = paintPaper;
+        sctx.fillRect(0, 0, w, h);
+        sctx.drawImage(u, 0, 0, w, h);
+        paint.undo = sctx.getImageData(0, 0, w, h);
+      } catch (_) { paint.undo = null; }
+    }
   }
 
   function onPaintWindowOpen() {
@@ -11152,10 +11182,10 @@
     const tb = taskbarHeight();
     const usableW = Math.max(tileW, window.innerWidth - padX * 2);
     const usableH = Math.max(tileH, window.innerHeight - padY - tb - 4);
-    const cols = 2;
     const fitRows = Math.max(1, Math.floor((usableH + gapY) / cellH));
-    const need = Math.max(1, Math.ceil(icons.length / cols));
-    const rows = Math.max(fitRows, need);
+    const need = Math.max(1, Math.ceil(icons.length / 2));
+    const cols = need > fitRows ? Math.max(2, Math.ceil(icons.length / fitRows)) : 2;
+    const rows = fitRows;
     return { tileW, tileH, gapX, gapY, padX, padY, cellW, cellH, cols, rows, fitRows, usableW, usableH };
   }
 
