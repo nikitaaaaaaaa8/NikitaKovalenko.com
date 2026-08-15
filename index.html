@@ -2171,13 +2171,21 @@
     height: 148px;
     border-radius: 50%;
     border: 6px solid #163816;
+    background: #0a140a;
+    box-shadow: 0 0 0 3px rgba(57,255,20,.45), inset 0 0 18px #000;
+    position: relative;
+    flex: 0 0 auto;
+    overflow: hidden;
+  }
+  .rl-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
     background: repeating-conic-gradient(
       #c62828 0 4.86deg,
       #141414 4.86deg 9.73deg
     );
-    box-shadow: 0 0 0 3px rgba(57,255,20,.45), inset 0 0 18px #000;
-    position: relative;
-    flex: 0 0 auto;
+    z-index: 0;
   }
   .rl-wheel::before {
     content: "";
@@ -4040,6 +4048,7 @@
         <p class="muted casino-fun">for fun</p>
         <div class="rl-wheel-wrap">
           <div class="rl-wheel" id="rlWheel">
+            <div class="rl-ring" id="rlRing"></div>
             <div class="rl-ball" id="rlBall"></div>
             <div class="rl-hub" id="rlHub">0</div>
           </div>
@@ -8758,6 +8767,7 @@
   const rlResult = document.getElementById("rlResult");
   const rlHub = document.getElementById("rlHub");
   const rlWheel = document.getElementById("rlWheel");
+  const rlRing = document.getElementById("rlRing");
   const rlSpinBtn = document.getElementById("rlSpin");
   let rlBetAmt = 10;
   let rlStack = Object.create(null);
@@ -8902,11 +8912,13 @@
     const n = Math.floor(Math.random() * 37);
     const idx = RL_ORDER.indexOf(n);
     const pocket = 360 / 37;
-    const extra = 360 * 3 + idx * pocket;
+    const land = -((idx + 0.5) * pocket);
+    let extra = land - ((rlAngle % 360) + 360) % 360;
+    while (extra < 360 * 3) extra += 360;
     rlAngle += extra;
-    if (rlWheel) {
-      rlWheel.style.transition = "transform 1.45s cubic-bezier(.12,.72,.16,1)";
-      rlWheel.style.transform = "rotate(" + rlAngle + "deg)";
+    if (rlRing) {
+      rlRing.style.transition = "transform 1.45s cubic-bezier(.12,.72,.16,1)";
+      rlRing.style.transform = "rotate(" + rlAngle + "deg)";
     }
     if (rlMsg) rlMsg.textContent = "Spinning…";
     kitaWhoosh();
@@ -8945,6 +8957,18 @@
       chipsUpdate();
     }, 1500);
   }
+  function rlPaintRing() {
+    if (!rlRing) return;
+    const pocket = 360 / 37;
+    const stops = [];
+    for (let i = 0; i < RL_ORDER.length; i++) {
+      const num = RL_ORDER[i];
+      const col = num === 0 ? "#1b7a1b" : (RL_RED[num] ? "#c62828" : "#141414");
+      stops.push(col + " " + (i * pocket) + "deg " + ((i + 1) * pocket) + "deg");
+    }
+    rlRing.style.background = "conic-gradient(" + stops.join(",") + ")";
+  }
+  rlPaintRing();
   rlBuild();
   document.querySelectorAll("[data-rl-out]").forEach(btn => {
     btn.addEventListener("click", () => rlAdd(btn.getAttribute("data-rl-out"), null));
