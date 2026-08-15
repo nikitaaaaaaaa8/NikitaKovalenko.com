@@ -17,7 +17,10 @@
     var teslaToken, qtOk, uad, brands, i, linuxChrome, notPhone, sw, sh, iw, ih, maxW, minDim, touch, dims;
     try {
       p = new URLSearchParams(location.search || "");
-      if (p.has("tesla") && p.get("tesla") === "0") return false;
+      if (p.has("tesla") && p.get("tesla") === "0") {
+        try { sessionStorage.removeItem("kitaTesla"); } catch (errT) {}
+        return false;
+      }
       if (p.has("tesla")) { rememberTesla(); return true; }
     } catch (e0) {}
     try {
@@ -4772,7 +4775,10 @@
     var teslaToken, qtOk, uad, brands, i, linuxChrome, notPhone, sw, sh, iw, ih, maxW, minDim, touch, dims;
     try {
       p = new URLSearchParams(location.search || "");
-      if (p.has("tesla") && p.get("tesla") === "0") return false;
+      if (p.has("tesla") && p.get("tesla") === "0") {
+        try { sessionStorage.removeItem("kitaTesla"); } catch (errT) {}
+        return false;
+      }
       if (p.has("tesla")) { rememberTesla(); return true; }
     } catch (e0) {}
     try {
@@ -5183,6 +5189,14 @@
     el.classList.remove("open", "active");
     if (typeof onGameWindowClose === "function") onGameWindowClose(name);
     if (name === "vlc") vlcOnClose();
+    let topName = null, topZ = -1;
+    Object.keys(windows).forEach(function (n) {
+      const w = windows[n];
+      if (!w || !w.classList.contains("open")) return;
+      const zNow = parseInt(w.style.zIndex, 10) || 0;
+      if (zNow >= topZ) { topZ = zNow; topName = n; }
+    });
+    if (topName) focusWindow(topName);
   }
 
   let audioMuted = false;
@@ -5354,7 +5368,7 @@
 
     if (cmd === "help") {
       termPrint("commands: help, whoami, winning, clear, sudo, date, kita, scan, confess, coinflip, matrix, aura, snow");
-      termPrint("apps: about, tracker, contact, drone, games, casino, trash, bookshelf, weather, paint, vlc");
+      termPrint("apps: about, tracker, contact, drone, games, casino, trash, bookshelf, weather, paint, vlc, terminal");
     } else if (cmd === "whoami") {
       termPrint("guest@nikitakovalenko.com // temporary main character");
     } else if (cmd === "winning") {
@@ -5786,7 +5800,7 @@
 
   function desktopResizeBounds() {
     const margin = 8;
-    const taskbar = 40;
+    const taskbar = taskbarHeight();
     return {
       minX: margin,
       minY: margin,
@@ -6313,7 +6327,7 @@
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
             "Designed for the computer, but it works on mobile too.",
-            "The desktop auto-detects the Tesla car browser and uses bigger icons and buttons. ?tesla still forces that layout. Phone and computer layouts stay the same."
+            "The desktop auto-detects the Tesla car browser and uses bigger icons and buttons. ?tesla forces that layout. ?tesla=0 clears it for this tab. Phone and computer layouts stay the same."
           ]
         },
         {
@@ -6321,7 +6335,7 @@
           paragraphs: [
             "Click an icon to open a window. Drag the title bar to move it. The yellow and red dots close the window. In a Tesla those close dots are larger.",
             "On a desktop, not a phone, drag the edges or corners to resize.",
-            "On a computer, About opens centered. On a phone it opens full-width at the top. Later windows try not to sit on top of one already open, and they stay above the taskbar. On a phone, rotate keeps windows where they are; they do not restack.",
+            "On a computer, About opens centered. On a phone it opens full-width at the top. Later windows try not to sit on top of one already open, and they stay above the taskbar. Close hands focus to the window on top. On a phone, rotate keeps windows where they are; they do not restack.",
             "Pointer cursor on clickable controls: close, buttons. Grab and drag cursor on title bars. The tray speaker mutes audio for this visit."
           ]
         },
@@ -6339,7 +6353,7 @@
         {
           title: "Games",
           paragraphs: [
-            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, and 2048. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome."
+            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, and 2048. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome."
           ]
         },
         {
@@ -6347,7 +6361,7 @@
           paragraphs: [
             "Casino is a fake-chip toy. One bankroll across Blackjack, Slots, Roulette, Craps (pass line plus odds), and Baccarat (Player / Banker / Tie; banker even money).",
             "Blackjack sits on a rectangular green felt — dealer up top, you below, chips on the rail. Hit, stand, double, split on the same rank once (8+8 yes, 10+K no), and insurance when the dealer shows an ace (pays 2:1). Cards deal one at a time. After a hand, Rebet repeats the last bet size.",
-            "Roulette is a real rectangular felt, 3 numbers across and 12 down (plus 0). Outside bets — red, black, odd, even, 1–18, 19–36, dozens, and column 2to1 — sit on the table. Stack chips on a spot; click again to add.",
+            "Roulette is a real rectangular felt, 12 numbers across and 3 down (plus 0). Outside bets — red, black, odd, even, 1–18, 19–36, dozens, and column 2to1 — sit on the table. Stack chips on a spot; click again to add.",
             "Craps rolls two dice in a glass dome. The dome shakes, the dice bounce, then they land on the roll. Pass line plus true odds after a point. Slots is a 3-row machine with five paylines. One bet covers every line; each hit pays its best award and they add up. A line draws through a hit. Reels stop one at a time. 777 pays 20×, three diamonds 12×, any other three-of-a-kind 6×, two 7s 2×. Other pairs do not pay. Two 7s that miss 777 flash so-close — that line still pays 2×. Baccarat sits on the same green felt as Blackjack, with Player and Banker zones and a short road along the edge. Cards deal one at a time.",
             "You start at 1000 chips. A refresh resets them. One pile, every table. Tables have light motion and short beeps, mute from the tray speaker."
           ]
@@ -6355,7 +6369,7 @@
         {
           title: "Terminal",
           paragraphs: [
-            "Open Terminal and type help, then press Run. Help lists commands and app names. Type an app name to open it. vlc opens the player (folder-level app).",
+            "Open Terminal and type help, then press Run. Help lists commands and app names, including terminal. Type an app name to open it. vlc opens the player (folder-level app).",
             "games and casino open those folders. Not the inner games. snow toggles the snow. matrix toggles the rain. Matrix off puts snow back unless you already stopped it. Konami still unlocks VIP.",
             "scan drops a short Kita AV banner, walks fake paths, and may find a threat or two. coinflip shows a coin, then heads or tails.",
             "The placeholder is try: help. There is no email command."
@@ -8270,7 +8284,6 @@
 
   if (chessBoardEl) {
     chessBoardEl.addEventListener("click", chessOnClick);
-    chessBoardEl.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
   }
   const chessNewBtn = document.getElementById("chessNew");
   if (chessNewBtn) chessNewBtn.addEventListener("click", function () { chessNewGame(true); });
@@ -8596,7 +8609,6 @@
 
   if (pipesBoardEl) {
     pipesBoardEl.addEventListener("click", pipesOnClick);
-    pipesBoardEl.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
   }
   const pipesNewBtn = document.getElementById("pipesNew");
   if (pipesNewBtn) pipesNewBtn.addEventListener("click", function () { pipesNewGame(true); });
@@ -8765,7 +8777,6 @@
   let g2048Swipe = null;
   if (g2048BoardEl) {
     g2048BoardEl.addEventListener("pointerdown", function (e) {
-      e.stopPropagation();
       g2048Swipe = { x: e.clientX, y: e.clientY, id: e.pointerId };
       try { g2048BoardEl.setPointerCapture(e.pointerId); } catch (errCap) {}
     });
@@ -10289,6 +10300,10 @@
     if (name === "snake") snStop();
     if (name === "tetris") tStop();
     if (name === "solitaire") solKillGhost();
+    if (name === "chess") {
+      chessAiGen += 1;
+      chess.busy = false;
+    }
   }
 
 
