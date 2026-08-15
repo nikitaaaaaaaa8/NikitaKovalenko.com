@@ -411,6 +411,21 @@
     flex: 1 1 auto;
   }
 
+  #win-vlc.user-sized {
+    max-width: none;
+    max-height: none;
+  }
+  #win-vlc.user-sized > .content.vlc-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+  #win-vlc.user-sized .vlc-stage {
+    height: auto;
+    min-height: 120px;
+    flex: 1 1 auto;
+  }
+
   .titlebar {
     display: flex;
     align-items: center;
@@ -2723,6 +2738,254 @@
     margin-left: auto;
   }
 
+  /* VLC player */
+  #win-vlc {
+    max-width: min(760px, calc(100vw - 24px));
+  }
+  #win-vlc .content.vlc-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #121212;
+    color: #e8e4dc;
+  }
+  .vlc-win-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .vlc-cone-mark {
+    width: 16px;
+    height: 16px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 16px;
+  }
+  .vlc-cone-mark svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+    overflow: visible;
+  }
+  .vlc-body {
+    display: flex;
+    min-height: 280px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .vlc-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .vlc-stage {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 220px;
+    height: 280px;
+    background:
+      radial-gradient(ellipse at 50% 42%, #2a2118 0%, #121212 62%, #0a0a0a 100%);
+    overflow: hidden;
+  }
+  .vlc-stage video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+  }
+  .vlc-empty {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    pointer-events: none;
+    text-align: center;
+    padding: 16px;
+    background:
+      radial-gradient(ellipse at 50% 42%, #2a2118 0%, #121212 62%, #0a0a0a 100%);
+  }
+  .vlc-stage.has-video .vlc-empty { display: none; }
+  .vlc-stage:not(.has-video) video {
+    visibility: hidden;
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+  .vlc-empty-cone {
+    width: 72px;
+    height: 72px;
+    opacity: .92;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,.45));
+  }
+  .vlc-empty-cone svg {
+    width: 72px;
+    height: 72px;
+    display: block;
+  }
+  .vlc-drop {
+    margin: 0;
+    color: #c4b49a;
+    font-size: 13px;
+    letter-spacing: .04em;
+  }
+  .vlc-parked {
+    display: none;
+    margin: 0;
+    color: #f0a24a;
+    font-size: 12px;
+  }
+  html.tesla .vlc-parked { display: block; }
+  .vlc-playlist {
+    flex: 0 0 168px;
+    width: 168px;
+    background: #1a1a1a;
+    border-left: 1px solid #2c2c2c;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .vlc-pl-head {
+    padding: 10px 12px 8px;
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #8a8070;
+    border-bottom: 1px solid #2c2c2c;
+  }
+  .vlc-pl-list {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .vlc-row {
+    appearance: none;
+    width: 100%;
+    text-align: left;
+    border: 1px solid #2e2e2e;
+    background: #161616;
+    color: #e8e4dc;
+    border-radius: 8px;
+    padding: 10px 10px;
+    min-height: 48px;
+    cursor: pointer;
+    font: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .vlc-row:hover { border-color: #f27c00; background: #221a12; }
+  .vlc-row.active {
+    border-color: #f27c00;
+    background: #2a1c10;
+    box-shadow: inset 0 0 0 1px rgba(242,124,0,.35);
+  }
+  .vlc-row-title { font-size: 13px; color: #f3efe6; }
+  .vlc-row-sub { font-size: 11px; color: #8a8070; }
+  .vlc-chrome {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: linear-gradient(180deg, #2a2a2a, #141414);
+    border-top: 1px solid #3a3a3a;
+  }
+  .vlc-play {
+    appearance: none;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border-radius: 10px;
+    border: 1px solid #f27c00;
+    background: #2a1808;
+    color: #ffb14a;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font: inherit;
+  }
+  .vlc-play svg { width: 20px; height: 20px; display: block; }
+  .vlc-play:hover { background: #3a220c; }
+  .vlc-play:disabled {
+    opacity: .4;
+    cursor: default;
+    border-color: #555;
+    color: #888;
+    background: #1a1a1a;
+  }
+  .vlc-times {
+    flex: 0 0 auto;
+    font-size: 11px;
+    color: #c4b49a;
+    min-width: 78px;
+    letter-spacing: .02em;
+  }
+  .vlc-seek,
+  .vlc-vol {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    height: 28px;
+    margin: 0;
+    min-width: 0;
+  }
+  .vlc-seek { flex: 1 1 auto; }
+  .vlc-vol { flex: 0 0 88px; width: 88px; }
+  .vlc-seek:disabled,
+  .vlc-vol:disabled { opacity: .4; }
+  .vlc-seek::-webkit-slider-runnable-track,
+  .vlc-vol::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 999px;
+    background: #3a3a3a;
+  }
+  .vlc-seek::-moz-range-track,
+  .vlc-vol::-moz-range-track {
+    height: 6px;
+    border-radius: 999px;
+    background: #3a3a3a;
+    border: 0;
+  }
+  .vlc-seek::-webkit-slider-thumb,
+  .vlc-vol::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    margin-top: -6px;
+    border-radius: 50%;
+    background: #f27c00;
+    border: 0;
+    box-shadow: 0 0 0 2px #1a1a1a;
+  }
+  .vlc-seek::-moz-range-thumb,
+  .vlc-vol::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #f27c00;
+    border: 0;
+  }
+  .vlc-vol-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 0 auto;
+    color: #c4b49a;
+  }
+  .vlc-vol-wrap svg { width: 18px; height: 18px; display: block; flex: 0 0 18px; }
+
 
   @media (max-width: 700px) {
     .ms-board { grid-template-columns: repeat(9, 26px); }
@@ -3003,6 +3266,50 @@
     }
     .paint-actions { margin-left: 0; }
 
+    #win-vlc.window.open {
+      max-height: calc(100dvh - 44px);
+    }
+    #win-vlc .content.vlc-content {
+      max-height: none;
+      overflow: hidden;
+    }
+    #win-vlc .vlc-body {
+      flex-direction: column;
+      min-height: 0;
+      flex: 1 1 auto;
+    }
+    #win-vlc .vlc-stage {
+      min-height: 160px;
+      height: min(38vh, 240px);
+      flex: 1 1 auto;
+    }
+    #win-vlc .vlc-playlist {
+      flex: 0 0 auto;
+      width: auto;
+      border-left: 0;
+      border-top: 1px solid #2c2c2c;
+    }
+    #win-vlc .vlc-pl-list {
+      flex-direction: row;
+      overflow: auto;
+    }
+    #win-vlc .vlc-row {
+      min-width: 140px;
+      min-height: 52px;
+    }
+    #win-vlc .vlc-chrome {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    #win-vlc .vlc-play {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      min-height: 48px;
+    }
+    #win-vlc .vlc-seek,
+    #win-vlc .vlc-vol { height: 32px; }
+    #win-vlc .vlc-vol { flex-basis: 110px; width: 110px; }
 
     #win-solitaire.window.open,
     #win-chess.window.open,
@@ -3314,6 +3621,24 @@
   html.tesla .slot-sym.sd { font-size: 30px; }
   html.tesla .slot-table { font-size: 12px; }
   html.tesla #slotSpin { min-height: 52px; min-width: 110px; font-size: 16px; }
+  html.tesla #win-vlc {
+    max-width: min(760px, calc(100vw - 24px));
+  }
+  html.tesla .vlc-row {
+    min-height: 56px;
+    font-size: 15px;
+    padding: 12px;
+  }
+  html.tesla .vlc-play {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    min-height: 56px;
+  }
+  html.tesla .vlc-seek,
+  html.tesla .vlc-vol { height: 36px; }
+  html.tesla .vlc-drop { font-size: 15px; }
+  html.tesla .vlc-parked { font-size: 14px; }
 </style>
 </head>
 <body>
@@ -3372,6 +3697,10 @@
       <div class="icon" id="icon-casino" tabindex="0" data-open="casino" aria-label="Casino">
         <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.4" y="7" width="8.8" height="12.2" rx="1.3" transform="rotate(-14 7.8 13.1)"/><rect x="10.6" y="5.2" width="8.8" height="12.2" rx="1.3"/><path d="M15 9.15c-.75-.95-2.15.12-1.38 1.22L15 12.15l1.38-1.78c.77-1.1-.63-2.17-1.38-1.22z" fill="currentColor" stroke="none"/><circle cx="8.1" cy="19.15" r="2.05"/><circle cx="8.1" cy="19.15" r="1.05" opacity=".5"/><circle cx="19.1" cy="18.4" r="1.55" opacity=".75"/></svg></div>
         <div class="label">Casino</div>
+      </div>
+      <div class="icon" id="icon-vlc" tabindex="0" data-open="vlc" aria-label="VLC">
+        <div class="glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#e86a00" d="M3.6 20.15h16.8c.55 0 .85-.62.52-1.08L13.15 3.7c-.48-.8-1.82-.8-2.3 0L3.08 19.07c-.33.46-.03 1.08.52 1.08z"/><path fill="#f4efe6" d="M8.05 14.05h7.9l.95 2.55H7.1z"/><path fill="#f4efe6" d="M9.5 9.35h5l.8 2.2H8.7z"/><path fill="#c45500" d="M3.15 19.55h17.7c.48 0 .78.55.5 1l-.45.7H3.1l-.45-.7c-.28-.45.02-1 .5-1z"/><path fill="#ffb14a" opacity=".55" d="M11.15 4.55h1.7l.4 1.25h-2.5z"/></svg></div>
+        <div class="label">VLC</div>
       </div>
     </div>
 
@@ -3917,6 +4246,45 @@
       </div>
     </section>
 
+    <section class="window" id="win-vlc" style="top:56px; left:130px; width:720px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="vlc"></div>
+          <div class="dot min" data-close="vlc"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title vlc-win-title"><span class="vlc-cone-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#e86a00" d="M3.6 20.15h16.8c.55 0 .85-.62.52-1.08L13.15 3.7c-.48-.8-1.82-.8-2.3 0L3.08 19.07c-.33.46-.03 1.08.52 1.08z"/><path fill="#f4efe6" d="M8.05 14.05h7.9l.95 2.55H7.1z"/><path fill="#f4efe6" d="M9.5 9.35h5l.8 2.2H8.7z"/><path fill="#c45500" d="M3.15 19.55h17.7c.48 0 .78.55.5 1l-.45.7H3.1l-.45-.7c-.28-.45.02-1 .5-1z"/><path fill="#ffb14a" opacity=".55" d="M11.15 4.55h1.7l.4 1.25h-2.5z"/></svg></span>VLC media player</div>
+      </div>
+      <div class="content vlc-content">
+        <div class="vlc-body">
+          <div class="vlc-main">
+            <div class="vlc-stage" id="vlcStage">
+              <div class="vlc-empty" id="vlcEmpty">
+                <div class="vlc-empty-cone"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#e86a00" d="M3.6 20.15h16.8c.55 0 .85-.62.52-1.08L13.15 3.7c-.48-.8-1.82-.8-2.3 0L3.08 19.07c-.33.46-.03 1.08.52 1.08z"/><path fill="#f4efe6" d="M8.05 14.05h7.9l.95 2.55H7.1z"/><path fill="#f4efe6" d="M9.5 9.35h5l.8 2.2H8.7z"/><path fill="#c45500" d="M3.15 19.55h17.7c.48 0 .78.55.5 1l-.45.7H3.1l-.45-.7c-.28-.45.02-1 .5-1z"/><path fill="#ffb14a" opacity=".55" d="M11.15 4.55h1.7l.4 1.25h-2.5z"/></svg></div>
+                <p class="vlc-drop">Drop tapes later</p>
+                <p class="vlc-parked">Tapes play when parked.</p>
+              </div>
+            </div>
+          </div>
+          <aside class="vlc-playlist" aria-label="Playlist">
+            <div class="vlc-pl-head">Playlist</div>
+            <div class="vlc-pl-list" id="vlcPlaylist"></div>
+          </aside>
+        </div>
+        <div class="vlc-chrome">
+          <button type="button" class="vlc-play" id="vlcPlay" aria-label="Play" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.8v12.4L18.4 12z" fill="currentColor"/></svg>
+          </button>
+          <div class="vlc-times" id="vlcTime">0:00 / 0:00</div>
+          <input type="range" class="vlc-seek" id="vlcSeek" min="0" max="1000" value="0" step="1" disabled aria-label="Seek">
+          <div class="vlc-vol-wrap" title="Volume">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.2h3.6l4.6-3.6v13l-4.6-3.6H4z" fill="currentColor"/><path d="M16.2 8.4c1.5 1.3 1.5 5.9 0 7.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <input type="range" class="vlc-vol" id="vlcVol" min="0" max="100" value="80" step="1" aria-label="Volume">
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="window" id="win-blackjack" style="top:52px; left:110px; width:520px;">
       <div class="titlebar" data-drag>
         <div class="dots">
@@ -4211,6 +4579,7 @@
       <button type="button" data-open="bookshelf">Bookshelf</button>
       <button type="button" data-open="weather">Weather</button>
       <button type="button" data-open="paint">Paint</button>
+      <button type="button" data-open="vlc">VLC</button>
       <button type="button" data-open="drone">DroneStuff</button>
       <button type="button" data-open="trash">Trash</button>
     </div>
@@ -4337,6 +4706,7 @@
     pipes: document.getElementById("win-pipes"),
     weather: document.getElementById("win-weather"),
     paint: document.getElementById("win-paint"),
+    vlc: document.getElementById("win-vlc"),
     casino: document.getElementById("win-casino"),
     blackjack: document.getElementById("win-blackjack"),
     slots: document.getElementById("win-slots"),
@@ -4519,6 +4889,7 @@
     if (name === "stats") ensureApproxLocation();
     if (typeof onGameWindowOpen === "function") onGameWindowOpen(name);
     if (name === "paint") onPaintWindowOpen();
+    if (name === "vlc") vlcOnOpen();
   }
 
   let geoPromise = null;
@@ -4647,6 +5018,7 @@
     if (!el) return;
     el.classList.remove("open", "active");
     if (typeof onGameWindowClose === "function") onGameWindowClose(name);
+    if (name === "vlc") vlcOnClose();
   }
 
   let audioMuted = false;
@@ -4663,6 +5035,7 @@
     btn.setAttribute("aria-label", audioMuted ? "Unmute sound" : "Mute sound");
     btn.title = audioMuted ? "Unmute" : "Mute";
     if (!audioMuted) kitaACGet();
+    vlcApplyMute();
   }
 
   let kitaAC = null;
@@ -4817,7 +5190,7 @@
 
     if (cmd === "help") {
       termPrint("commands: help, whoami, winning, clear, sudo, date, kita, scan, confess, coinflip, matrix, aura, snow");
-      termPrint("apps: about, tracker, contact, drone, games, casino, trash, bookshelf, weather, paint");
+      termPrint("apps: about, tracker, contact, drone, games, casino, trash, bookshelf, weather, paint, vlc");
     } else if (cmd === "whoami") {
       termPrint("guest@nikitakovalenko.com // temporary main character");
     } else if (cmd === "winning") {
@@ -4961,7 +5334,9 @@
         bookshelf: "bookshelf",
         books: "bookshelf",
         weather: "weather",
-        paint: "paint"
+        paint: "paint",
+        vlc: "vlc",
+        videos: "vlc"
       };
       let launch = cmd;
       if (launch.indexOf("open ") === 0) launch = launch.slice(5).trim();
@@ -5226,6 +5601,7 @@
 
   function windowMinSize(win) {
     if (win && win.id === "win-paint") return { minW: 420, minH: 320 };
+    if (win && win.id === "win-vlc") return { minW: 360, minH: 280 };
     if (win && win.id === "win-solitaire") return { minW: 360, minH: 280 };
     if (win && win.id === "win-chess") return { minW: 300, minH: 360 };
     if (win && win.id === "win-pipes") return { minW: 300, minH: 360 };
@@ -5781,6 +6157,7 @@
           paragraphs: [
             "Weather shows current conditions from your IP city, via Open-Meteo. Not GPS. Tracker uses the same city guess, plus session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
             "Paint has a brush, eraser, fill, shapes, a palette, undo, and save.",
+            "VLC is a player for fight and soccer tapes. The playlist stays empty until those files are on the machine.",
             "DroneStuff is an in-OS gallery of aerials, not a redirect. Click a shot for the lightbox.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Open mail app prefills the subject “you're the man.”"
@@ -9478,6 +9855,257 @@
     if (name === "tetris") tStop();
     if (name === "solitaire") solKillGhost();
   }
+
+
+  // VLC — fight / soccer tapes. Session-only. Playlist is not saved.
+  const vlcTapes = [
+    { id: "fight", title: "Fight", src: "/videos/fight.mp4" },
+    { id: "soccer", title: "Soccer", src: "/videos/soccer.mp4" }
+  ];
+  const vlc = {
+    id: "",
+    video: null,
+    volume: 0.8,
+    seeking: false,
+    gen: 0
+  };
+
+  function vlcIsTesla() {
+    return document.documentElement.classList.contains("tesla");
+  }
+
+  function vlcFmt(sec) {
+    if (!isFinite(sec) || sec < 0) return "0:00";
+    const s = Math.floor(sec);
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return m + ":" + String(r).padStart(2, "0");
+  }
+
+  function vlcEls() {
+    return {
+      stage: document.getElementById("vlcStage"),
+      empty: document.getElementById("vlcEmpty"),
+      list: document.getElementById("vlcPlaylist"),
+      play: document.getElementById("vlcPlay"),
+      seek: document.getElementById("vlcSeek"),
+      time: document.getElementById("vlcTime"),
+      vol: document.getElementById("vlcVol")
+    };
+  }
+
+  function vlcApplyMute() {
+    if (!vlc.video) return;
+    const silent = !kitaAudioAllowed() || vlc.volume <= 0;
+    vlc.video.muted = silent;
+    vlc.video.volume = Math.max(0, Math.min(1, vlc.volume));
+  }
+
+  function vlcSetPlayIcon(playing) {
+    const btn = vlcEls().play;
+    if (!btn) return;
+    btn.setAttribute("aria-label", playing ? "Pause" : "Play");
+    btn.innerHTML = playing
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.4v14H7zM13.6 5H17v14h-3.4z" fill="currentColor"/></svg>'
+      : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.8v12.4L18.4 12z" fill="currentColor"/></svg>';
+  }
+
+  function vlcUpdateTime() {
+    const els = vlcEls();
+    const v = vlc.video;
+    const dur = v && isFinite(v.duration) ? v.duration : 0;
+    const cur = v ? v.currentTime || 0 : 0;
+    if (els.time) els.time.textContent = vlcFmt(cur) + " / " + vlcFmt(dur);
+    if (els.seek && !vlc.seeking) {
+      els.seek.value = dur ? String(Math.round((cur / dur) * 1000)) : "0";
+    }
+  }
+
+  function vlcShowEmpty() {
+    const els = vlcEls();
+    if (els.stage) els.stage.classList.remove("has-video");
+    if (els.play) els.play.disabled = true;
+    if (els.seek) {
+      els.seek.disabled = true;
+      els.seek.value = "0";
+    }
+    if (els.time) els.time.textContent = "0:00 / 0:00";
+    vlcSetPlayIcon(false);
+  }
+
+  function vlcDetach() {
+    const v = vlc.video;
+    vlc.video = null;
+    if (v) {
+      try { v.pause(); } catch (e1) {}
+      try { v.removeAttribute("src"); v.load(); } catch (e2) {}
+      if (v.parentNode) v.parentNode.removeChild(v);
+    }
+    vlcShowEmpty();
+  }
+
+  function vlcReady(v) {
+    const els = vlcEls();
+    if (!els.stage || vlc.video !== v) return;
+    if (!v.parentNode) els.stage.appendChild(v);
+    els.stage.classList.add("has-video");
+    if (els.play) els.play.disabled = vlcIsTesla();
+    if (els.seek) els.seek.disabled = vlcIsTesla();
+    vlcApplyMute();
+    vlcUpdateTime();
+    const tape = vlcTapes.find(function (t) { return t.id === vlc.id; });
+    if (tape && els.list) {
+      const row = els.list.querySelector('[data-vlc-id="' + tape.id + '"]');
+      const sub = row && row.querySelector(".vlc-row-sub");
+      if (sub) sub.textContent = vlcFmt(v.duration);
+    }
+  }
+
+  function vlcFail(gen) {
+    if (gen !== vlc.gen) return;
+    vlcDetach();
+    const els = vlcEls();
+    const row = els.list && els.list.querySelector('[data-vlc-id="' + vlc.id + '"]');
+    const sub = row && row.querySelector(".vlc-row-sub");
+    if (sub) sub.textContent = "no file yet";
+  }
+
+  function vlcAttach(tape) {
+    vlc.gen += 1;
+    const gen = vlc.gen;
+    vlc.id = tape ? tape.id : "";
+    vlcDetach();
+    vlc.id = tape ? tape.id : "";
+    const els = vlcEls();
+    if (els.list) {
+      els.list.querySelectorAll(".vlc-row").forEach(function (row) {
+        row.classList.toggle("active", !!(tape && row.getAttribute("data-vlc-id") === tape.id));
+      });
+    }
+    if (!tape || !tape.src) return;
+    if (vlcIsTesla()) {
+      vlcShowEmpty();
+      return;
+    }
+    const v = document.createElement("video");
+    v.setAttribute("playsinline", "");
+    v.setAttribute("webkit-playsinline", "");
+    v.setAttribute("controlslist", "nodownload noplaybackrate noremoteplayback");
+    v.preload = "metadata";
+    v.controls = false;
+    v.autoplay = false;
+    v.disablePictureInPicture = true;
+    function onErr() {
+      if (gen !== vlc.gen) return;
+      vlcFail(gen);
+    }
+    function onMeta() {
+      if (gen !== vlc.gen) return;
+      if (!v.duration || !isFinite(v.duration)) {
+        onErr();
+        return;
+      }
+      vlc.video = v;
+      vlcReady(v);
+    }
+    v.addEventListener("error", onErr);
+    v.addEventListener("loadedmetadata", onMeta);
+    v.addEventListener("timeupdate", function () { if (gen === vlc.gen) vlcUpdateTime(); });
+    v.addEventListener("ended", function () {
+      if (gen !== vlc.gen) return;
+      try { v.pause(); } catch (e3) {}
+      vlcSetPlayIcon(false);
+      vlcUpdateTime();
+    });
+    v.addEventListener("play", function () { if (gen === vlc.gen) vlcSetPlayIcon(true); });
+    v.addEventListener("pause", function () { if (gen === vlc.gen) vlcSetPlayIcon(false); });
+    vlc.video = v;
+    if (els.stage) els.stage.appendChild(v);
+    v.src = tape.src;
+    try { v.load(); } catch (e4) { onErr(); }
+  }
+
+  function vlcTogglePlay() {
+    if (vlcIsTesla()) {
+      showToast("Tapes play when parked.");
+      return;
+    }
+    const v = vlc.video;
+    if (!v || !v.getAttribute("src")) return;
+    if (v.paused) {
+      const p = v.play();
+      if (p && typeof p.catch === "function") {
+        p.catch(function () { vlcSetPlayIcon(false); });
+      }
+    } else {
+      v.pause();
+    }
+  }
+
+  function vlcRenderPlaylist() {
+    const els = vlcEls();
+    if (!els.list) return;
+    els.list.innerHTML = "";
+    vlcTapes.forEach(function (tape) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "vlc-row" + (vlc.id === tape.id ? " active" : "");
+      btn.setAttribute("data-vlc-id", tape.id);
+      const title = document.createElement("span");
+      title.className = "vlc-row-title";
+      title.textContent = tape.title;
+      const sub = document.createElement("span");
+      sub.className = "vlc-row-sub";
+      sub.textContent = "no file yet";
+      btn.appendChild(title);
+      btn.appendChild(sub);
+      btn.addEventListener("click", function () { vlcAttach(tape); });
+      els.list.appendChild(btn);
+    });
+  }
+
+  function vlcOnOpen() {
+    vlcRenderPlaylist();
+    const els = vlcEls();
+    if (els.vol) els.vol.value = String(Math.round(vlc.volume * 100));
+    vlcApplyMute();
+    if (vlc.video && vlc.video.parentNode) vlcReady(vlc.video);
+    else vlcShowEmpty();
+  }
+
+  function vlcOnClose() {
+    if (vlc.video) {
+      try { vlc.video.pause(); } catch (e5) {}
+      vlcSetPlayIcon(false);
+    }
+  }
+
+  (function initVlc() {
+    vlcRenderPlaylist();
+    const els = vlcEls();
+    if (els.play) {
+      els.play.addEventListener("click", function (e) {
+        e.preventDefault();
+        vlcTogglePlay();
+      });
+    }
+    if (els.seek) {
+      els.seek.addEventListener("pointerdown", function () { vlc.seeking = true; });
+      els.seek.addEventListener("pointerup", function () { vlc.seeking = false; });
+      els.seek.addEventListener("input", function () {
+        const v = vlc.video;
+        if (!v || !isFinite(v.duration) || !v.duration) return;
+        v.currentTime = (Number(els.seek.value) / 1000) * v.duration;
+        vlcUpdateTime();
+      });
+    }
+    if (els.vol) {
+      els.vol.addEventListener("input", function () {
+        vlc.volume = Math.max(0, Math.min(1, Number(els.vol.value) / 100));
+        vlcApplyMute();
+      });
+    }
+  })();
 
   // Paint app — session-only canvas (no localStorage)
   const paintCanvas = document.getElementById("paint-canvas");
