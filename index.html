@@ -422,8 +422,8 @@
   }
   #win-vlc.user-sized .vlc-stage {
     height: auto;
-    min-height: 120px;
-    flex: 1 1 auto;
+    min-height: 0;
+    flex: 0 0 auto;
   }
 
   .titlebar {
@@ -2874,7 +2874,7 @@
   }
   .vlc-body {
     display: flex;
-    min-height: 280px;
+    min-height: 0;
     flex: 1 1 auto;
     min-width: 0;
   }
@@ -2883,12 +2883,16 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
   .vlc-stage {
     position: relative;
-    flex: 1 1 auto;
-    min-height: 260px;
-    height: min(48vh, 380px);
+    flex: 0 0 auto;
+    width: min(100%, 280px);
+    aspect-ratio: 9 / 16;
+    height: auto;
+    margin: 0 auto;
+    max-height: min(68vh, 560px);
     background: #000;
     overflow: hidden;
   }
@@ -3361,9 +3365,13 @@
       flex: 1 1 auto;
     }
     #win-vlc .vlc-stage {
-      min-height: 160px;
-      height: min(38vh, 240px);
-      flex: 1 1 auto;
+      width: min(220px, 52vw);
+      aspect-ratio: 9 / 16;
+      height: auto;
+      max-height: min(50vh, 420px);
+      min-height: 0;
+      flex: 0 0 auto;
+      margin: 0 auto;
     }
     #win-vlc .vlc-playlist {
       flex: 0 0 auto;
@@ -3708,7 +3716,13 @@
   html.tesla .slot-table { font-size: 12px; }
   html.tesla #slotSpin { min-height: 52px; min-width: 110px; font-size: 16px; }
   html.tesla #win-vlc {
-    max-width: min(760px, calc(100vw - 24px));
+    max-width: min(560px, calc(100vw - 24px));
+  }
+  html.tesla .vlc-stage {
+    width: min(100%, 300px);
+    aspect-ratio: 9 / 16;
+    height: auto;
+    max-height: min(68vh, 560px);
   }
   html.tesla .vlc-row {
     min-height: 56px;
@@ -4412,7 +4426,7 @@
       </div>
     </section>
 
-    <section class="window" id="win-vlc" style="top:56px; left:160px; width:680px;">
+    <section class="window" id="win-vlc" style="top:56px; left:160px; width:520px;">
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="vlc"></div>
