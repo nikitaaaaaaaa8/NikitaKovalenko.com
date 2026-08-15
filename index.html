@@ -615,42 +615,135 @@
   }
   .book::before { top: 5px; }
   .book::after { bottom: 5px; }
-  .book:nth-child(1) {
-    background: linear-gradient(90deg, #1d3a22, #2f5a36 40%, #1a3320);
+  .book[data-book="game"] {
     height: 158px;
+    background-color: #1c2414;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px),
+      linear-gradient(90deg, rgba(0,0,0,.42), rgba(0,0,0,.1) 38%, rgba(0,0,0,.1) 62%, rgba(0,0,0,.44)),
+      repeating-conic-gradient(#1a2212 0% 25%, #c4b07a 0% 50%);
+    background-size: auto, auto, 9px 9px;
+    background-position: 0 0, 0 0, 50% 6px;
   }
-  .book:nth-child(2) {
-    background: linear-gradient(90deg, #3a1c22, #6a2e38 42%, #31181e);
+  .book[data-book="whoever"] {
     height: 176px;
+    background-color: #d8c08a;
+    background-image:
+      repeating-linear-gradient(180deg, transparent 0 4px, rgba(90,50,20,.07) 4px 5px),
+      linear-gradient(90deg, rgba(80,40,20,.22), transparent 40%, rgba(40,20,10,.28)),
+      url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2038%20176%22%3E%3Ccircle%20cx%3D%2219%22%20cy%3D%22158%22%20r%3D%228%22%20fill%3D%22none%22%20stroke%3D%22%238a221c%22%20stroke-width%3D%221.15%22%20stroke-dasharray%3D%221.7%201.2%22%20opacity%3D%22.7%22%2F%3E%3Ctext%20x%3D%2219%22%20y%3D%22161.4%22%20text-anchor%3D%22middle%22%20font-size%3D%229%22%20font-family%3D%22monospace%22%20fill%3D%22%238a221c%22%20opacity%3D%22.72%22%3E%21%3C%2Ftext%3E%3C%2Fsvg%3E"),
+      linear-gradient(90deg, #c4a06a, #ead7a8 46%, #b89258);
+    background-size: auto, auto, 100% 100%, auto;
+    background-repeat: repeat, no-repeat, no-repeat, no-repeat;
   }
-  .book:nth-child(3) {
-    background: linear-gradient(90deg, #1a2a3a, #2c4a62 40%, #162433);
+  .book[data-book="evolution"] {
     height: 168px;
+    background-color: #6a4e24;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 1px, transparent 1px 3px),
+      linear-gradient(90deg, rgba(0,0,0,.38), rgba(0,0,0,.1) 40%, rgba(0,0,0,.4)),
+      url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2038%20172%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23d8e8b0%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.62%22%3E%3Cpath%20d%3D%22M19%20156%20V38%22%2F%3E%3Cpath%20d%3D%22M19%20126%20L6%20104%22%2F%3E%3Cpath%20d%3D%22M19%20112%20L32%2088%22%2F%3E%3Cpath%20d%3D%22M19%2096%20L7%2072%22%2F%3E%3Cpath%20d%3D%22M19%2080%20L31%2056%22%2F%3E%3Cpath%20d%3D%22M19%2064%20L11%2046%22%2F%3E%3Cpath%20d%3D%22M19%2054%20L27%2038%22%2F%3E%3C%2Fg%3E%3Cellipse%20cx%3D%2219%22%20cy%3D%2234%22%20rx%3D%228%22%20ry%3D%227%22%20fill%3D%22%237cb04a%22%20opacity%3D%22.5%22%2F%3E%3C%2Fsvg%3E"),
+      linear-gradient(180deg, #3a5a22 0%, #6a4e24 30%, #8a6a2e 68%, #4a3014 100%);
+    background-size: auto, auto, 100% 100%, auto;
+    background-repeat: repeat, no-repeat, no-repeat, no-repeat;
   }
-  .book:nth-child(4) {
-    background: linear-gradient(90deg, #2a2a14, #4a4a22 40%, #242412);
+  .book[data-book="memetics"] {
     height: 150px;
+    background-color: #3a1860;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 1px, transparent 1px 3px),
+      linear-gradient(90deg, rgba(0,0,0,.42), rgba(0,0,0,.12) 40%, rgba(0,0,0,.44)),
+      radial-gradient(circle, rgba(255,80,180,.72) 0 1.15px, transparent 1.35px),
+      radial-gradient(circle, rgba(180,90,255,.55) 0 1px, transparent 1.2px),
+      radial-gradient(circle, rgba(255,190,90,.4) 0 .75px, transparent .95px),
+      url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2230%22%3E%3Ctext%20x%3D%2212%22%20y%3D%223%22%20fill%3D%22%23ffb8ff%22%20fill-opacity%3D%22.2%22%20font-size%3D%227%22%20font-family%3D%22monospace%22%20transform%3D%22rotate%2890%2012%203%29%22%3Ecopy%3C%2Ftext%3E%3C%2Fsvg%3E"),
+      linear-gradient(90deg, #2a1038, #5a2280 44%, #1e0c2a);
+    background-size: auto, auto, 7px 9px, 8px 7px, 11px 10px, 16px 30px, auto;
+    background-position: 0 0, 0 0, 0 0, 3px 4px, 5px 2px, 0 0, 0 0;
+    background-repeat: repeat, no-repeat, repeat, repeat, repeat, repeat, no-repeat;
   }
-  .book:nth-child(5) {
-    background: linear-gradient(90deg, #1a2e2e, #2a4a4a 40%, #152424);
+  .book[data-book="howto"] {
     height: 170px;
+    background-color: #0c2a10;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(57,255,20,.05) 0 1px, transparent 1px 3px),
+      linear-gradient(90deg, rgba(0,0,0,.38), rgba(0,0,0,.08) 40%, rgba(0,0,0,.42)),
+      radial-gradient(circle at 28% 13%, #ff5f57 0 2.15px, transparent 2.4px),
+      radial-gradient(circle at 50% 13%, #ffbd2e 0 2.15px, transparent 2.4px),
+      radial-gradient(circle at 72% 13%, #28c840 0 2.15px, transparent 2.4px),
+      repeating-linear-gradient(180deg, transparent 0 6px, rgba(57,255,20,.1) 6px 7px),
+      linear-gradient(90deg, #062010, #0e3a14 44%, #05180c);
   }
-  .book:nth-child(6) {
-    background: linear-gradient(90deg, #3a2814, #6a4a22 40%, #2a1c10);
+  .book[data-book="commons"] {
     height: 174px;
+    background-color: #6a5420;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 1px, transparent 1px 3px),
+      linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.04) 40%, rgba(0,0,0,.26)),
+      repeating-linear-gradient(90deg, transparent 0 4px, rgba(30,80,10,.35) 4px 5px),
+      linear-gradient(180deg, #2f7a16 0%, #5a9a22 16%, #c2b040 38%, #c49040 55%, #8a5424 74%, #3a220e 100%);
   }
-  .book:nth-child(7) {
-    background: linear-gradient(90deg, #2a1a32, #4a2e5a 40%, #1e1426);
+  .book[data-book="dunbar"] {
     height: 160px;
+    background-color: #2e1a40;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 1px, transparent 1px 3px),
+      linear-gradient(90deg, rgba(0,0,0,.4), rgba(0,0,0,.1) 40%, rgba(0,0,0,.42)),
+      url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2038%20160%22%3E%3Ccircle%20cx%3D%2219%22%20cy%3D%2280%22%20r%3D%2211%22%20fill%3D%22none%22%20stroke%3D%22%23e8d0ff%22%20stroke-width%3D%22.85%22%20opacity%3D%22.38%22%2F%3E%3C%2Fsvg%3E"),
+      radial-gradient(circle, #e8d0ff 0 1px, transparent 1.2px),
+      radial-gradient(circle, #c090e8 0 .8px, transparent 1px),
+      radial-gradient(circle, #f0c070 0 .7px, transparent .9px),
+      linear-gradient(90deg, #22142e, #3e2650 44%, #1a1024);
+    background-size: auto, auto, 100% 100%, 4px 5px, 5px 4px, 6px 6px, auto;
+    background-position: 0 0, 0 0, 0 0, 0 0, 2px 2px, 1px 3px, 0 0;
+    background-repeat: repeat, no-repeat, no-repeat, repeat, repeat, repeat, no-repeat;
   }
-  .book:nth-child(8) {
-    background: linear-gradient(90deg, #1c2438, #2e3c58 40%, #141a28);
+  .book[data-book="sunk"] {
     height: 156px;
+    background-color: #7a1c1c;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 1px, transparent 1px 3px),
+      linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.04) 40%, rgba(0,0,0,.26)),
+      radial-gradient(ellipse at 50% 90%, #050202 0 8px, #220808 10px, transparent 13px),
+      repeating-linear-gradient(180deg, transparent 0 7px, rgba(255,190,170,.28) 7px 8px),
+      linear-gradient(180deg, #8a2424 0%, #6a1c1c 58%, #3a0e0e 82%, #100404 100%);
   }
-  .book:nth-child(9) {
-    background: linear-gradient(90deg, #3a3018, #5a4820 40%, #2a2410);
+  .book[data-book="hand"] {
     height: 172px;
+    background-color: #1a3820;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 1px, transparent 1px 3px),
+      linear-gradient(90deg, rgba(0,0,0,.38), rgba(0,0,0,.08) 40%, rgba(0,0,0,.4)),
+      url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2038%20172%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23e8d898%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20opacity%3D%22.48%22%3E%3Cpath%20d%3D%22M11%20108%20v-28%20q0-3.2%203-3.2%203%200%203%203.2%20v28%22%2F%3E%3Cpath%20d%3D%22M17%20108%20v-33%20q0-3.4%203.1-3.4%203.1%200%203.1%203.4%20v33%22%2F%3E%3Cpath%20d%3D%22M23.2%20108%20v-25%20q0-3%202.7-3%202.7%200%202.7%203%20v25%22%2F%3E%3Cpath%20d%3D%22M11%20112%20q-7-1-8-9%200-3.1%202.7-3.3%202.5%200%204%204%22%2F%3E%3Cpath%20d%3D%22M9%20108%20h20%20q4%200%204%207%20v8%20q0%207-7%207%20h-10%20q-7%200-7-8%20z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"),
+      repeating-linear-gradient(180deg, transparent 0 12px, rgba(212,175,55,.11) 12px 13px),
+      linear-gradient(90deg, #163820, #245a32 44%, #122c1a);
+    background-size: auto, auto, 100% 100%, auto, auto;
+    background-repeat: repeat, no-repeat, no-repeat, repeat, no-repeat;
   }
+  .book[data-book="game"] .book-spine { color: #f4ecc4; }
+  .book[data-book="whoever"] .book-spine {
+    color: #2a140c;
+    text-shadow: 0 1px 0 rgba(255,255,255,.28);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+  }
+  .book[data-book="evolution"] .book-spine { color: #f2e6c4; }
+  .book[data-book="memetics"] .book-spine { color: #f4d8ff; }
+  .book[data-book="howto"] .book-spine {
+    color: #39ff14;
+    text-shadow: 0 0 6px rgba(57,255,20,.32), 0 1px 0 rgba(0,0,0,.7);
+  }
+  .book[data-book="commons"] .book-spine { color: #f6ecd0; }
+  .book[data-book="dunbar"] .book-spine { color: #f0e4ff; }
+  .book[data-book="sunk"] .book-spine { color: #ffe8dc; text-shadow: 0 1px 0 rgba(0,0,0,.75); }
+  .book[data-book="sunk"]::after {
+    height: 8px;
+    background:
+      radial-gradient(circle at 50% 40%, #f2d060 0 2.6px, #8a6818 3.1px, transparent 3.4px),
+      linear-gradient(90deg, rgba(0,0,0,.25), rgba(255,255,255,.12), rgba(0,0,0,.25));
+  }
+  .book[data-book="hand"] .book-spine { color: #efe3a8; }
   .book:hover,
   .book.active {
     transform: translateY(-8px);
@@ -5568,7 +5661,7 @@
             "Weather shows current conditions from your IP city, via Open-Meteo. Not GPS. Tracker uses the same city guess, plus session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
             "Paint has a brush, eraser, fill, shapes, a palette, undo, and save.",
             "DroneStuff is an in-OS gallery of aerials, not a redirect. Click a shot for the lightbox.",
-            "Bookshelf is these notes. Click a spine. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters."
+            "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters."
           ]
         },
         {
