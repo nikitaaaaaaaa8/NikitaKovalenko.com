@@ -4219,6 +4219,27 @@
   }
   function kitaChipSnd() { kitaBeep(800, 0.04, "square"); }
   function kitaCardSnd() { kitaBeep(440, 0.05, "triangle"); }
+  function kitaDealMs() {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return 0;
+    return 400;
+  }
+  function kitaDealAfter(fn) {
+    const ms = kitaDealMs();
+    if (!ms) fn();
+    else setTimeout(fn, ms);
+  }
+  function kitaDealSeq(steps, done) {
+    let i = 0;
+    function tick() {
+      if (i >= steps.length) {
+        if (done) done();
+        return;
+      }
+      steps[i++]();
+      kitaDealAfter(tick);
+    }
+    tick();
+  }
   function kitaWinSnd() { kitaBeep(660, 0.07, "sine"); setTimeout(function () { kitaBeep(880, 0.09, "sine"); }, 70); }
   function kitaLoseSnd() { kitaBeep(130, 0.11, "triangle"); }
   function kitaWhoosh() {
@@ -5187,9 +5208,9 @@
           title: "Casino",
           paragraphs: [
             "Casino is a fake-chip toy. One bankroll across Blackjack, Slots, Roulette, Craps (pass line plus odds), and Baccarat (Player / Banker / Tie; banker even money).",
-            "Blackjack has hit, stand, double, split on the same rank once (8+8 yes, 10+K no), and insurance when the dealer shows an ace (pays 2:1). After a hand, Rebet repeats the last bet size.",
+            "Blackjack has hit, stand, double, split on the same rank once (8+8 yes, 10+K no), and insurance when the dealer shows an ace (pays 2:1). Cards deal one at a time. After a hand, Rebet repeats the last bet size.",
             "Roulette lets you stack chips on more than one number, plus red/black, odd/even, dozens, and high/low.",
-            "Craps can take true odds behind the pass line after a point. Slots show a paytable; reels stop one at a time. Two 7s that miss 777 flash so-close — payouts stay the same. Baccarat keeps a short road of recent Player, Banker, and Tie results.",
+            "Craps can take true odds behind the pass line after a point. Slots show a paytable; reels stop one at a time. Two 7s that miss 777 flash so-close — payouts stay the same. Baccarat keeps a short road of recent Player, Banker, and Tie results. Cards deal one at a time.",
             "You start at 1000 chips. A refresh resets them. One pile, every table. Tables have light motion and short beeps, mute from the tray speaker."
           ]
         },
@@ -7459,7 +7480,8 @@
     insure: 0,
     split: false,
     didHand: false,
-    dealing: false
+    dealing: false,
+    anim: false
   };
 
   function bjNewDeck() {
@@ -7572,10 +7594,14 @@
       });
     }
     const h = bjActive();
-    if (bjEls.dbl) bjEls.dbl.disabled = !(bj.phase === "play" && h.cards.length === 2 && chips >= h.bet);
-    if (bjEls.splitBtn) bjEls.splitBtn.disabled = !bjCanSplit();
+    if (bjEls.hit) bjEls.hit.disabled = bj.phase !== "play" || !!bj.anim;
+    if (bjEls.stand) bjEls.stand.disabled = bj.phase !== "play" || !!bj.anim;
+    if (bjEls.dbl) bjEls.dbl.disabled = !(bj.phase === "play" && !bj.anim && h.cards.length === 2 && chips >= h.bet);
+    if (bjEls.splitBtn) bjEls.splitBtn.disabled = !bjCanSplit() || !!bj.anim;
+    if (bjEls.insYes) bjEls.insYes.disabled = bj.phase !== "insure" || !!bj.anim;
+    if (bjEls.insNo) bjEls.insNo.disabled = bj.phase !== "insure" || !!bj.anim;
     if (bjEls.rebet) {
-      const show = bj.phase === "bet" && bj.didHand && chips >= (bj.lastBet || 1) && chips >= 1;
+      const show = bj.phase === "bet" && !bj.dealing && bj.didHand && chips >= (bj.lastBet || 1) && chips >= 1;
       bjEls.rebet.hidden = !show;
       bjEls.rebet.disabled = !show;
     }
@@ -7685,29 +7711,63 @@
     bjSetBet(bet);
     if (chips < 1) { bjSay("you're tapped"); return; }
     bj.dealing = true;
+    bj.anim = true;
     if (bjEls.deal) bjEls.deal.disabled = true;
     if (bjEls.rebet) bjEls.rebet.disabled = true;
     chipsUpdate();
-    if (!chipsTake(bet)) { bj.dealing = false; bjSay("Bet exceeds chips"); showToast("not enough chips"); bjRender(false); return; }
+    if (!chipsTake(bet)) { bj.dealing = false; bj.anim = false; bjSay("Bet exceeds chips"); showToast("not enough chips"); bjRender(false); return; }
     if (bj.deck.length < 15) bj.deck = bjNewDeck();
-    const cards = [bjDraw(true), bjDraw(true)];
-    bj.player = cards;
-    bj.hands = [{ cards: cards, bet: bet }];
+    bj.player = [];
+    bj.hands = [{ cards: bj.player, bet: bet }];
     bj.handI = 0;
-    bj.dealer = [bjDraw(true), bjDraw(false)];
+    bj.dealer = [];
     bj.insure = 0;
     bj.split = false;
     bj.lastBet = bet;
-    kitaPopMode = "all";
-    kitaCardSnd();
-    const up = bj.dealer[0];
-    if (up && up.rank === 1) {
-      bj.phase = "insure";
-      bjSay("Dealer ace. Insurance?");
-      bjRender(false);
-      return;
-    }
-    bjPeekNow();
+    kitaPopMode = "last";
+    const gen = chipsGen;
+    bjRender(false);
+    kitaDealSeq([
+      function () {
+        if (gen !== chipsGen) return;
+        bj.player.push(bjDraw(true));
+        kitaPopMode = "last";
+        kitaCardSnd();
+        bjRender(false);
+      },
+      function () {
+        if (gen !== chipsGen) return;
+        bj.dealer.push(bjDraw(true));
+        kitaPopMode = "last";
+        kitaCardSnd();
+        bjRender(false);
+      },
+      function () {
+        if (gen !== chipsGen) return;
+        bj.player.push(bjDraw(true));
+        kitaPopMode = "last";
+        kitaCardSnd();
+        bjRender(false);
+      },
+      function () {
+        if (gen !== chipsGen) return;
+        bj.dealer.push(bjDraw(false));
+        kitaPopMode = "last";
+        kitaCardSnd();
+        bjRender(false);
+      }
+    ], function () {
+      if (gen !== chipsGen) return;
+      bj.anim = false;
+      const up = bj.dealer[0];
+      if (up && up.rank === 1) {
+        bj.phase = "insure";
+        bjSay("Dealer ace. Insurance?");
+        bjRender(false);
+        return;
+      }
+      bjPeekNow();
+    });
   }
   function bjRebet() {
     if (bj.phase !== "bet" || bj.dealing) return;
@@ -7715,7 +7775,7 @@
     bjDeal();
   }
   function bjInsureYes() {
-    if (bj.phase !== "insure") return;
+    if (bj.phase !== "insure" || bj.anim) return;
     const amt = Math.max(1, Math.floor(bj.bet / 2));
     if (chips < amt) {
       bj.insure = 0;
@@ -7727,7 +7787,7 @@
     bjPeekAfterInsure(false);
   }
   function bjInsureNo() {
-    if (bj.phase !== "insure") return;
+    if (bj.phase !== "insure" || bj.anim) return;
     bj.insure = 0;
     bjPeekAfterInsure(false);
   }
@@ -7748,29 +7808,36 @@
     bjRender(false);
   }
   function bjHit() {
-    if (bj.phase !== "play") return;
+    if (bj.phase !== "play" || bj.anim) return;
     const h = bjActive();
+    bj.anim = true;
     h.cards.push(bjDraw(true));
     bj.player = h.cards;
     kitaPopMode = "last";
     kitaCardSnd();
     const t = bjTotal(h.cards);
-    if (t > 21) {
-      if (bj.hands.length > 1) {
-        if (bj.handI === 0) {
-          bjSay("Hand 1 bust. " + t);
-          bjNextHand();
+    bjRender(false);
+    const gen = chipsGen;
+    kitaDealAfter(function () {
+      if (gen !== chipsGen) return;
+      bj.anim = false;
+      if (t > 21) {
+        if (bj.hands.length > 1) {
+          if (bj.handI === 0) {
+            bjSay("Hand 1 bust. " + t);
+            bjNextHand();
+            return;
+          }
+          bjDealerPlay();
           return;
         }
-        bjDealerPlay();
+        bjEnd("bust");
         return;
       }
-      bjEnd("bust");
-      return;
-    }
-    if (t === 21) { bjStand(); return; }
-    bjSay(bj.hands.length > 1 ? ("Hand " + (bj.handI + 1) + " of 2 · " + t) : ("You " + t));
-    bjRender(false);
+      if (t === 21) { bjStand(); return; }
+      bjSay(bj.hands.length > 1 ? ("Hand " + (bj.handI + 1) + " of 2 · " + t) : ("You " + t));
+      bjRender(false);
+    });
   }
   function bjResolveSplit() {
     bj.phase = "bet";
@@ -7802,22 +7869,37 @@
     bjUnlockDeal();
   }
   function bjDealerPlay() {
+    bj.anim = true;
     bj.dealer.forEach(c => { c.face = true; });
+    kitaPopMode = "last";
+    kitaCardSnd();
+    bjRender(true);
+    const gen = chipsGen;
     const live = bj.hands.some(h => bjTotal(h.cards) <= 21);
-    if (live) {
-      while (bjTotal(bj.dealer) < 17) bj.dealer.push(bjDraw(true));
+    function step() {
+      if (gen !== chipsGen) return;
+      if (live && bjTotal(bj.dealer) < 17) {
+        bj.dealer.push(bjDraw(true));
+        kitaPopMode = "last";
+        kitaCardSnd();
+        bjRender(true);
+        kitaDealAfter(step);
+        return;
+      }
+      bj.anim = false;
+      if (bj.hands.length <= 1) {
+        const p = bjTotal((bj.hands[0] && bj.hands[0].cards) || bj.player);
+        if (p > 21) bjEnd("bust");
+        else if (bjTotal(bj.dealer) > 21) bjEnd("dbust");
+        else bjEnd("show");
+        return;
+      }
+      bjResolveSplit();
     }
-    if (bj.hands.length <= 1) {
-      const p = bjTotal((bj.hands[0] && bj.hands[0].cards) || bj.player);
-      if (p > 21) bjEnd("bust");
-      else if (bjTotal(bj.dealer) > 21) bjEnd("dbust");
-      else bjEnd("show");
-      return;
-    }
-    bjResolveSplit();
+    kitaDealAfter(step);
   }
   function bjStand() {
-    if (bj.phase !== "play") return;
+    if (bj.phase !== "play" || bj.anim) return;
     if (bj.hands.length > 1 && bj.handI === 0) {
       bjNextHand();
       return;
@@ -7825,51 +7907,80 @@
     bjDealerPlay();
   }
   function bjDouble() {
-    if (bj.phase !== "play") return;
+    if (bj.phase !== "play" || bj.anim) return;
     const h = bjActive();
     if (!h || h.cards.length !== 2) return;
     if (!chipsTake(h.bet)) { showToast("not enough chips"); return; }
     h.bet *= 2;
+    bj.anim = true;
     h.cards.push(bjDraw(true));
     bj.player = h.cards;
     kitaPopMode = "last";
     kitaCardSnd();
-    if (bjTotal(h.cards) > 21) {
-      if (bj.hands.length > 1) {
-        if (bj.handI === 0) { bjNextHand(); return; }
-        bjDealerPlay();
+    bjRender(false);
+    const gen = chipsGen;
+    kitaDealAfter(function () {
+      if (gen !== chipsGen) return;
+      bj.anim = false;
+      if (bjTotal(h.cards) > 21) {
+        if (bj.hands.length > 1) {
+          if (bj.handI === 0) { bjNextHand(); return; }
+          bjDealerPlay();
+          return;
+        }
+        bjEnd("bust");
         return;
       }
-      bjEnd("bust");
-      return;
-    }
-    bjStand();
+      bjStand();
+    });
   }
   function bjSplit() {
-    if (!bjCanSplit()) return;
+    if (!bjCanSplit() || bj.anim) return;
     if (!chipsTake(bj.bet)) { showToast("not enough chips"); return; }
     const h = bj.hands[0];
     const a = h.cards[0];
     const b = h.cards[1];
     bj.split = true;
     bj.hands = [
-      { cards: [a, bjDraw(true)], bet: bj.bet },
-      { cards: [b, bjDraw(true)], bet: bj.bet }
+      { cards: [a], bet: bj.bet },
+      { cards: [b], bet: bj.bet }
     ];
     bj.handI = 0;
     bj.player = bj.hands[0].cards;
-    kitaPopMode = "all";
-    kitaCardSnd();
-    if (a.rank === 1) {
-      bjDealerPlay();
-      return;
-    }
-    if (bjTotal(bj.player) === 21) {
-      bjNextHand();
-      return;
-    }
-    bjSay("Hand 1 of 2");
+    bj.anim = true;
+    kitaPopMode = "off";
     bjRender(false);
+    const gen = chipsGen;
+    kitaDealSeq([
+      function () {
+        if (gen !== chipsGen) return;
+        bj.hands[0].cards.push(bjDraw(true));
+        kitaPopMode = "last";
+        kitaCardSnd();
+        bjRender(false);
+      },
+      function () {
+        if (gen !== chipsGen) return;
+        bj.hands[1].cards.push(bjDraw(true));
+        kitaPopMode = "last";
+        kitaCardSnd();
+        bjRender(false);
+      }
+    ], function () {
+      if (gen !== chipsGen) return;
+      bj.anim = false;
+      bj.player = bj.hands[0].cards;
+      if (a.rank === 1) {
+        bjDealerPlay();
+        return;
+      }
+      if (bjTotal(bj.player) === 21) {
+        bjNextHand();
+        return;
+      }
+      bjSay("Hand 1 of 2");
+      bjRender(false);
+    });
   }
   document.querySelectorAll("[data-bj-bet]").forEach(btn => {
     btn.addEventListener("click", () => bjSetBet(btn.getAttribute("data-bj-bet")));
@@ -8422,15 +8533,18 @@
     bac.bet = n;
     bacSync();
   }
-  function bacRender() {
-    if (bacEls.player) {
-      bacEls.player.innerHTML = "";
-      bac.player.forEach(c => bacEls.player.appendChild(bjMakeCard(c)));
+  function bacRender(popSide) {
+    function paint(el, hand, side) {
+      if (!el) return;
+      el.innerHTML = "";
+      hand.forEach((c, i) => {
+        const card = bjMakeCard(c);
+        if (kitaPopMode === "last" && popSide === side && i === hand.length - 1) card.classList.add("kita-pop");
+        el.appendChild(card);
+      });
     }
-    if (bacEls.banker) {
-      bacEls.banker.innerHTML = "";
-      bac.banker.forEach(c => bacEls.banker.appendChild(bjMakeCard(c)));
-    }
+    paint(bacEls.player, bac.player, "player");
+    paint(bacEls.banker, bac.banker, "banker");
     if (bacEls.pTot) bacEls.pTot.textContent = bac.player.length ? String(bacTotal(bac.player)) : "";
     if (bacEls.bTot) bacEls.bTot.textContent = bac.banker.length ? String(bacTotal(bac.banker)) : "";
   }
@@ -8504,32 +8618,78 @@
     }
     const gen = chipsGen;
     if (bac.deck.length < 16) bac.deck = bacNewDeck();
-    bac.player = [bacDraw(), bacDraw()];
-    bac.banker = [bacDraw(), bacDraw()];
-    kitaPopMode = "all";
-    kitaCardSnd();
+    bac.player = [];
+    bac.banker = [];
+    kitaPopMode = "last";
     bacRender();
-    const p2 = bacTotal(bac.player);
-    const b2 = bacTotal(bac.banker);
-    const natural = p2 >= 8 || b2 >= 8;
-    setTimeout(() => {
+    function finish() {
       if (gen !== chipsGen) return;
-      if (!natural) {
-        let pThird = null;
-        if (p2 <= 5) {
-          pThird = bacDraw();
-          bac.player.push(pThird);
-        }
-        if (bacBankerDraws(b2, pThird)) bac.banker.push(bacDraw());
-        kitaPopMode = "last";
-        kitaCardSnd();
-        bacRender();
-      }
       bacSettle();
       bac.busy = false;
       bacSync();
       chipsUpdate();
-    }, 280);
+    }
+    function bankerThird(b2, pThird) {
+      if (gen !== chipsGen) return;
+      if (bacBankerDraws(b2, pThird)) {
+        bac.banker.push(bacDraw());
+        kitaPopMode = "last";
+        kitaCardSnd();
+        bacRender("banker");
+        kitaDealAfter(finish);
+        return;
+      }
+      finish();
+    }
+    function afterTwo() {
+      if (gen !== chipsGen) return;
+      const p2 = bacTotal(bac.player);
+      const b2 = bacTotal(bac.banker);
+      if (p2 >= 8 || b2 >= 8) {
+        finish();
+        return;
+      }
+      if (p2 <= 5) {
+        const pThird = bacDraw();
+        bac.player.push(pThird);
+        kitaPopMode = "last";
+        kitaCardSnd();
+        bacRender("player");
+        kitaDealAfter(function () { bankerThird(b2, pThird); });
+        return;
+      }
+      bankerThird(b2, null);
+    }
+    kitaDealSeq([
+      function () {
+        if (gen !== chipsGen) return;
+        bac.player.push(bacDraw());
+        kitaPopMode = "last";
+        kitaCardSnd();
+        bacRender("player");
+      },
+      function () {
+        if (gen !== chipsGen) return;
+        bac.banker.push(bacDraw());
+        kitaPopMode = "last";
+        kitaCardSnd();
+        bacRender("banker");
+      },
+      function () {
+        if (gen !== chipsGen) return;
+        bac.player.push(bacDraw());
+        kitaPopMode = "last";
+        kitaCardSnd();
+        bacRender("player");
+      },
+      function () {
+        if (gen !== chipsGen) return;
+        bac.banker.push(bacDraw());
+        kitaPopMode = "last";
+        kitaCardSnd();
+        bacRender("banker");
+      }
+    ], afterTwo);
   }
   document.querySelectorAll("[data-bac-side]").forEach(btn => {
     btn.addEventListener("click", () => bacSetSide(btn.getAttribute("data-bac-side")));
@@ -8561,6 +8721,7 @@
     bac.busy = false;
     bacSync();
     bj.dealing = false;
+    bj.anim = false;
     bj.phase = "bet";
     bj.player = [];
     bj.hands = [];
