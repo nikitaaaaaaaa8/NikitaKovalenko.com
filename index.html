@@ -1390,8 +1390,7 @@
   #win-chess.window.open,
   #win-pipes.window.open,
   #win-minesweeper.window.open,
-  #win-2048.window.open,
-  #win-linerider.window.open {
+  #win-2048.window.open {
     max-height: calc(100dvh - 48px);
   }
   #win-tetris .content,
@@ -1487,33 +1486,6 @@
   .g2048-cell.v1024 { background: rgba(57,255,20,.42); color: #39ff14; font-size: clamp(12px, 3.2vw, 18px); }
   .g2048-cell.v2048 { background: #39ff14; color: #041204; font-size: clamp(12px, 3.2vw, 18px); box-shadow: 0 0 16px rgba(57,255,20,.45); }
 
-  /* Line Rider */
-  #win-linerider {
-    max-width: min(720px, calc(100vw - 24px));
-  }
-  #win-linerider .content.lr-content {
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    overflow: hidden;
-  }
-  .lr-stage {
-    flex: 1 1 auto;
-    min-height: 220px;
-    touch-action: none;
-  }
-  #lr-canvas {
-    display: block;
-    width: 100%;
-    height: 360px;
-    max-height: min(52vh, 400px);
-    background: #050805;
-    border: 1px solid rgba(57,255,20,.35);
-    border-radius: 6px;
-    touch-action: none;
-    cursor: crosshair;
-  }
-
   /* Chess */
   #win-chess {
     max-width: min(460px, calc(100vw - 24px));
@@ -1533,8 +1505,7 @@
   .pipes-toolbar,
   .ms-toolbar,
   .snake-toolbar,
-  .tetris-toolbar,
-  .lr-toolbar {
+  .tetris-toolbar {
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
@@ -1543,8 +1514,7 @@
   .pipes-controls,
   .ms-controls,
   .snake-controls,
-  .tetris-controls,
-  .lr-controls {
+  .tetris-controls {
     margin-top: 0;
     width: 100%;
     justify-content: space-between;
@@ -1554,8 +1524,7 @@
   .pipes-diff,
   .ms-diff,
   .snake-diff,
-  .tetris-diff,
-  .lr-tools {
+  .tetris-diff {
     display: flex;
     gap: 6px;
     flex: 1 1 auto;
@@ -1564,8 +1533,7 @@
   .pipes-diff .btn,
   .ms-diff .btn,
   .snake-diff .btn,
-  .tetris-diff .btn,
-  .lr-tools .btn {
+  .tetris-diff .btn {
     flex: 1 1 0;
     min-height: 40px;
     min-width: 56px;
@@ -1575,8 +1543,7 @@
   .pipes-diff .btn[aria-pressed="true"],
   .ms-diff .btn[aria-pressed="true"],
   .snake-diff .btn[aria-pressed="true"],
-  .tetris-diff .btn[aria-pressed="true"],
-  .lr-tools .btn[aria-pressed="true"] {
+  .tetris-diff .btn[aria-pressed="true"] {
     background: rgba(57,255,20,.18);
     border-color: var(--green);
     color: var(--green);
@@ -3102,8 +3069,7 @@
     .pipes-diff .btn,
     .ms-diff .btn,
     .snake-diff .btn,
-    .tetris-diff .btn,
-    .lr-tools .btn { min-height: 44px; }
+    .tetris-diff .btn { min-height: 44px; }
     .chess-pc { font-size: clamp(22px, 8vw, 32px); }
     .pipes-stage { width: min(100%, calc(100dvh - 210px)); grid-template-columns: minmax(8px, 12px) minmax(0, 1fr) minmax(8px, 12px); }
     .pipe-tile { min-height: 0; }
@@ -3677,8 +3643,7 @@
   html.tesla .pipes-diff .btn,
   html.tesla .ms-diff .btn,
   html.tesla .snake-diff .btn,
-  html.tesla .tetris-diff .btn,
-  html.tesla .lr-tools .btn { min-height: 48px; min-width: 64px; }
+  html.tesla .tetris-diff .btn { min-height: 48px; min-width: 64px; }
   html.tesla #win-roulette {
     max-width: min(640px, calc(100vw - 24px));
   }
@@ -4116,10 +4081,6 @@
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7.4" height="7.4" rx="1.2"/><rect x="13.1" y="3.5" width="7.4" height="7.4" rx="1.2"/><rect x="3.5" y="13.1" width="7.4" height="7.4" rx="1.2"/><rect x="13.1" y="13.1" width="7.4" height="7.4" rx="1.2"/><path d="M6.2 7.2h2.2M15.8 7.2h2.2M6.2 16.8h2.2M15.8 16.8h2.2"/></svg></div>
             <div class="gc-meta"><div class="gc-title">2048</div><div class="gc-desc">4×4 · arrows or swipe · session best</div></div>
           </button>
-          <button type="button" class="game-card" data-open="linerider">
-            <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 16.5c3.2-6 6.4-8.2 9.2-8.2 2.2 0 3.4 1.8 5.2 1.8 1.6 0 3.2-1.4 4.6-3.6"/><circle cx="8.2" cy="17.6" r="1.35" fill="currentColor" stroke="none"/><path d="M7.1 17.2l3.4-2.2 2.2 1.1"/></svg></div>
-            <div class="gc-meta"><div class="gc-title">Line Rider</div><div class="gc-desc">Draw a track · play · sledder rides it</div></div>
-          </button>
         </div>
       </div>
     </section>
@@ -4374,34 +4335,6 @@
         </div>
         <div class="g2048-board" id="g2048Board" aria-label="2048 board"></div>
         <p class="game-hint">Arrows / WASD · swipe on the board</p>
-      </div>
-    </section>
-
-    <section class="window" id="win-linerider" style="top:48px; left:140px; width:680px;">
-      <div class="titlebar" data-drag>
-        <div class="dots">
-          <div class="dot close" data-close="linerider"></div>
-          <div class="dot min" data-close="linerider"></div>
-          <div class="dot max"></div>
-        </div>
-        <div class="title">Line Rider</div>
-      </div>
-      <div class="content lr-content">
-        <div class="game-toolbar lr-toolbar">
-          <div class="game-status" id="lrStatus">Draw a track</div>
-          <div class="row lr-controls">
-            <div class="lr-tools" role="group" aria-label="Line Rider tools">
-              <button type="button" class="btn secondary" data-lr-mode="draw" aria-pressed="true">Draw</button>
-              <button type="button" class="btn secondary" data-lr-mode="play" aria-pressed="false">Play</button>
-              <button type="button" class="btn secondary" data-lr-mode="erase" aria-pressed="false">Erase</button>
-              <button type="button" class="btn" id="lrClear">Clear</button>
-            </div>
-          </div>
-        </div>
-        <div class="lr-stage">
-          <canvas id="lr-canvas" width="640" height="360" aria-label="Line Rider canvas"></canvas>
-        </div>
-        <p class="game-hint">Draw a ramp · Play rides it · not saved</p>
       </div>
     </section>
 
@@ -4931,7 +4864,6 @@
     chess: document.getElementById("win-chess"),
     pipes: document.getElementById("win-pipes"),
     n2048: document.getElementById("win-2048"),
-    linerider: document.getElementById("win-linerider"),
     weather: document.getElementById("win-weather"),
     paint: document.getElementById("win-paint"),
     vlc: document.getElementById("win-vlc"),
@@ -6397,7 +6329,7 @@
         {
           title: "Games",
           paragraphs: [
-            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, 2048, and Line Rider. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Line Rider: draw a track, hit Play, the sledder rides it. Tracks are not saved."
+            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, and 2048. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best."
           ]
         },
         {
@@ -6606,7 +6538,7 @@
 
 
 
-  // === Games: Minesweeper / Snake / Tetris / Solitaire / Chess / Pipes / 2048 / Line Rider ===
+  // === Games: Minesweeper / Snake / Tetris / Solitaire / Chess / Pipes / 2048 ===
   function gameWindowOpen(name) {
     return !!(windows[name] && windows[name].classList.contains("open"));
   }
@@ -8845,278 +8777,6 @@
   const g2048NewBtn = document.getElementById("g2048New");
   if (g2048NewBtn) g2048NewBtn.addEventListener("click", function () { g2048New(true); });
 
-  // --- Line Rider ---
-  const lrCanvas = document.getElementById("lr-canvas");
-  const lrCtx = lrCanvas ? lrCanvas.getContext("2d") : null;
-  const lrStatusEl = document.getElementById("lrStatus");
-  const lr = {
-    mode: "draw",
-    strokes: [],
-    cur: null,
-    playing: false,
-    raf: 0,
-    rider: null,
-    camX: 0,
-    camY: 0,
-    W: 640,
-    H: 360
-  };
-
-  function lrSize() {
-    if (!lrCanvas) return;
-    const wrap = lrCanvas.parentElement;
-    const cssW = Math.max(280, Math.floor((wrap && wrap.clientWidth) || lrCanvas.clientWidth || 640));
-    const cssH = Math.max(220, Math.min(400, Math.floor(cssW * 0.52)));
-    if (lrCanvas.width !== cssW || lrCanvas.height !== cssH) {
-      lrCanvas.width = cssW;
-      lrCanvas.height = cssH;
-    }
-    lr.W = cssW;
-    lr.H = cssH;
-  }
-
-  function lrStop() {
-    lr.playing = false;
-    if (lr.raf) { cancelAnimationFrame(lr.raf); lr.raf = 0; }
-  }
-
-  function lrSyncMode() {
-    document.querySelectorAll("[data-lr-mode]").forEach(function (btn) {
-      btn.setAttribute("aria-pressed", btn.getAttribute("data-lr-mode") === lr.mode ? "true" : "false");
-    });
-    if (lrStatusEl) {
-      if (lr.playing) lrStatusEl.textContent = "Riding";
-      else if (lr.mode === "erase") lrStatusEl.textContent = "Erase";
-      else lrStatusEl.textContent = "Draw a track";
-    }
-  }
-
-  function lrWorld(e) {
-    const r = lrCanvas.getBoundingClientRect();
-    const sx = lrCanvas.width / Math.max(1, r.width);
-    const sy = lrCanvas.height / Math.max(1, r.height);
-    return {
-      x: (e.clientX - r.left) * sx + (lr.playing ? lr.camX : 0),
-      y: (e.clientY - r.top) * sy + (lr.playing ? lr.camY : 0)
-    };
-  }
-
-  function lrClosest(px, py, a, b) {
-    const dx = b.x - a.x, dy = b.y - a.y;
-    const len2 = dx * dx + dy * dy;
-    if (len2 < 0.0001) return { x: a.x, y: a.y, t: 0, dx: 1, dy: 0, len: 0 };
-    let t = ((px - a.x) * dx + (py - a.y) * dy) / len2;
-    t = Math.max(0, Math.min(1, t));
-    const len = Math.sqrt(len2);
-    return { x: a.x + dx * t, y: a.y + dy * t, t: t, dx: dx / len, dy: dy / len, len: len };
-  }
-
-  function lrDraw() {
-    if (!lrCtx || !lrCanvas) return;
-    const w = lrCanvas.width, h = lrCanvas.height;
-    const camX = lr.playing ? lr.camX : 0;
-    const camY = lr.playing ? lr.camY : 0;
-    lrCtx.fillStyle = "#050805";
-    lrCtx.fillRect(0, 0, w, h);
-    lrCtx.strokeStyle = "rgba(57,255,20,0.05)";
-    lrCtx.lineWidth = 1;
-    const gs = 40;
-    const ox = -(((camX % gs) + gs) % gs);
-    const oy = -(((camY % gs) + gs) % gs);
-    for (let x = ox; x <= w; x += gs) {
-      lrCtx.beginPath(); lrCtx.moveTo(x + 0.5, 0); lrCtx.lineTo(x + 0.5, h); lrCtx.stroke();
-    }
-    for (let y = oy; y <= h; y += gs) {
-      lrCtx.beginPath(); lrCtx.moveTo(0, y + 0.5); lrCtx.lineTo(w, y + 0.5); lrCtx.stroke();
-    }
-    function strokePath(pts, color, width) {
-      if (!pts || pts.length < 2) {
-        if (pts && pts.length === 1) {
-          lrCtx.fillStyle = color;
-          lrCtx.beginPath();
-          lrCtx.arc(pts[0].x - camX, pts[0].y - camY, 2.2, 0, Math.PI * 2);
-          lrCtx.fill();
-        }
-        return;
-      }
-      lrCtx.strokeStyle = color;
-      lrCtx.lineWidth = width;
-      lrCtx.lineCap = "round";
-      lrCtx.lineJoin = "round";
-      lrCtx.beginPath();
-      lrCtx.moveTo(pts[0].x - camX, pts[0].y - camY);
-      for (let i = 1; i < pts.length; i++) lrCtx.lineTo(pts[i].x - camX, pts[i].y - camY);
-      lrCtx.stroke();
-    }
-    lr.strokes.forEach(function (s) { strokePath(s.pts, "#39ff14", 3); });
-    if (lr.cur) strokePath(lr.cur, "#39ff14", 3);
-    if (lr.rider) {
-      const r = lr.rider;
-      const x = r.x - camX, y = r.y - camY;
-      const spd = Math.hypot(r.vx, r.vy) || 1;
-      const fx = r.vx / spd, fy = r.vy / spd;
-      lrCtx.strokeStyle = "#e8e4dc";
-      lrCtx.lineWidth = 2.4;
-      lrCtx.lineCap = "round";
-      lrCtx.beginPath();
-      lrCtx.moveTo(x - fx * 11 - fy * 5, y - fy * 11 + fx * 5);
-      lrCtx.lineTo(x + fx * 13 - fy * 5, y + fy * 13 + fx * 5);
-      lrCtx.moveTo(x - fx * 11 + fy * 4, y - fy * 11 - fx * 4);
-      lrCtx.lineTo(x + fx * 13 + fy * 4, y + fy * 13 - fx * 4);
-      lrCtx.stroke();
-      lrCtx.fillStyle = "#39ff14";
-      lrCtx.beginPath();
-      lrCtx.arc(x - fy * 1, y - 7, 5.4, 0, Math.PI * 2);
-      lrCtx.fill();
-    }
-  }
-
-  function lrPhysics() {
-    const r = lr.rider;
-    if (!r) return;
-    const g = 0.34;
-    const rad = 8;
-    const snap = 13;
-    r.vy += g;
-    r.x += r.vx;
-    r.y += r.vy;
-    let best = null, bestD = snap;
-    for (let s = 0; s < lr.strokes.length; s++) {
-      const pts = lr.strokes[s].pts;
-      for (let i = 0; i < pts.length - 1; i++) {
-        const c = lrClosest(r.x, r.y, pts[i], pts[i + 1]);
-        const d = Math.hypot(r.x - c.x, r.y - c.y);
-        if (d < bestD) {
-          let nx = -c.dy, ny = c.dx;
-          if (ny > 0) { nx = -nx; ny = -ny; }
-          best = { c: c, nx: nx, ny: ny, tx: c.dx, ty: c.dy };
-          bestD = d;
-        }
-      }
-    }
-    if (best) {
-      r.x = best.c.x + best.nx * rad;
-      r.y = best.c.y + best.ny * rad;
-      let vt = r.vx * best.tx + r.vy * best.ty;
-      const vn = r.vx * best.nx + r.vy * best.ny;
-      vt += g * best.ty;
-      vt *= 0.994;
-      const bounce = vn < -2.8 ? vn * -0.18 : 0;
-      r.vx = best.tx * vt + best.nx * bounce;
-      r.vy = best.ty * vt + best.ny * bounce;
-    }
-    lr.camX += (r.x - lr.W * 0.32 - lr.camX) * 0.16;
-    lr.camY += (r.y - lr.H * 0.45 - lr.camY) * 0.16;
-  }
-
-  function lrLoop() {
-    if (!lr.playing) return;
-    lrPhysics();
-    lrDraw();
-    lr.raf = requestAnimationFrame(lrLoop);
-  }
-
-  function lrStartPos() {
-    let x = 56, y = 40, found = false;
-    for (let s = 0; s < lr.strokes.length; s++) {
-      const pts = lr.strokes[s].pts;
-      for (let i = 0; i < pts.length; i++) {
-        if (!found || pts[i].x < x) {
-          x = pts[i].x;
-          y = pts[i].y;
-          found = true;
-        }
-      }
-    }
-    if (found) return { x: x - 8, y: y - 42, vx: 1.5, vy: 0.25 };
-    return { x: 56, y: 40, vx: 1.6, vy: 0 };
-  }
-
-  function lrPlay() {
-    lrStop();
-    lr.mode = "play";
-    lrSize();
-    lr.rider = lrStartPos();
-    lr.camX = 0;
-    lr.camY = 0;
-    lr.playing = true;
-    lrSyncMode();
-    lrLoop();
-  }
-
-  function lrClear() {
-    lrStop();
-    lr.strokes = [];
-    lr.cur = null;
-    lr.rider = null;
-    lr.camX = 0;
-    lr.camY = 0;
-    lr.mode = "draw";
-    lrSyncMode();
-    lrDraw();
-  }
-
-  function lrSetMode(mode) {
-    if (mode === "play") { lrPlay(); return; }
-    lrStop();
-    lr.mode = mode === "erase" ? "erase" : "draw";
-    lr.camX = 0;
-    lr.camY = 0;
-    lrSyncMode();
-    lrDraw();
-  }
-
-  function lrEraseAt(p) {
-    const hitR = 16;
-    lr.strokes = lr.strokes.filter(function (s) {
-      return !s.pts.some(function (q) { return Math.hypot(q.x - p.x, q.y - p.y) < hitR; });
-    });
-  }
-
-  if (lrCanvas) {
-    lrCanvas.addEventListener("pointerdown", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      try { lrCanvas.setPointerCapture(e.pointerId); } catch (errCap) {}
-      const p = lrWorld(e);
-      if (lr.mode === "erase") { lrEraseAt(p); lrDraw(); return; }
-      if (lr.playing) return;
-      lr.mode = "draw";
-      lrSyncMode();
-      lr.cur = [p];
-    });
-    lrCanvas.addEventListener("pointermove", function (e) {
-      if (lr.mode === "erase" && (e.buttons & 1)) { lrEraseAt(lrWorld(e)); lrDraw(); return; }
-      if (!lr.cur) return;
-      const p = lrWorld(e);
-      const last = lr.cur[lr.cur.length - 1];
-      if (Math.hypot(p.x - last.x, p.y - last.y) >= 3) {
-        lr.cur.push(p);
-        lrDraw();
-      }
-    });
-    function lrEndStroke() {
-      if (lr.cur && lr.cur.length > 1) lr.strokes.push({ pts: lr.cur });
-      lr.cur = null;
-      lrDraw();
-    }
-    lrCanvas.addEventListener("pointerup", lrEndStroke);
-    lrCanvas.addEventListener("pointercancel", lrEndStroke);
-  }
-  document.querySelectorAll("[data-lr-mode]").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      lrSetMode(btn.getAttribute("data-lr-mode") || "draw");
-    });
-  });
-  const lrClearBtn = document.getElementById("lrClear");
-  if (lrClearBtn) lrClearBtn.addEventListener("click", function () { lrClear(); showToast("Track cleared"); });
-  window.addEventListener("resize", function () {
-    if (!lrCanvas) return;
-    lrSize();
-    lrDraw();
-  });
-
-
   // --- Casino (fake chips, session-only) ---
   const CHIP_START = 1000;
   let chips = CHIP_START;
@@ -10613,9 +10273,6 @@
     } else if (name === "n2048") {
       if (!g2048.started) g2048New(false);
       else g2048Render();
-    } else if (name === "linerider") {
-      lrSize();
-      lrDraw();
     } else if (name === "casino" || name === "blackjack" || name === "slots" || name === "roulette" || name === "craps" || name === "baccarat") {
       casinoOnOpen();
     }
@@ -10626,7 +10283,6 @@
     if (name === "snake") snStop();
     if (name === "tetris") tStop();
     if (name === "solitaire") solKillGhost();
-    if (name === "linerider") lrStop();
   }
 
 
