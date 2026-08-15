@@ -545,6 +545,14 @@
     padding: 6px 8px 8px;
     line-height: 1.3;
   }
+  .drone-views {
+    display: block;
+    margin-top: 2px;
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.2;
+  }
+  .drone-views:empty { display: none; }
   #droneLightbox {
     position: fixed;
     inset: 0;
@@ -3005,6 +3013,12 @@
   .vlc-row.active .vlc-row-title { color: var(--green); }
   .vlc-row-title { font-size: 13px; color: #f3efe6; }
   .vlc-row-sub { font-size: 11px; color: #8a8070; }
+  .vlc-row-views {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.2;
+  }
+  .vlc-row-views:empty { display: none; }
   .vlc-chrome {
     display: flex;
     align-items: center;
@@ -3747,6 +3761,9 @@
     font-size: 15px;
     padding: 12px;
   }
+  html.tesla .vlc-row-views { font-size: 13px; }
+  html.tesla .drone-caption,
+  html.tesla .drone-views { font-size: 12px; }
   html.tesla .vlc-play {
     width: 56px;
     height: 56px;
@@ -3945,43 +3962,43 @@
         <div class="drone-grid">
           <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-01.jpg" data-drone-cap="Benjamin Franklin Bridge">
             <img src="https://dronestuff.io/shot-01.jpg" alt="Benjamin Franklin Bridge" loading="lazy" width="280" height="96">
-            <div class="drone-caption">Benjamin Franklin Bridge</div>
+            <div class="drone-caption">Benjamin Franklin Bridge<span class="drone-views"></span></div>
           </button>
           <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-02.jpg" data-drone-cap="Mountain Ridge, Vermont">
             <img src="https://dronestuff.io/shot-02.jpg" alt="Mountain Ridge, Vermont" loading="lazy" width="280" height="96">
-            <div class="drone-caption">Mountain Ridge, Vermont</div>
+            <div class="drone-caption">Mountain Ridge, Vermont<span class="drone-views"></span></div>
           </button>
           <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-03.jpg" data-drone-cap="Autumn Road, New Hampshire">
             <img src="https://dronestuff.io/shot-03.jpg" alt="Autumn Road, New Hampshire" loading="lazy" width="280" height="96">
-            <div class="drone-caption">Autumn Road, New Hampshire</div>
+            <div class="drone-caption">Autumn Road, New Hampshire<span class="drone-views"></span></div>
           </button>
           <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-04.jpg" data-drone-cap="Kancamagus Highway">
             <img src="https://dronestuff.io/shot-04.jpg" alt="Kancamagus Highway" loading="lazy" width="280" height="96">
-            <div class="drone-caption">Kancamagus Highway</div>
+            <div class="drone-caption">Kancamagus Highway<span class="drone-views"></span></div>
           </button>
           <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-05.jpg" data-drone-cap="Groton Long Point, Connecticut">
             <img src="https://dronestuff.io/shot-05.jpg" alt="Groton Long Point, Connecticut" loading="lazy" width="280" height="96">
-            <div class="drone-caption">Groton Long Point, Connecticut</div>
+            <div class="drone-caption">Groton Long Point, Connecticut<span class="drone-views"></span></div>
           </button>
           <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-09.jpg" data-drone-cap="Groton Long Point, Connecticut">
             <img src="https://dronestuff.io/shot-09.jpg" alt="Groton Long Point, Connecticut" loading="lazy" width="280" height="96">
-            <div class="drone-caption">Groton Long Point, Connecticut</div>
+            <div class="drone-caption">Groton Long Point, Connecticut<span class="drone-views"></span></div>
           </button>
           <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-06.jpg" data-drone-cap="Philadelphia Art Museum Night">
             <img src="https://dronestuff.io/shot-06.jpg" alt="Philadelphia Art Museum Night" loading="lazy" width="280" height="96">
-            <div class="drone-caption">Philadelphia Art Museum Night</div>
+            <div class="drone-caption">Philadelphia Art Museum Night<span class="drone-views"></span></div>
           </button>
           <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-10.jpg" data-drone-cap="Philadelphia Art Museum">
             <img src="https://dronestuff.io/shot-10.jpg" alt="Philadelphia Art Museum" loading="lazy" width="280" height="96">
-            <div class="drone-caption">Philadelphia Art Museum</div>
+            <div class="drone-caption">Philadelphia Art Museum<span class="drone-views"></span></div>
           </button>
           <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-07.jpg" data-drone-cap="Funko Rew Graffiti">
             <img src="https://dronestuff.io/shot-07.jpg" alt="Funko Rew Graffiti" loading="lazy" width="280" height="96">
-            <div class="drone-caption">Funko Rew Graffiti</div>
+            <div class="drone-caption">Funko Rew Graffiti<span class="drone-views"></span></div>
           </button>
           <button type="button" class="drone-shot" data-drone-src="https://dronestuff.io/shot-08.jpg" data-drone-cap="Graffiti, Camden">
             <img src="https://dronestuff.io/shot-08.jpg" alt="Graffiti, Camden" loading="lazy" width="280" height="96">
-            <div class="drone-caption">Graffiti, Camden</div>
+            <div class="drone-caption">Graffiti, Camden<span class="drone-views"></span></div>
           </button>
         </div>
       </div>
@@ -4466,14 +4483,17 @@
               <button type="button" class="btn vlc-row active" data-vlc-id="fight" data-vlc-src="/videos/fight.mp4">
                 <span class="vlc-row-title">Fight</span>
                 <span class="vlc-row-sub">UFC · 30s</span>
+                <span class="vlc-row-views"></span>
               </button>
               <button type="button" class="btn vlc-row" data-vlc-id="football" data-vlc-src="/videos/football.mp4">
                 <span class="vlc-row-title">Football</span>
                 <span class="vlc-row-sub">Packers · 40s</span>
+                <span class="vlc-row-views"></span>
               </button>
               <button type="button" class="btn vlc-row" data-vlc-id="basketball" data-vlc-src="/videos/Basketball.mp4">
                 <span class="vlc-row-title">Basketball</span>
                 <span class="vlc-row-sub">15s</span>
+                <span class="vlc-row-views"></span>
               </button>
             </div>
           </aside>
@@ -5098,6 +5118,7 @@
     if (typeof onGameWindowOpen === "function") onGameWindowOpen(name);
     if (name === "paint") onPaintWindowOpen();
     if (name === "vlc") vlcOnOpen();
+    if (name === "drone") kitaFetchCounts();
   }
 
   let geoPromise = null;
@@ -5719,6 +5740,8 @@
     droneLightboxImg.alt = cap || "";
     if (droneLightboxCap) droneLightboxCap.textContent = cap || "";
     droneLightbox.hidden = false;
+    const viewId = kitaViewIdFromDroneSrc(src);
+    if (viewId) kitaHitView(viewId);
   }
 
   document.querySelectorAll(".drone-shot").forEach(btn => {
@@ -6365,8 +6388,8 @@
           paragraphs: [
             "Weather shows current conditions from your IP city, via Open-Meteo. Not GPS. Tracker uses the same city guess, plus session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
             "Paint has a brush, eraser, fill, shapes, a palette, undo, and save.",
-            "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect.",
-            "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox.",
+            "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
+            "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Open mail app prefills the subject “you're the man.”"
           ]
@@ -10607,6 +10630,113 @@
   }
 
 
+  // View counts live on the Worker. Session-only otherwise. No localStorage.
+  const KITA_VIEWS_URL = "https://kita-views.nikitaaaaaaaa.workers.dev";
+  const kitaViews = { inflight: null };
+
+  function kitaViewIdOk(id) {
+    return /^(vlc:(fight|football|basketball)|drone:0[1-9]|drone:10)$/.test(id || "");
+  }
+
+  function kitaViewIdFromDroneSrc(src) {
+    if (!src) return "";
+    const m = String(src).match(/shot-(\d+)\.jpg/i);
+    if (!m) return "";
+    const n = Number(m[1]);
+    if (!isFinite(n) || n < 1 || n > 10) return "";
+    const id = "drone:" + String(n).padStart(2, "0");
+    return kitaViewIdOk(id) ? id : "";
+  }
+
+  function kitaViewLabel(n) {
+    if (typeof n !== "number" || !isFinite(n) || n < 0) return "";
+    const k = Math.floor(n);
+    return k === 1 ? "1 view" : k + " views";
+  }
+
+  function kitaPaintView(el, n) {
+    if (!el) return;
+    el.textContent = kitaViewLabel(n);
+  }
+
+  function kitaPaintOneView(id, n) {
+    if (!kitaViewIdOk(id) || typeof n !== "number" || !isFinite(n)) return;
+    if (id.indexOf("vlc:") === 0) {
+      const row = document.querySelector('.vlc-row[data-vlc-id="' + id.slice(4) + '"]');
+      kitaPaintView(row ? row.querySelector(".vlc-row-views") : null, n);
+      return;
+    }
+    document.querySelectorAll(".drone-shot").forEach(function (btn) {
+      if (kitaViewIdFromDroneSrc(btn.getAttribute("data-drone-src")) === id) {
+        kitaPaintView(btn.querySelector(".drone-views"), n);
+      }
+    });
+  }
+
+  function kitaPaintAllViews(map) {
+    if (!map || typeof map !== "object") return;
+    document.querySelectorAll(".vlc-row").forEach(function (row) {
+      const tapeId = row.getAttribute("data-vlc-id");
+      const id = tapeId ? "vlc:" + tapeId : "";
+      if (!kitaViewIdOk(id) || !Object.prototype.hasOwnProperty.call(map, id)) return;
+      kitaPaintView(row.querySelector(".vlc-row-views"), map[id]);
+    });
+    document.querySelectorAll(".drone-shot").forEach(function (btn) {
+      const id = kitaViewIdFromDroneSrc(btn.getAttribute("data-drone-src"));
+      if (!id || !Object.prototype.hasOwnProperty.call(map, id)) return;
+      kitaPaintView(btn.querySelector(".drone-views"), map[id]);
+    });
+  }
+
+  function kitaFetchCounts() {
+    if (kitaViews.inflight) return kitaViews.inflight;
+    if (typeof fetch !== "function") return Promise.resolve(null);
+    kitaViews.inflight = fetch(KITA_VIEWS_URL + "/counts", {
+      method: "GET",
+      credentials: "omit",
+      cache: "no-store"
+    }).then(function (res) {
+      if (!res || !res.ok) throw new Error("counts failed");
+      return res.json();
+    }).then(function (data) {
+      if (!data || typeof data !== "object") throw new Error("counts bad");
+      kitaPaintAllViews(data);
+      return data;
+    }).catch(function () {
+      return null;
+    }).then(function (data) {
+      kitaViews.inflight = null;
+      return data;
+    });
+    return kitaViews.inflight;
+  }
+
+  function kitaHitView(id) {
+    if (!kitaViewIdOk(id) || typeof fetch !== "function") return;
+    fetch(KITA_VIEWS_URL + "/hit", {
+      method: "POST",
+      credentials: "omit",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: id })
+    }).then(function (res) {
+      if (!res || !res.ok) throw new Error("hit failed");
+      return res.json();
+    }).then(function (data) {
+      if (!data || data.id !== id || typeof data.n !== "number") return;
+      kitaPaintOneView(id, data.n);
+    }).catch(function () {});
+  }
+
+  function kitaHitAfterPlay(p, id) {
+    const viewId = id ? "vlc:" + id : "";
+    if (!kitaViewIdOk(viewId)) return;
+    if (p && typeof p.then === "function") {
+      p.then(function () { kitaHitView(viewId); }).catch(function () {});
+      return;
+    }
+    kitaHitView(viewId);
+  }
+
   // VLC — Fight / Football / Basketball. Session-only. No localStorage.
   const vlcTapes = [
     { id: "fight", title: "Fight", src: "/videos/fight.mp4" },
@@ -10708,8 +10838,10 @@
     vlcApplyAspect({ preferTape: !same });
     vlcApplyMute();
     if (play) {
+      const starting = !!(v.paused || v.ended || !same);
       const p = v.play();
       if (p && typeof p.catch === "function") p.catch(function () { vlcSetPlayLabel(); });
+      if (starting) kitaHitAfterPlay(p, tape.id);
     }
     vlcUpdateTime();
   }
@@ -10730,6 +10862,7 @@
     vlcApplyAspect();
     vlcApplyMute();
     vlcUpdateTime();
+    kitaFetchCounts();
   }
 
   function vlcOnClose() {
@@ -10747,6 +10880,7 @@
     if (v.paused) {
       const p = v.play();
       if (p && typeof p.catch === "function") p.catch(function () { vlcSetPlayLabel(); });
+      kitaHitAfterPlay(p, vlc.id);
     } else {
       v.pause();
     }
