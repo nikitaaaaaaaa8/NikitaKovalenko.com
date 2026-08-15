@@ -5481,8 +5481,8 @@
       } else {
         snowWanted = true;
         stopMatrix();
-        const on = startSnow();
-        termPrint(on ? "snow on." : "snow stays off.");
+        if (!snowing) startSnow();
+        termPrint(snowing ? "snow on." : "snow stays off.");
       }
     } else if (cmd === "aura") {
       auraActive = !auraActive;
@@ -6185,7 +6185,8 @@
   let snowWanted = true;
 
   function startSnow() {
-    if (!snowCanvas || snowing) return false;
+    if (snowing) return true;
+    if (!snowCanvas) return false;
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
     snowing = true;
     snowCanvas.style.display = "block";
