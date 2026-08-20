@@ -10420,8 +10420,12 @@
     if (typeof n !== "number" || !isFinite(n) || n < 0) return "—";
     return Math.floor(n).toLocaleString("en-US");
   }
+  let kitaWagerSeen = -1;
   function kitaPaintWagered(n) {
     if (typeof n !== "number" || !isFinite(n) || n < 0) return;
+    n = Math.floor(n);
+    if (n < kitaWagerSeen) return;
+    kitaWagerSeen = n;
     const label = kitaWagerLabel(n);
     document.querySelectorAll("[data-wagered]").forEach(function (el) {
       el.textContent = label;
@@ -10449,9 +10453,11 @@
       if (!res || !res.ok) throw new Error("wager failed");
       return res.json();
     }).then(function (data) {
-      if (!data || data.id !== "casino:wagered" || typeof data.n !== "number") return;
+      if (!data || data.id !== "casino:wagered" || typeof data.n !== "number") throw new Error("wager bad");
       kitaPaintWagered(data.n);
     }).catch(function () {
+      kitaWagerQ += add;
+      setTimeout(kitaFlushWager, 900);
     }).then(function () {
       kitaWagerBusy = false;
       kitaFlushWager();
