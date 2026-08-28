@@ -5313,9 +5313,8 @@
     const whereEl = document.getElementById("weatherWhere");
     return activeGeo().then(geo => {
       if (!Number.isFinite(geo.lat) || !Number.isFinite(geo.lon)) throw new Error("no coords");
-      const unit = "fahrenheit";
       const unitSym = "°F";
-      const url = "https://api.open-meteo.com/v1/forecast?latitude=" + geo.lat + "&longitude=" + geo.lon + "&current=temperature_2m,weather_code&temperature_unit=" + unit + "&forecast_days=1";
+      const url = "https://kita-views.nikitaaaaaaaa.workers.dev/weather?lat=" + geo.lat + "&lon=" + geo.lon;
       return fetch(url, { cache: "no-store" }).then(r => {
         if (!r.ok) throw new Error("weather failed");
         return r.json();
@@ -6564,7 +6563,7 @@
         {
           title: "Apps",
           paragraphs: [
-            "Weather shows current conditions in °F via Open-Meteo. Default city is an IP guess, same as Tracker. A target in Weather and Tracker can pin this machine for this visit if the browser allows it. Refresh forgets the pin. Tracker also counts session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
+            "Weather shows current conditions in °F. Open-Meteo is cached on the Worker so a rate limit on one machine does not blank the sky. Default city is an IP guess, same as Tracker. A target in Weather and Tracker can pin this machine for this visit if the browser allows it. Refresh forgets the pin. Tracker also counts session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
             "Paint has a brush, eraser, fill, shapes, a palette, undo, and save. Resize keeps the picture and undo.",
             "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
