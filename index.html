@@ -6540,7 +6540,7 @@
           title: "Desktop",
           paragraphs: [
             "This website is a fake desktop. Start, bottom left, lists apps with their icons. The clock, bottom right, is your local time. No seconds.",
-            "Icons sit in two columns. They snap to that grid and cannot stack. A short window adds a column so the last icon stays above the taskbar. Rotate keeps that layout.",
+            "Icons start in two columns. A short window adds a column so the last icon stays above the taskbar. Drag one anywhere on the desktop and it stays where you drop it for this visit. Refresh puts them back. Rotate keeps a layout you already moved.",
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
             "Designed for the computer, but it works on mobile too.",
@@ -11452,7 +11452,7 @@
   document.addEventListener("lostpointercapture", marqueeEnd);
 
 
-  // Desktop icons: two-column stock grid. Every visible icon owns one cell.
+  // Desktop icons: two-column stock layout. Drag leaves them where you drop them.
   const iconsRoot = document.querySelector(".icons");
   const desktopEl = document.getElementById("desktop");
   const recycleBin = [];
@@ -11530,6 +11530,7 @@
     el.dataset.posY = String(y);
     el.dataset.gridCol = String(col);
     el.dataset.gridRow = String(row);
+    delete el.dataset.iconFree;
     return [col, row];
   }
 
@@ -11604,10 +11605,39 @@
     return false;
   }
 
+  function desktopHasFreeIcons() {
+    return visibleDesktopIcons().some((ic) => ic.dataset.iconFree === "1");
+  }
+  function markIconFree(el) {
+    el.dataset.iconFree = "1";
+    delete el.dataset.gridCol;
+    delete el.dataset.gridRow;
+  }
+  function clampAllIcons() {
+    visibleDesktopIcons().forEach((el) => {
+      const x = parseFloat(el.dataset.posX);
+      const y = parseFloat(el.dataset.posY);
+      if (Number.isNaN(x) || Number.isNaN(y)) return;
+      setIconPos(el, x, y);
+    });
+  }
+  function commitDraggedIcons(members) {
+    if (!members || !members.length) return;
+    members.forEach((mem) => {
+      const x = parseFloat(mem.el.dataset.posX);
+      const y = parseFloat(mem.el.dataset.posY);
+      setIconPos(mem.el, Number.isNaN(x) ? mem.origX : x, Number.isNaN(y) ? mem.origY : y);
+      markIconFree(mem.el);
+    });
+  }
   function applyGridAfterViewportChange() {
     if (!iconsRoot) return;
     if (iconDrag) {
       gridNeedsRelayout = true;
+      return;
+    }
+    if (desktopHasFreeIcons()) {
+      clampAllIcons();
       return;
     }
     const m = gridMetrics();
@@ -11760,6 +11790,9 @@
       glyphHTML: glyph ? glyph.innerHTML : "",
       homeCol: parseInt(icon.dataset.gridCol, 10),
       homeRow: parseInt(icon.dataset.gridRow, 10),
+      homeX: parseFloat(icon.dataset.posX),
+      homeY: parseFloat(icon.dataset.posY),
+      wasFree: icon.dataset.iconFree === "1",
       el: icon
     });
     icon.classList.add("icon-trashed");
@@ -11780,19 +11813,24 @@
     const el = item.el;
     el.classList.remove("icon-trashed");
     el.removeAttribute("aria-hidden");
-    const m = gridMetrics();
-    const occupied = occupiedCellSet([el]);
-    const hc = item.homeCol;
-    const hr = item.homeRow;
-    const homeFree = Number.isInteger(hc) && Number.isInteger(hr)
-      && hc >= 0 && hr >= 0 && hc < m.cols && hr < m.rows
-      && !occupied.has(cellKey(hc, hr));
-    if (homeFree) {
-      placeIconAtCell(el, hc, hr, m);
+    if (item.wasFree && Number.isFinite(item.homeX) && Number.isFinite(item.homeY)) {
+      setIconPos(el, item.homeX, item.homeY);
+      markIconFree(el);
     } else {
-      const spot = firstFreeCell(occupied, m);
-      if (spot) placeIconAtCell(el, spot[0], spot[1], m);
-      else reflowDesktopIcons(gridMetrics());
+      const m = gridMetrics();
+      const occupied = occupiedCellSet([el]);
+      const hc = item.homeCol;
+      const hr = item.homeRow;
+      const homeFree = Number.isInteger(hc) && Number.isInteger(hr)
+        && hc >= 0 && hr >= 0 && hc < m.cols && hr < m.rows
+        && !occupied.has(cellKey(hc, hr));
+      if (homeFree) {
+        placeIconAtCell(el, hc, hr, m);
+      } else {
+        const spot = firstFreeCell(occupied, m);
+        if (spot) placeIconAtCell(el, spot[0], spot[1], m);
+        else reflowDesktopIcons(gridMetrics());
+      }
     }
     renderTrash();
     showToast("restored");
@@ -11894,12 +11932,11 @@
         victims.forEach((el) => sendToTrash(el, true));
         if (victims.length) showToast("sent to trash");
         const leftover = members.filter((m) => !m.el.classList.contains("icon-trashed"));
-        if (leftover.length) snapDraggedIcons(leftover, drag.el);
+        if (leftover.length) commitDraggedIcons(leftover);
       } else if (!cancelled) {
-        snapDraggedIcons(members, drag.el);
+        commitDraggedIcons(members);
       } else {
-        const m = gridMetrics();
-        members.forEach((mem) => placeIconAtCell(mem.el, mem.origCol, mem.origRow, m));
+        members.forEach((mem) => setIconPos(mem.el, mem.origX, mem.origY));
       }
       if (gridNeedsRelayout) {
         gridNeedsRelayout = false;
