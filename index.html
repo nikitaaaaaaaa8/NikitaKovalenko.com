@@ -531,6 +531,48 @@
   }
   .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 
+  .loc-pin {
+    appearance: none;
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(57,255,20,.4);
+    background: rgba(57,255,20,.08);
+    color: var(--green);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: .15s ease;
+  }
+  .loc-pin svg { width: 14px; height: 14px; display: block; }
+  .loc-pin:hover { background: rgba(57,255,20,.16); }
+  .loc-pin[aria-pressed="true"] {
+    background: rgba(57,255,20,.22);
+    border-color: rgba(57,255,20,.7);
+  }
+  .loc-pin:disabled { opacity: .45; cursor: default; }
+  .stat-loc {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .weather-where-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 0;
+  }
+  .weather-where-row #weatherWhere {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+  }
+
   #win-drone {
     max-width: min(620px, calc(100vw - 24px));
   }
@@ -3682,6 +3724,11 @@
     font-size: 14px;
     padding: 10px 16px;
   }
+  html.tesla .loc-pin {
+    width: 30px;
+    height: 30px;
+  }
+  html.tesla .loc-pin svg { width: 16px; height: 16px; }
   html.tesla .book {
     width: 48px;
   }
@@ -3906,7 +3953,7 @@
         <div class="title">Tracker</div>
       </div>
       <div class="content">
-        <div class="stat"><span>Approx location</span><span class="green" id="geoLocation">scanning…</span></div>
+        <div class="stat"><span>Approx location</span><span class="stat-loc"><span class="green" id="geoLocation">scanning…</span><button type="button" class="loc-pin" id="trackerPin" title="Use this machine's location, this visit" aria-label="Use this machine's location, this visit" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="6.2"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M12 3.2v2.6M12 18.2v2.6M3.2 12h2.6M18.2 12h2.6"/></svg></button></span></div>
         <div class="stat"><span>Network region</span><span class="muted" id="geoRegion">—</span></div>
         <div class="stat"><span>Session clicks</span><span class="green" id="clickCount">0</span></div>
         <div class="stat"><span>Tracker index</span><span class="green" id="winIndex">100</span></div>
@@ -4105,7 +4152,10 @@
       </div>
       <div class="content">
         <p class="green" id="weatherNow">scanning sky…</p>
-        <p class="muted" id="weatherWhere" style="margin: 0;">IP location, current conditions only.</p>
+        <div class="weather-where-row">
+          <p class="muted" id="weatherWhere">IP location, current conditions only.</p>
+          <button type="button" class="loc-pin" id="weatherPin" title="Use this machine's location, this visit" aria-label="Use this machine's location, this visit" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="6.2"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M12 3.2v2.6M12 18.2v2.6M3.2 12h2.6M18.2 12h2.6"/></svg></button>
+        </div>
       </div>
     </section>
 
@@ -5128,6 +5178,7 @@
   }
 
   let geoPromise = null;
+  let preciseGeo = null;
   function fetchGeo() {
     if (geoPromise) return geoPromise;
     async function readGeojs() {
@@ -5171,25 +5222,59 @@
     return geoPromise;
   }
 
+  function locPins() {
+    return [document.getElementById("trackerPin"), document.getElementById("weatherPin")].filter(Boolean);
+  }
+  function setLocPins(state) {
+    const title = state === "waiting" ? "Waiting on the browser"
+      : state === "pinned" ? "Pinned to this machine, this visit"
+      : "Use this machine's location, this visit";
+    locPins().forEach(function (btn) {
+      btn.disabled = state === "waiting";
+      btn.setAttribute("aria-pressed", state === "pinned" ? "true" : "false");
+      btn.setAttribute("title", title);
+      btn.setAttribute("aria-label", title);
+    });
+  }
+  function activeGeo() {
+    if (preciseGeo && Number.isFinite(preciseGeo.lat) && Number.isFinite(preciseGeo.lon)) {
+      return Promise.resolve(preciseGeo);
+    }
+    return fetchGeo();
+  }
   function ensureApproxLocation() {
     const locEl = document.getElementById("geoLocation");
     const regionEl = document.getElementById("geoRegion");
     const noteEl = document.getElementById("geoNote");
-    if (!locEl) return fetchGeo().catch(() => null);
-    return fetchGeo().then(geo => {
+    if (!locEl) return activeGeo().catch(() => null);
+    return activeGeo().then(geo => {
       const city = (geo.city || "").trim();
       const region = (geo.region || "").trim();
       const country = (geo.country || "").trim();
-      locEl.textContent = city ? ("near " + city) : (country ? ("near " + country) : "unknown sector");
-      if (regionEl) regionEl.textContent = [region, country].filter(Boolean).join(", ") || "—";
-      if (noteEl && geo.ip) {
-        noteEl.textContent = "City guess from IP (" + geo.ip + ") — not GPS. VPNs lie.";
+      if (city) locEl.textContent = "near " + city;
+      else if (geo.precise) locEl.textContent = "here";
+      else locEl.textContent = country ? ("near " + country) : "unknown sector";
+      if (regionEl) {
+        if (geo.precise) {
+          const coord = (Number.isFinite(geo.lat) && Number.isFinite(geo.lon))
+            ? (geo.lat.toFixed(3) + ", " + geo.lon.toFixed(3))
+            : "";
+          regionEl.textContent = [region, country].filter(Boolean).join(", ") || coord || "—";
+        } else {
+          regionEl.textContent = [region, country].filter(Boolean).join(", ") || "—";
+        }
       }
+      if (noteEl) {
+        if (geo.precise) noteEl.textContent = "Pinned to this machine, this visit. Refresh forgets.";
+        else if (geo.ip) noteEl.textContent = "City guess from IP (" + geo.ip + ") — not GPS. VPNs lie.";
+      }
+      setLocPins(geo.precise ? "pinned" : "idle");
       return geo;
     }).catch(() => {
       locEl.textContent = "signal lost";
       if (regionEl) regionEl.textContent = "—";
       if (noteEl) noteEl.textContent = "Could not read IP location. Network blocked it.";
+      setLocPins("idle");
       return null;
     });
   }
@@ -5220,7 +5305,7 @@
     const labelEl = document.getElementById("weatherLabel");
     const nowEl = document.getElementById("weatherNow");
     const whereEl = document.getElementById("weatherWhere");
-    return fetchGeo().then(geo => {
+    return activeGeo().then(geo => {
       if (!Number.isFinite(geo.lat) || !Number.isFinite(geo.lon)) throw new Error("no coords");
       const us = (geo.countryCode || "").toUpperCase() === "US" || /united states/i.test(geo.country || "");
       const unit = us ? "fahrenheit" : "celsius";
@@ -5238,15 +5323,81 @@
         if (labelEl) labelEl.textContent = tempTxt || "Weather";
         const place = [geo.city, geo.region].filter(Boolean).join(", ") || geo.country || "IP location";
         if (nowEl) nowEl.textContent = (tempTxt ? Math.round(temp) + unitSym + " · " : "") + info.label;
-        if (whereEl) whereEl.textContent = "Near " + place + ". Current only, from IP.";
+        if (whereEl) {
+          if (geo.precise) whereEl.textContent = "Pinned here. Current only. Refresh forgets.";
+          else whereEl.textContent = "Near " + place + ". Current only, from IP.";
+        }
       });
     }).catch(() => {
       if (labelEl) labelEl.textContent = "Weather";
       if (nowEl) nowEl.textContent = "sky unknown";
-      if (whereEl) whereEl.textContent = "Could not read weather for this IP.";
+      if (whereEl) whereEl.textContent = preciseGeo ? "Could not read weather for here." : "Could not read weather for this IP.";
     });
   }
   loadCurrentWeather();
+
+  function requestPreciseLocation() {
+    const noteEl = document.getElementById("geoNote");
+    function sayNote(msg) {
+      if (noteEl) noteEl.textContent = msg;
+    }
+    if (!navigator.geolocation) {
+      sayNote("This browser won't share. IP it is.");
+      setLocPins("idle");
+      return;
+    }
+    setLocPins("waiting");
+    sayNote("Waiting on the browser. IP until then.");
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      const fallback = {
+        city: "",
+        region: "",
+        country: "",
+        countryCode: "",
+        ip: "",
+        lat: lat,
+        lon: lon,
+        precise: true
+      };
+      const url = "https://geocoding-api.open-meteo.com/v1/reverse?latitude=" + encodeURIComponent(lat) + "&longitude=" + encodeURIComponent(lon) + "&language=en&format=json";
+      fetch(url, { cache: "no-store" }).then(function (r) {
+        if (!r.ok) throw new Error("reverse failed");
+        return r.json();
+      }).then(function (data) {
+        const hit = data && data.results && data.results[0];
+        preciseGeo = {
+          city: (hit && (hit.name || hit.city)) || "",
+          region: (hit && (hit.admin1 || hit.admin2)) || "",
+          country: (hit && hit.country) || "",
+          countryCode: (hit && hit.country_code) || "",
+          ip: "",
+          lat: lat,
+          lon: lon,
+          precise: true
+        };
+      }).catch(function () {
+        preciseGeo = fallback;
+      }).then(function () {
+        setLocPins("pinned");
+        ensureApproxLocation();
+        loadCurrentWeather();
+      });
+    }, function (err) {
+      setLocPins("idle");
+      if (err && err.code === 1) sayNote("Browser said no. Still guessing from IP.");
+      else sayNote("Could not pin it. Still guessing from IP.");
+      ensureApproxLocation();
+    }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 });
+  }
+  locPins().forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      requestPreciseLocation();
+    });
+  });
 
   function closeWindow(name) {
     const el = windows[name];
@@ -6408,7 +6559,7 @@
         {
           title: "Apps",
           paragraphs: [
-            "Weather shows current conditions from your IP city, via Open-Meteo. Not GPS. Tracker uses the same city guess, plus session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
+            "Weather shows current conditions via Open-Meteo. Default city is an IP guess, same as Tracker. A target in Weather and Tracker can pin this machine for this visit if the browser allows it. Refresh forgets the pin. Tracker also counts session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
             "Paint has a brush, eraser, fill, shapes, a palette, undo, and save. Resize keeps the picture and undo.",
             "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
