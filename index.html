@@ -88,6 +88,12 @@
     --icon-pad-x: 14px;
     --icon-pad-y: 18px;
   }
+  @media (max-height: 800px) {
+    :root {
+      --icon-gap-y: 8px;
+      --icon-pad-y: 10px;
+    }
+  }
 
   * { box-sizing: border-box; }
   html, body {
@@ -6540,7 +6546,7 @@
           title: "Desktop",
           paragraphs: [
             "This website is a fake desktop. Start, bottom left, lists apps with their icons. The clock, bottom right, is your local time. No seconds.",
-            "Icons start in two columns. Drag snaps to a grid across the whole desktop, not only those two columns. They cannot stack. Refresh puts them back. A short window still adds a stock column so the last icon stays above the taskbar. Rotate keeps a layout you already moved.",
+            "Icons start in two columns. Drag snaps to a grid across the whole desktop, not only those two columns. They cannot stack. Refresh puts them back. A short window packs those two columns tighter so they stay above the taskbar. Rotate keeps a layout you already moved.",
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
             "Designed for the computer, but it works on mobile too.",
@@ -11576,17 +11582,28 @@
 
   function stockColumnCount(m, n) {
     const fit = m.fitRows || m.rows;
-    const need = Math.max(1, Math.ceil(n / fit));
+    const need = Math.max(1, Math.ceil(n / Math.max(1, fit)));
     return need > 2 ? Math.max(2, need) : 2;
   }
   function reflowDesktopIcons(m) {
     m = m || gridMetrics();
     const icons = visibleDesktopIcons();
-    const cols = stockColumnCount(m, icons.length);
+    const n = icons.length;
+    let cols = 2;
+    let cellH = m.cellH;
+    const rowsNeeded = Math.max(1, Math.ceil(n / cols));
+    const packed = (m.usableH + m.gapY) / rowsNeeded;
+    let mm = m;
+    if (packed + 0.5 >= m.tileH) {
+      cellH = Math.min(m.cellH, packed);
+      mm = Object.assign({}, m, { cellH: cellH, rows: rowsNeeded, fitRows: rowsNeeded });
+    } else {
+      cols = stockColumnCount(m, n);
+    }
     icons.forEach((icon, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
-      placeIconAtCell(icon, col, row, m);
+      placeIconAtCell(icon, col, row, mm);
     });
   }
 
