@@ -4221,7 +4221,7 @@
       </div>
       <div class="content">
         <p class="green">CASINO // FAKE CHIPS ONLY</p>
-        <p class="muted casino-fun">for fun · all-time wagered <span data-wagered>—</span></p>
+        <p class="muted casino-fun">for fun · all-time wagered <span data-wagered>—</span> · P/L <span data-pnl>—</span></p>
         <div class="games-launcher">
           <button type="button" class="game-card" data-open="blackjack">
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4.5" width="10" height="14" rx="1.3"/><rect x="10" y="5.5" width="10" height="14" rx="1.3"/><path d="M15 9.2c-.8-1-2.3.1-1.5 1.3L15 12.2l1.5-1.7c.8-1.2-.7-2.3-1.5-1.3z" fill="currentColor" stroke="none"/></svg></div>
@@ -4580,7 +4580,7 @@
       </div>
       <div class="content casino-content">
         <div class="casino-bar">
-          <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span></div>
+          <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span> · P/L: <span data-pnl>—</span></div>
           <div class="casino-tapped" hidden>
             <span>you're tapped</span>
             <button type="button" class="btn" data-chip-reset>Reset chips</button>
@@ -4632,7 +4632,7 @@
       </div>
       <div class="content casino-content">
         <div class="casino-bar">
-          <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span></div>
+          <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span> · P/L: <span data-pnl>—</span></div>
           <div class="casino-tapped" hidden>
             <span>you're tapped</span>
             <button type="button" class="btn" data-chip-reset>Reset chips</button>
@@ -4690,7 +4690,7 @@
       </div>
       <div class="content casino-content">
         <div class="casino-bar">
-          <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span></div>
+          <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span> · P/L: <span data-pnl>—</span></div>
           <div class="casino-tapped" hidden>
             <span>you're tapped</span>
             <button type="button" class="btn" data-chip-reset>Reset chips</button>
@@ -4757,7 +4757,7 @@
       </div>
       <div class="content casino-content">
         <div class="casino-bar">
-          <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span></div>
+          <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span> · P/L: <span data-pnl>—</span></div>
           <div class="casino-tapped" hidden>
             <span>you're tapped</span>
             <button type="button" class="btn" data-chip-reset>Reset chips</button>
@@ -4801,7 +4801,7 @@
       </div>
       <div class="content casino-content">
         <div class="casino-bar">
-          <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span></div>
+          <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span> · P/L: <span data-pnl>—</span></div>
           <div class="casino-tapped" hidden>
             <span>you're tapped</span>
             <button type="button" class="btn" data-chip-reset>Reset chips</button>
@@ -6493,7 +6493,7 @@
       snitch.style.display = "none";
       clearTimeout(snitchTimeout);
       bumpWinning(47);
-      chipsGive(500);
+      chipsGive(500, true);
       showToast("Caught the Snitch! +47 winning · +500 chips");
     }
     snitch.addEventListener("click", catchSnitch);
@@ -6586,7 +6586,7 @@
             "Blackjack sits on a rectangular green felt — dealer up top, you below, chips on the rail. Hit, stand, double, split on the same rank once (8+8 yes, 10+K no), and insurance when the dealer shows an ace (pays 2:1). Cards deal one at a time. After a hand, Rebet repeats the last bet size.",
             "Roulette is a real rectangular felt, 12 numbers across and 3 down (plus 0). Outside bets — red, black, odd, even, 1–18, 19–36, dozens, and column 2to1 — sit on the table. Stack chips on a spot; click again to add. Straight pays 35:1, dozens and columns 2:1, even money 1:1. Zero kills outside bets. After a spin it names the hits and the odds. A short road of recent numbers sits under the wheel.",
             "Craps rolls two dice in a glass dome. The dome shakes, the dice bounce, then they land on the roll. Pass line plus true odds after a point. Slots is a 3-row machine with five paylines. One bet covers every line; each hit pays its best award and they add up. A line draws through a hit. Reels stop one at a time. 777 pays 20×, three diamonds 12×, any other three-of-a-kind 6×, two 7s 2×. Other pairs do not pay. Two 7s that miss 777 flash so-close — that line still pays 2×. Baccarat sits on the same green felt as Blackjack, with Player and Banker zones and a short road along the edge. Cards deal one at a time.",
-            "You start at 1000 chips. A refresh resets them. One pile, every table. All-time chips wagered is a Worker tally on the tables. Reset chips does not unwind it. Tables have light motion and short beeps, mute from the tray speaker."
+            "You start at 1000 chips. A refresh resets them. One pile, every table. All-time chips wagered and all-time P/L are Worker tallies on the tables, shared across every visit. P/L is payouts minus bets. Reset chips does not unwind them. Tables have light motion and short beeps, mute from the tray speaker."
           ]
         },
         {
@@ -9050,13 +9050,15 @@
     chipsUpdate();
     kitaChipSnd();
     if (typeof kitaWager === "function") kitaWager(n);
+    if (typeof kitaPnl === "function") kitaPnl(-n);
     return true;
   }
-  function chipsGive(n) {
+  function chipsGive(n, skipPnl) {
     n = Math.floor(Number(n) || 0);
     if (n < 1) return;
     chips += n;
     chipsUpdate();
+    if (!skipPnl && typeof kitaPnl === "function") kitaPnl(n);
   }
   document.addEventListener("click", (e) => {
     if (e.target.closest("[data-chip-reset]")) chipsReset();
@@ -10659,10 +10661,68 @@
     });
   }
 
+
+  function kitaPnlLabel(n) {
+    if (typeof n !== "number" || !isFinite(n)) return "—";
+    n = Math.floor(n);
+    if (n > 0) return "+" + n.toLocaleString("en-US");
+    if (n < 0) return "−" + Math.abs(n).toLocaleString("en-US");
+    return "0";
+  }
+  let kitaPnlServer = null;
+  let kitaPnlBusy = false;
+  function kitaPaintPnl(n) {
+    if (typeof n !== "number" || !isFinite(n)) return;
+    n = Math.floor(n);
+    kitaPnlServer = n;
+    const shown = n + kitaPnlQ;
+    const label = kitaPnlLabel(shown);
+    document.querySelectorAll("[data-pnl]").forEach(function (el) {
+      el.textContent = label;
+    });
+  }
+  let kitaPnlQ = 0;
+  function kitaPnl(n) {
+    n = Math.floor(Number(n) || 0);
+    if (n === 0 || typeof fetch !== "function") return;
+    kitaPnlQ += n;
+    if (kitaPnlServer !== null) kitaPaintPnl(kitaPnlServer);
+    kitaFlushPnl();
+  }
+  function kitaFlushPnl() {
+    if (kitaPnlBusy || kitaPnlQ === 0) return;
+    let add = kitaPnlQ;
+    if (add > 100000) add = 100000;
+    if (add < -100000) add = -100000;
+    kitaPnlQ -= add;
+    kitaPnlBusy = true;
+    fetch(KITA_VIEWS_URL + "/hit", {
+      method: "POST",
+      credentials: "omit",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: "casino:pnl", n: add })
+    }).then(function (res) {
+      if (!res || !res.ok) throw new Error("pnl failed");
+      return res.json();
+    }).then(function (data) {
+      if (!data || data.id !== "casino:pnl" || typeof data.n !== "number") throw new Error("pnl bad");
+      kitaPaintPnl(data.n);
+    }).catch(function () {
+      kitaPnlQ += add;
+      setTimeout(kitaFlushPnl, 900);
+    }).then(function () {
+      kitaPnlBusy = false;
+      kitaFlushPnl();
+    });
+  }
+
   function kitaPaintAllViews(map) {
     if (!map || typeof map !== "object") return;
     if (Object.prototype.hasOwnProperty.call(map, "casino:wagered")) {
       kitaPaintWagered(map["casino:wagered"]);
+    }
+    if (Object.prototype.hasOwnProperty.call(map, "casino:pnl") && !kitaPnlBusy && kitaPnlQ === 0) {
+      kitaPaintPnl(map["casino:pnl"]);
     }
     document.querySelectorAll(".vlc-row").forEach(function (row) {
       const tapeId = row.getAttribute("data-vlc-id");
