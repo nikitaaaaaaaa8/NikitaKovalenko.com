@@ -3224,6 +3224,7 @@
     .chess-pc { font-size: clamp(22px, 8vw, 32px); }
     .pipes-stage { width: min(100%, calc(100dvh - 210px)); grid-template-columns: minmax(8px, 12px) minmax(0, 1fr) minmax(8px, 12px); }
     .pipe-tile { min-height: 0; }
+    #win-games.window.open,
     #win-snake.window.open,
     #win-tetris.window.open,
     #win-minesweeper.window.open,
@@ -3231,9 +3232,9 @@
     #win-chess.window.open,
     #win-pipes.window.open,
     #win-solitaire.window.open {
-      height: calc(100dvh - 52px);
       max-height: calc(100dvh - 52px);
     }
+    #win-games .content,
     #win-snake .content,
     #win-tetris .content,
     #win-minesweeper .content,
@@ -5132,7 +5133,11 @@
       }
       top = Math.min(Math.max(margin, top), maxTop);
       el.style.top = top + "px";
-      el.style.maxHeight = Math.max(140, window.innerHeight - tb - top) + "px";
+      const room = Math.max(140, window.innerHeight - tb - top - 8);
+      el.style.maxHeight = room + "px";
+      if (/^win-(games|snake|tetris|minesweeper|2048|chess|pipes|solitaire)$/.test(el.id)) {
+        el.style.height = room + "px";
+      }
       return;
     }
 
@@ -6639,7 +6644,7 @@
         {
           title: "Games",
           paragraphs: [
-            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, and 2048. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome. On a phone, Flag stays Flag (it does not grow). Toolbars do not wrap. Snake and Tetris keep a bigger pad on screen; keyboard hints hide."
+            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, and 2048. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome. On a phone, Flag stays Flag (it does not grow). Toolbars do not wrap. Snake and Tetris keep a bigger pad on screen; keyboard hints hide. The Games list and each game window sit above the taskbar; the list scrolls if a card would tuck under Start."
           ]
         },
         {
