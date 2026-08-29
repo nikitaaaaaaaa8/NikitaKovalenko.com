@@ -1403,6 +1403,16 @@
     max-width: min(760px, calc(100vw - 24px));
   }
   #win-minesweeper .content {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+  #win-minesweeper .ms-toolbar,
+  #win-minesweeper .game-hint { flex-shrink: 0; }
+  #win-minesweeper .ms-board {
+    flex: 1 1 auto;
+    min-height: 0;
     overflow: auto;
   }
   .ms-board {
@@ -1611,6 +1621,16 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: nowrap;
+  }
+  #msFlagBtn, #msRestart {
+    flex: 0 0 auto;
+    min-height: 40px;
+  }
+  #msFlagBtn[aria-pressed="true"] {
+    background: rgba(57,255,20,.18);
+    border-color: var(--green);
+    color: var(--green);
   }
   .chess-diff,
   .pipes-diff,
@@ -3180,16 +3200,61 @@
 
   @media (max-width: 700px) {
     .ms-cell { font-size: 11px; }
-    .game-pad { max-width: 200px; }
+    .btn, .ms-cell, .pipe-tile, .game-card, .game-pad .btn {
+      touch-action: manipulation;
+    }
+    .game-card { min-height: 56px; }
+    .game-pad {
+      max-width: min(280px, 78vw);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .game-pad .btn {
+      min-height: 48px;
+      font-size: 18px;
+    }
     .chess-board { width: min(100%, calc(100dvh - 200px)); }
     .chess-diff .btn,
     .pipes-diff .btn,
     .ms-diff .btn,
     .snake-diff .btn,
-    .tetris-diff .btn { min-height: 44px; }
+    .tetris-diff .btn,
+    #msFlagBtn,
+    #msRestart { min-height: 44px; }
     .chess-pc { font-size: clamp(22px, 8vw, 32px); }
     .pipes-stage { width: min(100%, calc(100dvh - 210px)); grid-template-columns: minmax(8px, 12px) minmax(0, 1fr) minmax(8px, 12px); }
     .pipe-tile { min-height: 0; }
+    #win-snake.window.open,
+    #win-tetris.window.open,
+    #win-minesweeper.window.open,
+    #win-2048.window.open,
+    #win-chess.window.open,
+    #win-pipes.window.open,
+    #win-solitaire.window.open {
+      height: calc(100dvh - 52px);
+      max-height: calc(100dvh - 52px);
+    }
+    #win-snake .content,
+    #win-tetris .content,
+    #win-minesweeper .content,
+    #win-2048 .content.g2048-content,
+    #win-chess .content.chess-content,
+    #win-pipes .content.pipes-content,
+    #win-solitaire .content.sol-content {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    #win-snake .game-hint,
+    #win-tetris .game-hint,
+    #win-minesweeper .game-hint {
+      display: none;
+    }
+    #win-solitaire .game-toolbar .row { flex-wrap: nowrap; }
+    .g2048-board {
+      width: 100%;
+      max-width: min(100%, calc(100dvh - 180px));
+      margin: 0 auto;
+    }
 
     #win-solitaire {
       --sol-cw: 40px;
@@ -6574,7 +6639,7 @@
         {
           title: "Games",
           paragraphs: [
-            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, and 2048. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome."
+            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, and 2048. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome. On a phone, Flag stays Flag (it does not grow). Toolbars do not wrap. Snake and Tetris keep a bigger pad on screen; keyboard hints hide."
           ]
         },
         {
@@ -7024,8 +7089,6 @@
     msFlagBtn.addEventListener("click", () => {
       msFlagMode = !msFlagMode;
       msFlagBtn.setAttribute("aria-pressed", msFlagMode ? "true" : "false");
-      msFlagBtn.classList.toggle("secondary", !msFlagMode);
-      msFlagBtn.textContent = msFlagMode ? "Flag ON" : "Flag";
     });
   }
   const msRestartBtn = document.getElementById("msRestart");
