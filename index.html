@@ -3373,6 +3373,52 @@
   }
 
 
+
+  /* Scores / classic leaderboard */
+  #win-scores { width: min(420px, calc(100vw - 24px)); }
+  #win-scores .content.scores-content { display: flex; flex-direction: column; gap: 10px; }
+  .lb-toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .lb-toolbar select, .lb-toolbar .btn {
+    font: inherit; color: var(--green); background: rgba(0,0,0,.35);
+    border: 1px solid rgba(57,255,20,.4); border-radius: 6px; padding: 6px 8px;
+  }
+  .lb-note { margin: 0; font-size: 11px; }
+  .lb-table {
+    width: 100%; border-collapse: collapse; font-size: 12px;
+  }
+  .lb-table th, .lb-table td {
+    text-align: left; padding: 6px 8px; border-bottom: 1px solid rgba(57,255,20,.18);
+  }
+  .lb-table th { color: var(--muted); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; font-size: 10px; }
+  .lb-table td.rank { width: 2.2em; color: var(--muted); }
+  .lb-table td.score { text-align: right; font-variant-numeric: tabular-nums; color: var(--green); }
+  .lb-empty { color: var(--muted); font-size: 12px; padding: 10px 0; }
+  .lb-overlay {
+    position: fixed; inset: 0; z-index: 12000;
+    background: rgba(0,0,0,.55);
+    display: none; align-items: center; justify-content: center;
+    padding: 16px;
+  }
+  .lb-overlay.show { display: flex; }
+  .lb-card {
+    width: min(360px, 100%);
+    background: #071007;
+    border: 1px solid rgba(57,255,20,.55);
+    border-radius: 10px;
+    box-shadow: 0 0 24px rgba(57,255,20,.18);
+    padding: 14px;
+    color: #d8ffd0;
+  }
+  .lb-card h3 { margin: 0 0 6px; color: var(--green); font-size: 14px; letter-spacing: .06em; text-transform: uppercase; }
+  .lb-card p { margin: 0 0 10px; color: var(--muted); font-size: 12px; }
+  .lb-card input {
+    width: 100%; box-sizing: border-box; margin: 0 0 10px;
+    padding: 8px 10px; border-radius: 6px;
+    border: 1px solid rgba(57,255,20,.4);
+    background: #000; color: var(--green); font: inherit;
+  }
+  .lb-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
   /* Classic YouTube (in-window) — ~2006 skin */
   #win-youtube {
     width: min(780px, calc(100vw - 24px));
@@ -4425,7 +4471,50 @@
         <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="6.2" width="17.6" height="11.6" rx="3.2"/><path d="M10.4 9.4l5 2.6-5 2.6V9.4z" fill="currentColor" stroke="none"/></svg></div>
         <div class="label">YouTube</div>
       </div>
+      <div class="icon" id="icon-scores" tabindex="0" data-open="scores" aria-label="Scores">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 18.5V10.2"/><path d="M12 18.5V6.2"/><path d="M17.5 18.5v-5.2"/><path d="M4.5 18.5h15"/></svg></div>
+        <div class="label">Scores</div>
+      </div>
     </div>
+
+    <section class="window" id="win-scores" style="top:70px; left:150px; width:400px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="scores"></div>
+          <div class="dot min" data-close="scores"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Scores</div>
+      </div>
+      <div class="content scores-content">
+        <p class="green">LEADERBOARD // CLASSIC CABINET</p>
+        <p class="muted lb-note">Type a name when a run ends. Same name updates if you beat yourself. Shared across visits.</p>
+        <div class="lb-toolbar">
+          <label class="muted" for="lbBoardSelect">Board</label>
+          <select id="lbBoardSelect" aria-label="Leaderboard board">
+            <option value="snake:easy">Snake · Easy</option>
+            <option value="snake:medium" selected>Snake · Medium</option>
+            <option value="snake:hard">Snake · Hard</option>
+            <option value="tetris:easy">Tetris · Easy</option>
+            <option value="tetris:medium">Tetris · Medium</option>
+            <option value="tetris:hard">Tetris · Hard</option>
+            <option value="n2048">2048</option>
+            <option value="mines:easy">Minesweeper · Easy</option>
+            <option value="mines:medium">Minesweeper · Medium</option>
+            <option value="mines:hard">Minesweeper · Hard</option>
+            <option value="pipes:easy">Pipes · Easy</option>
+            <option value="pipes:medium">Pipes · Medium</option>
+            <option value="pipes:hard">Pipes · Hard</option>
+            <option value="solitaire">Solitaire · moves</option>
+            <option value="chess:easy">Chess wins · Easy</option>
+            <option value="chess:medium">Chess wins · Medium</option>
+            <option value="chess:hard">Chess wins · Hard</option>
+          </select>
+          <button type="button" class="btn" id="lbRefresh">Refresh</button>
+        </div>
+        <div id="lbBoardMount" class="lb-empty">Pick a board.</div>
+      </div>
+    </section>
 
     <section class="window" id="win-about" style="top:80px; left:140px; width:420px;">
       <div class="titlebar" data-drag>
@@ -5441,6 +5530,7 @@
       <button type="button" data-open="paint">Paint</button>
       <button type="button" data-open="vlc">VLC</button>
       <button type="button" data-open="youtube">YouTube</button>
+      <button type="button" data-open="scores">Scores</button>
       <button type="button" data-open="drone">DroneStuff</button>
       <button type="button" data-open="trash">Trash</button>
     </div>
@@ -5452,6 +5542,19 @@
     <div class="aura-value" id="auraValue">87</div>
   </div>
 
+  <div class="lb-overlay" id="lbOverlay" hidden>
+    <div class="lb-card" role="dialog" aria-modal="true" aria-labelledby="lbPromptTitle">
+      <h3 id="lbPromptTitle">New high score</h3>
+      <p id="lbPromptMeta">Enter a name for the board.</p>
+      <form id="lbPromptForm" action="#" autocomplete="off">
+        <input id="lbPromptName" maxlength="12" placeholder="Name (12 chars)" aria-label="Leaderboard name">
+        <div class="lb-actions">
+          <button type="button" class="btn secondary" id="lbPromptSkip">Skip</button>
+          <button type="submit" class="btn" id="lbPromptSave">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <div class="toast" id="toast"></div>
   <div id="droneLightbox" hidden role="dialog" aria-modal="true" aria-label="DroneStuff photo">
     <img id="droneLightboxImg" alt="">
@@ -5573,6 +5676,7 @@
     paint: document.getElementById("win-paint"),
     vlc: document.getElementById("win-vlc"),
     youtube: document.getElementById("win-youtube"),
+    scores: document.getElementById("win-scores"),
     casino: document.getElementById("win-casino"),
     blackjack: document.getElementById("win-blackjack"),
     slots: document.getElementById("win-slots"),
@@ -5761,6 +5865,7 @@
     if (name === "paint") onPaintWindowOpen();
     if (name === "vlc") vlcOnOpen();
     if (name === "youtube") ytOnOpen();
+    if (name === "scores") lbOnOpen();
     if (name === "drone") kitaFetchCounts();
   }
 
@@ -6198,7 +6303,7 @@
 
     if (cmd === "help") {
       termPrint("commands: help, whoami, winning, clear, sudo, date, kita, scan, confess, coinflip, matrix, aura, snow");
-      termPrint("apps: about, tracker, contact, drone, games, casino, trash, bookshelf, weather, paint, vlc, youtube, terminal");
+      termPrint("apps: about, tracker, contact, drone, games, casino, trash, bookshelf, weather, paint, vlc, youtube, scores, terminal");
     } else if (cmd === "whoami") {
       termPrint("guest@nikitakovalenko.com // temporary main character");
     } else if (cmd === "winning") {
@@ -6351,7 +6456,10 @@
         videos: "vlc",
         youtube: "youtube",
         yt: "youtube",
-        nikita_kovy: "youtube"
+        nikita_kovy: "youtube",
+        scores: "scores",
+        score: "scores",
+        leaderboard: "scores"
       };
       let launch = cmd;
       if (launch.indexOf("open ") === 0) launch = launch.slice(5).trim();
@@ -7181,6 +7289,7 @@
             "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
             "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden).",
+            "Scores is a classic leaderboard window for every rankable game. Open it from the desktop or type scores in Terminal.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Open mail app prefills the subject “you're the man.”"
           ]
@@ -7188,7 +7297,7 @@
         {
           title: "Games",
           paragraphs: [
-            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, and 2048. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome. On a phone, Flag stays Flag (it does not grow). Toolbars do not wrap. Snake and Tetris keep a bigger pad on screen; keyboard hints hide. The Games list and each game window sit above the taskbar; the list scrolls if a card would tuck under Start."
+            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, and 2048. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome. On a phone, Flag stays Flag (it does not grow). Toolbars do not wrap. Snake and Tetris keep a bigger pad on screen; keyboard hints hide. Scores is the shared classic leaderboard. When a run ends you can type a short name; the Worker keeps the top scores. Same name on the same board updates if you beat yourself (Chess tallies wins). Minesweeper / Pipes / Solitaire rank by lower time or moves. The Games list and each game window sit above the taskbar; the list scrolls if a card would tuck under Start."
           ]
         },
         {
@@ -7204,7 +7313,7 @@
         {
           title: "Terminal",
           paragraphs: [
-            "Open Terminal and type help, then press Run. Help lists commands and app names, including terminal. Type an app name to open it. vlc opens the player. youtube opens the classic YouTube window (folder-level apps).",
+            "Open Terminal and type help, then press Run. Help lists commands and app names, including terminal. Type an app name to open it. vlc opens the player. youtube opens the classic YouTube window. scores opens the leaderboard (folder-level apps).",
             "games and casino open those folders. Not the inner games. snow toggles the snow. matrix toggles the rain. Matrix off puts snow back unless you already stopped it. Konami still unlocks VIP.",
             "scan drops a short Kita AV banner, walks fake paths, and may find a threat or two. coinflip shows a coin, then heads or tails.",
             "The placeholder is try: help. There is no email command."
@@ -7918,6 +8027,7 @@
       msUpdateStatus();
       showToast("Minesweeper cleared. +10 winning");
       bumpWinning(10);
+      if (typeof lbOffer === "function") lbOffer("mines:" + msDiff, msTimer, { label: msTimer + "s · " + msDiff, dir: "low" });
     } else {
       msUpdateStatus();
     }
@@ -8093,12 +8203,12 @@
     const nx = head.x + snDir.x;
     const ny = head.y + snDir.y;
     if (nx < 0 || ny < 0 || nx >= SN_COLS || ny >= SN_ROWS) {
-      snAlive = false; snStop(); snUpdateStatus(); showToast("Snake crashed. Score " + snScore); return;
+      snAlive = false; snStop(); snUpdateStatus(); showToast("Snake crashed. Score " + snScore); if (typeof lbOffer === "function") lbOffer("snake:" + snDiff, snScore, { label: snScore + " · " + snDiff }); return;
     }
     const willEat = nx === snFood.x && ny === snFood.y;
     const body = willEat ? snSnake : snSnake.slice(0, -1);
     if (body.some(p => p.x === nx && p.y === ny)) {
-      snAlive = false; snStop(); snUpdateStatus(); showToast("Snake crashed. Score " + snScore); return;
+      snAlive = false; snStop(); snUpdateStatus(); showToast("Snake crashed. Score " + snScore); if (typeof lbOffer === "function") lbOffer("snake:" + snDiff, snScore, { label: snScore + " · " + snDiff }); return;
     }
     snSnake.unshift({ x: nx, y: ny });
     if (willEat) {
@@ -8217,7 +8327,7 @@
       tStop();
       tDraw();
       tUpdateStatus();
-      showToast("Tetris over. Score " + tScore);
+      showToast("Tetris over. Score " + tScore); if (typeof lbOffer === "function") lbOffer("tetris:" + tDiff, tScore, { label: tScore + " · " + tDiff });
       return false;
     }
     return true;
@@ -8486,7 +8596,7 @@
   };
   let sol = {
     stock: [], waste: [], found: [[],[],[],[]], tab: [[],[],[],[],[],[],[]],
-    drawN: 3, won: false, dealt: false
+    drawN: 3, won: false, dealt: false, moves: 0
   };
   let solUndo = null;
   let solSel = null;
@@ -8500,7 +8610,7 @@
   function solClone(v) { return JSON.parse(JSON.stringify(v)); }
   function solPushUndo() {
     solUndo = JSON.stringify({
-      stock: sol.stock, waste: sol.waste, found: sol.found, tab: sol.tab, won: sol.won
+      stock: sol.stock, waste: sol.waste, found: sol.found, tab: sol.tab, won: sol.won, moves: sol.moves
     });
     if (solEls.undoBtn) solEls.undoBtn.disabled = false;
   }
@@ -8633,12 +8743,14 @@
       if (solEls.win) solEls.win.hidden = false;
       showToast("Solitaire cleared. +10 winning");
       bumpWinning(10);
+      if (typeof lbOffer === "function") lbOffer("solitaire", sol.moves, { label: sol.moves + " moves", dir: "low" });
     }
   }
   function solDoMove(src, dest) {
     if (sol.won) return false;
     if (!solCanMove(src, dest)) return false;
     solPushUndo();
+    sol.moves += 1;
     const cards = solTake(src);
     if (dest.type === "f") sol.found[dest.i].push(cards[0]);
     else sol.tab[dest.col].push.apply(sol.tab[dest.col], cards);
@@ -8678,6 +8790,7 @@
     if (sol.won) return;
     if (sol.stock.length) {
       solPushUndo();
+      sol.moves += 1;
       const n = Math.min(sol.drawN, sol.stock.length);
       for (let i = 0; i < n; i++) {
         const c = sol.stock.pop();
@@ -8690,6 +8803,7 @@
     }
     if (sol.waste.length) {
       solPushUndo();
+      sol.moves += 1;
       while (sol.waste.length) {
         const c = sol.waste.pop();
         c.face = false;
@@ -8701,8 +8815,8 @@
   }
   function solUpdateStatus() {
     if (!solEls.status) return;
-    if (sol.won) solEls.status.textContent = "Cleared · four foundations";
-    else solEls.status.textContent = "Klondike · Draw " + sol.drawN;
+    if (sol.won) solEls.status.textContent = "Cleared · " + sol.moves + " moves";
+    else solEls.status.textContent = "Klondike · Draw " + sol.drawN + " · " + sol.moves + " moves";
     if (solEls.drawBtn) {
       solEls.drawBtn.textContent = "Draw " + sol.drawN;
       solEls.drawBtn.setAttribute("aria-pressed", sol.drawN === 3 ? "true" : "false");
@@ -8803,6 +8917,7 @@
     sol.found = [[],[],[],[]];
     sol.tab = [[],[],[],[],[],[],[]];
     sol.won = false;
+    sol.moves = 0;
     sol.dealt = true;
     solSel = null;
     solLastTap = null;
@@ -8826,6 +8941,7 @@
     sol.found = snap.found;
     sol.tab = snap.tab;
     sol.won = snap.won;
+    if (typeof snap.moves === "number") sol.moves = snap.moves;
     solSel = null;
     solClearUndo();
     solRender();
@@ -9409,6 +9525,7 @@
         winIndex += 12;
         renderStats();
         showToast("Checkmate. +12 winning");
+        if (typeof lbOffer === "function") lbOffer("chess:" + chess.diff, 1, { label: "win · " + chess.diff, mode: "add" });
       } else showToast("Checkmate");
     } else {
       chessSetStatus("Stalemate", "stale");
@@ -9741,6 +9858,7 @@
       pipesRender();
       bumpWinning(10);
       showToast("Pipes connected. +10 winning");
+      if (typeof lbOffer === "function") lbOffer("pipes:" + pipes.diff, pipes.moves, { label: pipes.moves + " moves · " + pipes.diff, dir: "low" });
     } else {
       pipesRender();
     }
@@ -9958,6 +10076,7 @@
     if (!g2048CanMove()) {
       g2048.over = true;
       showToast("2048 over. Score " + g2048.score);
+      if (typeof lbOffer === "function") lbOffer("n2048", g2048.score, { label: String(g2048.score) });
     }
     g2048Render();
   }
@@ -11550,6 +11669,160 @@
   // View counts live on the Worker. Session-only otherwise. No localStorage.
   const KITA_VIEWS_URL = "https://kita-views.nikitaaaaaaaa.workers.dev";
   const kitaViews = { inflight: null };
+
+  // --- Classic leaderboards (Worker KV) ---
+  let lbName = "";
+  let lbPending = null;
+  const LB_DIR = {
+    "snake:easy": "high", "snake:medium": "high", "snake:hard": "high",
+    "tetris:easy": "high", "tetris:medium": "high", "tetris:hard": "high",
+    "n2048": "high",
+    "mines:easy": "low", "mines:medium": "low", "mines:hard": "low",
+    "pipes:easy": "low", "pipes:medium": "low", "pipes:hard": "low",
+    "solitaire": "low",
+    "chess:easy": "high", "chess:medium": "high", "chess:hard": "high"
+  };
+
+  function lbFormatScore(board, score) {
+    const dir = LB_DIR[board] || "high";
+    if (board.indexOf("mines:") === 0) return score + "s";
+    if (board.indexOf("pipes:") === 0 || board === "solitaire") return score + " moves";
+    if (board.indexOf("chess:") === 0) return score === 1 ? "1 win" : score + " wins";
+    return String(score);
+  }
+
+  function lbRenderRows(board, rows, dir) {
+    const mount = document.getElementById("lbBoardMount");
+    if (!mount) return;
+    if (!rows || !rows.length) {
+      mount.className = "lb-empty";
+      mount.textContent = "No scores yet. Finish a run and type a name.";
+      return;
+    }
+    mount.className = "";
+    const head = dir === "low" ? "Best" : "Score";
+    let html = '<table class="lb-table"><thead><tr><th>#</th><th>Name</th><th>' + head + '</th></tr></thead><tbody>';
+    rows.forEach(function (row, i) {
+      html += '<tr><td class="rank">' + (i + 1) + '</td><td>' +
+        String(row.name || "").replace(/&/g,"&amp;").replace(/</g,"&lt;") +
+        '</td><td class="score">' + lbFormatScore(board, row.score) + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    mount.innerHTML = html;
+  }
+
+  function lbFetchBoard(board) {
+    board = board || (document.getElementById("lbBoardSelect") || {}).value || "snake:medium";
+    const mount = document.getElementById("lbBoardMount");
+    if (mount) {
+      mount.className = "lb-empty";
+      mount.textContent = "Loading…";
+    }
+    return fetch(KITA_VIEWS_URL + "/scores?board=" + encodeURIComponent(board), {
+      method: "GET", credentials: "omit", cache: "no-store"
+    }).then(function (res) {
+      if (!res || !res.ok) throw new Error("scores failed");
+      return res.json();
+    }).then(function (data) {
+      lbRenderRows(board, data && data.rows, (data && data.dir) || LB_DIR[board] || "high");
+      return data;
+    }).catch(function () {
+      if (mount) {
+        mount.className = "lb-empty";
+        mount.textContent = "Could not reach the board.";
+      }
+      return null;
+    });
+  }
+
+  function lbOnOpen() {
+    lbFetchBoard();
+  }
+
+  function lbHidePrompt() {
+    const ov = document.getElementById("lbOverlay");
+    if (!ov) return;
+    ov.classList.remove("show");
+    ov.hidden = true;
+    lbPending = null;
+  }
+
+  function lbOffer(board, score, opts) {
+    opts = opts || {};
+    if (!LB_DIR[board]) return;
+    score = Math.floor(Number(score) || 0);
+    if (score < 0) return;
+    if ((LB_DIR[board] === "low") && score < 1 && board.indexOf("mines:") !== 0) return;
+    if (board.indexOf("mines:") === 0 && score < 0) return;
+    lbPending = { board: board, score: score, mode: opts.mode || "best", label: opts.label || String(score) };
+    const ov = document.getElementById("lbOverlay");
+    const title = document.getElementById("lbPromptTitle");
+    const meta = document.getElementById("lbPromptMeta");
+    const input = document.getElementById("lbPromptName");
+    if (title) title.textContent = "Save to Scores";
+    if (meta) meta.textContent = (opts.label || score) + " → " + board.replace(":", " · ");
+    if (input) {
+      input.value = lbName || "";
+      setTimeout(function () { try { input.focus(); input.select(); } catch (e) {} }, 30);
+    }
+    if (ov) {
+      ov.hidden = false;
+      ov.classList.add("show");
+    }
+  }
+
+  function lbSubmit(name) {
+    const pending = lbPending;
+    if (!pending) return Promise.resolve(null);
+    name = String(name || "").replace(/\s+/g, " ").trim().slice(0, 12);
+    if (!name) {
+      showToast("Need a name");
+      return Promise.resolve(null);
+    }
+    lbName = name;
+    const body = { board: pending.board, name: name, score: pending.score, mode: pending.mode || "best" };
+    lbHidePrompt();
+    return fetch(KITA_VIEWS_URL + "/score", {
+      method: "POST",
+      credentials: "omit",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }).then(function (res) {
+      if (!res || !res.ok) throw new Error("score failed");
+      return res.json();
+    }).then(function (data) {
+      if (data && data.kept) showToast("Kept your better score");
+      else showToast("Saved · " + name);
+      const sel = document.getElementById("lbBoardSelect");
+      if (sel) sel.value = pending.board;
+      if (windows.scores && windows.scores.classList.contains("open")) lbFetchBoard(pending.board);
+      return data;
+    }).catch(function () {
+      showToast("Score save failed");
+      return null;
+    });
+  }
+
+  (function wireScores() {
+    const sel = document.getElementById("lbBoardSelect");
+    const refresh = document.getElementById("lbRefresh");
+    if (sel) sel.addEventListener("change", function () { lbFetchBoard(sel.value); });
+    if (refresh) refresh.addEventListener("click", function () { lbFetchBoard(sel ? sel.value : ""); });
+    const form = document.getElementById("lbPromptForm");
+    const skip = document.getElementById("lbPromptSkip");
+    if (form) form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = document.getElementById("lbPromptName");
+      lbSubmit(input ? input.value : "");
+    });
+    if (skip) skip.addEventListener("click", function (e) { e.preventDefault(); lbHidePrompt(); });
+    const ov = document.getElementById("lbOverlay");
+    if (ov) ov.addEventListener("click", function (e) {
+      if (e.target === ov) lbHidePrompt();
+    });
+  })();
+
+
 
   function kitaViewIdOk(id) {
     return /^(vlc:(fight|football|basketball)|drone:0[1-9]|drone:10)$/.test(id || "");
