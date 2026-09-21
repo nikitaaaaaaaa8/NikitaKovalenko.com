@@ -579,6 +579,107 @@
     min-width: 0;
   }
 
+  #win-weather {
+    width: min(340px, calc(100vw - 24px));
+  }
+  #win-weather .content.weather-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(57,255,20,.12), transparent 46%),
+      radial-gradient(circle at 88% 100%, rgba(57,255,20,.06), transparent 42%),
+      #050805;
+  }
+  .wx-hero {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+  }
+  .wx-art {
+    width: 96px;
+    height: 96px;
+    border: 1px solid rgba(57,255,20,.35);
+    border-radius: 12px;
+    background: rgba(0,0,0,.35);
+    box-shadow: inset 0 0 18px rgba(57,255,20,.08), 0 0 14px rgba(57,255,20,.12);
+    display: grid;
+    place-items: center;
+    color: var(--green);
+    overflow: hidden;
+  }
+  .wx-art svg {
+    width: 72px;
+    height: 72px;
+    display: block;
+    filter: drop-shadow(0 0 6px rgba(57,255,20,.45));
+  }
+  .wx-art[data-kind="clear"] .wx-sun-rays {
+    transform-origin: 32px 32px;
+    animation: wx-spin 18s linear infinite;
+  }
+  .wx-art[data-kind="rain"] .wx-drop,
+  .wx-art[data-kind="storm"] .wx-drop {
+    animation: wx-fall 1.1s linear infinite;
+  }
+  .wx-art[data-kind="rain"] .wx-drop.d2,
+  .wx-art[data-kind="storm"] .wx-drop.d2 { animation-delay: .25s; }
+  .wx-art[data-kind="rain"] .wx-drop.d3,
+  .wx-art[data-kind="storm"] .wx-drop.d3 { animation-delay: .55s; }
+  .wx-art[data-kind="snow"] .wx-flake {
+    animation: wx-drift 2.4s ease-in-out infinite;
+  }
+  .wx-art[data-kind="snow"] .wx-flake.f2 { animation-delay: .4s; }
+  .wx-art[data-kind="snow"] .wx-flake.f3 { animation-delay: .9s; }
+  .wx-art[data-kind="storm"] .wx-bolt {
+    animation: wx-flash 2.2s steps(1, end) infinite;
+  }
+  .wx-art[data-kind="fog"] .wx-fogline {
+    animation: wx-fog 3.2s ease-in-out infinite;
+  }
+  .wx-art[data-kind="fog"] .wx-fogline.l2 { animation-delay: .5s; }
+  .wx-art[data-kind="fog"] .wx-fogline.l3 { animation-delay: 1s; }
+  @keyframes wx-spin { to { transform: rotate(360deg); } }
+  @keyframes wx-fall {
+    0% { transform: translateY(-2px); opacity: .15; }
+    20% { opacity: 1; }
+    100% { transform: translateY(10px); opacity: .05; }
+  }
+  @keyframes wx-drift {
+    0%, 100% { transform: translate(0, 0); opacity: .7; }
+    50% { transform: translate(3px, 5px); opacity: 1; }
+  }
+  @keyframes wx-flash {
+    0%, 82%, 100% { opacity: .35; }
+    84%, 90% { opacity: 1; }
+  }
+  @keyframes wx-fog {
+    0%, 100% { opacity: .35; transform: translateX(-2px); }
+    50% { opacity: .9; transform: translateX(3px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wx-art svg * { animation: none !important; }
+  }
+  .wx-readout { min-width: 0; }
+  .wx-temp {
+    font-size: 34px;
+    line-height: 1;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: -0.5px;
+    text-shadow: 0 0 12px rgba(57,255,20,.35);
+    margin: 0 0 4px;
+  }
+  .wx-cond {
+    margin: 0;
+    font-size: 14px;
+  }
+  .wx-meta {
+    margin: 4px 0 0;
+    font-size: 11px;
+  }
+
   #win-drone {
     max-width: min(620px, calc(100vw - 24px));
   }
@@ -4613,7 +4714,7 @@
       </div>
     </section>
 
-    <section class="window" id="win-weather" style="top:110px; left:200px; width:280px;">
+    <section class="window" id="win-weather" style="top:110px; left:200px; width:340px;">
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="weather"></div>
@@ -4622,8 +4723,15 @@
         </div>
         <div class="title">Weather</div>
       </div>
-      <div class="content">
-        <p class="green" id="weatherNow">scanning sky…</p>
+      <div class="content weather-content">
+        <div class="wx-hero">
+          <div class="wx-art" id="weatherArt" data-kind="cloud" aria-hidden="true"></div>
+          <div class="wx-readout">
+            <div class="wx-temp" id="weatherTemp">—</div>
+            <p class="green wx-cond" id="weatherNow">scanning sky…</p>
+            <p class="muted wx-meta" id="weatherCodeLabel">current conditions</p>
+          </div>
+        </div>
         <div class="weather-where-row">
           <p class="muted" id="weatherWhere">IP location, current conditions only.</p>
           <button type="button" class="loc-pin" id="weatherPin" title="Use this machine's location, this visit" aria-label="Use this machine's location, this visit" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="6.2"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M12 3.2v2.6M12 18.2v2.6M3.2 12h2.6M18.2 12h2.6"/></svg></button>
@@ -5760,6 +5868,7 @@
 
   const weatherGlyphs = {
     clear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3.2v1.8M12 19v1.8M3.2 12h1.8M19 12h1.8M5.6 5.6l1.3 1.3M17.1 17.1l1.3 1.3M5.6 18.4l1.3-1.3M17.1 6.9l1.3-1.3"/></svg>',
+    partly: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.2" cy="9" r="3.1"/><path d="M9.2 3.6v1.4M3.6 9h1.4M5.2 5.2l1 1M5.2 12.8l1-1"/><path d="M9.5 17.2h8.6a2.9 2.9 0 0 0 .35-5.8 4.2 4.2 0 0 0-8-1A3.1 3.1 0 0 0 9.5 17.2z"/></svg>',
     cloud: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.2 17.5h10.2a3.4 3.4 0 0 0 .4-6.8 5 5 0 0 0-9.6-1.2A3.6 3.6 0 0 0 7.2 17.5z"/></svg>',
     rain: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.2 14.2h10.2a3.4 3.4 0 0 0 .4-6.8 5 5 0 0 0-9.6-1.2A3.6 3.6 0 0 0 7.2 14.2z"/><path d="M8.5 17.2v2.2M12 16.6v2.6M15.5 17.2v2.2"/></svg>',
     snow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.2v15.6M6.4 7.4l11.2 9.2M17.6 7.4L6.4 16.6"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>',
@@ -5767,10 +5876,20 @@
     fog: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 9.5h15M5.5 12.5h13M7 15.5h10M6 18.2h12"/></svg>'
   };
 
+  const weatherArt = {
+    clear: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><g class="wx-sun-rays"><path d="M32 8v6M32 50v6M8 32h6M50 32h6M14.5 14.5l4.2 4.2M45.3 45.3l4.2 4.2M14.5 49.5l4.2-4.2M45.3 18.7l4.2-4.2"/></g><circle cx="32" cy="32" r="11" fill="rgba(57,255,20,.12)"/><circle cx="32" cy="32" r="11"/></svg>',
+    partly: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><g class="wx-sun-rays"><circle cx="24" cy="24" r="8" fill="rgba(57,255,20,.12)"/><circle cx="24" cy="24" r="8"/><path d="M24 10v4M10 24h4M14 14l2.8 2.8M14 34l2.8-2.8"/></g><path d="M22 46h26a8 8 0 0 0 1-16 12 12 0 0 0-23-2.5A8.5 8.5 0 0 0 22 46z" fill="rgba(57,255,20,.08)"/><path d="M22 46h26a8 8 0 0 0 1-16 12 12 0 0 0-23-2.5A8.5 8.5 0 0 0 22 46z"/></svg>',
+    cloud: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 42h33a9 9 0 0 0 1.1-18 14 14 0 0 0-27-2.8A9.5 9.5 0 0 0 16 42z" fill="rgba(57,255,20,.08)"/><path d="M16 42h33a9 9 0 0 0 1.1-18 14 14 0 0 0-27-2.8A9.5 9.5 0 0 0 16 42z"/></svg>',
+    rain: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 34h33a9 9 0 0 0 1.1-18 14 14 0 0 0-27-2.8A9.5 9.5 0 0 0 16 34z" fill="rgba(57,255,20,.08)"/><path d="M16 34h33a9 9 0 0 0 1.1-18 14 14 0 0 0-27-2.8A9.5 9.5 0 0 0 16 34z"/><path class="wx-drop d1" d="M22 42v8"/><path class="wx-drop d2" d="M32 40v10"/><path class="wx-drop d3" d="M42 42v8"/></svg>',
+    snow: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 30h33a9 9 0 0 0 1.1-18 14 14 0 0 0-27-2.8A9.5 9.5 0 0 0 16 30z" fill="rgba(57,255,20,.08)"/><path d="M16 30h33a9 9 0 0 0 1.1-18 14 14 0 0 0-27-2.8A9.5 9.5 0 0 0 16 30z"/><g class="wx-flake f1"><path d="M24 38v10M20 41l8 4M28 41l-8 4"/><circle cx="24" cy="43" r="1.4" fill="currentColor" stroke="none"/></g><g class="wx-flake f2"><path d="M33 40v10M29 43l8 4M37 43l-8 4"/><circle cx="33" cy="45" r="1.4" fill="currentColor" stroke="none"/></g><g class="wx-flake f3"><path d="M43 38v10M39 41l8 4M47 41l-8 4"/><circle cx="43" cy="43" r="1.4" fill="currentColor" stroke="none"/></g></svg>',
+    storm: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 30h33a9 9 0 0 0 1.1-18 14 14 0 0 0-27-2.8A9.5 9.5 0 0 0 16 30z" fill="rgba(57,255,20,.08)"/><path d="M16 30h33a9 9 0 0 0 1.1-18 14 14 0 0 0-27-2.8A9.5 9.5 0 0 0 16 30z"/><path class="wx-bolt" d="M30 30l-6 12h7l-4 12 14-16h-8z" fill="currentColor" stroke="none"/><path class="wx-drop d2" d="M46 40v8"/></svg>',
+    fog: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path class="wx-fogline l1" d="M12 24h40"/><path class="wx-fogline l2" d="M16 34h32"/><path class="wx-fogline l3" d="M14 44h36"/><path d="M20 54h24" opacity=".45"/></svg>'
+  };
+
   function weatherKind(code) {
     const n = Number(code);
     if (n === 0) return { kind: "clear", label: "Clear" };
-    if (n === 1 || n === 2) return { kind: "clear", label: "Mostly clear" };
+    if (n === 1 || n === 2) return { kind: "partly", label: n === 1 ? "Mostly clear" : "Partly cloudy" };
     if (n === 3) return { kind: "cloud", label: "Cloudy" };
     if (n === 45 || n === 48) return { kind: "fog", label: "Fog" };
     if ([71,73,75,77,85,86].indexOf(n) >= 0) return { kind: "snow", label: "Snow" };
@@ -5779,11 +5898,21 @@
     return { kind: "cloud", label: "Cloudy" };
   }
 
+  function setWeatherArt(kind) {
+    const art = document.getElementById("weatherArt");
+    if (!art) return;
+    const k = weatherArt[kind] ? kind : "cloud";
+    art.dataset.kind = k;
+    art.innerHTML = weatherArt[k];
+  }
+
   function loadCurrentWeather() {
     const glyphEl = document.getElementById("weatherGlyph");
     const labelEl = document.getElementById("weatherLabel");
     const nowEl = document.getElementById("weatherNow");
     const whereEl = document.getElementById("weatherWhere");
+    const tempEl = document.getElementById("weatherTemp");
+    const codeLabelEl = document.getElementById("weatherCodeLabel");
     return activeGeo().then(geo => {
       if (!Number.isFinite(geo.lat) || !Number.isFinite(geo.lon)) throw new Error("no coords");
       const unitSym = "°F";
@@ -5796,10 +5925,13 @@
         const code = data && data.current ? data.current.weather_code : null;
         const info = weatherKind(code);
         if (glyphEl && weatherGlyphs[info.kind]) glyphEl.innerHTML = weatherGlyphs[info.kind];
+        setWeatherArt(info.kind);
         const tempTxt = (typeof temp === "number") ? Math.round(temp) + unitSym : "";
         if (labelEl) labelEl.textContent = tempTxt || "Weather";
+        if (tempEl) tempEl.textContent = tempTxt || "—";
+        if (nowEl) nowEl.textContent = info.label;
+        if (codeLabelEl) codeLabelEl.textContent = "WMO " + (code == null ? "—" : code) + " · live sky";
         const place = [geo.city, geo.region].filter(Boolean).join(", ") || geo.country || "IP location";
-        if (nowEl) nowEl.textContent = (tempTxt ? tempTxt + " · " : "") + info.label;
         if (whereEl) {
           if (geo.precise) whereEl.textContent = "Pinned here. Current only. Refresh forgets.";
           else whereEl.textContent = "Near " + place + ". Current only, from IP.";
@@ -5807,10 +5939,14 @@
       });
     }).catch(() => {
       if (labelEl) labelEl.textContent = "Weather";
+      if (tempEl) tempEl.textContent = "—";
       if (nowEl) nowEl.textContent = "sky unknown";
+      if (codeLabelEl) codeLabelEl.textContent = "no signal";
+      setWeatherArt("cloud");
       if (whereEl) whereEl.textContent = preciseGeo ? "Could not read weather for here." : "Could not read weather for this IP.";
     });
   }
+  setWeatherArt("cloud");
   loadCurrentWeather();
 
   function requestPreciseLocation() {
@@ -7040,7 +7176,7 @@
         {
           title: "Apps",
           paragraphs: [
-            "Weather shows current conditions in °F. Open-Meteo is cached on the Worker so a rate limit on one machine does not blank the sky. Default city is an IP guess, same as Tracker. A target in Weather and Tracker can pin this machine for this visit if the browser allows it. Refresh forgets the pin. Tracker also counts session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
+            "Weather shows current conditions in °F with a neon SVG for the real sky (clear, partly cloudy, cloudy, rain, snow, storm, fog). The desktop icon matches it. Open-Meteo is cached on the Worker so a rate limit on one machine does not blank the sky. Default city is an IP guess, same as Tracker. A target in Weather and Tracker can pin this machine for this visit if the browser allows it. Refresh forgets the pin. Tracker also counts session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
             "Paint has a brush, eraser, fill, shapes, a palette, undo, and save. Resize keeps the picture and undo.",
             "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
