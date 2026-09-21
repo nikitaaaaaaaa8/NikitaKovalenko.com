@@ -5931,7 +5931,7 @@
       el.style.top = top + "px";
       const room = Math.max(140, window.innerHeight - tb - top - 8);
       el.style.maxHeight = room + "px";
-      if (/^win-(games|snake|tetris|minesweeper|2048|chess|pipes|solitaire)$/.test(el.id)) {
+      if (/^win-(games|snake|tetris|minesweeper|2048|chess|pipes|solitaire|flappy|tron|pacman)$/.test(el.id)) {
         el.style.height = room + "px";
       }
       return;
@@ -12650,7 +12650,10 @@
     "mines:easy": "low", "mines:medium": "low", "mines:hard": "low",
     "pipes:easy": "low", "pipes:medium": "low", "pipes:hard": "low",
     "solitaire": "low",
-    "chess:easy": "high", "chess:medium": "high", "chess:hard": "high"
+    "chess:easy": "high", "chess:medium": "high", "chess:hard": "high",
+    "flappy:easy": "high", "flappy:medium": "high", "flappy:hard": "high",
+    "tron:easy": "high", "tron:medium": "high", "tron:hard": "high",
+    "pacman:easy": "high", "pacman:medium": "high", "pacman:hard": "high"
   };
 
   function lbFormatScore(board, score) {
