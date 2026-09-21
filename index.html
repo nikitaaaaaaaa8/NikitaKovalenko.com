@@ -1590,7 +1590,10 @@
   #win-chess.window.open,
   #win-pipes.window.open,
   #win-minesweeper.window.open,
-  #win-2048.window.open {
+  #win-2048.window.open,
+  #win-flappy.window.open,
+  #win-tron.window.open,
+  #win-pacman.window.open {
     max-height: calc(100dvh - 48px);
   }
   #win-tetris .content,
@@ -3332,7 +3335,10 @@
     #win-2048.window.open,
     #win-chess.window.open,
     #win-pipes.window.open,
-    #win-solitaire.window.open {
+    #win-solitaire.window.open,
+    #win-flappy.window.open,
+    #win-tron.window.open,
+    #win-pacman.window.open {
       max-height: calc(100dvh - 52px);
     }
     #win-games .content,
@@ -3342,7 +3348,10 @@
     #win-2048 .content.g2048-content,
     #win-chess .content.chess-content,
     #win-pipes .content.pipes-content,
-    #win-solitaire .content.sol-content {
+    #win-solitaire .content.sol-content,
+    #win-flappy .content.flappy-content,
+    #win-tron .content.tron-content,
+    #win-pacman .content.pacman-content {
       flex: 1 1 auto;
       min-height: 0;
     }
@@ -3418,6 +3427,35 @@
     background: #000; color: var(--green); font: inherit;
   }
   .lb-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+
+  /* Arcade trio: Flappy / Tron / Pac-Man */
+  #win-flappy, #win-tron, #win-pacman { width: min(420px, calc(100vw - 24px)); }
+  #win-flappy .content.flappy-content,
+  #win-tron .content.tron-content,
+  #win-pacman .content.pacman-content {
+    display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+  }
+  #win-flappy .game-canvas-wrap,
+  #win-tron .game-canvas-wrap,
+  #win-pacman .game-canvas-wrap {
+    flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center;
+  }
+  #win-flappy canvas, #win-tron canvas, #win-pacman canvas {
+    max-width: 100%; height: auto; image-rendering: pixelated;
+    border: 1px solid rgba(57,255,20,.35);
+    border-radius: 6px;
+    background: #050805;
+    box-shadow: inset 0 0 18px rgba(57,255,20,.08), 0 0 14px rgba(57,255,20,.12);
+  }
+  .arcade-pick { gap: 6px; margin: 0 0 8px; flex-wrap: wrap; }
+  .arcade-pick .btn { padding: 4px 8px; font-size: 11px; }
+  .arcade-pick input[type="color"] {
+    width: 28px; height: 22px; padding: 0; border: 1px solid rgba(57,255,20,.4);
+    border-radius: 4px; background: #000; vertical-align: middle; margin-left: 4px;
+  }
+  .flappy-pad { max-width: 220px; grid-template-columns: 1fr; }
+  .flappy-pad .pad-flap { grid-column: 1; min-height: 48px; letter-spacing: .12em; }
 
   /* Classic YouTube (in-window) — ~2006 skin */
   #win-youtube {
@@ -4509,6 +4547,15 @@
             <option value="chess:easy">Chess wins · Easy</option>
             <option value="chess:medium">Chess wins · Medium</option>
             <option value="chess:hard">Chess wins · Hard</option>
+            <option value="flappy:easy">Flappy · Easy</option>
+            <option value="flappy:medium">Flappy · Medium</option>
+            <option value="flappy:hard">Flappy · Hard</option>
+            <option value="tron:easy">Tron · Easy</option>
+            <option value="tron:medium">Tron · Medium</option>
+            <option value="tron:hard">Tron · Hard</option>
+            <option value="pacman:easy">Pac-Man · Easy</option>
+            <option value="pacman:medium">Pac-Man · Medium</option>
+            <option value="pacman:hard">Pac-Man · Hard</option>
           </select>
           <button type="button" class="btn" id="lbRefresh">Refresh</button>
         </div>
@@ -4869,6 +4916,19 @@
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7.4" height="7.4" rx="1.2"/><rect x="13.1" y="3.5" width="7.4" height="7.4" rx="1.2"/><rect x="3.5" y="13.1" width="7.4" height="7.4" rx="1.2"/><rect x="13.1" y="13.1" width="7.4" height="7.4" rx="1.2"/><path d="M6.2 7.2h2.2M15.8 7.2h2.2M6.2 16.8h2.2M15.8 16.8h2.2"/></svg></div>
             <div class="gc-meta"><div class="gc-title">2048</div><div class="gc-desc">4×4 · arrows or swipe · session best</div></div>
           </button>
+
+          <button type="button" class="game-card" data-open="flappy">
+            <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="11" cy="12" rx="6.2" ry="4.8"/><path d="M16.2 11.2l4 1.2-4 1.4"/><circle cx="13.2" cy="10.4" r="0.9" fill="currentColor" stroke="none"/><path d="M4.5 9.2c1.4-.2 2.6.6 3.2 1.6"/></svg></div>
+            <div class="gc-meta"><div class="gc-title">Flappy Bird</div><div class="gc-desc">Characters · neon pipes · Easy / Medium / Hard</div></div>
+          </button>
+          <button type="button" class="game-card" data-open="tron">
+            <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h7"/><path d="M11 16V8h5"/><path d="M16 8h4"/><circle cx="4" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="20" cy="8" r="1.2" fill="currentColor" stroke="none"/></svg></div>
+            <div class="gc-meta"><div class="gc-title">Tron</div><div class="gc-desc">1–3 AIs · pick colors · Easy / Medium / Hard</div></div>
+          </button>
+          <button type="button" class="game-card" data-open="pacman">
+            <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12a7 7 0 1 1-7-7"/><path d="M12 5v7h7"/><circle cx="9.2" cy="9.2" r="0.9" fill="currentColor" stroke="none"/></svg></div>
+            <div class="gc-meta"><div class="gc-title">Pac-Man</div><div class="gc-desc">Maze · ghosts · power pellets · Easy / Medium / Hard</div></div>
+          </button>
         </div>
       </div>
     </section>
@@ -5125,6 +5185,125 @@
         <p class="game-hint">Arrows / WASD · swipe on the board</p>
       </div>
     </section>
+
+    <section class="window" id="win-flappy" style="top:56px; left:200px; width:380px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="flappy"></div>
+          <div class="dot min" data-close="flappy"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Flappy Bird</div>
+      </div>
+      <div class="content flappy-content">
+        <div class="game-toolbar">
+          <div class="game-status" id="flappyStatus">Score: 0</div>
+          <div class="row flappy-controls">
+            <div class="snake-diff" role="group" aria-label="Difficulty">
+              <button type="button" class="btn secondary" data-fl-diff="easy" aria-pressed="false">Easy</button>
+              <button type="button" class="btn secondary" data-fl-diff="medium" aria-pressed="true">Medium</button>
+              <button type="button" class="btn secondary" data-fl-diff="hard" aria-pressed="false">Hard</button>
+            </div>
+            <button type="button" class="btn" id="flappyRestart">Restart</button>
+          </div>
+        </div>
+        <div class="arcade-pick row" role="group" aria-label="Character">
+          <button type="button" class="btn secondary fl-char" data-fl-char="bird" aria-pressed="true">Bird</button>
+          <button type="button" class="btn secondary fl-char" data-fl-char="kita" aria-pressed="false">Kita</button>
+          <button type="button" class="btn secondary fl-char" data-fl-char="pixel" aria-pressed="false">Pixel</button>
+          <button type="button" class="btn secondary fl-char" data-fl-char="drone" aria-pressed="false">Drone</button>
+        </div>
+        <div class="game-canvas-wrap">
+          <canvas id="flappy-canvas" width="320" height="420" aria-label="Flappy Bird"></canvas>
+        </div>
+        <div class="game-pad flappy-pad" id="flappyPad">
+          <button type="button" class="btn pad-flap" data-flap="1" aria-label="Flap">FLAP</button>
+        </div>
+        <p class="game-hint">Space / click / tap · flap through neon pipes</p>
+      </div>
+    </section>
+
+    <section class="window" id="win-tron" style="top:48px; left:160px; width:420px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="tron"></div>
+          <div class="dot min" data-close="tron"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Tron</div>
+      </div>
+      <div class="content tron-content">
+        <div class="game-toolbar">
+          <div class="game-status" id="tronStatus">Trail: 0</div>
+          <div class="row tron-controls">
+            <div class="snake-diff" role="group" aria-label="Difficulty">
+              <button type="button" class="btn secondary" data-tr-diff="easy" aria-pressed="false">Easy</button>
+              <button type="button" class="btn secondary" data-tr-diff="medium" aria-pressed="true">Medium</button>
+              <button type="button" class="btn secondary" data-tr-diff="hard" aria-pressed="false">Hard</button>
+            </div>
+            <button type="button" class="btn" id="tronRestart">Restart</button>
+          </div>
+        </div>
+        <div class="arcade-pick row" role="group" aria-label="AI count">
+          <span class="muted" style="align-self:center;font-size:11px;">AIs</span>
+          <button type="button" class="btn secondary" data-tr-ais="1" aria-pressed="true">1</button>
+          <button type="button" class="btn secondary" data-tr-ais="2" aria-pressed="false">2</button>
+          <button type="button" class="btn secondary" data-tr-ais="3" aria-pressed="false">3</button>
+        </div>
+        <div class="arcade-pick row tron-colors" id="tronColorRow">
+          <label class="muted" style="font-size:11px;">You <input type="color" id="tronYouColor" value="#39ff14" aria-label="Your color"></label>
+          <label class="muted" style="font-size:11px;">AI1 <input type="color" id="tronAi1Color" value="#ff4d6d" aria-label="AI 1 color"></label>
+          <label class="muted" style="font-size:11px;">AI2 <input type="color" id="tronAi2Color" value="#4da6ff" aria-label="AI 2 color"></label>
+          <label class="muted" style="font-size:11px;">AI3 <input type="color" id="tronAi3Color" value="#ffd54a" aria-label="AI 3 color"></label>
+        </div>
+        <div class="game-canvas-wrap">
+          <canvas id="tron-canvas" width="336" height="336" aria-label="Tron"></canvas>
+        </div>
+        <div class="game-pad" id="tronPad">
+          <button type="button" class="btn pad-up" data-tr-dir="up" aria-label="Up">▲</button>
+          <button type="button" class="btn pad-left" data-tr-dir="left" aria-label="Left">◀</button>
+          <button type="button" class="btn pad-down" data-tr-dir="down" aria-label="Down">▼</button>
+          <button type="button" class="btn pad-right" data-tr-dir="right" aria-label="Right">▶</button>
+        </div>
+        <p class="game-hint">Arrows / WASD · walls and trails kill · last trail wins the board</p>
+      </div>
+    </section>
+
+    <section class="window" id="win-pacman" style="top:40px; left:140px; width:400px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="pacman"></div>
+          <div class="dot min" data-close="pacman"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Pac-Man</div>
+      </div>
+      <div class="content pacman-content">
+        <div class="game-toolbar">
+          <div class="game-status" id="pacStatus">Score: 0 · Lives: 3</div>
+          <div class="row pac-controls">
+            <div class="snake-diff" role="group" aria-label="Difficulty">
+              <button type="button" class="btn secondary" data-pac-diff="easy" aria-pressed="false">Easy</button>
+              <button type="button" class="btn secondary" data-pac-diff="medium" aria-pressed="true">Medium</button>
+              <button type="button" class="btn secondary" data-pac-diff="hard" aria-pressed="false">Hard</button>
+            </div>
+            <button type="button" class="btn" id="pacRestart">Restart</button>
+          </div>
+        </div>
+        <div class="game-canvas-wrap">
+          <canvas id="pacman-canvas" width="304" height="336" aria-label="Pac-Man"></canvas>
+        </div>
+        <div class="game-pad" id="pacPad">
+          <button type="button" class="btn pad-up" data-pac-dir="up" aria-label="Up">▲</button>
+          <button type="button" class="btn pad-left" data-pac-dir="left" aria-label="Left">◀</button>
+          <button type="button" class="btn pad-down" data-pac-dir="down" aria-label="Down">▼</button>
+          <button type="button" class="btn pad-right" data-pac-dir="right" aria-label="Right">▶</button>
+        </div>
+        <p class="game-hint">Arrows / WASD · eat dots · power pellets scare ghosts</p>
+      </div>
+    </section>
+
+
 
     <section class="window" id="win-paint" style="top:64px; left:150px; width:680px;">
       <div class="titlebar" data-drag>
@@ -5672,6 +5851,9 @@
     chess: document.getElementById("win-chess"),
     pipes: document.getElementById("win-pipes"),
     n2048: document.getElementById("win-2048"),
+    flappy: document.getElementById("win-flappy"),
+    tron: document.getElementById("win-tron"),
+    pacman: document.getElementById("win-pacman"),
     weather: document.getElementById("win-weather"),
     paint: document.getElementById("win-paint"),
     vlc: document.getElementById("win-vlc"),
@@ -7297,7 +7479,7 @@
         {
           title: "Games",
           paragraphs: [
-            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, and 2048. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome. On a phone, Flag stays Flag (it does not grow). Toolbars do not wrap. Snake and Tetris keep a bigger pad on screen; keyboard hints hide. Scores is the shared classic leaderboard. When a run ends you can type a short name; the Worker keeps the top scores. Same name on the same board updates if you beat yourself (Chess tallies wins). Minesweeper / Pipes / Solitaire rank by lower time or moves. The Games list and each game window sit above the taskbar; the list scrolls if a card would tuck under Start."
+            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, 2048, Flappy Bird, Tron, and Pac-Man. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome. On a phone, Flag stays Flag (it does not grow). Toolbars do not wrap. Snake and Tetris keep a bigger pad on screen; keyboard hints hide. Flappy Bird has character skins (Bird, Kita, Pixel, Drone) and neon site-green pipes; Easy / Medium / Hard change gravity and gap. Tron is light-cycles versus 1–3 AIs with color picks for you and each AI; score is your trail. Pac-Man is a neon maze with dots, power pellets, four ghosts, and three lives. Scores is the shared classic leaderboard. When a run ends you can type a short name; the Worker keeps the top scores. Same name on the same board updates if you beat yourself (Chess tallies wins). Minesweeper / Pipes / Solitaire rank by lower time or moves. The Games list and each game window sit above the taskbar; the list scrolls if a card would tuck under Start."
           ]
         },
         {
@@ -8574,7 +8756,783 @@
       else handled = false;
       if (handled) e.preventDefault();
     }
+    if (gameWindowOpen("flappy") && windows.flappy && windows.flappy.classList.contains("active")) {
+      if (key === " " || key === "ArrowUp" || key === "w" || key === "W") {
+        e.preventDefault();
+        flFlap();
+      }
+    }
+    if (gameWindowOpen("tron") && windows.tron && windows.tron.classList.contains("active")) {
+      let handled = true;
+      if (key === "ArrowUp" || key === "w" || key === "W") trSetDir(0, -1);
+      else if (key === "ArrowDown" || key === "s" || key === "S") trSetDir(0, 1);
+      else if (key === "ArrowLeft" || key === "a" || key === "A") trSetDir(-1, 0);
+      else if (key === "ArrowRight" || key === "d" || key === "D") trSetDir(1, 0);
+      else handled = false;
+      if (handled) e.preventDefault();
+    }
+    if (gameWindowOpen("pacman") && windows.pacman && windows.pacman.classList.contains("active")) {
+      let handled = true;
+      if (key === "ArrowUp" || key === "w" || key === "W") pacSetDir(0, -1);
+      else if (key === "ArrowDown" || key === "s" || key === "S") pacSetDir(0, 1);
+      else if (key === "ArrowLeft" || key === "a" || key === "A") pacSetDir(-1, 0);
+      else if (key === "ArrowRight" || key === "d" || key === "D") pacSetDir(1, 0);
+      else handled = false;
+      if (handled) e.preventDefault();
+    }
   });
+
+
+  // --- Flappy Bird ---
+  const FL_SPEED = { easy: 1.6, medium: 2.2, hard: 2.9 };
+  const FL_GAP = { easy: 130, medium: 108, hard: 88 };
+  const FL_GRAV = { easy: 0.28, medium: 0.34, hard: 0.42 };
+  const FL_FLAP = { easy: -5.2, medium: -5.8, hard: -6.4 };
+  let flDiff = "medium";
+  let flChar = "bird";
+  let flScore = 0;
+  let flAlive = false;
+  let flRunning = false;
+  let flRaf = 0;
+  let flBird = { x: 72, y: 180, vy: 0, r: 12 };
+  let flPipes = [];
+  let flFrame = 0;
+  let flOffered = false;
+  const flappyCanvas = document.getElementById("flappy-canvas");
+  const flappyCtx = flappyCanvas ? flappyCanvas.getContext("2d") : null;
+  const flappyStatus = document.getElementById("flappyStatus");
+
+  function flSyncDiff() {
+    document.querySelectorAll("[data-fl-diff]").forEach(function (btn) {
+      btn.setAttribute("aria-pressed", btn.getAttribute("data-fl-diff") === flDiff ? "true" : "false");
+    });
+  }
+  function flSyncChar() {
+    document.querySelectorAll("[data-fl-char]").forEach(function (btn) {
+      btn.setAttribute("aria-pressed", btn.getAttribute("data-fl-char") === flChar ? "true" : "false");
+    });
+  }
+  function flUpdateStatus() {
+    if (!flappyStatus) return;
+    flappyStatus.textContent = flAlive ? ("Score: " + flScore) : ("Game over · Score: " + flScore);
+  }
+  function flStop() {
+    flRunning = false;
+    if (flRaf) { cancelAnimationFrame(flRaf); flRaf = 0; }
+  }
+  function flSpawnPipe() {
+    const h = flappyCanvas ? flappyCanvas.height : 420;
+    const gap = FL_GAP[flDiff] || 108;
+    const topH = 40 + Math.random() * Math.max(40, h - gap - 120);
+    flPipes.push({ x: (flappyCanvas ? flappyCanvas.width : 320) + 10, top: topH, gap: gap, passed: false });
+  }
+  function flDrawChar(ctx, x, y, r) {
+    ctx.save();
+    ctx.translate(x, y);
+    if (flChar === "kita") {
+      ctx.fillStyle = "#39ff14";
+      ctx.shadowColor = "rgba(57,255,20,.7)";
+      ctx.shadowBlur = 10;
+      ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = "#050805";
+      ctx.beginPath(); ctx.arc(r * 0.25, -r * 0.15, r * 0.22, 0, Math.PI * 2); ctx.fill();
+    } else if (flChar === "pixel") {
+      ctx.fillStyle = "#39ff14";
+      ctx.fillRect(-r, -r, r * 2, r * 2);
+      ctx.fillStyle = "#050805";
+      ctx.fillRect(r * 0.1, -r * 0.5, r * 0.45, r * 0.45);
+    } else if (flChar === "drone") {
+      ctx.strokeStyle = "#39ff14";
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(-r, 0); ctx.lineTo(r, 0); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-r * 0.7, -r * 0.6); ctx.lineTo(-r * 0.2, 0); ctx.lineTo(-r * 0.7, r * 0.6); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(r * 0.7, -r * 0.6); ctx.lineTo(r * 0.2, 0); ctx.lineTo(r * 0.7, r * 0.6); ctx.stroke();
+      ctx.fillStyle = "#39ff14";
+      ctx.beginPath(); ctx.arc(0, 0, r * 0.45, 0, Math.PI * 2); ctx.fill();
+    } else {
+      ctx.fillStyle = "#b8ff6a";
+      ctx.beginPath(); ctx.ellipse(0, 0, r * 1.1, r * 0.85, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#39ff14";
+      ctx.beginPath(); ctx.ellipse(-r * 0.2, r * 0.1, r * 0.55, r * 0.35, -0.4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#050805";
+      ctx.beginPath(); ctx.arc(r * 0.35, -r * 0.2, r * 0.18, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#ffb020";
+      ctx.beginPath(); ctx.moveTo(r * 0.7, 0); ctx.lineTo(r * 1.35, -r * 0.15); ctx.lineTo(r * 0.7, r * 0.2); ctx.closePath(); ctx.fill();
+    }
+    ctx.restore();
+  }
+  function flDraw() {
+    if (!flappyCtx || !flappyCanvas) return;
+    const w = flappyCanvas.width, h = flappyCanvas.height;
+    const g = flappyCtx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, "#020402");
+    g.addColorStop(1, "#071007");
+    flappyCtx.fillStyle = g;
+    flappyCtx.fillRect(0, 0, w, h);
+    flappyCtx.strokeStyle = "rgba(57,255,20,0.08)";
+    for (let i = 0; i < w; i += 16) {
+      flappyCtx.beginPath(); flappyCtx.moveTo(i + 0.5, 0); flappyCtx.lineTo(i + 0.5, h); flappyCtx.stroke();
+    }
+    flPipes.forEach(function (p) {
+      const pipeW = 44;
+      flappyCtx.fillStyle = "rgba(57,255,20,0.18)";
+      flappyCtx.strokeStyle = "#39ff14";
+      flappyCtx.lineWidth = 2;
+      flappyCtx.shadowColor = "rgba(57,255,20,0.45)";
+      flappyCtx.shadowBlur = 8;
+      flappyCtx.fillRect(p.x, 0, pipeW, p.top);
+      flappyCtx.strokeRect(p.x + 0.5, 0.5, pipeW - 1, p.top - 1);
+      const botY = p.top + p.gap;
+      flappyCtx.fillRect(p.x, botY, pipeW, h - botY);
+      flappyCtx.strokeRect(p.x + 0.5, botY + 0.5, pipeW - 1, h - botY - 1);
+      flappyCtx.fillStyle = "rgba(57,255,20,0.35)";
+      flappyCtx.fillRect(p.x - 3, p.top - 12, pipeW + 6, 12);
+      flappyCtx.fillRect(p.x - 3, botY, pipeW + 6, 12);
+      flappyCtx.shadowBlur = 0;
+    });
+    flDrawChar(flappyCtx, flBird.x, flBird.y, flBird.r);
+    flappyCtx.fillStyle = "rgba(57,255,20,0.9)";
+    flappyCtx.font = "600 18px ui-monospace, monospace";
+    flappyCtx.fillText(String(flScore), 12, 28);
+  }
+  function flDie() {
+    if (!flAlive) return;
+    flAlive = false;
+    flStop();
+    flUpdateStatus();
+    showToast("Flappy · " + flScore);
+    if (!flOffered && typeof lbOffer === "function") {
+      flOffered = true;
+      lbOffer("flappy:" + flDiff, flScore, { label: flScore + " · " + flDiff });
+    }
+  }
+  function flTick() {
+    if (!flRunning || !flAlive) return;
+    const speed = FL_SPEED[flDiff] || 2.2;
+    const grav = FL_GRAV[flDiff] || 0.34;
+    flBird.vy += grav;
+    flBird.y += flBird.vy;
+    const h = flappyCanvas.height;
+    if (flBird.y + flBird.r > h - 2 || flBird.y - flBird.r < 2) { flDie(); flDraw(); return; }
+    flFrame++;
+    if (flFrame % 90 === 0) flSpawnPipe();
+    const pipeW = 44;
+    for (let i = flPipes.length - 1; i >= 0; i--) {
+      const p = flPipes[i];
+      p.x -= speed;
+      if (!p.passed && p.x + pipeW < flBird.x) {
+        p.passed = true;
+        flScore += 1;
+        flUpdateStatus();
+      }
+      if (p.x + pipeW < -10) flPipes.splice(i, 1);
+      else {
+        const withinX = flBird.x + flBird.r * 0.7 > p.x && flBird.x - flBird.r * 0.7 < p.x + pipeW;
+        if (withinX) {
+          if (flBird.y - flBird.r * 0.7 < p.top || flBird.y + flBird.r * 0.7 > p.top + p.gap) {
+            flDie(); flDraw(); return;
+          }
+        }
+      }
+    }
+    flDraw();
+    flRaf = requestAnimationFrame(flTick);
+  }
+  function flFlap() {
+    if (!gameWindowOpen("flappy")) return;
+    if (!flAlive) { flReset(true); return; }
+    if (!flRunning) {
+      flRunning = true;
+      flRaf = requestAnimationFrame(flTick);
+    }
+    flBird.vy = FL_FLAP[flDiff] || -5.8;
+  }
+  function flReset(autostart) {
+    flStop();
+    flScore = 0;
+    flAlive = true;
+    flOffered = false;
+    flFrame = 0;
+    flPipes = [];
+    flBird = { x: 72, y: (flappyCanvas ? flappyCanvas.height : 420) * 0.42, vy: 0, r: 12 };
+    flSpawnPipe();
+    flUpdateStatus();
+    flDraw();
+    if (autostart) {
+      flRunning = true;
+      flBird.vy = FL_FLAP[flDiff] || -5.8;
+      flRaf = requestAnimationFrame(flTick);
+    }
+  }
+  document.querySelectorAll("[data-fl-diff]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      flDiff = btn.getAttribute("data-fl-diff") || "medium";
+      flSyncDiff();
+      flReset(false);
+      showToast("Flappy · " + flDiff);
+    });
+  });
+  document.querySelectorAll("[data-fl-char]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      flChar = btn.getAttribute("data-fl-char") || "bird";
+      flSyncChar();
+      flDraw();
+    });
+  });
+  const flappyRestart = document.getElementById("flappyRestart");
+  if (flappyRestart) flappyRestart.addEventListener("click", function () { flReset(false); showToast("New Flappy"); });
+  const flappyPad = document.getElementById("flappyPad");
+  if (flappyPad) flappyPad.addEventListener("click", function (e) {
+    if (e.target.closest("[data-flap]")) flFlap();
+  });
+  if (flappyCanvas) {
+    flappyCanvas.addEventListener("pointerdown", function (e) { e.preventDefault(); flFlap(); });
+  }
+  flSyncDiff();
+  flSyncChar();
+
+  // --- Tron ---
+  const TR_SPEED = { easy: 140, medium: 95, hard: 62 };
+  const TR_COLS = 28, TR_ROWS = 28;
+  let trDiff = "medium";
+  let trAis = 1;
+  let trScore = 0;
+  let trAlive = false;
+  let trRunning = false;
+  let trTimer = 0;
+  let trGrid = [];
+  let trPlayers = [];
+  let trOffered = false;
+  const tronCanvas = document.getElementById("tron-canvas");
+  const tronCtx = tronCanvas ? tronCanvas.getContext("2d") : null;
+  const tronStatus = document.getElementById("tronStatus");
+  const TR_DIRS = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } };
+
+  function trYouColor() { const el = document.getElementById("tronYouColor"); return (el && el.value) || "#39ff14"; }
+  function trAiColor(i) {
+    const el = document.getElementById("tronAi" + i + "Color");
+    const fallback = ["#ff4d6d", "#4da6ff", "#ffd54a"];
+    return (el && el.value) || fallback[i - 1] || "#fff";
+  }
+  function trSyncDiff() {
+    document.querySelectorAll("[data-tr-diff]").forEach(function (btn) {
+      btn.setAttribute("aria-pressed", btn.getAttribute("data-tr-diff") === trDiff ? "true" : "false");
+    });
+  }
+  function trSyncAis() {
+    document.querySelectorAll("[data-tr-ais]").forEach(function (btn) {
+      btn.setAttribute("aria-pressed", String(trAis) === btn.getAttribute("data-tr-ais") ? "true" : "false");
+    });
+    [2, 3].forEach(function (n) {
+      const lab = document.querySelector('label.muted input#tronAi' + n + 'Color');
+      const wrap = lab ? lab.closest("label") : null;
+      if (wrap) wrap.style.display = trAis >= n ? "" : "none";
+    });
+  }
+  function trUpdateStatus() {
+    if (!tronStatus) return;
+    const you = trPlayers[0];
+    const trail = you ? you.trail : trScore;
+    tronStatus.textContent = trAlive
+      ? ("Trail: " + trail + " · AIs " + trAis)
+      : ("Game over · Trail: " + trail);
+  }
+  function trStop() {
+    trRunning = false;
+    if (trTimer) { clearInterval(trTimer); trTimer = 0; }
+  }
+  function trKey(x, y) { return x + "," + y; }
+  function trCellFree(x, y) {
+    if (x < 0 || y < 0 || x >= TR_COLS || y >= TR_ROWS) return false;
+    return !trGrid[y][x];
+  }
+  function trDraw() {
+    if (!tronCtx || !tronCanvas) return;
+    const w = tronCanvas.width, h = tronCanvas.height;
+    const cell = Math.floor(Math.min(w / TR_COLS, h / TR_ROWS));
+    tronCtx.fillStyle = "#050805";
+    tronCtx.fillRect(0, 0, w, h);
+    tronCtx.strokeStyle = "rgba(57,255,20,0.07)";
+    for (let i = 0; i <= TR_COLS; i++) {
+      tronCtx.beginPath(); tronCtx.moveTo(i * cell + 0.5, 0); tronCtx.lineTo(i * cell + 0.5, TR_ROWS * cell); tronCtx.stroke();
+    }
+    for (let j = 0; j <= TR_ROWS; j++) {
+      tronCtx.beginPath(); tronCtx.moveTo(0, j * cell + 0.5); tronCtx.lineTo(TR_COLS * cell, j * cell + 0.5); tronCtx.stroke();
+    }
+    for (let y = 0; y < TR_ROWS; y++) {
+      for (let x = 0; x < TR_COLS; x++) {
+        const id = trGrid[y][x];
+        if (!id) continue;
+        const p = trPlayers[id - 1];
+        tronCtx.fillStyle = p ? p.color : "#39ff14";
+        tronCtx.globalAlpha = 0.85;
+        tronCtx.fillRect(x * cell + 1, y * cell + 1, cell - 2, cell - 2);
+        tronCtx.globalAlpha = 1;
+      }
+    }
+    trPlayers.forEach(function (p) {
+      if (!p.alive) return;
+      tronCtx.fillStyle = p.color;
+      tronCtx.shadowColor = p.color;
+      tronCtx.shadowBlur = 8;
+      tronCtx.fillRect(p.x * cell + 1, p.y * cell + 1, cell - 2, cell - 2);
+      tronCtx.shadowBlur = 0;
+    });
+  }
+  function trAiThink(p) {
+    const dirs = [
+      { x: p.dir.x, y: p.dir.y },
+      { x: -p.dir.y, y: p.dir.x },
+      { x: p.dir.y, y: -p.dir.x }
+    ];
+    function look(d, depth) {
+      let x = p.x, y = p.y, score = 0;
+      for (let i = 0; i < depth; i++) {
+        x += d.x; y += d.y;
+        if (!trCellFree(x, y)) return score;
+        score += 1 + (depth - i) * 0.15;
+      }
+      return score + 2;
+    }
+    const depth = trDiff === "hard" ? 8 : (trDiff === "easy" ? 3 : 5);
+    let best = dirs[0], bestS = -1;
+    dirs.forEach(function (d) {
+      if (d.x === 0 && d.y === 0) return;
+      const s = look(d, depth) + Math.random() * 0.3;
+      if (s > bestS) { bestS = s; best = d; }
+    });
+    p.next = best;
+  }
+  function trEnd() {
+    trAlive = false;
+    trStop();
+    const you = trPlayers[0];
+    trScore = you ? you.trail : 0;
+    trUpdateStatus();
+    showToast("Tron · trail " + trScore);
+    if (!trOffered && typeof lbOffer === "function") {
+      trOffered = true;
+      lbOffer("tron:" + trDiff, trScore, { label: trScore + " · " + trDiff + " · " + trAis + " AI" });
+    }
+  }
+  function trTick() {
+    if (!trRunning || !trAlive) return;
+    trPlayers.forEach(function (p) {
+      if (!p.alive || p.human) return;
+      trAiThink(p);
+    });
+    const moves = [];
+    trPlayers.forEach(function (p) {
+      if (!p.alive) return;
+      if (p.next) p.dir = p.next;
+      const nx = p.x + p.dir.x, ny = p.y + p.dir.y;
+      moves.push({ p: p, nx: nx, ny: ny });
+    });
+    const claimed = {};
+    moves.forEach(function (m) {
+      const k = trKey(m.nx, m.ny);
+      if (!claimed[k]) claimed[k] = [];
+      claimed[k].push(m);
+    });
+    moves.forEach(function (m) {
+      const p = m.p;
+      if (!trCellFree(m.nx, m.ny) || (claimed[trKey(m.nx, m.ny)] || []).length > 1) {
+        p.alive = false;
+        return;
+      }
+      p.x = m.nx; p.y = m.ny;
+      trGrid[p.y][p.x] = p.id;
+      p.trail += 1;
+    });
+    const you = trPlayers[0];
+    if (!you || !you.alive) { trEnd(); trDraw(); return; }
+    const anyAi = trPlayers.slice(1).some(function (p) { return p.alive; });
+    if (!anyAi) {
+      trScore = you.trail;
+      trUpdateStatus();
+      trAlive = false;
+      trStop();
+      showToast("Tron cleared. +10 winning");
+      bumpWinning(10);
+      if (!trOffered && typeof lbOffer === "function") {
+        trOffered = true;
+        lbOffer("tron:" + trDiff, you.trail, { label: you.trail + " · win · " + trDiff });
+      }
+      trDraw();
+      return;
+    }
+    trScore = you.trail;
+    trUpdateStatus();
+    trDraw();
+  }
+  function trSetDir(dx, dy) {
+    const you = trPlayers[0];
+    if (!you || !you.alive) return;
+    if (you.dir.x === -dx && you.dir.y === -dy) return;
+    you.next = { x: dx, y: dy };
+  }
+  function trStartLoop() {
+    trStop();
+    trRunning = true;
+    trTimer = setInterval(trTick, TR_SPEED[trDiff] || 95);
+  }
+  function trReset() {
+    trStop();
+    trOffered = false;
+    trAlive = true;
+    trGrid = [];
+    for (let y = 0; y < TR_ROWS; y++) {
+      trGrid[y] = [];
+      for (let x = 0; x < TR_COLS; x++) trGrid[y][x] = 0;
+    }
+    const starts = [
+      { x: 4, y: Math.floor(TR_ROWS / 2), dir: { x: 1, y: 0 }, color: trYouColor(), human: true },
+      { x: TR_COLS - 5, y: Math.floor(TR_ROWS / 2), dir: { x: -1, y: 0 }, color: trAiColor(1), human: false },
+      { x: Math.floor(TR_COLS / 2), y: 4, dir: { x: 0, y: 1 }, color: trAiColor(2), human: false },
+      { x: Math.floor(TR_COLS / 2), y: TR_ROWS - 5, dir: { x: 0, y: -1 }, color: trAiColor(3), human: false }
+    ];
+    trPlayers = [];
+    for (let i = 0; i <= trAis; i++) {
+      const s = starts[i];
+      const p = {
+        id: i + 1, x: s.x, y: s.y, dir: { x: s.dir.x, y: s.dir.y }, next: null,
+        color: s.color, human: s.human, alive: true, trail: 1
+      };
+      trGrid[p.y][p.x] = p.id;
+      trPlayers.push(p);
+    }
+    trScore = 1;
+    trUpdateStatus();
+    trDraw();
+    trStartLoop();
+  }
+  document.querySelectorAll("[data-tr-diff]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      trDiff = btn.getAttribute("data-tr-diff") || "medium";
+      trSyncDiff();
+      trReset();
+      showToast("Tron · " + trDiff);
+    });
+  });
+  document.querySelectorAll("[data-tr-ais]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      trAis = Math.max(1, Math.min(3, parseInt(btn.getAttribute("data-tr-ais"), 10) || 1));
+      trSyncAis();
+      trReset();
+      showToast("Tron · " + trAis + " AI");
+    });
+  });
+  ["tronYouColor", "tronAi1Color", "tronAi2Color", "tronAi3Color"].forEach(function (id) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("change", function () {
+      if (trPlayers[0]) trPlayers[0].color = trYouColor();
+      for (let i = 1; i <= 3; i++) {
+        if (trPlayers[i]) trPlayers[i].color = trAiColor(i);
+      }
+      trDraw();
+    });
+  });
+  const tronRestart = document.getElementById("tronRestart");
+  if (tronRestart) tronRestart.addEventListener("click", function () { trReset(); showToast("New Tron"); });
+  const tronPad = document.getElementById("tronPad");
+  if (tronPad) tronPad.addEventListener("click", function (e) {
+    const b = e.target.closest("[data-tr-dir]");
+    if (!b) return;
+    const d = b.getAttribute("data-tr-dir");
+    if (d === "up") trSetDir(0, -1);
+    else if (d === "down") trSetDir(0, 1);
+    else if (d === "left") trSetDir(-1, 0);
+    else if (d === "right") trSetDir(1, 0);
+  });
+  trSyncDiff();
+  trSyncAis();
+
+  // --- Pac-Man ---
+  const PAC_SPEED = { easy: 160, medium: 120, hard: 85 };
+  const PAC_GHOST = { easy: 0.55, medium: 0.75, hard: 0.95 };
+  const PAC_MAP = [
+    "###################",
+    "#........#........#",
+    "#.##.###.#.###.##.#",
+    "#o...............o#",
+    "#.##.#.#####.#.##.#",
+    "#....#...#...#....#",
+    "####.###.#.###.####",
+    "   #.#.......#.#   ",
+    "####.#.## ##.#.####",
+    "#......#   #......#",
+    "####.#.#####.#.####",
+    "   #.#.......#.#   ",
+    "####.#.#####.#.####",
+    "#........#........#",
+    "#.##.###.#.###.##.#",
+    "#o.#...........#.o#",
+    "##.#.#.#####.#.#.##",
+    "#....#...#...#....#",
+    "#.######.#.######.#",
+    "#.................#",
+    "###################"
+  ];
+  let pacDiff = "medium";
+  let pacScore = 0;
+  let pacLives = 3;
+  let pacAlive = false;
+  let pacRunning = false;
+  let pacTimer = 0;
+  let pacGrid = [];
+  let pacDots = 0;
+  let pacPlayer = null;
+  let pacGhosts = [];
+  let pacFright = 0;
+  let pacEatStreak = 0;
+  let pacOffered = false;
+  let pacNext = { x: 0, y: 0 };
+  const pacCanvas = document.getElementById("pacman-canvas");
+  const pacCtx = pacCanvas ? pacCanvas.getContext("2d") : null;
+  const pacStatus = document.getElementById("pacStatus");
+  const PAC_GHOST_COLORS = ["#ff4d6d", "#4da6ff", "#ff9f4d", "#ff7ad9"];
+
+  function pacSyncDiff() {
+    document.querySelectorAll("[data-pac-diff]").forEach(function (btn) {
+      btn.setAttribute("aria-pressed", btn.getAttribute("data-pac-diff") === pacDiff ? "true" : "false");
+    });
+  }
+  function pacUpdateStatus() {
+    if (!pacStatus) return;
+    pacStatus.textContent = pacAlive
+      ? ("Score: " + pacScore + " · Lives: " + pacLives)
+      : ("Game over · Score: " + pacScore);
+  }
+  function pacStop() {
+    pacRunning = false;
+    if (pacTimer) { clearInterval(pacTimer); pacTimer = 0; }
+  }
+  function pacBuild() {
+    pacGrid = PAC_MAP.map(function (row) { return row.split(""); });
+    pacDots = 0;
+    for (let y = 0; y < pacGrid.length; y++) {
+      for (let x = 0; x < pacGrid[y].length; x++) {
+        const c = pacGrid[y][x];
+        if (c === "." || c === "o") pacDots += 1;
+      }
+    }
+  }
+  function pacSolid(x, y) {
+    if (y < 0 || y >= pacGrid.length || x < 0 || x >= pacGrid[0].length) return true;
+    return pacGrid[y][x] === "#";
+  }
+  function pacTunnel(ent) {
+    const w = pacGrid[0].length;
+    if (ent.x < 0) ent.x = w - 1;
+    if (ent.x >= w) ent.x = 0;
+  }
+  function pacDraw() {
+    if (!pacCtx || !pacCanvas) return;
+    const rows = pacGrid.length, cols = pacGrid[0].length;
+    const cell = Math.floor(Math.min(pacCanvas.width / cols, pacCanvas.height / rows));
+    pacCtx.fillStyle = "#050805";
+    pacCtx.fillRect(0, 0, pacCanvas.width, pacCanvas.height);
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const c = pacGrid[y][x];
+        if (c === "#") {
+          pacCtx.fillStyle = "rgba(57,255,20,0.22)";
+          pacCtx.strokeStyle = "#39ff14";
+          pacCtx.lineWidth = 1;
+          pacCtx.fillRect(x * cell, y * cell, cell, cell);
+          pacCtx.strokeRect(x * cell + 0.5, y * cell + 0.5, cell - 1, cell - 1);
+        } else if (c === ".") {
+          pacCtx.fillStyle = "#d8ffd0";
+          pacCtx.beginPath();
+          pacCtx.arc(x * cell + cell / 2, y * cell + cell / 2, 2, 0, Math.PI * 2);
+          pacCtx.fill();
+        } else if (c === "o") {
+          pacCtx.fillStyle = "#39ff14";
+          pacCtx.beginPath();
+          pacCtx.arc(x * cell + cell / 2, y * cell + cell / 2, 4.5, 0, Math.PI * 2);
+          pacCtx.fill();
+        }
+      }
+    }
+    if (pacPlayer) {
+      const ang = Math.atan2(pacPlayer.dir.y, pacPlayer.dir.x) || 0;
+      const mouth = 0.35 + 0.2 * Math.sin(Date.now() / 80);
+      pacCtx.fillStyle = "#ffd54a";
+      pacCtx.beginPath();
+      pacCtx.moveTo(pacPlayer.x * cell + cell / 2, pacPlayer.y * cell + cell / 2);
+      pacCtx.arc(pacPlayer.x * cell + cell / 2, pacPlayer.y * cell + cell / 2, cell * 0.42, ang + mouth, ang - mouth + Math.PI * 2);
+      pacCtx.closePath();
+      pacCtx.fill();
+    }
+    pacGhosts.forEach(function (g, i) {
+      if (!g.alive) return;
+      const gx = g.x * cell + cell / 2, gy = g.y * cell + cell / 2;
+      pacCtx.fillStyle = pacFright > 0 ? "#4d6bff" : PAC_GHOST_COLORS[i % PAC_GHOST_COLORS.length];
+      pacCtx.beginPath();
+      pacCtx.arc(gx, gy - 1, cell * 0.38, Math.PI, 0);
+      pacCtx.lineTo(gx + cell * 0.38, gy + cell * 0.35);
+      pacCtx.lineTo(gx + cell * 0.18, gy + cell * 0.2);
+      pacCtx.lineTo(gx, gy + cell * 0.35);
+      pacCtx.lineTo(gx - cell * 0.18, gy + cell * 0.2);
+      pacCtx.lineTo(gx - cell * 0.38, gy + cell * 0.35);
+      pacCtx.closePath();
+      pacCtx.fill();
+      pacCtx.fillStyle = "#050805";
+      pacCtx.beginPath(); pacCtx.arc(gx - 3, gy - 2, 2, 0, Math.PI * 2); pacCtx.fill();
+      pacCtx.beginPath(); pacCtx.arc(gx + 3, gy - 2, 2, 0, Math.PI * 2); pacCtx.fill();
+    });
+  }
+  function pacPlaceActors() {
+    pacPlayer = { x: 9, y: 15, dir: { x: -1, y: 0 } };
+    pacNext = { x: -1, y: 0 };
+    pacGhosts = [
+      { x: 9, y: 9, dir: { x: 1, y: 0 }, alive: true, cool: 0, home: { x: 9, y: 9 } },
+      { x: 8, y: 9, dir: { x: -1, y: 0 }, alive: true, cool: 0, home: { x: 8, y: 9 } },
+      { x: 10, y: 9, dir: { x: 1, y: 0 }, alive: true, cool: 0, home: { x: 10, y: 9 } },
+      { x: 9, y: 8, dir: { x: 0, y: -1 }, alive: true, cool: 0, home: { x: 9, y: 8 } }
+    ];
+    pacFright = 0;
+    pacEatStreak = 0;
+  }
+  function pacLoseLife() {
+    pacLives -= 1;
+    if (pacLives <= 0) {
+      pacAlive = false;
+      pacStop();
+      pacUpdateStatus();
+      showToast("Pac-Man over · " + pacScore);
+      if (!pacOffered && typeof lbOffer === "function") {
+        pacOffered = true;
+        lbOffer("pacman:" + pacDiff, pacScore, { label: pacScore + " · " + pacDiff });
+      }
+      return;
+    }
+    pacPlaceActors();
+    pacUpdateStatus();
+  }
+  function pacGhostStep(g) {
+    const opts = [];
+    [{ x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 }].forEach(function (d) {
+      if (d.x === -g.dir.x && d.y === -g.dir.y) return;
+      const nx = g.x + d.x, ny = g.y + d.y;
+      if (!pacSolid(nx, ny)) opts.push(d);
+    });
+    if (!opts.length) {
+      g.dir = { x: -g.dir.x, y: -g.dir.y };
+      return;
+    }
+    let target = { x: pacPlayer.x, y: pacPlayer.y };
+    if (pacFright > 0) {
+      target = { x: g.x - (pacPlayer.x - g.x), y: g.y - (pacPlayer.y - g.y) };
+    }
+    if (g.cool > 0) { g.cool -= 1; return; }
+    const chase = Math.random() < (PAC_GHOST[pacDiff] || 0.75);
+    let pick = opts[Math.floor(Math.random() * opts.length)];
+    if (chase) {
+      let best = pick, bestD = 1e9;
+      opts.forEach(function (d) {
+        const nx = g.x + d.x, ny = g.y + d.y;
+        const dist = Math.abs(nx - target.x) + Math.abs(ny - target.y);
+        const score = pacFright > 0 ? -dist : dist;
+        if (score < bestD) { bestD = score; best = d; }
+      });
+      pick = best;
+    }
+    g.dir = pick;
+    g.x += g.dir.x; g.y += g.dir.y;
+    pacTunnel(g);
+  }
+  function pacTick() {
+    if (!pacRunning || !pacAlive || !pacPlayer) return;
+    if (pacFright > 0) pacFright -= 1;
+    if (!pacSolid(pacPlayer.x + pacNext.x, pacPlayer.y + pacNext.y)) {
+      pacPlayer.dir = { x: pacNext.x, y: pacNext.y };
+    }
+    const nx = pacPlayer.x + pacPlayer.dir.x, ny = pacPlayer.y + pacPlayer.dir.y;
+    if (!pacSolid(nx, ny)) {
+      pacPlayer.x = nx; pacPlayer.y = ny;
+      pacTunnel(pacPlayer);
+    }
+    const cell = pacGrid[pacPlayer.y][pacPlayer.x];
+    if (cell === ".") {
+      pacGrid[pacPlayer.y][pacPlayer.x] = " ";
+      pacScore += 10;
+      pacDots -= 1;
+    } else if (cell === "o") {
+      pacGrid[pacPlayer.y][pacPlayer.x] = " ";
+      pacScore += 50;
+      pacDots -= 1;
+      pacFright = pacDiff === "easy" ? 40 : (pacDiff === "hard" ? 22 : 30);
+      pacEatStreak = 0;
+    }
+    pacGhosts.forEach(function (g) {
+      if (!g.alive) return;
+      pacGhostStep(g);
+      if (g.x === pacPlayer.x && g.y === pacPlayer.y) {
+        if (pacFright > 0) {
+          pacEatStreak += 1;
+          pacScore += 200 * pacEatStreak;
+          g.x = g.home.x; g.y = g.home.y; g.cool = 16;
+        } else {
+          pacLoseLife();
+        }
+      }
+    });
+    if (pacDots <= 0) {
+      pacAlive = false;
+      pacStop();
+      showToast("Pac-Man cleared. +10 winning");
+      bumpWinning(10);
+      if (!pacOffered && typeof lbOffer === "function") {
+        pacOffered = true;
+        lbOffer("pacman:" + pacDiff, pacScore, { label: pacScore + " · clear · " + pacDiff });
+      }
+    }
+    pacUpdateStatus();
+    pacDraw();
+  }
+  function pacSetDir(dx, dy) {
+    pacNext = { x: dx, y: dy };
+  }
+  function pacStartLoop() {
+    pacStop();
+    pacRunning = true;
+    pacTimer = setInterval(pacTick, PAC_SPEED[pacDiff] || 120);
+  }
+  function pacReset() {
+    pacStop();
+    pacOffered = false;
+    pacScore = 0;
+    pacLives = 3;
+    pacAlive = true;
+    pacBuild();
+    pacPlaceActors();
+    pacUpdateStatus();
+    pacDraw();
+    pacStartLoop();
+  }
+  document.querySelectorAll("[data-pac-diff]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      pacDiff = btn.getAttribute("data-pac-diff") || "medium";
+      pacSyncDiff();
+      pacReset();
+      showToast("Pac-Man · " + pacDiff);
+    });
+  });
+  const pacRestart = document.getElementById("pacRestart");
+  if (pacRestart) pacRestart.addEventListener("click", function () { pacReset(); showToast("New Pac-Man"); });
+  const pacPad = document.getElementById("pacPad");
+  if (pacPad) pacPad.addEventListener("click", function (e) {
+    const b = e.target.closest("[data-pac-dir]");
+    if (!b) return;
+    const d = b.getAttribute("data-pac-dir");
+    if (d === "up") pacSetDir(0, -1);
+    else if (d === "down") pacSetDir(0, 1);
+    else if (d === "left") pacSetDir(-1, 0);
+    else if (d === "right") pacSetDir(1, 0);
+  });
+  pacSyncDiff();
 
 
   // --- Solitaire (Klondike) ---
@@ -11649,6 +12607,15 @@
     } else if (name === "n2048") {
       if (!g2048.started) g2048New(false);
       else g2048Render();
+    } else if (name === "flappy") {
+      if (!flAlive && flScore === 0) flReset(false);
+      else flDraw();
+    } else if (name === "tron") {
+      if (!trPlayers.length || !trAlive) trReset();
+      else trStartLoop();
+    } else if (name === "pacman") {
+      if (!pacPlayer || !pacAlive) pacReset();
+      else pacStartLoop();
     } else if (name === "casino" || name === "blackjack" || name === "slots" || name === "roulette" || name === "craps" || name === "baccarat") {
       casinoOnOpen();
     }
@@ -11658,6 +12625,9 @@
     if (name === "minesweeper") msStopTimer();
     if (name === "snake") snStop();
     if (name === "tetris") tStop();
+    if (name === "flappy") flStop();
+    if (name === "tron") trStop();
+    if (name === "pacman") pacStop();
     if (name === "solitaire") solKillGhost();
     if (name === "chess") {
       chessAiGen += 1;
