@@ -3497,14 +3497,16 @@
 
   /* Classic YouTube (in-window) — ~2006 skin */
   #win-youtube {
-    width: min(780px, calc(100vw - 24px));
+    width: min(980px, calc(100vw - 24px));
+    max-width: min(980px, calc(100vw - 24px));
+    min-width: min(720px, calc(100vw - 24px));
   }
   #win-youtube .content.yt-content {
     padding: 0;
     background: #fff;
     color: #333;
     overflow: auto;
-    max-height: min(70vh, 640px);
+    max-height: min(84vh, 820px);
   }
   .yt-classic {
     font-family: Arial, Helvetica, sans-serif;
@@ -3597,7 +3599,7 @@
     width: 100%;
     position: relative;
     overflow: hidden;
-    --yt-chrome-h: 28px;
+    --yt-chrome-h: 32px;
   }
   .yt-player-host {
     position: absolute;
@@ -4767,7 +4769,7 @@
     </section>
 
 
-    <section class="window" id="win-youtube" style="top:48px; left:120px; width:760px;">
+    <section class="window" id="win-youtube" style="top:36px; left:80px; width:960px;">
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="youtube"></div>
