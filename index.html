@@ -537,6 +537,15 @@
   }
   .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 
+  .about-actions {
+    align-items: center;
+  }
+  .about-actions #rageBtn {
+    margin-left: auto;
+  }
+
+
+
   .loc-pin {
     appearance: none;
     flex: 0 0 auto;
@@ -4618,9 +4627,10 @@
         <p>Owner: <span class="green">Nikita</span><br>
         Status: <span class="danger">Morale dangerously high</span><br>
         Mood: Vibing in the pond</p>
-        <div class="row">
-          <button class="btn" id="rageBtn">Click for wisdom</button>
-          <button class="btn secondary" id="glitchBtn">Glitch once</button>
+        <div class="row about-actions">
+          <button type="button" class="btn" id="aboutCloseBtn">Click to close</button>
+          <button type="button" class="btn secondary" id="glitchBtn">Glitch once</button>
+          <button type="button" class="btn secondary" id="rageBtn">Click for wisdom</button>
         </div>
         <p class="muted" id="wisdom" style="margin-top:12px;">Tip: Konami code.</p>
       </div>
@@ -7072,6 +7082,13 @@
   });
 
   // interactions
+  const aboutCloseBtn = document.getElementById("aboutCloseBtn");
+  if (aboutCloseBtn) {
+    aboutCloseBtn.addEventListener("click", () => {
+      closeWindow("about");
+    });
+  }
+
   document.getElementById("rageBtn").addEventListener("click", () => {
     bumpWinning(3);
     wisdom.textContent = lines[wisdomIndex % lines.length];
@@ -7499,7 +7516,7 @@
           paragraphs: [
             "Click an icon to open a window. Drag the title bar to move it. The yellow and red dots close the window. The dots are glass, with a glare on the top and the bottom. In a Tesla those close dots are larger.",
             "On a desktop, not a phone, drag the edges or corners to resize.",
-            "On a computer, About opens centered. On a phone it opens full-width at the top. Later windows try not to sit on top of one already open, and they stay above the taskbar. Close hands focus to the window on top. On a phone, rotate keeps windows where they are; they do not restack.",
+            "On a computer, About opens centered. On a phone it opens full-width at the top. About’s highlighted button is Click to close; Glitch once and Click for wisdom sit as secondary actions, with wisdom on the right. Later windows try not to sit on top of one already open, and they stay above the taskbar. Close hands focus to the window on top. On a phone, rotate keeps windows where they are; they do not restack.",
             "Pointer cursor on clickable controls: close, buttons. Grab and drag cursor on title bars. The tray speaker mutes audio for this visit."
           ]
         },
