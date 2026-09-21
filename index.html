@@ -1607,7 +1607,18 @@
   #win-snake .game-canvas-wrap {
     flex: 1 1 auto;
     min-height: 0;
+    overflow: hidden;
+    display: flex;
     align-items: center;
+    justify-content: center;
+  }
+  #win-tetris canvas,
+  #win-snake canvas {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
   }
   #win-tetris .game-pad,
   #win-snake .game-pad,
@@ -3357,7 +3368,10 @@
     }
     #win-snake .game-hint,
     #win-tetris .game-hint,
-    #win-minesweeper .game-hint {
+    #win-minesweeper .game-hint,
+    #win-flappy .game-hint,
+    #win-tron .game-hint,
+    #win-pacman .game-hint {
       display: none;
     }
     #win-solitaire .game-toolbar .row { flex-wrap: nowrap; }
@@ -3436,13 +3450,37 @@
   #win-pacman .content.pacman-content {
     display: flex; flex-direction: column; min-height: 0; overflow: hidden;
   }
+  #win-flappy .game-toolbar,
+  #win-tron .game-toolbar,
+  #win-pacman .game-toolbar,
+  #win-flappy .arcade-pick,
+  #win-tron .arcade-pick,
+  #win-pacman .arcade-pick,
+  #win-flappy .game-pad,
+  #win-tron .game-pad,
+  #win-pacman .game-pad,
+  #win-flappy .game-hint,
+  #win-tron .game-hint,
+  #win-pacman .game-hint {
+    flex-shrink: 0;
+  }
   #win-flappy .game-canvas-wrap,
   #win-tron .game-canvas-wrap,
   #win-pacman .game-canvas-wrap {
-    flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   #win-flappy canvas, #win-tron canvas, #win-pacman canvas {
-    max-width: 100%; height: auto; image-rendering: pixelated;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    image-rendering: pixelated;
     border: 1px solid rgba(57,255,20,.35);
     border-radius: 6px;
     background: #050805;
@@ -7479,7 +7517,7 @@
         {
           title: "Games",
           paragraphs: [
-            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, 2048, Flappy Bird, Tron, and Pac-Man. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome. On a phone, Flag stays Flag (it does not grow). Toolbars do not wrap. Snake and Tetris keep a bigger pad on screen; keyboard hints hide. Flappy Bird has character skins (Bird, Kita, Pixel, Drone) and neon site-green pipes; Easy / Medium / Hard change gravity and gap. Tron is light-cycles versus 1–3 AIs with color picks for you and each AI; score is your trail. Pac-Man is a neon maze with dots, power pellets, four ghosts, and three lives. Scores is the shared classic leaderboard. When a run ends you can type a short name; the Worker keeps the top scores. Same name on the same board updates if you beat yourself (Chess tallies wins). Minesweeper / Pipes / Solitaire rank by lower time or moves. The Games list and each game window sit above the taskbar; the list scrolls if a card would tuck under Start."
+            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, 2048, Flappy Bird, Tron, and Pac-Man. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome. On a phone, Flag stays Flag (it does not grow). Toolbars do not wrap. Snake and Tetris keep a bigger pad on screen; keyboard hints hide. Flappy Bird has character skins (Bird, Kita, Pixel, Drone) and neon site-green pipes; Easy / Medium / Hard change gravity and gap. On a phone the character / AI / difficulty picks stay above the board (the canvas shrinks to fit). Tron is light-cycles versus 1–3 AIs with color picks for you and each AI; score is your trail. Pac-Man is a neon maze with dots, power pellets, four ghosts, and three lives. Scores is the shared classic leaderboard. When a run ends you can type a short name; the Worker keeps the top scores. Same name on the same board updates if you beat yourself (Chess tallies wins). Minesweeper / Pipes / Solitaire rank by lower time or moves. The Games list and each game window sit above the taskbar; the list scrolls if a card would tuck under Start."
           ]
         },
         {
