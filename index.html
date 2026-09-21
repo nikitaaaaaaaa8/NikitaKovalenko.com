@@ -3271,6 +3271,191 @@
     #win-solitaire .sol-card.back::after { font-size: 12px; }
   }
 
+
+  /* Classic YouTube (in-window) — ~2006 skin */
+  #win-youtube {
+    width: min(780px, calc(100vw - 24px));
+  }
+  #win-youtube .content.yt-content {
+    padding: 0;
+    background: #fff;
+    color: #333;
+    overflow: auto;
+    max-height: min(70vh, 640px);
+  }
+  .yt-classic {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 1.35;
+    background: #fff;
+    color: #333;
+  }
+  .yt-masthead {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 8px 10px 6px;
+    border-bottom: 1px solid #ccc;
+    background: linear-gradient(#fff, #f6f6f6);
+  }
+  .yt-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    text-decoration: none;
+    color: #000;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: -0.5px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .yt-logo .yt-you { color: #000; }
+  .yt-logo .yt-tube {
+    display: inline-block;
+    margin-left: 1px;
+    padding: 2px 5px 3px;
+    background: #cd1e25;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 18px;
+    letter-spacing: 0;
+  }
+  .yt-search {
+    display: flex;
+    flex: 1 1 180px;
+    min-width: 140px;
+    max-width: 320px;
+  }
+  .yt-search input {
+    flex: 1;
+    border: 1px solid #999;
+    border-right: 0;
+    padding: 4px 6px;
+    font: inherit;
+    color: #333;
+    background: #fff;
+    border-radius: 2px 0 0 2px;
+    min-width: 0;
+  }
+  .yt-search button {
+    border: 1px solid #999;
+    background: #f0f0f0;
+    padding: 4px 10px;
+    font: inherit;
+    cursor: pointer;
+    border-radius: 0 2px 2px 0;
+    color: #333;
+  }
+  .yt-search button:hover { background: #e4e4e4; }
+  .yt-mast-links {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+    font-size: 11px;
+  }
+  .yt-mast-links a {
+    color: #0033cc;
+    text-decoration: none;
+  }
+  .yt-mast-links a:hover { text-decoration: underline; }
+  .yt-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 12px;
+    padding: 10px;
+    align-items: start;
+  }
+  .yt-player-wrap {
+    background: #000;
+    border: 1px solid #666;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    position: relative;
+  }
+  .yt-player-wrap iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .yt-watch-meta { margin-top: 8px; }
+  .yt-watch-title {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+  }
+  .yt-watch-stats {
+    color: #666;
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+  .yt-stars { color: #f90; letter-spacing: 1px; }
+  .yt-watch-desc {
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    padding: 8px;
+    color: #333;
+    white-space: pre-wrap;
+    max-height: 88px;
+    overflow: auto;
+  }
+  .yt-side-head {
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: #000;
+    font-size: 12px;
+  }
+  .yt-side-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .yt-row {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 6px;
+    text-align: left;
+    border: 1px solid transparent;
+    background: transparent;
+    padding: 2px;
+    cursor: pointer;
+    color: inherit;
+    font: inherit;
+    width: 100%;
+  }
+  .yt-row:hover { border-color: #999; background: #f5f5f5; }
+  .yt-row.active { border-color: #cd1e25; background: #fff5f5; }
+  .yt-thumb {
+    width: 96px;
+    height: 72px;
+    object-fit: cover;
+    background: #000;
+    border: 1px solid #999;
+    display: block;
+  }
+  .yt-row-title {
+    font-weight: 700;
+    color: #0033cc;
+    font-size: 11px;
+    line-height: 1.3;
+  }
+  .yt-row.active .yt-row-title { color: #cd1e25; }
+  .yt-row-sub { color: #666; font-size: 10px; margin-top: 2px; }
+  @media (max-width: 700px) {
+    #win-youtube.window.open { max-height: calc(100dvh - 52px); }
+    #win-youtube .content.yt-content {
+      max-height: none;
+      min-height: 0;
+      flex: 1 1 auto;
+    }
+    .yt-body { grid-template-columns: 1fr; }
+    .yt-mast-links { margin-left: 0; width: 100%; }
+  }
+
   /* Mobile optimization — keep windows draggable (no !important position locks) */
   .titlebar[data-drag] {
     touch-action: none;
@@ -3990,6 +4175,10 @@
         <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.8L4.6 20.2h14.8L12 3.8z"/><path d="M8.2 14.2h7.6"/><path d="M9.4 11.2h5.2"/><path d="M10.8 16.4l3.4 2-3.4 2v-4z" fill="currentColor" stroke="none"/></svg></div>
         <div class="label">VLC</div>
       </div>
+      <div class="icon" id="icon-youtube" tabindex="0" data-open="youtube" aria-label="YouTube">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="6.2" width="17.6" height="11.6" rx="3.2"/><path d="M10.4 9.4l5 2.6-5 2.6V9.4z" fill="currentColor" stroke="none"/></svg></div>
+        <div class="label">YouTube</div>
+      </div>
     </div>
 
     <section class="window" id="win-about" style="top:80px; left:140px; width:420px;">
@@ -4153,6 +4342,51 @@
             <img src="https://dronestuff.io/shot-08.jpg" alt="Graffiti, Camden" loading="lazy" width="280" height="96">
             <div class="drone-caption">Graffiti, Camden<span class="drone-views"></span></div>
           </button>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="window" id="win-youtube" style="top:48px; left:120px; width:760px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="youtube"></div>
+          <div class="dot min" data-close="youtube"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">YouTube</div>
+      </div>
+      <div class="content yt-content">
+        <div class="yt-classic">
+          <div class="yt-masthead">
+            <a class="yt-logo" href="https://www.youtube.com/@Nikita_Kovy" target="_blank" rel="noopener noreferrer" title="Open channel">
+              <span class="yt-you">You</span><span class="yt-tube">Tube</span>
+            </a>
+            <form class="yt-search" id="ytSearchForm" action="#" autocomplete="off">
+              <input type="search" id="ytSearch" placeholder="Search this channel" aria-label="Search this channel">
+              <button type="submit">Search</button>
+            </form>
+            <div class="yt-mast-links">
+              <a href="https://www.youtube.com/@Nikita_Kovy" target="_blank" rel="noopener noreferrer">@Nikita_Kovy</a>
+              <a href="https://www.youtube.com/@Nikita_Kovy/videos" target="_blank" rel="noopener noreferrer">Videos</a>
+            </div>
+          </div>
+          <div class="yt-body">
+            <div class="yt-main">
+              <div class="yt-player-wrap">
+                <iframe id="ytFrame" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+              </div>
+              <div class="yt-watch-meta">
+                <h2 class="yt-watch-title" id="ytTitle">Loading…</h2>
+                <div class="yt-watch-stats"><span class="yt-stars" aria-hidden="true">★★★★★</span> · <span id="ytViews">Views: —</span> · From: Nikita</div>
+                <div class="yt-watch-desc" id="ytDesc"></div>
+              </div>
+            </div>
+            <aside class="yt-side">
+              <div class="yt-side-head">More From: Nikita</div>
+              <div class="yt-side-list" id="ytList"></div>
+            </aside>
+          </div>
         </div>
       </div>
     </section>
@@ -4932,6 +5166,7 @@
       <button type="button" data-open="weather">Weather</button>
       <button type="button" data-open="paint">Paint</button>
       <button type="button" data-open="vlc">VLC</button>
+      <button type="button" data-open="youtube">YouTube</button>
       <button type="button" data-open="drone">DroneStuff</button>
       <button type="button" data-open="trash">Trash</button>
     </div>
@@ -5063,6 +5298,7 @@
     weather: document.getElementById("win-weather"),
     paint: document.getElementById("win-paint"),
     vlc: document.getElementById("win-vlc"),
+    youtube: document.getElementById("win-youtube"),
     casino: document.getElementById("win-casino"),
     blackjack: document.getElementById("win-blackjack"),
     slots: document.getElementById("win-slots"),
@@ -5250,6 +5486,7 @@
     if (typeof onGameWindowOpen === "function") onGameWindowOpen(name);
     if (name === "paint") onPaintWindowOpen();
     if (name === "vlc") vlcOnOpen();
+    if (name === "youtube") ytOnOpen();
     if (name === "drone") kitaFetchCounts();
   }
 
@@ -5479,6 +5716,7 @@
     el.classList.remove("open", "active");
     if (typeof onGameWindowClose === "function") onGameWindowClose(name);
     if (name === "vlc") vlcOnClose();
+    if (name === "youtube") ytOnClose();
     let topName = null, topZ = -1;
     Object.keys(windows).forEach(function (n) {
       const w = windows[n];
@@ -5658,7 +5896,7 @@
 
     if (cmd === "help") {
       termPrint("commands: help, whoami, winning, clear, sudo, date, kita, scan, confess, coinflip, matrix, aura, snow");
-      termPrint("apps: about, tracker, contact, drone, games, casino, trash, bookshelf, weather, paint, vlc, terminal");
+      termPrint("apps: about, tracker, contact, drone, games, casino, trash, bookshelf, weather, paint, vlc, youtube, terminal");
     } else if (cmd === "whoami") {
       termPrint("guest@nikitakovalenko.com // temporary main character");
     } else if (cmd === "winning") {
@@ -5808,7 +6046,10 @@
         weather: "weather",
         paint: "paint",
         vlc: "vlc",
-        videos: "vlc"
+        videos: "vlc",
+        youtube: "youtube",
+        yt: "youtube",
+        nikita_kovy: "youtube"
       };
       let launch = cmd;
       if (launch.indexOf("open ") === 0) launch = launch.slice(5).trim();
@@ -6637,6 +6878,7 @@
             "Paint has a brush, eraser, fill, shapes, a palette, undo, and save. Resize keeps the picture and undo.",
             "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
+            "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar. Click a row to play in the window. Search filters this channel. The logo opens the real channel.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Open mail app prefills the subject “you're the man.”"
           ]
@@ -6660,7 +6902,7 @@
         {
           title: "Terminal",
           paragraphs: [
-            "Open Terminal and type help, then press Run. Help lists commands and app names, including terminal. Type an app name to open it. vlc opens the player (folder-level app).",
+            "Open Terminal and type help, then press Run. Help lists commands and app names, including terminal. Type an app name to open it. vlc opens the player. youtube opens the classic YouTube window (folder-level apps).",
             "games and casino open those folders. Not the inner games. snow toggles the snow. matrix toggles the rain. Matrix off puts snow back unless you already stopped it. Konami still unlocks VIP.",
             "scan drops a short Kita AV banner, walks fake paths, and may find a threat or two. coinflip shows a coin, then heads or tails.",
             "The placeholder is try: help. There is no email command."
@@ -6852,6 +7094,111 @@
 
 
 
+
+
+  // --- YouTube (@Nikita_Kovy) classic player ---
+  const YT_CHANNEL = "https://www.youtube.com/@Nikita_Kovy";
+  const YT_VIDEOS = [
+    { id: "206fY_DsYTk", title: "GTA Loading Don", views: "59", desc: "GTA V Loading Screen Remake — Donald Edition. Fan parody; not affiliated with Rockstar." },
+    { id: "7WCn-29EnFM", title: "Happy Birthday Baker!", views: "38", desc: "September 12, 2026 @ FaceClock. Song: Memories by RJ Pasin." },
+    { id: "ZMKURwtVeQw", title: "Drone Captures Stunning Deer Family in the Wild | Aerial Nature Adventure", views: "199", desc: "Aerial footage of a deer family, DJI Mini 1. Filmed August 2025." },
+    { id: "KnW1t7HEFVk", title: "Experience Medellín’s Ciclovia: A Sunday Walk Adventure", views: "833", desc: "Sunday ciclovía walk on Avenida Poblado in Medellín, Colombia." },
+    { id: "yRgk2RtF9k4", title: "July 4th Done Right", views: "103", desc: "Dan, Dois, Kita. New Jersey. July 4th bridge jumps." }
+  ];
+  let ytCurrent = null;
+  let ytFilter = "";
+
+  function ytEscape(str) {
+    return String(str == null ? "" : str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function ytEmbedUrl(id) {
+    return "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) + "?rel=0&modestbranding=1&autoplay=1";
+  }
+
+  function ytFiltered() {
+    const q = (ytFilter || "").trim().toLowerCase();
+    if (!q) return YT_VIDEOS.slice();
+    return YT_VIDEOS.filter(function (v) {
+      return (v.title + " " + v.desc).toLowerCase().indexOf(q) !== -1;
+    });
+  }
+
+  function ytRenderList() {
+    const list = document.getElementById("ytList");
+    if (!list) return;
+    const rows = ytFiltered();
+    if (!rows.length) {
+      list.innerHTML = '<div class="yt-row-sub">No videos match that search.</div>';
+      return;
+    }
+    list.innerHTML = rows.map(function (v) {
+      const active = ytCurrent === v.id ? " active" : "";
+      return '<button type="button" class="yt-row' + active + '" data-yt="' + ytEscape(v.id) + '">' +
+        '<img class="yt-thumb" src="https://i.ytimg.com/vi/' + ytEscape(v.id) + '/hqdefault.jpg" alt="" loading="lazy" width="96" height="72">' +
+        '<div><div class="yt-row-title">' + ytEscape(v.title) + '</div>' +
+        '<div class="yt-row-sub">' + ytEscape(v.views) + ' views</div></div></button>';
+    }).join("");
+  }
+
+  function ytPlay(id, opts) {
+    const v = YT_VIDEOS.find(function (x) { return x.id === id; }) || YT_VIDEOS[0];
+    if (!v) return;
+    ytCurrent = v.id;
+    const frame = document.getElementById("ytFrame");
+    const title = document.getElementById("ytTitle");
+    const views = document.getElementById("ytViews");
+    const desc = document.getElementById("ytDesc");
+    if (title) title.textContent = v.title;
+    if (views) views.textContent = "Views: " + v.views;
+    if (desc) desc.textContent = v.desc;
+    if (frame) {
+      const auto = !(opts && opts.silent);
+      frame.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(v.id) +
+        "?rel=0&modestbranding=1" + (auto ? "&autoplay=1" : "");
+    }
+    ytRenderList();
+  }
+
+  function ytOnOpen() {
+    if (!ytCurrent) ytPlay(YT_VIDEOS[0].id, { silent: true });
+    else ytRenderList();
+  }
+
+  function ytOnClose() {
+    const frame = document.getElementById("ytFrame");
+    if (frame) frame.src = "";
+  }
+
+  (function wireYouTube() {
+    const list = document.getElementById("ytList");
+    if (list) {
+      list.addEventListener("click", function (e) {
+        const btn = e.target.closest("[data-yt]");
+        if (!btn) return;
+        e.preventDefault();
+        ytPlay(btn.getAttribute("data-yt"));
+      });
+    }
+    const form = document.getElementById("ytSearchForm");
+    if (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const input = document.getElementById("ytSearch");
+        ytFilter = input ? input.value : "";
+        ytRenderList();
+        const rows = ytFiltered();
+        if (rows.length && (!ytCurrent || !rows.some(function (r) { return r.id === ytCurrent; }))) {
+          ytPlay(rows[0].id);
+        }
+      });
+    }
+    ytRenderList();
+  })();
 
   // === Games: Minesweeper / Snake / Tetris / Solitaire / Chess / Pipes / 2048 ===
   function gameWindowOpen(name) {
