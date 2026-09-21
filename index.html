@@ -7508,7 +7508,7 @@
             "Paint has a brush, eraser, fill, shapes, a palette, undo, and save. Resize keeps the picture and undo.",
             "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
-            "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden).",
+            "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
             "Scores is a classic leaderboard window for every rankable game. Open it from the desktop or type scores in Terminal.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Open mail app prefills the subject “you're the man.”"
@@ -7885,6 +7885,30 @@
     ytSyncScrub();
   }
 
+
+  function ytPreferMaxQuality(player) {
+    player = player || ytPlayer;
+    if (!player) return;
+    try {
+      let levels = [];
+      if (typeof player.getAvailableQualityLevels === "function") {
+        levels = player.getAvailableQualityLevels() || [];
+      }
+      // YouTube returns highest first sometimes; prefer known high labels
+      const prefer = ["highres", "hd2160", "hd1440", "hd1080", "hd720", "large", "medium"];
+      let pick = "";
+      for (let i = 0; i < prefer.length; i++) {
+        if (levels.indexOf(prefer[i]) >= 0) { pick = prefer[i]; break; }
+      }
+      if (!pick && levels.length) pick = levels[0];
+      if (!pick) pick = "highres";
+      if (typeof player.setPlaybackQuality === "function") player.setPlaybackQuality(pick);
+      if (typeof player.setPlaybackQualityRange === "function") {
+        try { player.setPlaybackQualityRange(pick, pick); } catch (e2) {}
+      }
+    } catch (e) {}
+  }
+
   function ytDestroyPlayer() {
     ytStopTick();
     if (ytPlayer && typeof ytPlayer.destroy === "function") {
@@ -7934,6 +7958,7 @@
               const vol = document.getElementById("ytVol");
               const v = vol ? parseInt(vol.value, 10) : 80;
               ev.target.setVolume(Number.isFinite(v) ? v : 80);
+              ytPreferMaxQuality(ev.target);
               if (ytWantPlay) ev.target.playVideo();
             } catch (e) {}
             ytSyncScrub();
@@ -7941,11 +7966,15 @@
           },
           onStateChange: function (ev) {
             const st = ev.data;
-            if (st === YT.PlayerState.PLAYING) ytSetChromeState("playing");
-            else if (st === YT.PlayerState.PAUSED) ytSetChromeState("paused");
+            if (st === YT.PlayerState.PLAYING) {
+              ytSetChromeState("playing");
+              ytPreferMaxQuality(ev.target);
+            } else if (st === YT.PlayerState.PAUSED) ytSetChromeState("paused");
             else if (st === YT.PlayerState.ENDED) ytSetChromeState("ended");
-            else if (st === YT.PlayerState.BUFFERING) ytSetChromeState("buffering");
-            else if (st === YT.PlayerState.UNSTARTED || st === YT.PlayerState.CUED) ytSetChromeState("paused");
+            else if (st === YT.PlayerState.BUFFERING) {
+              ytSetChromeState("buffering");
+              ytPreferMaxQuality(ev.target);
+            } else if (st === YT.PlayerState.UNSTARTED || st === YT.PlayerState.CUED) ytSetChromeState("paused");
             ytSyncScrub();
           }
         }
@@ -7966,9 +7995,11 @@
     const auto = !(opts && opts.silent);
     if (ytPlayer && typeof ytPlayer.loadVideoById === "function" && ytApiReady) {
       try {
-        if (auto) ytPlayer.loadVideoById(v.id);
-        else ytPlayer.cueVideoById(v.id);
+        const spec = { videoId: v.id, suggestedQuality: "highres" };
+        if (auto) ytPlayer.loadVideoById(spec);
+        else ytPlayer.cueVideoById(spec);
         ytWantPlay = auto;
+        ytPreferMaxQuality(ytPlayer);
       } catch (e) {
         ytMountPlayer(v.id, auto);
       }
