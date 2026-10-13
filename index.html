@@ -1309,6 +1309,33 @@
     border: 1px solid #1d5c1d; border-radius: 1px; text-shadow: 0 0 4px #39ff14;
     box-shadow: inset 0 3px 3px -2px rgba(57,255,20,.25), inset 0 -3px 3px -2px rgba(0,0,0,.9);
   }
+  #win-radio .radio-content { padding: 10px; }
+  .radio-lcd { background: #000; border: 1px solid #1d5c1d; border-radius: 3px; padding: 6px 8px; box-shadow: inset 0 0 12px rgba(57,255,20,.12); }
+  .radio-track { color: var(--green); font: bold 13px "Courier New", monospace; text-shadow: 0 0 6px rgba(57,255,20,.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .radio-sub { color: var(--muted); font: 11px "Courier New", monospace; margin: 2px 0 6px; }
+  .radio-viz { display: block; width: 100%; height: 56px; }
+  .radio-stems { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0 8px; }
+  .stem { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .stem-bar { position: relative; width: 44px; height: 150px; display: flex; flex-direction: column-reverse; gap: 3px; padding: 5px; background: #050805; border: 1px solid #1d5c1d; border-radius: 22px; touch-action: none; cursor: ns-resize; box-sizing: border-box; }
+  .stem-bar:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .stem-seg { flex: 1; border-radius: 6px; background: #0d1f0d; transition: background .08s, box-shadow .08s; }
+  .stem-seg.lit { background: #39ff14; box-shadow: 0 0 8px #39ff14, 0 0 2px #d6ff7a inset; }
+  .stem.is-off .stem-seg.lit { background: #1f5f14; box-shadow: none; }
+  .stem-name { color: var(--green); font: 11px "Courier New", monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .stem-btns { display: flex; gap: 4px; }
+  .stem-btns button { width: 26px; height: 26px; padding: 0; border: 1px solid #1d5c1d; border-radius: 4px; background: #000; color: var(--muted); font: bold 11px "Courier New", monospace; cursor: pointer; }
+  .stem-btns button.on { color: #000; background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .radio-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .radio-loop.on { color: #000; background: var(--green); }
+  .radio-knob-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+  .radio-knob { --ang: 0deg; position: relative; width: 38px; height: 38px; border-radius: 50%; background: radial-gradient(circle at 50% 45%, #102010, #000 70%); border: 1px solid #1d5c1d; box-shadow: 0 0 8px rgba(57,255,20,.35); touch-action: none; cursor: ns-resize; }
+  .radio-knob i { position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; background: var(--green); border-radius: 2px; box-shadow: 0 0 6px var(--green); transform-origin: 50% 15px; transform: rotate(var(--ang)); }
+  .radio-knob:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .radio-knob-val { color: var(--green); font: 11px "Courier New", monospace; min-width: 38px; }
+  .radio-vol { display: flex; align-items: center; gap: 8px; margin-top: 8px; color: var(--muted); font: 11px "Courier New", monospace; }
+  .radio-vol input { flex: 1; accent-color: #39ff14; }
+  .radio-note { font-size: 11px; margin: 8px 0 0; }
+  @media (max-width: 700px) { .stem-bar { width: 52px; height: 170px; } .stem-btns button { width: 30px; height: 30px; } }
   .about-visitor { margin-top: 8px; }
   #kitaSaver { position: fixed; inset: 0; z-index: 2147483000; background: #000; cursor: none; touch-action: none; }
   #kitaSaver[hidden] { display: none; }
@@ -4572,11 +4599,50 @@
         <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="6.2" width="17.6" height="11.6" rx="3.2"/><path d="M10.4 9.4l5 2.6-5 2.6V9.4z" fill="currentColor" stroke="none"/></svg></div>
         <div class="label">YouTube</div>
       </div>
+      <div class="icon" id="icon-radio" tabindex="0" data-open="radio" aria-label="Kita Radio">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7.6L17.5 3.4"/><rect x="3" y="7.6" width="18" height="12" rx="2.2"/><circle cx="8.6" cy="13.6" r="3"/><circle cx="8.6" cy="13.6" r="0.9" fill="currentColor" stroke="none"/><path d="M14.4 11.2h4M14.4 13.6h4M14.4 16h4"/></svg></div>
+        <div class="label">Radio</div>
+      </div>
       <div class="icon" id="icon-scores" tabindex="0" data-open="scores" aria-label="Scores">
         <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 18.5V10.2"/><path d="M12 18.5V6.2"/><path d="M17.5 18.5v-5.2"/><path d="M4.5 18.5h15"/></svg></div>
         <div class="label">Scores</div>
       </div>
     </div>
+
+    <section class="window" id="win-radio" style="top:90px; left:260px; width:380px;">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="radio"></div>
+          <div class="dot min" data-close="radio"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Kita Radio</div>
+      </div>
+      <div class="content radio-content">
+        <div class="radio-lcd">
+          <div class="radio-track" id="radioTrack">1. Elevator to Nowhere</div>
+          <div class="radio-sub" id="radioSub">paused</div>
+          <canvas id="radioViz" class="radio-viz" height="56" aria-hidden="true"></canvas>
+        </div>
+        <div class="radio-stems">
+          <div class="stem"><div class="stem-bar" role="slider" tabindex="0" aria-label="Drums level" aria-valuemin="0" aria-valuemax="100"><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span></div><div class="stem-name">drums</div><div class="stem-btns"><button type="button" class="stem-m" aria-label="Mute drums">M</button><button type="button" class="stem-s" aria-label="Solo drums">S</button></div></div>
+          <div class="stem"><div class="stem-bar" role="slider" tabindex="0" aria-label="Bass level" aria-valuemin="0" aria-valuemax="100"><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span></div><div class="stem-name">bass</div><div class="stem-btns"><button type="button" class="stem-m" aria-label="Mute bass">M</button><button type="button" class="stem-s" aria-label="Solo bass">S</button></div></div>
+          <div class="stem"><div class="stem-bar" role="slider" tabindex="0" aria-label="Keys level" aria-valuemin="0" aria-valuemax="100"><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span></div><div class="stem-name">keys</div><div class="stem-btns"><button type="button" class="stem-m" aria-label="Mute keys">M</button><button type="button" class="stem-s" aria-label="Solo keys">S</button></div></div>
+          <div class="stem"><div class="stem-bar" role="slider" tabindex="0" aria-label="Lead level" aria-valuemin="0" aria-valuemax="100"><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span><span class="stem-seg"></span></div><div class="stem-name">lead</div><div class="stem-btns"><button type="button" class="stem-m" aria-label="Mute lead">M</button><button type="button" class="stem-s" aria-label="Solo lead">S</button></div></div>
+        </div>
+        <div class="radio-controls">
+          <button type="button" class="btn" id="radioPlay" aria-pressed="false">Play</button>
+          <button type="button" class="btn secondary" id="radioNext">Next</button>
+          <button type="button" class="btn secondary radio-loop" id="radioLoop" aria-pressed="false">Loop: off</button>
+          <div class="radio-knob-wrap">
+            <div class="radio-knob" id="radioKnob" role="slider" tabindex="0" aria-label="Speed and pitch" aria-valuemin="0.5" aria-valuemax="1.5" aria-valuenow="1.00"><i></i></div>
+            <span class="radio-knob-val" id="radioSpeedVal">1.00x</span>
+          </div>
+        </div>
+        <label class="radio-vol"><span>vol</span><input type="range" id="radioVol" min="0" max="100" value="70" aria-label="Radio volume"></label>
+        <p class="muted radio-note">Four stems, one clock. Drag a bar to set its level. M mutes, S solos. Nothing here was licensed because nothing here was recorded.</p>
+      </div>
+    </section>
 
     <section class="window" id="win-scores" style="top:70px; left:150px; width:400px;">
       <div class="titlebar" data-drag>
@@ -5775,6 +5841,7 @@
       <button type="button" data-open="paint">Paint</button>
       <button type="button" data-open="vlc">VLC</button>
       <button type="button" data-open="youtube">YouTube</button>
+      <button type="button" data-open="radio">Radio</button>
       <button type="button" data-open="scores">Scores</button>
       <button type="button" data-open="drone">DroneStuff</button>
       <button type="button" data-open="trash">Trash</button>
@@ -5925,6 +5992,7 @@
     paint: document.getElementById("win-paint"),
     vlc: document.getElementById("win-vlc"),
     youtube: document.getElementById("win-youtube"),
+    radio: document.getElementById("win-radio"),
     scores: document.getElementById("win-scores"),
     casino: document.getElementById("win-casino"),
     blackjack: document.getElementById("win-blackjack"),
@@ -6123,6 +6191,7 @@
     if (name === "paint") onPaintWindowOpen();
     if (name === "vlc") vlcOnOpen();
     if (name === "youtube") ytOnOpen();
+    if (name === "radio") radioOnOpen();
     if (name === "scores") lbOnOpen();
     if (name === "drone") kitaFetchCounts();
   }
@@ -6382,6 +6451,7 @@
     if (typeof onGameWindowClose === "function") onGameWindowClose(name);
     if (name === "vlc") vlcOnClose();
     if (name === "youtube") ytOnClose();
+    if (name === "radio") radioOnClose();
     let topName = null, topZ = -1;
     Object.keys(windows).forEach(function (n) {
       const w = windows[n];
@@ -6407,6 +6477,7 @@
     btn.title = audioMuted ? "Unmute" : "Mute";
     if (!audioMuted) kitaACGet();
     vlcApplyMute();
+    radioApplyMute();
   }
 
   let kitaAC = null;
@@ -6561,7 +6632,7 @@
 
     if (cmd === "help") {
       termPrint("commands: help, whoami, winning, clear, sudo, date, kita, scan, confess, coinflip, matrix, aura, snow, screensaver");
-      termPrint("apps: about, tracker, contact, drone, games, casino, trash, bookshelf, weather, paint, vlc, youtube, scores, terminal");
+      termPrint("apps: about, tracker, contact, drone, games, casino, trash, bookshelf, weather, paint, vlc, youtube, radio, scores, terminal");
     } else if (cmd === "screensaver" || cmd === "saver") {
       termPrint("going dark. touch anything to come back.");
       setTimeout(() => { if (window.kitaSaverStart) window.kitaSaverStart(true); }, 400);
@@ -6718,6 +6789,8 @@
         youtube: "youtube",
         yt: "youtube",
         nikita_kovy: "youtube",
+        radio: "radio",
+        winamp: "radio",
         scores: "scores",
         score: "scores",
         leaderboard: "scores"
@@ -7559,6 +7632,7 @@
             "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
             "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar, with its view count and length. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
+            "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck; double-click resets it. Loop holds the current track; off, it moves on every eight bars. Next skips. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
             "Scores is a classic leaderboard window for every rankable game. Open it from the desktop or type scores in Terminal.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Open mail app prefills the subject “you're the man.”"
@@ -7583,7 +7657,7 @@
         {
           title: "Terminal",
           paragraphs: [
-            "Open Terminal and type help, then press Run. Help lists commands and app names, including terminal. Type an app name to open it. vlc opens the player. youtube opens the classic YouTube window. scores opens the leaderboard (folder-level apps).",
+            "Open Terminal and type help, then press Run. Help lists commands and app names, including terminal. Type an app name to open it. vlc opens the player. youtube opens the classic YouTube window. radio opens Kita Radio. scores opens the leaderboard (folder-level apps).",
             "games and casino open those folders. Not the inner games. snow toggles the snow. matrix toggles the rain. Matrix off puts snow back unless you already stopped it. Konami still unlocks VIP.",
             "scan drops a short Kita AV banner, walks fake paths, and may find a threat or two. coinflip shows a coin, then heads or tails. screensaver starts the screensaver now instead of waiting a minute.",
             "The placeholder is try: help. There is no email command."
@@ -7776,6 +7850,398 @@
 
 
 
+
+  // --- Kita Radio: 4-stem WebAudio player (Stem Player-ish). Generated live, nothing downloaded. ---
+  const RADIO_TRACKS = [
+    { name: "Elevator to Nowhere", sub: "lo-fi, 78 bpm, going down", bpm: 78, root: 45,
+      chords: [[0, 3, 7, 10], [5, 8, 12, 15], [-2, 2, 5, 9], [3, 7, 10, 14]],
+      bass: "0...0..7.0...5..", kick: "x.....x...x.....", snare: "....x.......x...", hat: "x.x.x.x.x.x.x.xx",
+      lead: [12, null, 15, null, 19, null, 17, 15, null, null, 12, null, 10, null, null, null], wave: "triangle" },
+    { name: "Inbox Zero", sub: "synthwave, 96 bpm, briefly", bpm: 96, root: 40,
+      chords: [[0, 4, 7, 11], [-3, 0, 4, 7], [5, 9, 12, 16], [7, 11, 14, 17]],
+      bass: "0.0.0.0.0.0.0.12.", kick: "x...x...x...x...", snare: "....x.......x...", hat: "..x...x...x...x.",
+      lead: [19, null, 16, 19, 21, null, 19, null, 16, null, 14, null, 12, null, null, 11], wave: "sawtooth" },
+    { name: "Mild Victory Lap", sub: "chiptune, 112 bpm, no trophy", bpm: 112, root: 48,
+      chords: [[0, 4, 7], [5, 9, 12], [7, 11, 14], [0, 4, 7]],
+      bass: "0..0..7.0..0..5.", kick: "x..x..x...x..x..", snare: "....x..x....x...", hat: "xxxxxxxxxxxxxxxx",
+      lead: [12, 16, 19, 24, 19, 16, 12, null, 14, 17, 21, 26, 21, 17, 14, null], wave: "square" },
+    { name: "Fluorescent Tuesday", sub: "dark synth, 88 bpm, open office", bpm: 88, root: 38,
+      chords: [[0, 3, 7], [-4, 0, 3], [-2, 2, 5], [-5, -2, 2]],
+      bass: "0.....0.3..0..-2.", kick: "x.......x..x....", snare: "....x.......x..x", hat: "x.xxx.xxx.xxx.xx",
+      lead: [null, null, 15, null, 14, null, 12, null, null, null, 10, 12, null, 7, null, null], wave: "square" }
+  ];
+  const RADIO_STEMS = ["drums", "bass", "keys", "lead"];
+  const RADIO_BARS = 8;
+  const radio = {
+    ac: null, master: null, analyser: null, stems: [], noise: null,
+    playing: false, track: 0, step: 0, bar: 0, nextTime: 0, timer: null, raf: 0,
+    level: [0.8, 0.8, 0.7, 0.7], muted: [false, false, false, false], solo: -1,
+    vol: 0.7, speed: 1, loop: false, wired: false
+  };
+
+  window.kitaRadio = radio;
+  window.kitaRadioStemGain = (i) => radioStemGain(i);
+
+  function radioCtx() {
+    if (!kitaAC) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      try { kitaAC = new AC(); } catch (e) { return null; }
+    }
+    if (kitaAC.state === "suspended") { try { kitaAC.resume(); } catch (e) {} }
+    return kitaAC;
+  }
+
+  function radioBuild() {
+    const ac = radioCtx();
+    if (!ac) return false;
+    if (radio.ac === ac) return true;
+    radio.ac = ac;
+    radio.master = ac.createGain();
+    radio.analyser = ac.createAnalyser();
+    radio.analyser.fftSize = 128;
+    radio.analyser.smoothingTimeConstant = 0.8;
+    radio.master.connect(radio.analyser);
+    radio.analyser.connect(ac.destination);
+    radio.stems = RADIO_STEMS.map(() => {
+      const g = ac.createGain();
+      g.connect(radio.master);
+      return g;
+    });
+    const len = Math.floor(ac.sampleRate * 0.5);
+    radio.noise = ac.createBuffer(1, len, ac.sampleRate);
+    const d = radio.noise.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    radioApplyGains(true);
+    return true;
+  }
+
+  function radioStemGain(i) {
+    if (radio.solo >= 0) return radio.solo === i ? radio.level[i] : 0;
+    return radio.muted[i] ? 0 : radio.level[i];
+  }
+
+  function radioApplyGains(instant) {
+    if (!radio.ac) return;
+    const t = radio.ac.currentTime;
+    radio.stems.forEach((g, i) => {
+      g.gain.cancelScheduledValues(t);
+      g.gain.setTargetAtTime(radioStemGain(i) * 0.9, t, instant ? 0.001 : 0.03);
+    });
+    const m = (radio.playing && !audioMuted) ? radio.vol : 0;
+    radio.master.gain.cancelScheduledValues(t);
+    radio.master.gain.setTargetAtTime(m, t, instant ? 0.001 : 0.04);
+  }
+
+  function radioApplyMute() {
+    radioApplyGains(false);
+    radioRenderUi();
+  }
+
+  function radioFreq(midi) { return 440 * Math.pow(2, (midi - 69) / 12) * radio.speed; }
+
+  function radioEnv(g, t, a, peak, dur) {
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(peak, t + a);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  }
+
+  function radioNoise(dest, t, hp, peak, dur) {
+    const ac = radio.ac;
+    const src = ac.createBufferSource();
+    src.buffer = radio.noise;
+    src.playbackRate.value = radio.speed;
+    const f = ac.createBiquadFilter();
+    f.type = "highpass";
+    f.frequency.value = hp;
+    const g = ac.createGain();
+    radioEnv(g, t, 0.002, peak, dur);
+    src.connect(f); f.connect(g); g.connect(dest);
+    src.start(t); src.stop(t + dur + 0.02);
+  }
+
+  function radioTone(dest, type, freq, t, a, peak, dur, cutoff, detune) {
+    const ac = radio.ac;
+    const o = ac.createOscillator();
+    o.type = type;
+    o.frequency.setValueAtTime(freq, t);
+    if (detune) o.detune.value = detune;
+    const f = ac.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.value = cutoff;
+    const g = ac.createGain();
+    radioEnv(g, t, a, peak, dur);
+    o.connect(f); f.connect(g); g.connect(dest);
+    o.start(t); o.stop(t + dur + 0.05);
+  }
+
+  function radioScheduleStep(t, stepDur) {
+    const tr = RADIO_TRACKS[radio.track];
+    const s = radio.step;
+    const [drums, bass, keys, lead] = radio.stems;
+    if (tr.kick[s] === "x") {
+      const ac = radio.ac, o = ac.createOscillator(), g = ac.createGain();
+      o.type = "sine";
+      o.frequency.setValueAtTime(150 * radio.speed, t);
+      o.frequency.exponentialRampToValueAtTime(42 * radio.speed, t + 0.12);
+      radioEnv(g, t, 0.003, 0.9, 0.3);
+      o.connect(g); g.connect(drums);
+      o.start(t); o.stop(t + 0.35);
+    }
+    if (tr.snare[s] === "x") {
+      radioNoise(drums, t, 1400, 0.35, 0.16);
+      radioTone(drums, "triangle", 185 * radio.speed, t, 0.002, 0.2, 0.08, 3000);
+    }
+    if (tr.hat[s] === "x") radioNoise(drums, t, 7000, s % 4 === 0 ? 0.14 : 0.08, 0.04);
+    const bc = tr.bass[s];
+    if (bc && bc !== ".") {
+      // bass string: digits = semitone offset; "-2"/"12" handled by parse below
+      const off = radioBassOffset(tr.bass, s);
+      if (off !== null) radioTone(bass, "sawtooth", radioFreq(tr.root - 12 + off), t, 0.005, 0.45, stepDur * 1.8, 520);
+    }
+    if (s === 0 || s === 8) {
+      const ch = tr.chords[radio.bar % tr.chords.length];
+      ch.forEach((n, i) => {
+        radioTone(keys, "triangle", radioFreq(tr.root + 12 + n), t, 0.06, 0.12, stepDur * 7.5, 1600, i % 2 ? 6 : -6);
+        radioTone(keys, "sawtooth", radioFreq(tr.root + 12 + n), t, 0.08, 0.035, stepDur * 7.5, 900, i % 2 ? -9 : 9);
+      });
+    }
+    const ln = tr.lead[s];
+    if (ln !== null && ln !== undefined && (radio.bar % 2 === 1 || s < 8)) {
+      radioTone(lead, tr.wave, radioFreq(tr.root + 12 + ln), t, 0.01, tr.wave === "triangle" ? 0.22 : 0.09, stepDur * 1.6, 2400);
+    }
+  }
+
+  // Bass patterns are 16 single-char steps; a "-" or "1" prefix joins with the next digit.
+  function radioBassOffset(str, s) {
+    const toks = [];
+    for (let i = 0; i < str.length && toks.length < 16; i++) {
+      const c = str[i];
+      if (c === ".") { toks.push(null); continue; }
+      if ((c === "-" || c === "1") && /[0-9]/.test(str[i + 1] || "") && c + str[i + 1] !== "1.") {
+        toks.push(Number(c + str[i + 1])); i++; continue;
+      }
+      toks.push(Number(c));
+    }
+    const v = toks[s];
+    return (v === undefined || Number.isNaN(v)) ? null : v;
+  }
+
+  function radioTick() {
+    if (!radio.playing || !radio.ac) return;
+    const ac = radio.ac;
+    while (radio.nextTime < ac.currentTime + 0.15) {
+      const tr = RADIO_TRACKS[radio.track];
+      const stepDur = 60 / (tr.bpm * radio.speed) / 4;
+      radioScheduleStep(radio.nextTime, stepDur);
+      radio.nextTime += stepDur;
+      radio.step += 1;
+      if (radio.step >= 16) {
+        radio.step = 0;
+        radio.bar += 1;
+        if (radio.bar >= RADIO_BARS) {
+          radio.bar = 0;
+          if (!radio.loop) {
+            radio.track = (radio.track + 1) % RADIO_TRACKS.length;
+            setTimeout(radioRenderUi, 0);
+          }
+        }
+      }
+    }
+  }
+
+  function radioPlay() {
+    if (!radioBuild()) { showToast && showToast("No WebAudio here. Radio silence."); return; }
+    if (radio.playing) return;
+    radio.playing = true;
+    radio.nextTime = radio.ac.currentTime + 0.06;
+    radioApplyGains(false);
+    radio.timer = setInterval(radioTick, 25);
+    radioTick();
+    radioVizStart();
+    radioRenderUi();
+  }
+
+  function radioPause() {
+    if (!radio.playing) return;
+    radio.playing = false;
+    clearInterval(radio.timer);
+    radio.timer = null;
+    radioApplyGains(false);
+    radioRenderUi();
+  }
+
+  function radioNext() {
+    radio.track = (radio.track + 1) % RADIO_TRACKS.length;
+    radio.step = 0;
+    radio.bar = 0;
+    if (radio.playing && radio.ac) radio.nextTime = radio.ac.currentTime + 0.05;
+    radioRenderUi();
+  }
+
+  function radioRenderUi() {
+    const tr = RADIO_TRACKS[radio.track];
+    const nm = document.getElementById("radioTrack");
+    const sub = document.getElementById("radioSub");
+    if (nm) nm.textContent = (radio.track + 1) + ". " + tr.name;
+    if (sub) {
+      let txt = tr.sub;
+      if (audioMuted) txt += " · muted in tray";
+      else if (!radio.playing) txt += " · paused";
+      sub.textContent = txt;
+    }
+    const pb = document.getElementById("radioPlay");
+    if (pb) {
+      pb.textContent = radio.playing ? "Pause" : "Play";
+      pb.setAttribute("aria-pressed", radio.playing ? "true" : "false");
+    }
+    const lb = document.getElementById("radioLoop");
+    if (lb) {
+      lb.classList.toggle("on", radio.loop);
+      lb.setAttribute("aria-pressed", radio.loop ? "true" : "false");
+      lb.textContent = radio.loop ? "Loop: on" : "Loop: off";
+    }
+    document.querySelectorAll("#win-radio .stem").forEach((col, i) => {
+      const lvl = radio.level[i];
+      const audible = radioStemGain(i) > 0;
+      col.classList.toggle("is-off", !audible);
+      col.querySelectorAll(".stem-seg").forEach((seg, k) => {
+        seg.classList.toggle("lit", k < Math.round(lvl * 10));
+      });
+      const bar = col.querySelector(".stem-bar");
+      if (bar) {
+        bar.setAttribute("aria-valuenow", String(Math.round(lvl * 100)));
+        bar.setAttribute("aria-valuetext", Math.round(lvl * 100) + "%" + (audible ? "" : ", silent"));
+      }
+      const m = col.querySelector(".stem-m"), s = col.querySelector(".stem-s");
+      if (m) { m.classList.toggle("on", radio.muted[i]); m.setAttribute("aria-pressed", radio.muted[i] ? "true" : "false"); }
+      if (s) { s.classList.toggle("on", radio.solo === i); s.setAttribute("aria-pressed", radio.solo === i ? "true" : "false"); }
+    });
+    const knob = document.getElementById("radioKnob");
+    if (knob) {
+      const ang = (radio.speed - 1) * 270; // 0.5..1.5 -> -135..135
+      knob.style.setProperty("--ang", ang + "deg");
+      knob.setAttribute("aria-valuenow", radio.speed.toFixed(2));
+      knob.setAttribute("aria-valuetext", radio.speed.toFixed(2) + "x");
+    }
+    const kv = document.getElementById("radioSpeedVal");
+    if (kv) kv.textContent = radio.speed.toFixed(2) + "x";
+  }
+
+  function radioSetLevel(i, v) {
+    radio.level[i] = Math.max(0, Math.min(1, v));
+    radioApplyGains(false);
+    radioRenderUi();
+  }
+
+  function radioSetSpeed(v) {
+    radio.speed = Math.round(Math.max(0.5, Math.min(1.5, v)) * 100) / 100;
+    radioRenderUi();
+  }
+
+  function radioVizStart() {
+    if (radio.raf) return;
+    const cv = document.getElementById("radioViz");
+    if (!cv) return;
+    const ctx = cv.getContext("2d");
+    let data = null;
+    function draw() {
+      const win = document.getElementById("win-radio");
+      if (!win || !win.classList.contains("open")) { radio.raf = 0; return; }
+      const w = cv.clientWidth || 300, h = cv.clientHeight || 56;
+      if (cv.width !== w) cv.width = w;
+      if (cv.height !== h) cv.height = h;
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, w, h);
+      const n = 24, gap = 2, bw = (w - gap * (n - 1)) / n;
+      if (radio.analyser) {
+        if (!data) data = new Uint8Array(radio.analyser.frequencyBinCount);
+        radio.analyser.getByteFrequencyData(data);
+      }
+      ctx.shadowColor = "#39ff14";
+      ctx.shadowBlur = 6;
+      for (let i = 0; i < n; i++) {
+        const v = data ? data[Math.min(data.length - 1, 1 + i * 2)] / 255 : 0;
+        const bh = Math.max(2, v * (h - 4));
+        const segs = Math.floor(bh / 4);
+        for (let k = 0; k < segs; k++) {
+          ctx.fillStyle = k > (h / 4) * 0.75 ? "#d6ff7a" : "#39ff14";
+          ctx.fillRect(i * (bw + gap), h - 2 - k * 4 - 3, bw, 3);
+        }
+        if (!segs) { ctx.fillStyle = "#1d5c1d"; ctx.fillRect(i * (bw + gap), h - 3, bw, 2); }
+      }
+      ctx.shadowBlur = 0;
+      radio.raf = requestAnimationFrame(draw);
+    }
+    radio.raf = requestAnimationFrame(draw);
+  }
+
+  function radioOnOpen() {
+    radioWire();
+    radioRenderUi();
+    radioVizStart();
+  }
+
+  function radioOnClose() {
+    radioPause();
+  }
+
+  function radioWire() {
+    if (radio.wired) return;
+    const win = document.getElementById("win-radio");
+    if (!win) return;
+    radio.wired = true;
+    document.getElementById("radioPlay").addEventListener("click", () => { radio.playing ? radioPause() : radioPlay(); });
+    document.getElementById("radioNext").addEventListener("click", radioNext);
+    document.getElementById("radioLoop").addEventListener("click", () => { radio.loop = !radio.loop; radioRenderUi(); });
+    const vol = document.getElementById("radioVol");
+    vol.addEventListener("input", () => { radio.vol = Number(vol.value) / 100; radioApplyGains(false); });
+    win.querySelectorAll(".stem").forEach((col, i) => {
+      const bar = col.querySelector(".stem-bar");
+      const setFromY = (e) => {
+        const r = bar.getBoundingClientRect();
+        radioSetLevel(i, 1 - (e.clientY - r.top) / r.height);
+      };
+      bar.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        try { bar.setPointerCapture(e.pointerId); } catch (err) {}
+        bar.dataset.drag = "1";
+        setFromY(e);
+      });
+      bar.addEventListener("pointermove", (e) => { if (bar.dataset.drag === "1") setFromY(e); });
+      const end = () => { bar.dataset.drag = ""; };
+      bar.addEventListener("pointerup", end);
+      bar.addEventListener("pointercancel", end);
+      bar.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp" || e.key === "ArrowRight") { e.preventDefault(); radioSetLevel(i, radio.level[i] + 0.1); }
+        if (e.key === "ArrowDown" || e.key === "ArrowLeft") { e.preventDefault(); radioSetLevel(i, radio.level[i] - 0.1); }
+      });
+      col.querySelector(".stem-m").addEventListener("click", () => {
+        radio.muted[i] = !radio.muted[i];
+        radioApplyGains(false); radioRenderUi();
+      });
+      col.querySelector(".stem-s").addEventListener("click", () => {
+        radio.solo = radio.solo === i ? -1 : i;
+        radioApplyGains(false); radioRenderUi();
+      });
+    });
+    const knob = document.getElementById("radioKnob");
+    let kY = 0, kV = 1, kDrag = false;
+    knob.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      kDrag = true; kY = e.clientY; kV = radio.speed;
+      try { knob.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+    knob.addEventListener("pointermove", (e) => { if (kDrag) radioSetSpeed(kV + (kY - e.clientY) / 160); });
+    knob.addEventListener("pointerup", () => { kDrag = false; });
+    knob.addEventListener("pointercancel", () => { kDrag = false; });
+    knob.addEventListener("dblclick", () => radioSetSpeed(1));
+    knob.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowUp" || e.key === "ArrowRight") { e.preventDefault(); radioSetSpeed(radio.speed + 0.05); }
+      if (e.key === "ArrowDown" || e.key === "ArrowLeft") { e.preventDefault(); radioSetSpeed(radio.speed - 0.05); }
+      if (e.key === "Home" || e.key === "0") { e.preventDefault(); radioSetSpeed(1); }
+    });
+  }
 
   // --- YouTube (@Nikita_Kovy) classic player ---
   const YT_CHANNEL = "https://www.youtube.com/@Nikita_Kovy";
