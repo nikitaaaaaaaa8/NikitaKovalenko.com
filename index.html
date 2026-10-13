@@ -1310,6 +1310,9 @@
     box-shadow: inset 0 3px 3px -2px rgba(57,255,20,.25), inset 0 -3px 3px -2px rgba(0,0,0,.9);
   }
   .about-visitor { margin-top: 8px; }
+  #kitaSaver { position: fixed; inset: 0; z-index: 2147483000; background: #000; cursor: none; touch-action: none; }
+  #kitaSaver[hidden] { display: none; }
+  #kitaSaver canvas { display: block; width: 100%; height: 100%; }
   .about-visitor[hidden] { display: none; }
   @media (max-width: 480px) { .hit-odo { display: none !important; } }
   .clock {
@@ -5802,6 +5805,7 @@
     <img id="droneLightboxImg" alt="">
     <div class="drone-lightbox-cap" id="droneLightboxCap"></div>
   </div>
+  <div id="kitaSaver" hidden aria-hidden="true"><canvas id="kitaSaverCanvas"></canvas></div>
   <canvas id="snow-canvas" aria-hidden="true"></canvas>
   <canvas id="matrix-canvas" aria-hidden="true"></canvas>
   <div id="snitch" role="button" aria-label="Golden Snitch" title="Catch the Snitch"><svg viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">  <defs>    <radialGradient id="snitchBall" cx="35%" cy="30%" r="65%">      <stop offset="0%" stop-color="#fff4b0"/>      <stop offset="45%" stop-color="#ffd54a"/>      <stop offset="100%" stop-color="#c79200"/>    </radialGradient>    <linearGradient id="snitchWing" x1="0" y1="0" x2="1" y2="1">      <stop offset="0%" stop-color="#fff8d6"/>      <stop offset="55%" stop-color="#ffe27a"/>      <stop offset="100%" stop-color="#d4a017"/>    </linearGradient>  </defs>  <g class="wing-l" fill="url(#snitchWing)" stroke="#a87900" stroke-width="0.6">    <path d="M14.2 13.2c-2.2-1.1-5.4-2.8-7.8-3.2-1.3-.2-2.4.4-2.6 1.2-.2.9.6 1.7 1.8 2.1 1.9.6 4.4.7 6.4.7l2.2-.8z"/>    <path d="M13.6 14.6c-2.4-.1-5.2.1-7.1 1.1-1.1.6-1.4 1.6-.7 2.2.7.6 1.9.4 3-.1 1.8-.8 3.7-2 4.8-3.2z" opacity=".9"/>  </g>  <g class="wing-r" fill="url(#snitchWing)" stroke="#a87900" stroke-width="0.6">    <path d="M17.8 13.2c2.2-1.1 5.4-2.8 7.8-3.2 1.3-.2 2.4.4 2.6 1.2.2.9-.6 1.7-1.8 2.1-1.9.6-4.4.7-6.4.7l-2.2-.8z"/>    <path d="M18.4 14.6c2.4-.1 5.2.1 7.1 1.1 1.1.6 1.4 1.6.7 2.2-.7.6-1.9.4-3-.1-1.8-.8-3.7-2-4.8-3.2z" opacity=".9"/>  </g>  <circle cx="16" cy="16" r="5.2" fill="url(#snitchBall)" stroke="#9a7200" stroke-width="0.7"/>  <ellipse cx="14.4" cy="14.6" rx="1.6" ry="1.1" fill="#fff6c8" opacity=".75"/>  <path d="M16 11.2v9.6M12.4 16h7.2" stroke="#a87900" stroke-width="0.55" opacity=".45"/></svg></div>
@@ -6556,8 +6560,11 @@
     if (!cmd) return;
 
     if (cmd === "help") {
-      termPrint("commands: help, whoami, winning, clear, sudo, date, kita, scan, confess, coinflip, matrix, aura, snow");
+      termPrint("commands: help, whoami, winning, clear, sudo, date, kita, scan, confess, coinflip, matrix, aura, snow, screensaver");
       termPrint("apps: about, tracker, contact, drone, games, casino, trash, bookshelf, weather, paint, vlc, youtube, scores, terminal");
+    } else if (cmd === "screensaver" || cmd === "saver") {
+      termPrint("going dark. touch anything to come back.");
+      setTimeout(() => { if (window.kitaSaverStart) window.kitaSaverStart(true); }, 400);
     } else if (cmd === "whoami") {
       termPrint("guest@nikitakovalenko.com // temporary main character");
     } else if (cmd === "winning") {
@@ -7531,6 +7538,7 @@
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
             "Designed for the computer, but it works on mobile too.",
+            "Leave it alone for a minute and the screensaver takes over: neon stars on black and a KITA OS logo that bounces toward the corner and, like everyone, almost makes it. Any mouse, key, or touch brings the desktop back. It waits while YouTube or VLC is playing or a game window is open. With reduced motion on, it is a dim still frame.",
             "The desktop auto-detects the Tesla car browser and uses bigger icons and buttons. ?tesla forces that layout. ?tesla=0 clears it for this tab. Phone and computer layouts stay the same."
           ]
         },
@@ -7577,7 +7585,7 @@
           paragraphs: [
             "Open Terminal and type help, then press Run. Help lists commands and app names, including terminal. Type an app name to open it. vlc opens the player. youtube opens the classic YouTube window. scores opens the leaderboard (folder-level apps).",
             "games and casino open those folders. Not the inner games. snow toggles the snow. matrix toggles the rain. Matrix off puts snow back unless you already stopped it. Konami still unlocks VIP.",
-            "scan drops a short Kita AV banner, walks fake paths, and may find a threat or two. coinflip shows a coin, then heads or tails.",
+            "scan drops a short Kita AV banner, walks fake paths, and may find a threat or two. coinflip shows a coin, then heads or tails. screensaver starts the screensaver now instead of waiting a minute.",
             "The placeholder is try: help. There is no email command."
           ]
         },
@@ -12751,6 +12759,127 @@
   const KITA_VIEWS_URL = "https://kita-views.nikitaaaaaaaa.workers.dev";
   const kitaViews = { inflight: null };
 
+  // --- Screensaver: 60s idle, neon starfield, Kita logo that never quite hits the corner ---
+  (function kitaScreensaver() {
+    const IDLE_MS = 60000;
+    const wrap = document.getElementById("kitaSaver");
+    const cv = document.getElementById("kitaSaverCanvas");
+    if (!wrap || !cv) return;
+    const ctx = cv.getContext("2d");
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+    let lastInput = Date.now();
+    let on = false, raf = 0, startedAt = 0, stars = [], logo = null;
+    const GAME_IDS = /^win-(snake|tetris|minesweeper|2048|chess|pipes|solitaire|flappy|tron|pacman|blackjack|slots|roulette|craps|baccarat)$/;
+
+    function busy() {
+      const v = document.getElementById("vlcVideo");
+      if (v && !v.paused && !v.ended) return true;
+      if (typeof ytUiPlaying !== "undefined" && ytUiPlaying) return true;
+      return [...document.querySelectorAll(".window.open")].some(w => GAME_IDS.test(w.id));
+    }
+    function size() {
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      cv.width = Math.round(innerWidth * dpr);
+      cv.height = Math.round(innerHeight * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function seed() {
+      stars = [];
+      for (let i = 0; i < 260; i++) stars.push({ x: Math.random() * 2 - 1, y: Math.random() * 2 - 1, z: Math.random() });
+      const w = Math.min(220, innerWidth * 0.45), h = w * 0.34;
+      // Odd speeds so the corner hit keeps almost happening.
+      logo = { w: w, h: h, x: innerWidth * 0.31, y: innerHeight * 0.23, vx: 1.37, vy: 1.03, hue: 0 };
+    }
+    function drawLogo(dim) {
+      const L = logo;
+      ctx.save();
+      ctx.globalAlpha = dim ? 0.55 : 1;
+      ctx.shadowColor = "#39ff14";
+      ctx.shadowBlur = dim ? 6 : 18;
+      ctx.strokeStyle = "#39ff14";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(L.x + 1, L.y + 1, L.w - 2, L.h - 2);
+      ctx.fillStyle = "#39ff14";
+      ctx.font = "bold " + Math.round(L.h * 0.55) + "px 'Courier New', monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("KITA OS", L.x + L.w / 2, L.y + L.h / 2 + 1);
+      ctx.restore();
+    }
+    function frame() {
+      if (!on) return;
+      const W = innerWidth, H = innerHeight, cx = W / 2, cy = H / 2;
+      ctx.fillStyle = "rgba(0,0,0,0.35)";
+      ctx.fillRect(0, 0, W, H);
+      for (const st of stars) {
+        st.z -= 0.006;
+        if (st.z <= 0.02) { st.x = Math.random() * 2 - 1; st.y = Math.random() * 2 - 1; st.z = 1; }
+        const px = cx + (st.x / st.z) * cx, py = cy + (st.y / st.z) * cy;
+        if (px < 0 || px > W || py < 0 || py > H) { st.z = 0; continue; }
+        const r = 0.8 + (1 - st.z) * 2.4;
+        ctx.fillStyle = st.z < 0.3 ? "#b6ffa0" : "#39ff14";
+        ctx.fillRect(px, py, r, r);
+      }
+      const L = logo;
+      L.x += L.vx; L.y += L.vy;
+      if (L.x <= 0) { L.x = 0; L.vx = Math.abs(L.vx); }
+      if (L.x + L.w >= W) { L.x = W - L.w; L.vx = -Math.abs(L.vx); }
+      if (L.y <= 0) { L.y = 0; L.vy = Math.abs(L.vy); }
+      if (L.y + L.h >= H) { L.y = H - L.h; L.vy = -Math.abs(L.vy); }
+      drawLogo(false);
+      raf = requestAnimationFrame(frame);
+    }
+    function drawStatic() {
+      const W = innerWidth, H = innerHeight;
+      ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "rgba(57,255,20,0.35)";
+      for (const st of stars) ctx.fillRect((st.x + 1) / 2 * W, (st.y + 1) / 2 * H, 1.5, 1.5);
+      logo.x = (W - logo.w) / 2; logo.y = (H - logo.h) / 2;
+      drawLogo(true);
+    }
+    function start(force) {
+      if (on) return;
+      if (!force && busy()) return;
+      on = true;
+      startedAt = Date.now();
+      wrap.hidden = false;
+      size(); seed();
+      ctx.fillStyle = "#000"; ctx.fillRect(0, 0, innerWidth, innerHeight);
+      if (reduce && reduce.matches) drawStatic();
+      else raf = requestAnimationFrame(frame);
+    }
+    function stop() {
+      if (!on) return;
+      on = false;
+      cancelAnimationFrame(raf);
+      wrap.hidden = true;
+    }
+    function poke(e) {
+      lastInput = Date.now();
+      // Ignore the tail of the input that launched it from Terminal.
+      if (on && Date.now() - startedAt > 250) {
+        stop();
+        if (e && e.type !== "mousemove" && e.type !== "pointermove" && e.type !== "wheel" && e.type !== "scroll") {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+    }
+    ["pointerdown", "pointermove", "mousemove", "keydown", "touchstart", "wheel"].forEach(t =>
+      window.addEventListener(t, poke, { capture: true, passive: t !== "pointerdown" && t !== "keydown" && t !== "touchstart" }));
+    window.addEventListener("resize", () => { if (on) { size(); if (reduce && reduce.matches) drawStatic(); } });
+    setInterval(() => {
+      if (on || document.hidden) return;
+      if (Date.now() - lastInput >= IDLE_MS) {
+        if (busy()) { lastInput = Date.now(); return; }
+        start(false);
+      }
+    }, 2000);
+    window.kitaSaverStart = start;
+    window.kitaSaverStop = stop;
+    window.kitaSaverOn = () => on;
+  })();
+
   // Hit counter: one real count per page load. No number, no counter.
   (function kitaVisitorCounter() {
     const odo = document.getElementById("hitOdo");
@@ -12769,7 +12898,7 @@
             sp.textContent = ch;
             return sp;
           }));
-          odo.title = txt + ". Congratulations, you are not the first.";
+          odo.title = txt + ".";
           odo.setAttribute("aria-label", txt);
           odo.hidden = false;
         }
