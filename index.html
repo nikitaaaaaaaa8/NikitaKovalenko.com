@@ -7527,7 +7527,7 @@
             "Paint has a brush, eraser, fill, shapes, a palette, undo, and save. Resize keeps the picture and undo.",
             "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
-            "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
+            "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar, with its view count and length. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
             "Scores is a classic leaderboard window for every rankable game. Open it from the desktop or type scores in Terminal.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Open mail app prefills the subject “you're the man.”"
@@ -7749,11 +7749,11 @@
   // --- YouTube (@Nikita_Kovy) classic player ---
   const YT_CHANNEL = "https://www.youtube.com/@Nikita_Kovy";
   const YT_VIDEOS = [
-    { id: "0SwdonVxKZM", title: "GTA Loading Don", views: "98", desc: "GTA V Loading Screen Remake — Donald Edition. Higher-res upload. Fan parody; not affiliated with Rockstar." },
-    { id: "zJrRD6zzuQI", title: "Thank You Kathy & Peter | From Above", views: "17", desc: "July 4th with the Murgios at Groton Long Point, CT. Higher-res upload. Music: Come Fly With Me | Frank Sinatra." },
-    { id: "7WCn-29EnFM", title: "Happy Birthday Baker!", views: "39", desc: "September 12, 2026 @ FaceClock. Song: Memories by RJ Pasin." },
-    { id: "ZMKURwtVeQw", title: "Drone: Deer Family Wild | Aerial Nature", views: "199", desc: "Aerial footage of a deer family, DJI Mini 1. Filmed August 2025." },
-    { id: "KnW1t7HEFVk", title: "Experience Medellín’s Ciclovia: A Sunday Walk Adventure", views: "850", desc: "Sunday ciclovía walk on Avenida Poblado in Medellín, Colombia." }
+    { id: "0SwdonVxKZM", title: "GTA Loading Don", views: "116", dur: "0:41", desc: "GTA V Loading Screen Remake — Donald Edition. Higher-res upload. Fan parody; not affiliated with Rockstar." },
+    { id: "zJrRD6zzuQI", title: "Thank You Kathy & Peter | From Above", views: "19", dur: "2:04", desc: "July 4th with the Murgios at Groton Long Point, CT. Higher-res upload. Music: Come Fly With Me | Frank Sinatra." },
+    { id: "7WCn-29EnFM", title: "Happy Birthday Baker!", views: "41", dur: "1:17", desc: "September 12, 2026 @ FaceClock. Song: Memories by RJ Pasin." },
+    { id: "ZMKURwtVeQw", title: "Drone: Deer Family Wild | Aerial Nature", views: "200", dur: "3:22", desc: "Aerial footage of a deer family, DJI Mini 1. Filmed August 2025." },
+    { id: "KnW1t7HEFVk", title: "Experience Medellín’s Ciclovia: A Sunday Walk Adventure", views: "859", dur: "45:27", desc: "Sunday ciclovía walk on Avenida Poblado in Medellín, Colombia." }
   ];
   let ytCurrent = null;
   let ytFilter = "";
@@ -7826,7 +7826,7 @@
       return '<button type="button" class="yt-row' + active + '" data-yt="' + ytEscape(v.id) + '">' +
         '<img class="yt-thumb" src="https://i.ytimg.com/vi/' + ytEscape(v.id) + '/hqdefault.jpg" alt="" loading="lazy" width="96" height="72">' +
         '<div><div class="yt-row-title">' + ytEscape(v.title) + '</div>' +
-        '<div class="yt-row-sub">' + ytEscape(v.views) + ' views</div></div></button>';
+        '<div class="yt-row-sub">' + ytEscape(v.views) + ' views' + (v.dur ? ' · ' + ytEscape(v.dur) : '') + '</div></div></button>';
     }).join("");
   }
 
