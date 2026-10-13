@@ -6086,8 +6086,17 @@
     const el = windows[name];
     const alreadyOpen = !!(el && el.classList.contains("open"));
     focusWindow(name);
-    // Fit into the viewport every time an app opens (fixes phone off-screen starts)
-    requestAnimationFrame(() => placeWindowOnScreen(el, { fresh: !alreadyOpen }));
+    // Picking anything (Start row, icon, Terminal, keyboard) closes the Start menu
+    const sm = document.getElementById("startMenu");
+    const sb = document.getElementById("startBtn");
+    if (sm) sm.hidden = true;
+    if (sb) { sb.classList.remove("open"); sb.setAttribute("aria-expanded", "false"); }
+    // Fit into the viewport every time an app opens: clamp right away (no off-screen
+    // first frame), then once more after layout settles.
+    if (el) {
+      placeWindowOnScreen(el, { fresh: !alreadyOpen });
+      requestAnimationFrame(() => placeWindowOnScreen(el, { fresh: false }));
+    }
     // Skip autofocus on phones — iOS zooms the page when focusing inputs
     if (name === "terminal" && window.innerWidth > 700) {
       setTimeout(() => { if (termIn) termIn.focus(); }, 50);
@@ -7503,7 +7512,7 @@
         {
           title: "Desktop",
           paragraphs: [
-            "This website is a fake desktop. Start, bottom left, lists apps with their icons. The clock, bottom right, is your local time. No seconds.",
+            "This website is a fake desktop. Start, bottom left, lists apps with their icons; picking one closes the menu. The clock, bottom right, is your local time. No seconds.",
             "Icons start in two columns. Drag snaps to a grid across the whole desktop, not only those two columns. They cannot stack. Refresh puts them back. A short window packs those two columns tighter so they stay above the taskbar. Rotate keeps a layout you already moved.",
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
@@ -7516,7 +7525,7 @@
           paragraphs: [
             "Click an icon to open a window. Drag the title bar to move it. The yellow and red dots close the window. The dots are glass, with a glare on the top and the bottom. In a Tesla those close dots are larger.",
             "On a desktop, not a phone, drag the edges or corners to resize.",
-            "On a computer, About opens centered. On a phone it opens full-width at the top. About’s highlighted button is Click to close; Glitch once and Click for wisdom sit as secondary actions, with wisdom on the right. Later windows try not to sit on top of one already open, and they stay above the taskbar. Close hands focus to the window on top. On a phone, rotate keeps windows where they are; they do not restack.",
+            "On a computer, About opens centered. On a phone it opens full-width at the top. About’s highlighted button is Click to close; Glitch once and Click for wisdom sit as secondary actions, with wisdom on the right. Every window opens fully on screen and above the taskbar, whether from an icon, Start, Terminal, or a Games card. Later windows try not to sit on top of one already open. Close hands focus to the window on top. On a phone, rotate keeps windows where they are; they do not restack.",
             "Pointer cursor on clickable controls: close, buttons. Grab and drag cursor on title bars. The tray speaker mutes audio for this visit."
           ]
         },
