@@ -1301,47 +1301,33 @@
   .tray-speaker.is-muted .spk-on { display: none; }
   .tray-speaker.is-muted .spk-off { display: block; }
   .tray-speaker:hover { filter: brightness(1.15); }
-  .hit-odo { display: flex; align-items: center; gap: 1px; flex-shrink: 0; cursor: default; }
-  .hit-odo[hidden] { display: none; }
+  .hit-widget {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    margin: 3px 0 3px auto; padding: 0 8px; flex-shrink: 0; cursor: default;
+    border: 1px solid rgba(57,255,20,.35);
+    background: linear-gradient(180deg, #0a140a 0%, #030603 100%);
+    box-shadow: inset 1px 1px 0 rgba(57,255,20,.18), 0 0 8px rgba(57,255,20,.12);
+  }
+  .hit-widget[hidden] { display: none; }
+  .hit-widget:not([hidden]) + .tray { margin-left: 6px; }
+  .hit-odo { display: flex; gap: 1px; }
   .hit-odo .odo-d {
-    display: inline-block; width: 9px; height: 15px; line-height: 15px; text-align: center;
-    font: bold 10px/15px "Courier New", monospace; color: #39ff14; background: #000;
+    display: inline-block; width: 9px; height: 14px; text-align: center;
+    font: bold 10px/14px "Courier New", monospace; color: #39ff14; background: #000;
     border: 1px solid #1d5c1d; border-radius: 1px; text-shadow: 0 0 4px #39ff14;
     box-shadow: inset 0 3px 3px -2px rgba(57,255,20,.25), inset 0 -3px 3px -2px rgba(0,0,0,.9);
   }
-  #win-radio .radio-content { padding: 10px; }
-  .radio-lcd { background: #000; border: 1px solid #1d5c1d; border-radius: 3px; padding: 6px 8px; box-shadow: inset 0 0 12px rgba(57,255,20,.12); }
-  .radio-track { color: var(--green); font: bold 13px "Courier New", monospace; text-shadow: 0 0 6px rgba(57,255,20,.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .radio-sub { color: var(--muted); font: 11px "Courier New", monospace; margin: 2px 0 6px; }
-  .radio-viz { display: block; width: 100%; height: 56px; }
-  .radio-stems { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0 8px; }
-  .stem { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-  .stem-bar { position: relative; width: 44px; height: 150px; display: flex; flex-direction: column-reverse; gap: 3px; padding: 5px; background: #050805; border: 1px solid #1d5c1d; border-radius: 22px; touch-action: none; cursor: ns-resize; box-sizing: border-box; }
-  .stem-bar:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
-  .stem-seg { flex: 1; border-radius: 6px; background: #0d1f0d; transition: background .08s, box-shadow .08s; }
-  .stem-seg.lit { background: #39ff14; box-shadow: 0 0 8px #39ff14, 0 0 2px #d6ff7a inset; }
-  .stem.is-off .stem-seg.lit { background: #1f5f14; box-shadow: none; }
-  .stem-name { color: var(--green); font: 11px "Courier New", monospace; text-transform: uppercase; letter-spacing: 1px; }
-  .stem-btns { display: flex; gap: 4px; }
-  .stem-btns button { width: 26px; height: 26px; padding: 0; border: 1px solid #1d5c1d; border-radius: 4px; background: #000; color: var(--muted); font: bold 11px "Courier New", monospace; cursor: pointer; }
-  .stem-btns button.on { color: #000; background: var(--green); box-shadow: 0 0 8px var(--green); }
-  .radio-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .radio-loop.on { color: #000; background: var(--green); }
-  .radio-knob-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; }
-  .radio-knob { --ang: 0deg; position: relative; width: 38px; height: 38px; border-radius: 50%; background: radial-gradient(circle at 50% 45%, #102010, #000 70%); border: 1px solid #1d5c1d; box-shadow: 0 0 8px rgba(57,255,20,.35); touch-action: none; cursor: ns-resize; }
-  .radio-knob i { position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; background: var(--green); border-radius: 2px; box-shadow: 0 0 6px var(--green); transform-origin: 50% 15px; transform: rotate(var(--ang)); }
-  .radio-knob:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
-  .radio-knob-val { color: var(--green); font: 11px "Courier New", monospace; min-width: 38px; }
-  .radio-vol { display: flex; align-items: center; gap: 8px; margin-top: 8px; color: var(--muted); font: 11px "Courier New", monospace; }
-  .radio-vol input { flex: 1; accent-color: #39ff14; }
-  .radio-note { font-size: 11px; margin: 8px 0 0; }
-  @media (max-width: 700px) { .stem-bar { width: 52px; height: 170px; } .stem-btns button { width: 30px; height: 30px; } }
+  .hit-label {
+    font: 7px/1 var(--font); letter-spacing: 2.4px; text-transform: uppercase; color: #7ea878;
+    padding-left: 2.4px; text-shadow: 0 0 4px rgba(57,255,20,.35);
+  }
+  html.tesla .hit-odo .odo-d { width: 12px; height: 19px; font-size: 14px; line-height: 19px; }
+  html.tesla .hit-label { font-size: 9px; }
   .about-visitor { margin-top: 8px; }
   #kitaSaver { position: fixed; inset: 0; z-index: 2147483000; background: #000; cursor: none; touch-action: none; }
   #kitaSaver[hidden] { display: none; }
   #kitaSaver canvas { display: block; width: 100%; height: 100%; }
   .about-visitor[hidden] { display: none; }
-  @media (max-width: 480px) { .hit-odo { display: none !important; } }
   .clock {
     min-width: 0;
     flex-shrink: 0;
@@ -5820,8 +5806,11 @@
       <span class="xp-flag" aria-hidden="true"><i class="r"></i><i class="g"></i><i class="b"></i><i class="y"></i></span>
       start
     </button>
+    <div class="hit-widget" id="hitWidget" hidden role="img" aria-label="Visitor counter">
+      <div class="hit-odo" id="hitOdo"></div>
+      <div class="hit-label">Visitors</div>
+    </div>
     <div class="tray">
-      <div class="hit-odo" id="hitOdo" hidden role="img" aria-label="Visitor counter"></div>
       <button type="button" class="tray-speaker" id="traySpeaker" aria-label="Mute sound" aria-pressed="false" title="Mute">
         <svg class="spk-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.2h3.6l4.6-3.6v13l-4.6-3.6H4z" fill="currentColor"/><path d="M16.2 8.4c1.5 1.3 1.5 5.9 0 7.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M18.7 6.1c2.5 2.3 2.5 9.5 0 11.8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
         <svg class="spk-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.2h3.6l4.6-3.6v13l-4.6-3.6H4z" fill="currentColor"/><path d="M16.4 9.2l5 5M21.4 9.2l-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
@@ -7606,7 +7595,7 @@
           title: "Desktop",
           paragraphs: [
             "This website is a fake desktop. Start, bottom left, lists apps with their icons; picking one closes the menu. The clock, bottom right, is your local time. No seconds.",
-            "Next to the clock is a 2006 hit counter. Every page load is one real visit, counted on the Worker; About says You are visitor #N. On a phone the taskbar is too tight, so only About shows it. If the Worker does not answer, the counter just is not there. No fake numbers.",
+            "Left of the clock tray sits a 2006 hit counter in its own little panel: odometer digits, VISITORS underneath. Every page load is one real visit, counted on the Worker; About also says You are visitor #N. Phones get the same panel. If the Worker does not answer, the counter just is not there. No fake numbers.",
             "Icons start in two columns. Drag snaps to a grid across the whole desktop, not only those two columns. They cannot stack. Refresh puts them back. A short window packs those two columns tighter so they stay above the taskbar. Rotate keeps a layout you already moved.",
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
@@ -13349,6 +13338,7 @@
   // Hit counter: one real count per page load. No number, no counter.
   (function kitaVisitorCounter() {
     const odo = document.getElementById("hitOdo");
+    const widget = document.getElementById("hitWidget");
     const line = document.getElementById("aboutVisitor");
     fetch(KITA_VIEWS_URL + "/visit", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" })
       .then(r => { if (!r.ok) throw new Error("visit " + r.status); return r.json(); })
@@ -13364,9 +13354,11 @@
             sp.textContent = ch;
             return sp;
           }));
-          odo.title = txt + ".";
-          odo.setAttribute("aria-label", txt);
-          odo.hidden = false;
+          if (widget) {
+            widget.title = txt + ".";
+            widget.setAttribute("aria-label", txt);
+            widget.hidden = false;
+          }
         }
         if (line) {
           line.textContent = txt + ". Not a prize. Just a number.";
