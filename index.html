@@ -513,6 +513,8 @@
     color: var(--text);
     touch-action: pan-y;
   }
+  /* A window clamped to a short screen scrolls its body instead of clipping it. */
+  .window > .content { min-height: 0; overflow: auto; }
   .muted { color: var(--muted); }
   .danger { color: var(--danger); }
   .green { color: var(--green); }
@@ -7653,7 +7655,7 @@
           paragraphs: [
             "Click an icon to open a window. Drag the title bar to move it. The yellow and red dots close the window. The dots are glass, with a glare on the top and the bottom. In a Tesla those close dots are larger.",
             "On a desktop, not a phone, drag the edges or corners to resize.",
-            "On a computer, About opens centered. On a phone it opens full-width at the top. About’s highlighted button is Click to close; Glitch once and Click for wisdom sit as secondary actions, with wisdom on the right. Every window opens fully on screen and above the taskbar, whether from an icon, Start, Terminal, or a Games card. Later windows try not to sit on top of one already open. Close hands focus to the window on top. On a phone, rotate keeps windows where they are; they do not restack.",
+            "On a computer, About opens centered. On a phone it opens full-width at the top. About’s highlighted button is Click to close; Glitch once and Click for wisdom sit as secondary actions, with wisdom on the right. Every window opens fully on screen and above the taskbar, whether from an icon, Start, Terminal, or a Games card. Later windows try not to sit on top of one already open. A window taller than the screen scrolls inside instead of hiding the rest. Close hands focus to the window on top. On a phone, rotate keeps windows where they are; they do not restack.",
             "Pointer cursor on clickable controls: close, buttons. Grab and drag cursor on title bars. The tray speaker mutes audio for this visit."
           ]
         },
