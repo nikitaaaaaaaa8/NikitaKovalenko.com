@@ -7640,7 +7640,7 @@
           paragraphs: [
             "This website is a fake desktop. Start, bottom left, lists apps with their icons; picking one closes the menu. The clock, bottom right, is your local time. No seconds.",
             "Left of the clock tray sits a 2006 hit counter in its own little panel: odometer digits, VISITORS underneath. Every page load is one real visit, counted on the Worker; About also says You are visitor #N. Phones get the same panel. If the Worker does not answer, the counter just is not there. No fake numbers.",
-            "Icons start in two columns. Drag snaps to a grid across the whole desktop, not only those two columns. They cannot stack. Refresh puts them back. A short window packs those two columns tighter so they stay above the taskbar. Rotate keeps a layout you already moved.",
+            "Icons start in two columns. A tap opens that app and nothing else, not whatever lands under your finger. Drag snaps to a grid across the whole desktop, not only those two columns. They cannot stack. Refresh puts them back. A short window packs those two columns tighter so they stay above the taskbar. Rotate keeps a layout you already moved.",
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar. Empty clears the bin for this visit; refresh brings everything back, because nothing here is permanent.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
             "Designed for the computer, but it works on mobile too.",
@@ -15036,10 +15036,24 @@
     // Click opens only the grabbed icon, never the whole selection.
     if (e && e.pointerType === "touch") {
       iconSkipClick = true;
+      iconGhost = { x: e.clientX, y: e.clientY, until: Date.now() + 800 };
       activateDesktopControl(drag.el);
       countSessionClick();
     }
   }
+
+  // The tap's compatibility click lands on whatever now sits under the finger,
+  // usually the window that just opened. Eat that one click, wherever it lands.
+  let iconGhost = null;
+  document.addEventListener("click", (e) => {
+    const g = iconGhost;
+    if (!g) return;
+    iconGhost = null;
+    if (Date.now() > g.until || Math.hypot(e.clientX - g.x, e.clientY - g.y) > 30) return;
+    iconSkipClick = false;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  }, true);
 
   if (iconsRoot) {
     iconsRoot.addEventListener("pointerdown", (e) => {
