@@ -1820,6 +1820,8 @@
     align-items: center;
     flex-wrap: nowrap;
   }
+  /* Five buttons don't fit a 320-360px phone; let Restart drop to its own line. */
+  @media (max-width: 380px) { .ms-controls { flex-wrap: wrap; } }
   #msFlagBtn, #msRestart {
     flex: 0 0 auto;
     min-height: 40px;
