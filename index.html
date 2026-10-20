@@ -5019,7 +5019,7 @@
           </button>
           <button type="button" class="game-card" data-open="solitaire">
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="10.5" height="14.5" rx="1.4"/><rect x="10" y="3.5" width="10.5" height="14.5" rx="1.4"/><path d="M15.3 8.2c-.9-1.1-2.6.1-1.7 1.5l1.7 2.1 1.7-2.1c.9-1.4-.8-2.6-1.7-1.5z"/></svg></div>
-            <div class="gc-meta"><div class="gc-title">Solitaire</div><div class="gc-desc">Klondike · draw 3 · kings in the blank</div></div>
+            <div class="gc-meta"><div class="gc-title">Solitaire</div><div class="gc-desc">Klondike · draw 3 or 1 · kings in the blank</div></div>
           </button>
           <button type="button" class="game-card" data-open="chess">
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20.5h8l.7-3H7.3z"/><path d="M7.5 17.5h9"/><path d="M8.3 17.5l1-6.2h5.4l1 6.2"/><path d="M9.7 11.3c0-1.5.9-2.7 2.3-2.7s2.3 1.2 2.3 2.7"/><circle cx="12" cy="5.6" r="1.25"/><path d="M8.4 8.6h7.2"/></svg></div>
@@ -7597,7 +7597,7 @@
             "This website is a fake desktop. Start, bottom left, lists apps with their icons; picking one closes the menu. The clock, bottom right, is your local time. No seconds.",
             "Left of the clock tray sits a 2006 hit counter in its own little panel: odometer digits, VISITORS underneath. Every page load is one real visit, counted on the Worker; About also says You are visitor #N. Phones get the same panel. If the Worker does not answer, the counter just is not there. No fake numbers.",
             "Icons start in two columns. Drag snaps to a grid across the whole desktop, not only those two columns. They cannot stack. Refresh puts them back. A short window packs those two columns tighter so they stay above the taskbar. Rotate keeps a layout you already moved.",
-            "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar.",
+            "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar. Empty clears the bin for this visit; refresh brings everything back, because nothing here is permanent.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
             "Designed for the computer, but it works on mobile too.",
             "Leave it alone for a minute and the screensaver takes over: neon stars on black and a KITA OS logo that bounces toward the corner and, like everyone, almost makes it. Any mouse, key, or touch brings the desktop back. It waits while YouTube or VLC is playing or a game window is open. With reduced motion on, it is a dim still frame.",
@@ -7617,20 +7617,20 @@
           title: "Apps",
           paragraphs: [
             "Weather shows current conditions in °F with a neon SVG for the real sky (clear, partly cloudy, cloudy, rain, snow, storm, fog). The desktop icon matches it. Open-Meteo is cached on the Worker so a rate limit on one machine does not blank the sky. Default city is an IP guess, same as Tracker. A target in Weather and Tracker can pin this machine for this visit if the browser allows it. Refresh forgets the pin. Tracker also counts session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
-            "Paint has a brush, eraser, fill, shapes, a palette, undo, and save. Resize keeps the picture and undo.",
+            "Paint has a brush, eraser, fill, eyedropper, line, rectangle, ellipse, a palette, undo, and save. Resize keeps the picture and undo.",
             "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
             "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar, with its view count and length. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
             "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck; double-click resets it. Loop holds the current track; off, it moves on every eight bars. Next skips. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
             "Scores is a classic leaderboard window for every rankable game. Open it from the desktop or type scores in Terminal.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
-            "Contact says “Got something? Write me.” Open mail app prefills the subject “you're the man.”"
+            "Contact says “Got something? Write me.” Copy email copies the address. Open mail app prefills the subject “you're the man.”"
           ]
         },
         {
           title: "Games",
           paragraphs: [
-            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike), Chess (Easy / Medium / Hard), Pipes, 2048, Flappy Bird, Tron, and Pac-Man. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome. On a phone, Flag stays Flag (it does not grow). Toolbars do not wrap. Snake and Tetris keep a bigger pad on screen; keyboard hints hide. Flappy Bird has character skins (Bird, Kita, Pixel, Drone) and neon site-green pipes; Easy / Medium / Hard change gravity and gap. On a phone the character / AI / difficulty picks stay above the board (the canvas shrinks to fit). Tron is light-cycles versus 1–3 AIs with color picks for you and each AI; score is your trail. Pac-Man is a neon maze with dots, power pellets, four ghosts, and three lives. Scores is the shared classic leaderboard. When a run ends you can type a short name; the Worker keeps the top scores. Same name on the same board updates if you beat yourself (Chess tallies wins). Minesweeper / Pipes / Solitaire rank by lower time or moves. The Games list and each game window sit above the taskbar; the list scrolls if a card would tuck under Start."
+            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike, Draw 3 or Draw 1), Chess (Easy / Medium / Hard), Pipes, 2048, Flappy Bird, Tron, and Pac-Man. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome. On a phone, Flag stays Flag (it does not grow). Toolbars do not wrap. Snake and Tetris keep a bigger pad on screen; keyboard hints hide. Flappy Bird has character skins (Bird, Kita, Pixel, Drone) and neon site-green pipes; Easy / Medium / Hard change gravity and gap. On a phone the character / AI / difficulty picks stay above the board (the canvas shrinks to fit). Tron is light-cycles versus 1–3 AIs with color picks for you and each AI; score is your trail; Easy / Medium / Hard. Pac-Man is a neon maze with dots, power pellets, four ghosts, and three lives; Easy / Medium / Hard. Scores is the shared classic leaderboard. When a run ends you can type a short name; the Worker keeps the top scores. Same name on the same board updates if you beat yourself (Chess tallies wins). Minesweeper / Pipes / Solitaire rank by lower time or moves. The Games list and each game window sit above the taskbar; the list scrolls if a card would tuck under Start."
           ]
         },
         {
@@ -7646,9 +7646,9 @@
         {
           title: "Terminal",
           paragraphs: [
-            "Open Terminal and type help, then press Run. Help lists commands and app names, including terminal. Type an app name to open it. vlc opens the player. youtube opens the classic YouTube window. radio opens Kita Radio. scores opens the leaderboard (folder-level apps).",
+            "Open Terminal and type help, then press Run. Help lists commands and app names, including terminal. Type an app name to open it; open in front of it works too. vlc opens the player. youtube opens the classic YouTube window. radio opens Kita Radio. scores opens the leaderboard (folder-level apps).",
             "games and casino open those folders. Not the inner games. snow toggles the snow. matrix toggles the rain. Matrix off puts snow back unless you already stopped it. Konami still unlocks VIP.",
-            "scan drops a short Kita AV banner, walks fake paths, and may find a threat or two. coinflip shows a coin, then heads or tails. screensaver starts the screensaver now instead of waiting a minute.",
+            "scan drops a short Kita AV banner, walks fake paths, and may find a threat or two. coinflip shows a coin, then heads or tails. aura toggles an aura meter that starts draining immediately. screensaver starts the screensaver now instead of waiting a minute.",
             "The placeholder is try: help. There is no email command."
           ]
         },
@@ -7657,7 +7657,7 @@
           paragraphs: [
             "Snow is on by default. Type snow in Terminal to toggle it. Type matrix to toggle the Matrix rain. Matrix off puts snow back unless you already stopped it. Konami still unlocks VIP. You can still see the desktop through it.",
             "A golden snitch shows up every 120 seconds, on screen for 5 seconds. Catch it for +47 winning and +500 casino chips.",
-            "Konami: up, up, down, down, left, right, left, right, B, A. That opens a VIP box and starts the Matrix rain. matrix only toggles the rain. About’s tip line is Tip: Konami code.",
+            "Konami: up, up, down, down, left, right, left, right, B, A. That opens Contact with a VIP box, adds 50 winning, and starts the Matrix rain. matrix only toggles the rain. About’s tip line is Tip: Konami code.",
             "Refresh starts a new session. Nothing important is saved."
           ]
         }
