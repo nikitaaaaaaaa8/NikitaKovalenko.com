@@ -1323,6 +1323,50 @@
   }
   html.tesla .hit-odo .odo-d { width: 12px; height: 19px; font-size: 14px; line-height: 19px; }
   html.tesla .hit-label { font-size: 9px; }
+  #win-radio .radio-content { padding: 10px; }
+  .radio-lcd { background: #000; border: 1px solid #1d5c1d; border-radius: 3px; padding: 6px 8px; box-shadow: inset 0 0 12px rgba(57,255,20,.12); }
+  .radio-track { color: var(--green); font: bold 13px "Courier New", monospace; text-shadow: 0 0 6px rgba(57,255,20,.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .radio-sub { color: var(--muted); font: 11px "Courier New", monospace; margin: 2px 0 6px; }
+  .radio-viz { display: block; width: 100%; height: 56px; }
+  .radio-stems { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0 8px; }
+  .stem { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .stem-bar { position: relative; width: 44px; height: 150px; display: flex; flex-direction: column-reverse; gap: 3px; padding: 5px; background: #050805; border: 1px solid #1d5c1d; border-radius: 22px; touch-action: none; cursor: ns-resize; box-sizing: border-box; }
+  .stem-bar:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .stem-seg { flex: 1; border-radius: 6px; background: #0d1f0d; transition: background .08s, box-shadow .08s; }
+  .stem-seg.lit { background: #39ff14; box-shadow: 0 0 8px #39ff14, 0 0 2px #d6ff7a inset; }
+  .stem.is-off .stem-seg.lit { background: #1f5f14; box-shadow: none; }
+  .stem-name { color: var(--green); font: 11px "Courier New", monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .stem-btns { display: flex; gap: 4px; }
+  .stem-btns button { width: 26px; height: 26px; padding: 0; border: 1px solid #1d5c1d; border-radius: 4px; background: #000; color: var(--muted); font: bold 11px "Courier New", monospace; cursor: pointer; }
+  .stem-btns button.on { color: #000; background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .radio-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .radio-loop.on { color: #000; background: var(--green); }
+  .radio-knob-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+  .radio-knob { --ang: 0deg; position: relative; width: 38px; height: 38px; border-radius: 50%; background: radial-gradient(circle at 50% 45%, #102010, #000 70%); border: 1px solid #1d5c1d; box-shadow: 0 0 8px rgba(57,255,20,.35); touch-action: none; cursor: ns-resize; }
+  .radio-knob i { position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; background: var(--green); border-radius: 2px; box-shadow: 0 0 6px var(--green); transform-origin: 50% 15px; transform: rotate(var(--ang)); }
+  .radio-knob:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .radio-knob-val { color: var(--green); font: 11px "Courier New", monospace; min-width: 38px; padding: 2px 4px; background: transparent; border: 1px dashed #1d5c1d; border-radius: 3px; cursor: pointer; }
+  .radio-knob-val:hover { border-color: var(--green); }
+  .radio-vol { display: flex; align-items: center; gap: 8px; margin-top: 8px; color: var(--muted); font: 11px "Courier New", monospace; }
+  .radio-vol input { flex: 1; accent-color: #39ff14; }
+  .radio-note { font-size: 11px; margin: 8px 0 0; }
+  @media (max-width: 700px) { .stem-bar { width: 52px; height: 170px; } .stem-btns button { width: 30px; height: 30px; } }
+  #win-radio button, #win-radio input { touch-action: manipulation; }
+  /* Fingers, not cursors: every radio control is at least a 44px target on touch screens. */
+  @media (pointer: coarse) {
+    .radio-stems { gap: 8px; }
+    .stem { min-width: 0; }
+    .stem-bar { width: 100%; max-width: 64px; min-width: 48px; height: 170px; }
+    .stem-btns { flex-direction: column; gap: 4px; width: 100%; align-items: center; }
+    .stem-btns button { width: 100%; max-width: 64px; min-width: 44px; height: 44px; font-size: 13px; }
+    .radio-controls { gap: 8px; }
+    .radio-controls .btn { min-height: 44px; min-width: 44px; padding-left: 12px; padding-right: 12px; }
+    .radio-knob { width: 48px; height: 48px; }
+    .radio-knob i { top: 5px; height: 16px; transform-origin: 50% 19px; }
+    .radio-knob-val { min-height: 44px; min-width: 52px; font-size: 13px; }
+    .radio-vol { min-height: 44px; }
+    .radio-vol input { height: 44px; margin: 0; }
+  }
   .about-visitor { margin-top: 8px; }
   #kitaSaver { position: fixed; inset: 0; z-index: 2147483000; background: #000; cursor: none; touch-action: none; }
   #kitaSaver[hidden] { display: none; }
@@ -4622,7 +4666,7 @@
           <button type="button" class="btn secondary radio-loop" id="radioLoop" aria-pressed="false">Loop: off</button>
           <div class="radio-knob-wrap">
             <div class="radio-knob" id="radioKnob" role="slider" tabindex="0" aria-label="Speed and pitch" aria-valuemin="0.5" aria-valuemax="1.5" aria-valuenow="1.00"><i></i></div>
-            <span class="radio-knob-val" id="radioSpeedVal">1.00x</span>
+            <button type="button" class="radio-knob-val" id="radioSpeedVal" title="Reset speed to 1.00x" aria-label="Speed 1.00x, tap to reset">1.00x</button>
           </div>
         </div>
         <label class="radio-vol"><span>vol</span><input type="range" id="radioVol" min="0" max="100" value="70" aria-label="Radio volume"></label>
@@ -7621,7 +7665,7 @@
             "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
             "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar, with its view count and length. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
-            "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck; double-click resets it. Loop holds the current track; off, it moves on every eight bars. Next skips. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
+            "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck: drag it up or down, mouse or finger. Tap the readout next to it (or double-click the knob) to reset to 1.00x. On touch screens every control is a full fingertip wide. Loop holds the current track; off, it moves on every eight bars. Next skips. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
             "Scores is a classic leaderboard window for every rankable game. Open it from the desktop or type scores in Terminal.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Copy email copies the address. Open mail app prefills the subject “you're the man.”"
@@ -8114,7 +8158,10 @@
       knob.setAttribute("aria-valuetext", radio.speed.toFixed(2) + "x");
     }
     const kv = document.getElementById("radioSpeedVal");
-    if (kv) kv.textContent = radio.speed.toFixed(2) + "x";
+    if (kv) {
+      kv.textContent = radio.speed.toFixed(2) + "x";
+      kv.setAttribute("aria-label", "Speed " + radio.speed.toFixed(2) + "x, tap to reset");
+    }
   }
 
   function radioSetLevel(i, v) {
@@ -8225,6 +8272,18 @@
     knob.addEventListener("pointerup", () => { kDrag = false; });
     knob.addEventListener("pointercancel", () => { kDrag = false; });
     knob.addEventListener("dblclick", () => radioSetSpeed(1));
+    // Reset on finger lift as well as click: browsers can swallow the click
+    // for a tap that lands right after a knob drag.
+    const readout = document.getElementById("radioSpeedVal");
+    let readoutAt = 0;
+    const resetSpeed = () => {
+      if (Date.now() - readoutAt < 400) return;
+      readoutAt = Date.now();
+      radioSetSpeed(1);
+      if (typeof showToast === "function") showToast("speed reset. back to factory smugness.");
+    };
+    readout.addEventListener("pointerup", (e) => { if (e.pointerType !== "mouse") resetSpeed(); });
+    readout.addEventListener("click", resetSpeed);
     knob.addEventListener("keydown", (e) => {
       if (e.key === "ArrowUp" || e.key === "ArrowRight") { e.preventDefault(); radioSetSpeed(radio.speed + 0.05); }
       if (e.key === "ArrowDown" || e.key === "ArrowLeft") { e.preventDefault(); radioSetSpeed(radio.speed - 0.05); }
