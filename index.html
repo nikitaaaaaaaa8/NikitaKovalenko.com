@@ -6510,6 +6510,20 @@
     if (topName) focusWindow(topName);
   }
 
+  // A window that grows after it opened (a book, a dealt hand) slides up instead of
+  // running under the taskbar. Not while the user is dragging or resizing it.
+  if (window.ResizeObserver) {
+    const growWatch = new ResizeObserver((entries) => {
+      entries.forEach((en) => {
+        const el = en.target;
+        if (!el.classList.contains("open") || el.classList.contains("user-sized")) return;
+        if (document.body.classList.contains("dragging") || document.body.classList.contains("resizing")) return;
+        if (el.getBoundingClientRect().bottom > window.innerHeight - taskbarHeight() + 1) placeWindowOnScreen(el, { fresh: false });
+      });
+    });
+    Object.values(windows).forEach((w) => { if (w) growWatch.observe(w); });
+  }
+
   let audioMuted = false;
   function kitaAudioAllowed() {
     return !audioMuted;
@@ -7676,7 +7690,7 @@
             "Click an icon to open a window. Drag the title bar to move it. The yellow and red dots close the window. The dots are glass, with a glare on the top and the bottom. In a Tesla those close dots are larger.",
             "On a desktop, not a phone, drag the edges or corners to resize.",
             "Escape closes one layer per press: a photo, then a score prompt, then the Start menu, then the window in front. The keyboard deserves an exit too.",
-            "On a computer, About opens centered. On a phone it opens full-width at the top. About’s highlighted button is Click to close; Glitch once and Click for wisdom sit as secondary actions, with wisdom on the right. Every window opens fully on screen and above the taskbar, whether from an icon, Start, Terminal, or a Games card. Later windows try not to sit on top of one already open. A window taller than the screen scrolls inside instead of hiding the rest. Close hands focus to the window on top. On a phone, rotate keeps windows where they are; they do not restack.",
+            "On a computer, About opens centered. On a phone it opens full-width at the top. About’s highlighted button is Click to close; Glitch once and Click for wisdom sit as secondary actions, with wisdom on the right. Every window opens fully on screen and above the taskbar, whether from an icon, Start, Terminal, or a Games card. Later windows try not to sit on top of one already open. A window taller than the screen scrolls inside instead of hiding the rest. Close hands focus to the window on top. On a phone, rotate keeps windows where they are; they do not restack. A window that grows after it opens, say a book, slides up to stay above the taskbar.",
             "Pointer cursor on clickable controls: close, buttons. Grab and drag cursor on title bars. The tray speaker mutes audio for this visit."
           ]
         },
