@@ -1395,6 +1395,10 @@
     box-shadow: var(--shadow);
     font-family: var(--font);
     overflow: hidden;
+    /* Shorter screen than menu (phone landscape): scroll instead of losing the top rows. */
+    max-height: calc(100vh - 52px);
+    max-height: calc(100dvh - 52px);
+    overflow-y: auto;
   }
   .start-menu[hidden] { display: none; }
   .start-head {
@@ -4378,7 +4382,7 @@
     font-size: 14px;
   }
   html.tesla .taskbar { height: 56px; }
-  html.tesla .start-menu { bottom: 56px; width: min(320px, 92vw); }
+  html.tesla .start-menu { bottom: 56px; width: min(320px, 92vw); max-height: calc(100dvh - 64px); }
   html.tesla .start-btn {
     font-size: 20px;
     padding: 0 22px 0 14px;
@@ -7656,7 +7660,7 @@
         {
           title: "Desktop",
           paragraphs: [
-            "This website is a fake desktop. Start, bottom left, lists apps with their icons; picking one closes the menu. The clock, bottom right, is your local time. No seconds.",
+            "This website is a fake desktop. Start, bottom left, lists apps with their icons; picking one closes the menu. On a screen shorter than the menu, it scrolls. The clock, bottom right, is your local time. No seconds.",
             "Left of the clock tray sits a 2006 hit counter in its own little panel: odometer digits, VISITORS underneath. Every page load is one real visit, counted on the Worker; About also says You are visitor #N. Phones get the same panel. If the Worker does not answer, the counter just is not there. No fake numbers.",
             "Icons start in two columns. A tap opens that app and nothing else, not whatever lands under your finger. Drag snaps to a grid across the whole desktop, not only those two columns. They cannot stack. Refresh puts them back. A short window packs those two columns tighter so they stay above the taskbar. Rotate keeps a layout you already moved.",
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar. Empty clears the bin for this visit; refresh brings everything back, because nothing here is permanent.",
