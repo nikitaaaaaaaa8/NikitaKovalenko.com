@@ -6201,7 +6201,7 @@
     const h = el.offsetHeight || 280;
     const taskbarRoom = taskbarHeight() + 8;
     const left = Math.max(16, Math.round((window.innerWidth - w) / 2));
-    const top = Math.max(16, Math.round((window.innerHeight - taskbarRoom - h) / 2));
+    const top = Math.max(8, Math.round((window.innerHeight - taskbarRoom - h) / 2));
     el.style.left = left + "px";
     el.style.top = top + "px";
   }
