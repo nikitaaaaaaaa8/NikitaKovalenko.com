@@ -1342,7 +1342,6 @@
   .stem-btns button { width: 26px; height: 26px; padding: 0; border: 1px solid #1d5c1d; border-radius: 4px; background: #000; color: var(--muted); font: bold 11px "Courier New", monospace; cursor: pointer; }
   .stem-btns button.on { color: #000; background: var(--green); box-shadow: 0 0 8px var(--green); }
   .radio-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .radio-loop.on { color: #000; background: var(--green); }
   .radio-knob-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; }
   .radio-knob { --ang: 0deg; position: relative; width: 38px; height: 38px; border-radius: 50%; background: radial-gradient(circle at 50% 45%, #102010, #000 70%); border: 1px solid #1d5c1d; box-shadow: 0 0 8px rgba(57,255,20,.35); touch-action: none; cursor: ns-resize; }
   .radio-knob i { position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; background: var(--green); border-radius: 2px; box-shadow: 0 0 6px var(--green); transform-origin: 50% 15px; transform: rotate(var(--ang)); }
@@ -4678,7 +4677,6 @@
         <div class="radio-controls">
           <button type="button" class="btn" id="radioPlay" aria-pressed="false">Play</button>
           <button type="button" class="btn secondary" id="radioNext">Next</button>
-          <button type="button" class="btn secondary radio-loop" id="radioLoop" aria-pressed="false">Loop: off</button>
           <div class="radio-knob-wrap">
             <div class="radio-knob" id="radioKnob" role="slider" tabindex="0" aria-label="Speed and pitch" aria-valuemin="0.5" aria-valuemax="1.5" aria-valuenow="1.00"><i></i></div>
             <button type="button" class="radio-knob-val" id="radioSpeedVal" title="Reset speed to 1.00x" aria-label="Speed 1.00x, tap to reset">1.00x</button>
@@ -7702,7 +7700,7 @@
             "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
             "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar, with its view count and length. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
-            "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck: drag it up or down, mouse or finger. Tap the readout next to it (or double-click the knob) to reset to 1.00x. On touch screens every control is a full fingertip wide. Loop holds the current track; off, it moves on every eight bars. Next skips. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
+            "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck: drag it up or down, mouse or finger. Tap the readout next to it (or double-click the knob) to reset to 1.00x. On touch screens every control is a full fingertip wide. The current track plays forever or until you press Next, whichever comes first. There is no Loop button; looping is the whole plan. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
             "Scores is a classic leaderboard window for every rankable game. Open it from the desktop or type scores in Terminal.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Copy email copies the address. Open mail app prefills the subject “you're the man.”"
@@ -7941,12 +7939,12 @@
       lead: [null, null, 15, null, 14, null, 12, null, null, null, 10, 12, null, 7, null, null], wave: "square" }
   ];
   const RADIO_STEMS = ["drums", "bass", "keys", "lead"];
-  const RADIO_BARS = 8;
+  const RADIO_PHRASE_BARS = 8; // chord/lead phrase length; the track itself never ends
   const radio = {
     ac: null, master: null, analyser: null, stems: [], noise: null,
     playing: false, track: 0, step: 0, bar: 0, nextTime: 0, timer: null, raf: 0,
     level: [0.8, 0.8, 0.7, 0.7], muted: [false, false, false, false], solo: -1,
-    vol: 0.7, speed: 1, loop: false, wired: false
+    vol: 0.7, speed: 1, wired: false
   };
 
   window.kitaRadio = radio;
@@ -8109,13 +8107,7 @@
       if (radio.step >= 16) {
         radio.step = 0;
         radio.bar += 1;
-        if (radio.bar >= RADIO_BARS) {
-          radio.bar = 0;
-          if (!radio.loop) {
-            radio.track = (radio.track + 1) % RADIO_TRACKS.length;
-            setTimeout(radioRenderUi, 0);
-          }
-        }
+        if (radio.bar >= RADIO_PHRASE_BARS) radio.bar = 0;
       }
     }
   }
@@ -8164,12 +8156,6 @@
     if (pb) {
       pb.textContent = radio.playing ? "Pause" : "Play";
       pb.setAttribute("aria-pressed", radio.playing ? "true" : "false");
-    }
-    const lb = document.getElementById("radioLoop");
-    if (lb) {
-      lb.classList.toggle("on", radio.loop);
-      lb.setAttribute("aria-pressed", radio.loop ? "true" : "false");
-      lb.textContent = radio.loop ? "Loop: on" : "Loop: off";
     }
     document.querySelectorAll("#win-radio .stem").forEach((col, i) => {
       const lvl = radio.level[i];
@@ -8266,7 +8252,6 @@
     radio.wired = true;
     document.getElementById("radioPlay").addEventListener("click", () => { radio.playing ? radioPause() : radioPlay(); });
     document.getElementById("radioNext").addEventListener("click", radioNext);
-    document.getElementById("radioLoop").addEventListener("click", () => { radio.loop = !radio.loop; radioRenderUi(); });
     const vol = document.getElementById("radioVol");
     vol.addEventListener("input", () => { radio.vol = Number(vol.value) / 100; radioApplyGains(false); });
     win.querySelectorAll(".stem").forEach((col, i) => {
