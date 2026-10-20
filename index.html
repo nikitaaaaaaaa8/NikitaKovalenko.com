@@ -1601,6 +1601,8 @@
   .ms-board {
     display: grid;
     grid-template-columns: repeat(var(--ms-cols, 9), minmax(14px, 1fr));
+    /* Rows never shrink under the square cells; a short window scrolls the board instead. */
+    grid-auto-rows: minmax(max-content, auto);
     gap: 2px;
     width: 100%;
     max-width: 100%;
