@@ -539,12 +539,6 @@
   }
   .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 
-  .about-actions {
-    align-items: center;
-  }
-  .about-actions #rageBtn {
-    margin-left: auto;
-  }
 
 
 
@@ -4644,6 +4638,78 @@
   html.tesla .vlc-vol { height: 36px; }
   html.tesla .vlc-drop { font-size: 15px; }
   html.tesla .vlc-parked { font-size: 14px; }
+
+  /* --- About redesign --- */
+  .about-card { display: flex; flex-direction: column; gap: 12px; }
+  .about-card p { margin: 0; }
+  .about-lede { color: var(--text); line-height: 1.5; }
+  .about-launch { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .about-app {
+    appearance: none; font: inherit; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    padding: 9px 2px 7px; min-width: 0;
+    border: 1px solid rgba(57,255,20,.28); border-radius: 10px;
+    background: rgba(57,255,20,.05); color: var(--green);
+    transition: .15s ease;
+  }
+  .about-app svg { width: 22px; height: 22px; filter: drop-shadow(0 0 4px rgba(57,255,20,.55)); }
+  .about-app span { font-size: 10px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .about-app:hover, .about-app:focus-visible { background: rgba(57,255,20,.16); border-color: rgba(57,255,20,.7); outline: none; }
+  .about-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .about-foot #wisdom { font-size: 12px; line-height: 1.4; }
+  .about-foot .btn { flex: 0 0 auto; }
+  .about-extras { display: flex; align-items: center; gap: 14px; font-size: 11px; color: var(--muted); border-top: 1px dashed rgba(57,255,20,.15); padding-top: 8px; margin-top: -2px; }
+  .about-link { appearance: none; background: none; border: 0; padding: 0; font: inherit; color: var(--muted); cursor: pointer; text-decoration: underline dotted rgba(126,168,120,.6); text-underline-offset: 3px; }
+  .about-link:hover { color: var(--green); }
+  .about-extras .about-visitor { margin: 0 0 0 auto; color: var(--green-dim); }
+  .about-extras .about-visitor[hidden] { display: none; }
+  @media (max-width: 700px) {
+    .about-card { gap: 10px; }
+    .about-app { padding: 10px 2px 8px; min-height: 58px; }
+    .about-extras { font-size: 12px; }
+  }
+
+  .kb {
+    position: fixed; right: 12px; bottom: 56px; z-index: 90; width: 372px;
+    background: rgba(6,10,6,.94); border: 1px solid rgba(57,255,20,.55); border-radius: 12px;
+    box-shadow: var(--shadow), 0 0 22px rgba(57,255,20,.12);
+    color: var(--text); font-size: 12px; padding: 11px 12px 12px;
+    opacity: 0; transform: translateY(10px); pointer-events: none;
+    transition: opacity .35s ease, transform .35s ease;
+  }
+  .kb.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .kb::after {
+    content: ""; position: absolute; right: 38px; bottom: -7px; width: 12px; height: 12px;
+    background: rgba(6,10,6,.94); border-right: 1px solid rgba(57,255,20,.55); border-bottom: 1px solid rgba(57,255,20,.55);
+    transform: rotate(45deg);
+  }
+  .kb-head { display: flex; align-items: center; gap: 8px; color: var(--green); }
+  .kb-head > svg { width: 18px; height: 18px; flex: 0 0 auto; filter: drop-shadow(0 0 4px rgba(57,255,20,.6)); }
+  .kb-head strong { font-weight: normal; flex: 1 1 auto; text-transform: uppercase; letter-spacing: .04em; font-size: 11px; }
+  .kb-x { appearance: none; background: none; border: 0; padding: 2px; margin: -4px -4px -4px 0; color: var(--muted); cursor: pointer; display: inline-flex; }
+  .kb-x svg { width: 16px; height: 16px; }
+  .kb-x:hover { color: var(--green); }
+  .kb p { margin: 6px 0 9px; color: var(--muted); line-height: 1.45; }
+  .kb-apps { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 6px; }
+  .kb-app {
+    appearance: none; font: inherit; font-size: 11px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px 5px 7px;
+    border: 1px solid rgba(57,255,20,.3); border-radius: 999px; background: rgba(57,255,20,.05); color: var(--text);
+  }
+  .kb-app svg { width: 15px; height: 15px; color: var(--green); }
+  .kb-app:hover, .kb-app:focus-visible { background: rgba(57,255,20,.16); border-color: rgba(57,255,20,.7); outline: none; }
+  .kb-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 11px; color: var(--muted); }
+  .kb-foot .about-link { font-size: 11px; }
+  .kb-drain { position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; border-radius: 2px; background: var(--green); box-shadow: 0 0 6px var(--green); transform-origin: left; transform: scaleX(1); }
+  .kb.show .kb-drain { animation: kbDrain var(--kb-life, 9s) linear forwards; }
+  .kb:hover .kb-drain, .kb:focus-within .kb-drain { animation-play-state: paused; }
+  @keyframes kbDrain { to { transform: scaleX(0); } }
+  @media (max-width: 700px) {
+    .kb { left: 8px; right: 8px; width: auto; }
+    .kb-apps { grid-template-columns: 1fr 1fr; }
+    .kb-app { font-size: 12px; padding: 8px 11px 8px 9px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .kb, .kb .kb-drain { transition: none; animation: none; } }
 </style>
 </head>
 <body>
@@ -4785,7 +4851,7 @@
       </div>
     </section>
 
-    <section class="window" id="win-about" style="top:80px; left:140px; width:420px;">
+    <section class="window" id="win-about" style="top:80px; left:140px; width:344px;">
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="about"></div>
@@ -4794,19 +4860,18 @@
         </div>
         <div class="title">About.txt</div>
       </div>
-      <div class="content">
-        <div class="green">THIS IS MY WEBSITE NOW</div>
-        <p class="muted">Welcome to Kita OS — this site works like an old computer. Click the desktop icons, open windows, and drag them around. Designed for the computer, but it works on mobile too.</p>
-        <p>Owner: <span class="green">Nikita</span><br>
-        Status: <span class="danger">Morale dangerously high</span><br>
-        Mood: Vibing in the pond</p>
-        <div class="row about-actions">
-          <button type="button" class="btn" id="aboutCloseBtn">Click to close</button>
-          <button type="button" class="btn secondary" id="glitchBtn">Glitch once</button>
-          <button type="button" class="btn secondary" id="rageBtn">Click for wisdom</button>
+      <div class="content about-card">
+        <p class="about-lede">It works like an old computer. Click icons, drag windows, break nothing important.</p>
+        <div class="about-launch" aria-label="Quick launch"><button type="button" class="about-app" data-open="youtube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="6.2" width="17.6" height="11.6" rx="3.2"/><path d="M10.4 9.4l5 2.6-5 2.6V9.4z" fill="currentColor" stroke="none"/></svg><span>YouTube</span></button><button type="button" class="about-app" data-open="games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="8.2" width="17" height="9.6" rx="3.2"/><path d="M8 12.2v2.2"/><path d="M6.9 13.3h2.2"/><circle cx="15.2" cy="11.6" r="0.95" fill="currentColor" stroke="none"/><circle cx="17.3" cy="13.8" r="0.95" fill="currentColor" stroke="none"/><path d="M9.5 8.2c0-1.7 1.1-3.2 2.5-3.2s2.5 1.5 2.5 3.2" opacity=".7"/><path d="M4.8 10.2H3.2" opacity=".55"/><path d="M20.8 10.2h1.6" opacity=".55"/></svg><span>Games</span></button><button type="button" class="about-app" data-open="radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7.6L17.5 3.4"/><rect x="3" y="7.6" width="18" height="12" rx="2.2"/><circle cx="8.6" cy="13.6" r="3"/><circle cx="8.6" cy="13.6" r="0.9" fill="currentColor" stroke="none"/><path d="M14.4 11.2h4M14.4 13.6h4M14.4 16h4"/></svg><span>Radio</span></button><button type="button" class="about-app" data-open="drone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="6" r="2.2"/><circle cx="18.5" cy="6" r="2.2"/><circle cx="5.5" cy="18" r="2.2"/><circle cx="18.5" cy="18" r="2.2"/><path d="M7.4 6.8l3.2 3.1"/><path d="M16.6 6.8l-3.2 3.1"/><path d="M7.4 17.2l3.2-3.1"/><path d="M16.6 17.2l-3.2-3.1"/><rect x="9.2" y="9.2" width="5.6" height="5.6" rx="1.2"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg><span>DroneStuff</span></button></div>
+        <div class="about-foot">
+          <p class="muted" id="wisdom">Tip: Konami code.</p>
+          <button type="button" class="btn" id="aboutCloseBtn">Got it</button>
         </div>
-        <p class="muted" id="wisdom" style="margin-top:12px;">Tip: Konami code.</p>
-        <p class="green about-visitor" id="aboutVisitor" hidden></p>
+        <div class="about-extras">
+          <button type="button" class="about-link" id="rageBtn">wisdom</button>
+          <button type="button" class="about-link" id="glitchBtn">glitch</button>
+          <span class="about-visitor" id="aboutVisitor" hidden></span>
+        </div>
       </div>
     </section>
 
@@ -5967,6 +6032,13 @@
       </form>
     </div>
   </div>
+  <div class="kb" id="kitaBalloon" role="status" aria-live="polite">
+    <div class="kb-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3.5h7.2L19 8.3V20a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 20V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M14 3.5V8h4.5"/><circle cx="12" cy="13.2" r="2.2"/><path d="M12 15.4v3.2"/><path d="M9.2 18.6h5.6"/></svg><strong>Your computer is ready</strong><button type="button" class="kb-x" id="kbClose" aria-label="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg></button></div>
+    <p>Works like an old computer. Allegedly.</p>
+    <div class="kb-apps"><button type="button" class="kb-app" data-open="youtube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="6.2" width="17.6" height="11.6" rx="3.2"/><path d="M10.4 9.4l5 2.6-5 2.6V9.4z" fill="currentColor" stroke="none"/></svg><span>YouTube</span></button><button type="button" class="kb-app" data-open="games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="8.2" width="17" height="9.6" rx="3.2"/><path d="M8 12.2v2.2"/><path d="M6.9 13.3h2.2"/><circle cx="15.2" cy="11.6" r="0.95" fill="currentColor" stroke="none"/><circle cx="17.3" cy="13.8" r="0.95" fill="currentColor" stroke="none"/><path d="M9.5 8.2c0-1.7 1.1-3.2 2.5-3.2s2.5 1.5 2.5 3.2" opacity=".7"/><path d="M4.8 10.2H3.2" opacity=".55"/><path d="M20.8 10.2h1.6" opacity=".55"/></svg><span>Games</span></button><button type="button" class="kb-app" data-open="radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7.6L17.5 3.4"/><rect x="3" y="7.6" width="18" height="12" rx="2.2"/><circle cx="8.6" cy="13.6" r="3"/><circle cx="8.6" cy="13.6" r="0.9" fill="currentColor" stroke="none"/><path d="M14.4 11.2h4M14.4 13.6h4M14.4 16h4"/></svg><span>Radio</span></button><button type="button" class="kb-app" data-open="drone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="6" r="2.2"/><circle cx="18.5" cy="6" r="2.2"/><circle cx="5.5" cy="18" r="2.2"/><circle cx="18.5" cy="18" r="2.2"/><path d="M7.4 6.8l3.2 3.1"/><path d="M16.6 6.8l-3.2 3.1"/><path d="M7.4 17.2l3.2-3.1"/><path d="M16.6 17.2l-3.2-3.1"/><rect x="9.2" y="9.2" width="5.6" height="5.6" rx="1.2"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg><span>DroneStuff</span></button></div>
+    <div class="kb-foot"><span>Tip: Konami code.</span><button type="button" class="about-link" data-open="about" id="kbMore">About.txt</button></div>
+    <div class="kb-drain" id="kbDrain"></div>
+  </div>
   <div class="toast" id="toast"></div>
   <div id="droneLightbox" hidden role="dialog" aria-modal="true" aria-label="DroneStuff photo">
     <img id="droneLightboxImg" alt="">
@@ -6245,17 +6317,6 @@
     const pos = clampPos(margin + n * 32, margin + n * 32);
     el.style.left = pos.left + "px";
     el.style.top = pos.top + "px";
-  }
-
-  function centerWindowDesktop(el) {
-    if (!el || window.innerWidth <= 700) return;
-    const w = el.offsetWidth || parseInt(el.style.width, 10) || 420;
-    const h = el.offsetHeight || 280;
-    const taskbarRoom = taskbarHeight() + 8;
-    const left = Math.max(16, Math.round((window.innerWidth - w) / 2));
-    const top = Math.max(8, Math.round((window.innerHeight - taskbarRoom - h) / 2));
-    el.style.left = left + "px";
-    el.style.top = top + "px";
   }
 
   function focusWindow(name) {
@@ -6969,10 +7030,8 @@
   // boot
   setTimeout(() => {
     boot.classList.add("hide");
-    openWindow("about");
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => centerWindowDesktop(windows.about));
-    });
+    // No window at boot: an XP-style tray balloon instead.
+    kbShow();
     termPrint("Kita OS ready.");
     termPrint("type `help` to pretend you know what you're doing.");
   }, 1500);
@@ -7305,6 +7364,27 @@
     });
   });
 
+
+  // About quick-launch: open the app, then get out of the way.
+  document.querySelectorAll("#win-about .about-app").forEach(b => b.addEventListener("click", () => closeWindow("about")));
+
+  // Tray balloon: says hi, drains, leaves. Hover or focus pauses it.
+  const kb = document.getElementById("kitaBalloon");
+  function kbHide() { if (kb) kb.classList.remove("show"); }
+  function kbShow() {
+    if (!kb) return;
+    kb.style.bottom = (taskbarHeight() + 10) + "px";
+    kb.classList.add("show");
+  }
+  if (kb) {
+    document.getElementById("kbDrain").addEventListener("animationend", kbHide);
+    document.getElementById("kbClose").addEventListener("click", kbHide);
+    kb.querySelectorAll("[data-open]").forEach(b => b.addEventListener("click", kbHide));
+    document.getElementById("desktop").addEventListener("pointerdown", (e) => {
+      if (!e.target.closest("#kitaBalloon")) kbHide();
+    });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") kbHide(); });
+  }
   // interactions
   const aboutCloseBtn = document.getElementById("aboutCloseBtn");
   if (aboutCloseBtn) {
@@ -7732,10 +7812,11 @@
           title: "Desktop",
           paragraphs: [
             "This website is a fake desktop. Start, bottom left, lists apps with their icons; picking one closes the menu. On a screen shorter than the menu, it scrolls. The clock, bottom right, is your local time. No seconds.",
-            "Left of the clock tray sits a 2006 hit counter in its own little panel: odometer digits, VISITORS underneath. Every page load is one real visit, counted on the Worker; About also says You are visitor #N. Phones get the same panel. If the Worker does not answer, the counter just is not there. No fake numbers.",
+            "Left of the clock tray sits a 2006 hit counter in its own little panel: odometer digits, VISITORS underneath. Every page load is one real visit, counted on the Worker; About’s footer also says visitor #N. Phones get the same panel. If the Worker does not answer, the counter just is not there. No fake numbers.",
             "Icons start in two columns. A tap opens that app and nothing else, not whatever lands under your finger. Drag snaps to a grid across the whole desktop, not only those two columns. They cannot stack. Refresh puts them back. A short window packs those two columns tighter so they stay above the taskbar. Rotate keeps a layout you already moved.",
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar. Empty clears the bin for this visit; refresh brings everything back, because nothing here is permanent.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
+            "On load nothing opens in your way. A tray balloon pops up over the clock: Your computer is ready, four quick-launch chips (YouTube, Games, Radio, DroneStuff), Tip: Konami code, and an About.txt link. A thin green line drains for 9 seconds, then the balloon leaves on its own. Hover or focus pauses it. The x, a chip, or any click on the desktop dismisses it sooner. On a phone it spans the width above the taskbar, chips two by two.",
             "Designed for the computer, but it works on mobile too.",
             "Leave it alone for a minute and the screensaver takes over: neon stars on black and a KITA OS logo that bounces toward the corner and, like everyone, almost makes it. Any mouse, key, or touch brings the desktop back. It waits while YouTube or VLC is playing or a game window is open. With reduced motion on, it is a dim still frame.",
             "The desktop auto-detects the Tesla car browser and uses bigger icons and buttons. ?tesla forces that layout. ?tesla=0 clears it for this tab. Phone and computer layouts stay the same."
@@ -7747,7 +7828,7 @@
             "Click an icon to open a window. Drag the title bar to move it. The yellow and red dots close the window. The dots are glass, with a glare on the top and the bottom. In a Tesla those close dots are larger.",
             "On a desktop, not a phone, drag the edges or corners to resize.",
             "Escape closes one layer per press: a photo, then a score prompt, then the Start menu, then the window in front. The keyboard deserves an exit too.",
-            "On a computer, About opens centered. On a phone it opens full-width at the top. About’s highlighted button is Click to close; Glitch once and Click for wisdom sit as secondary actions, with wisdom on the right. Every window opens fully on screen and above the taskbar, whether from an icon, Start, Terminal, or a Games card. Later windows try not to sit on top of one already open. A window taller than the screen scrolls inside instead of hiding the rest. Close hands focus to the window on top. On a phone, rotate keeps windows where they are; they do not restack. A window that grows after it opens, say a book, slides up to stay above the taskbar.",
+            "About opens only when you ask: its icon, Start, or Terminal. It is a small window with one line, the same four quick-launch tiles (pick one and that app opens while About closes), Tip: Konami code, and a highlighted Got it that closes it. wisdom and glitch sit underneath as small links, next to visitor #N. On a phone it opens full-width at the top, like every window. Every window opens fully on screen and above the taskbar, whether from an icon, Start, Terminal, or a Games card. Later windows try not to sit on top of one already open. A window taller than the screen scrolls inside instead of hiding the rest. Close hands focus to the window on top. On a phone, rotate keeps windows where they are; they do not restack. A window that grows after it opens, say a book, slides up to stay above the taskbar.",
             "Pointer cursor on clickable controls: close, buttons. Grab and drag cursor on title bars. The tray speaker mutes audio for this visit."
           ]
         },
@@ -7795,7 +7876,7 @@
           paragraphs: [
             "Snow is on by default. Type snow in Terminal to toggle it. Type matrix to toggle the Matrix rain. Matrix off puts snow back unless you already stopped it. Konami still unlocks VIP. You can still see the desktop through it.",
             "A golden snitch shows up every 120 seconds, on screen for 5 seconds. Catch it for +47 winning and +500 casino chips, unless you are tapped out. Then it is just the +47.",
-            "Konami: up, up, down, down, left, right, left, right, B, A. That opens Contact with a VIP box, adds 50 winning, and starts the Matrix rain. matrix only toggles the rain. About’s tip line is Tip: Konami code.",
+            "Konami: up, up, down, down, left, right, left, right, B, A. That opens Contact with a VIP box, adds 50 winning, and starts the Matrix rain. matrix only toggles the rain. About and the load balloon both say Tip: Konami code.",
             "Refresh starts a new session. Nothing important is saved."
           ]
         }
@@ -13495,7 +13576,7 @@
           }
         }
         if (line) {
-          line.textContent = txt + ". Not a prize. Just a number.";
+          line.textContent = "visitor #" + n.toLocaleString("en-US"); line.title = "Not a prize. Just a number.";
           line.hidden = false;
         }
       })
