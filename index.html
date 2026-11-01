@@ -3492,13 +3492,64 @@
 
 
   /* Scores / classic leaderboard */
-  #win-scores { width: min(420px, calc(100vw - 24px)); }
-  #win-scores .content.scores-content { display: flex; flex-direction: column; gap: 10px; }
-  .lb-toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .lb-toolbar select, .lb-toolbar .btn {
-    font: inherit; color: var(--green); background: rgba(0,0,0,.35);
-    border: 1px solid rgba(57,255,20,.4); border-radius: 6px; padding: 6px 8px;
+  #win-scores {
+    width: min(940px, calc(100vw - 24px));
+    max-width: min(940px, calc(100vw - 24px));
   }
+  #win-scores .content.scores-content { display: flex; flex-direction: column; gap: 10px; }
+  .lb-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .lb-head p { margin: 0; }
+  .lb-head .btn, .lb-detail-bar .btn, .lb-chip {
+    font: inherit; font-size: 12px; color: var(--green); background: rgba(0,0,0,.35);
+    border: 1px solid rgba(57,255,20,.4); border-radius: 6px; padding: 6px 10px;
+    min-height: 36px; cursor: pointer; touch-action: manipulation; flex: 0 0 auto;
+  }
+  .lb-head .btn:hover, .lb-detail-bar .btn:hover, .lb-chip:hover { border-color: rgba(57,255,20,.85); }
+  .lb-status { margin: 0; font-size: 11px; color: var(--muted); }
+  .lb-status.err { color: var(--muted); font-size: 12px; padding: 10px 0; }
+  /* Masonry-ish: columns pack short cards (Solitaire, 2048) under tall ones. */
+  .lb-grid { column-width: 262px; column-gap: 10px; }
+  .lb-game {
+    display: inline-block; width: 100%; vertical-align: top;
+    break-inside: avoid; -webkit-column-break-inside: avoid; margin: 0 0 10px;
+    border: 1px solid rgba(57,255,20,.28); border-radius: 10px;
+    background: rgba(0,0,0,.28); padding: 8px; min-width: 0; box-sizing: border-box;
+  }
+  .lb-game-head {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    background: none; border: 0; padding: 2px 2px 6px; margin: 0;
+    color: inherit; font: inherit; text-align: left; cursor: pointer; min-height: 36px;
+  }
+  .lb-glyph { width: 26px; height: 26px; flex: 0 0 26px; color: var(--green); filter: drop-shadow(0 0 4px rgba(57,255,20,.45)); }
+  .lb-glyph svg { width: 26px; height: 26px; display: block; }
+  .lb-game-name { display: block; color: var(--green); font-weight: 700; font-size: 13px; letter-spacing: .03em; }
+  .lb-metric { display: block; color: var(--muted); font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; }
+  .lb-board {
+    display: block; width: 100%; text-align: left; font: inherit; color: inherit;
+    background: rgba(57,255,20,.03); border: 1px solid rgba(57,255,20,.14); border-radius: 7px;
+    padding: 5px 7px; margin-top: 5px; cursor: pointer; min-height: 44px; touch-action: manipulation;
+  }
+  .lb-board:hover, .lb-board:focus-visible { border-color: rgba(57,255,20,.6); background: rgba(57,255,20,.07); outline: none; }
+  .lb-diff {
+    display: flex; justify-content: space-between; gap: 6px;
+    font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px;
+  }
+  .lb-diff b { color: #bfeeb4; font-weight: 700; }
+  .lb-row { display: flex; gap: 6px; font-size: 12px; line-height: 1.55; min-width: 0; }
+  .lb-row .r { width: 1.3em; flex: 0 0 auto; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .lb-row .n { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lb-row .s { flex: 0 0 auto; color: var(--green); font-variant-numeric: tabular-nums; }
+  .lb-row.lb-first .r, .lb-row.lb-first .n { color: var(--green); font-weight: 700; text-shadow: 0 0 6px rgba(57,255,20,.55); }
+  .lb-row.lb-first .s { text-shadow: 0 0 6px rgba(57,255,20,.55); font-weight: 700; }
+  .lb-unclaimed { display: block; font-size: 12px; color: var(--muted); font-style: italic; line-height: 1.55; }
+  .lb-detail[hidden], .lb-grid[hidden], .lb-chips[hidden] { display: none; }
+  .lb-detail-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .lb-detail-title { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .lb-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .lb-chip[aria-pressed="true"] { background: rgba(57,255,20,.16); border-color: rgba(57,255,20,.85); color: #eaffe3; }
+  .lb-table tr.lb-first td { color: var(--green); font-weight: 700; text-shadow: 0 0 6px rgba(57,255,20,.5); }
+  .lb-table td.when { color: var(--muted); font-size: 11px; white-space: nowrap; text-align: right; }
+  .lb-table th.r { text-align: right; }
   .lb-note { margin: 0; font-size: 11px; }
   .lb-table {
     width: 100%; border-collapse: collapse; font-size: 12px;
@@ -4687,7 +4738,7 @@
       </div>
     </section>
 
-    <section class="window" id="win-scores" style="top:70px; left:150px; width:400px;">
+    <section class="window" id="win-scores" style="top:56px; left:120px; width:920px;">
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="scores"></div>
@@ -4697,41 +4748,23 @@
         <div class="title">Scores</div>
       </div>
       <div class="content scores-content">
-        <p class="green">LEADERBOARD // CLASSIC CABINET</p>
-        <p class="muted lb-note">Type a name when a run ends. Same name updates if you beat yourself. Shared across visits.</p>
-        <div class="lb-toolbar">
-          <label class="muted" for="lbBoardSelect">Board</label>
-          <select id="lbBoardSelect" aria-label="Leaderboard board">
-            <option value="snake:easy">Snake · Easy</option>
-            <option value="snake:medium" selected>Snake · Medium</option>
-            <option value="snake:hard">Snake · Hard</option>
-            <option value="tetris:easy">Tetris · Easy</option>
-            <option value="tetris:medium">Tetris · Medium</option>
-            <option value="tetris:hard">Tetris · Hard</option>
-            <option value="n2048">2048</option>
-            <option value="mines:easy">Minesweeper · Easy</option>
-            <option value="mines:medium">Minesweeper · Medium</option>
-            <option value="mines:hard">Minesweeper · Hard</option>
-            <option value="pipes:easy">Pipes · Easy</option>
-            <option value="pipes:medium">Pipes · Medium</option>
-            <option value="pipes:hard">Pipes · Hard</option>
-            <option value="solitaire">Solitaire · moves</option>
-            <option value="chess:easy">Chess wins · Easy</option>
-            <option value="chess:medium">Chess wins · Medium</option>
-            <option value="chess:hard">Chess wins · Hard</option>
-            <option value="flappy:easy">Flappy · Easy</option>
-            <option value="flappy:medium">Flappy · Medium</option>
-            <option value="flappy:hard">Flappy · Hard</option>
-            <option value="tron:easy">Tron · Easy</option>
-            <option value="tron:medium">Tron · Medium</option>
-            <option value="tron:hard">Tron · Hard</option>
-            <option value="pacman:easy">Pac-Man · Easy</option>
-            <option value="pacman:medium">Pac-Man · Medium</option>
-            <option value="pacman:hard">Pac-Man · Hard</option>
-          </select>
+        <div class="lb-head">
+          <div>
+            <p class="green">LEADERBOARD // EVERY CABINET AT ONCE</p>
+            <p class="muted lb-note">Top 3 on every board. Tap one for the full ten. Type a name when a run ends; same name updates if you beat yourself.</p>
+          </div>
           <button type="button" class="btn" id="lbRefresh">Refresh</button>
         </div>
-        <div id="lbBoardMount" class="lb-empty">Pick a board.</div>
+        <p class="lb-status" id="lbStatus" aria-live="polite">Loading…</p>
+        <div class="lb-grid" id="lbGrid"></div>
+        <div class="lb-detail" id="lbDetail" hidden>
+          <div class="lb-detail-bar">
+            <button type="button" class="btn" id="lbBack">&larr; All boards</button>
+            <div class="lb-detail-title" id="lbDetailTitle"></div>
+          </div>
+          <div class="lb-chips" id="lbChips"></div>
+          <div id="lbBoardMount"></div>
+        </div>
       </div>
     </section>
 
@@ -7043,7 +7076,7 @@
   if (droneLightbox) {
     droneLightbox.addEventListener("click", closeDroneLightbox);
   }
-  // Escape peels one layer: photo, score prompt, Start menu, then the front window.
+  // Escape peels one layer: photo, score prompt, Start menu, Scores detail, then the front window.
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape" || e.defaultPrevented) return;
     if (droneLightbox && !droneLightbox.hidden) { closeDroneLightbox(); return; }
@@ -7051,6 +7084,7 @@
     if (lbOv && !lbOv.hidden) { lbHidePrompt(); return; }
     if (startMenu && !startMenu.hidden) { setStartOpen(false); if (startBtn) startBtn.focus(); return; }
     const front = Object.keys(windows).find(n => windows[n] && windows[n].classList.contains("open") && windows[n].classList.contains("active"));
+    if (front === "scores" && lbEscapeBack()) return;
     if (front) closeWindow(front);
   });
 
@@ -7701,7 +7735,7 @@
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
             "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar, newest first, with its view count and length. The newest is Elijah Taylor live at The Barbary, a full set at 1:16:21, which is why the time readout learned hours. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
             "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck: drag it up or down, mouse or finger. Tap the readout next to it (or double-click the knob) to reset to 1.00x. On touch screens every control is a full fingertip wide. The current track plays forever or until you press Next, whichever comes first. There is no Loop button; looping is the whole plan. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
-            "Scores is a classic leaderboard window for every rankable game. Open it from the desktop or type scores in Terminal.",
+            "Scores is the classic leaderboard for every rankable game, all on one screen. Each game gets a card with every difficulty stacked inside it, top 3 per board (rank, name, score) and the metric under the title (score, points, wins, fewest moves, fastest clear). #1 glows. Empty boards say Unclaimed. Cards flow three across on a desktop, fewer on a tablet, one column on a phone, and the window scrolls. Tap a board for its full top 10 with when each score landed, flip difficulties with the chips, and Back to all boards (Escape does Back first, then closes the window). One request to the Worker’s /boards fills everything; Refresh asks again. If the Worker is down it says Could not reach the board. Open it from the desktop or type scores in Terminal.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Copy email copies the address. Open mail app prefills the subject “you're the man.”"
           ]
@@ -13475,52 +13509,186 @@
     return String(score);
   }
 
-  function lbRenderRows(board, rows, dir) {
+  // Overview = every game, every difficulty, top 3. Detail = one board, top 10.
+  // One GET /boards fills both; nothing is stored past the session.
+  const LB_GAMES = [
+    { open: "minesweeper", name: "Minesweeper", metric: "fastest clear · lower wins", boards: [["mines:easy", "Easy"], ["mines:medium", "Medium"], ["mines:hard", "Hard"]] },
+    { open: "snake", name: "Snake", metric: "score", boards: [["snake:easy", "Easy"], ["snake:medium", "Medium"], ["snake:hard", "Hard"]] },
+    { open: "tetris", name: "Tetris", metric: "score", boards: [["tetris:easy", "Easy"], ["tetris:medium", "Medium"], ["tetris:hard", "Hard"]] },
+    { open: "solitaire", name: "Solitaire", metric: "fewest moves · lower wins", boards: [["solitaire", "Klondike"]] },
+    { open: "chess", name: "Chess", metric: "wins vs the engine", boards: [["chess:easy", "Easy"], ["chess:medium", "Medium"], ["chess:hard", "Hard"]] },
+    { open: "pipes", name: "Pipes", metric: "fewest moves · lower wins", boards: [["pipes:easy", "Easy"], ["pipes:medium", "Medium"], ["pipes:hard", "Hard"]] },
+    { open: "n2048", name: "2048", metric: "score", boards: [["n2048", "4×4"]] },
+    { open: "flappy", name: "Flappy Bird", metric: "pipes cleared", boards: [["flappy:easy", "Easy"], ["flappy:medium", "Medium"], ["flappy:hard", "Hard"]] },
+    { open: "tron", name: "Tron", metric: "trail length", boards: [["tron:easy", "Easy"], ["tron:medium", "Medium"], ["tron:hard", "Hard"]] },
+    { open: "pacman", name: "Pac-Man", metric: "points", boards: [["pacman:easy", "Easy"], ["pacman:medium", "Medium"], ["pacman:hard", "Hard"]] }
+  ];
+  let lbData = null;      // { board: { dir, rows } } from the last good fetch
+  let lbView = "";        // "" = overview, else the board id in detail
+  let lbGridScroll = 0;
+  let lbReq = 0;
+
+  function lbEsc(v) {
+    return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function lbGameOf(board) {
+    return LB_GAMES.find(function (g) { return g.boards.some(function (b) { return b[0] === board; }); }) || null;
+  }
+  function lbGlyph(g) {
+    const svg = document.querySelector('#win-games .game-card[data-open="' + g.open + '"] .gc-glyph svg');
+    return '<span class="lb-glyph" aria-hidden="true">' + (svg ? svg.outerHTML : "") + '</span>';
+  }
+  function lbRows(board) {
+    const b = lbData && lbData[board];
+    return b && Array.isArray(b.rows) ? b.rows : [];
+  }
+  function lbWhen(t) {
+    t = Number(t);
+    if (!isFinite(t) || t <= 0) return "";
+    const s = Math.max(0, (Date.now() - t) / 1000);
+    if (s < 90) return "just now";
+    if (s < 3600) return Math.round(s / 60) + "m ago";
+    if (s < 86400) return Math.round(s / 3600) + "h ago";
+    if (s < 86400 * 30) return Math.round(s / 86400) + "d ago";
+    return new Date(t).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
+
+  function lbRenderGrid() {
+    const grid = document.getElementById("lbGrid");
+    if (!grid || !lbData) return;
+    let html = "";
+    LB_GAMES.forEach(function (g) {
+      html += '<section class="lb-game" data-game="' + g.open + '">' +
+        '<button type="button" class="lb-game-head" data-lb-game="' + g.open + '" aria-label="' + lbEsc(g.name) + ' full boards">' +
+        lbGlyph(g) + '<span><span class="lb-game-name">' + lbEsc(g.name) + '</span><span class="lb-metric">' + lbEsc(g.metric) + '</span></span></button>';
+      g.boards.forEach(function (pair) {
+        const rows = lbRows(pair[0]);
+        const n = rows.length;
+        html += '<button type="button" class="lb-board" data-board="' + pair[0] + '" aria-label="' + lbEsc(g.name + " " + pair[1]) + ' top ten">' +
+          '<span class="lb-diff"><b>' + lbEsc(pair[1]) + '</b><span>' + (n ? (n === 1 ? "1 entry" : (n >= 10 ? "10+" : n) + " entries") : "") + '</span></span>';
+        if (!n) html += '<span class="lb-unclaimed">Unclaimed.</span>';
+        rows.slice(0, 3).forEach(function (row, i) {
+          html += '<span class="lb-row' + (i === 0 ? " lb-first" : "") + '"><span class="r">' + (i + 1) + '</span><span class="n">' +
+            lbEsc(row.name) + '</span><span class="s">' + lbEsc(lbFormatScore(pair[0], row.score)) + '</span></span>';
+        });
+        html += '</button>';
+      });
+      html += '</section>';
+    });
+    grid.innerHTML = html;
+  }
+
+  function lbRenderStatus() {
+    const st = document.getElementById("lbStatus");
+    if (!st || !lbData) return;
+    let total = 0, claimed = 0;
+    LB_GAMES.forEach(function (g) { g.boards.forEach(function (p) { total++; if (lbRows(p[0]).length) claimed++; }); });
+    st.className = "lb-status";
+    st.textContent = claimed === total ? "All " + total + " boards claimed. Impressive, or concerning." :
+      claimed + " of " + total + " boards claimed. The rest are free real estate.";
+  }
+
+  function lbRenderDetail(board) {
+    const g = lbGameOf(board);
+    const title = document.getElementById("lbDetailTitle");
+    const chips = document.getElementById("lbChips");
     const mount = document.getElementById("lbBoardMount");
-    if (!mount) return;
-    if (!rows || !rows.length) {
+    if (!g || !mount) return;
+    const label = (g.boards.find(function (p) { return p[0] === board; }) || ["", ""])[1];
+    if (title) title.innerHTML = lbGlyph(g) + '<span><span class="lb-game-name">' + lbEsc(g.name + " · " + label) +
+      '</span><span class="lb-metric">' + lbEsc(g.metric) + ' · top 10</span></span>';
+    if (chips) {
+      chips.hidden = g.boards.length < 2;
+      chips.innerHTML = g.boards.map(function (p) {
+        return '<button type="button" class="lb-chip" data-board="' + p[0] + '" aria-pressed="' + (p[0] === board) + '">' + lbEsc(p[1]) + '</button>';
+      }).join("");
+    }
+    const rows = lbRows(board).slice(0, 10);
+    if (!rows.length) {
       mount.className = "lb-empty";
-      mount.textContent = "No scores yet. Finish a run and type a name.";
+      mount.textContent = "Unclaimed. Ten open slots and zero competition.";
       return;
     }
     mount.className = "";
-    const head = dir === "low" ? "Best" : "Score";
-    let html = '<table class="lb-table"><thead><tr><th>#</th><th>Name</th><th>' + head + '</th></tr></thead><tbody>';
+    const dir = (lbData[board] && lbData[board].dir) || LB_DIR[board] || "high";
+    let html = '<table class="lb-table"><thead><tr><th>#</th><th>Name</th><th>' + (dir === "low" ? "Best" : "Score") + '</th><th class="r">When</th></tr></thead><tbody>';
     rows.forEach(function (row, i) {
-      html += '<tr><td class="rank">' + (i + 1) + '</td><td>' +
-        String(row.name || "").replace(/&/g,"&amp;").replace(/</g,"&lt;") +
-        '</td><td class="score">' + lbFormatScore(board, row.score) + '</td></tr>';
+      html += '<tr' + (i === 0 ? ' class="lb-first"' : "") + '><td class="rank">' + (i + 1) + '</td><td>' + lbEsc(row.name) +
+        '</td><td class="score">' + lbEsc(lbFormatScore(board, row.score)) + '</td><td class="when">' + lbEsc(lbWhen(row.t)) + '</td></tr>';
     });
-    html += '</tbody></table>';
-    mount.innerHTML = html;
+    mount.innerHTML = html + '</tbody></table>';
   }
 
-  function lbFetchBoard(board) {
-    board = board || (document.getElementById("lbBoardSelect") || {}).value || "snake:medium";
-    const mount = document.getElementById("lbBoardMount");
-    if (mount) {
-      mount.className = "lb-empty";
-      mount.textContent = "Loading…";
-    }
-    return fetch(KITA_VIEWS_URL + "/scores?board=" + encodeURIComponent(board), {
+  function lbScroller() {
+    return document.querySelector("#win-scores .scores-content");
+  }
+
+  function lbShowDetail(board) {
+    if (!lbGameOf(board) || !lbData) return;
+    const sc = lbScroller();
+    if (!lbView && sc) lbGridScroll = sc.scrollTop;
+    lbView = board;
+    lbRenderDetail(board);
+    const grid = document.getElementById("lbGrid");
+    const det = document.getElementById("lbDetail");
+    if (grid) grid.hidden = true;
+    if (det) det.hidden = false;
+    if (sc) sc.scrollTop = 0;
+    const back = document.getElementById("lbBack");
+    if (back && window.innerWidth > 700) { try { back.focus({ preventScroll: true }); } catch (e) {} }
+  }
+
+  function lbShowOverview() {
+    lbView = "";
+    const grid = document.getElementById("lbGrid");
+    const det = document.getElementById("lbDetail");
+    if (det) det.hidden = true;
+    if (grid) grid.hidden = !lbData;
+    const sc = lbScroller();
+    if (sc) sc.scrollTop = lbGridScroll;
+  }
+
+  function lbFetchAll() {
+    const req = ++lbReq;
+    const st = document.getElementById("lbStatus");
+    if (st && !lbData) { st.className = "lb-status"; st.textContent = "Loading…"; }
+    return fetch(KITA_VIEWS_URL + "/boards?top=10", {
       method: "GET", credentials: "omit", cache: "no-store"
     }).then(function (res) {
-      if (!res || !res.ok) throw new Error("scores failed");
+      if (!res || !res.ok) throw new Error("boards failed");
       return res.json();
     }).then(function (data) {
-      lbRenderRows(board, data && data.rows, (data && data.dir) || LB_DIR[board] || "high");
+      if (req !== lbReq) return data;
+      if (!data || !data.boards || typeof data.boards !== "object") throw new Error("bad boards");
+      lbData = data.boards;
+      lbRenderStatus();
+      lbRenderGrid();
+      if (lbView) lbRenderDetail(lbView);
+      else { const grid = document.getElementById("lbGrid"); if (grid) grid.hidden = false; }
       return data;
     }).catch(function () {
-      if (mount) {
-        mount.className = "lb-empty";
-        mount.textContent = "Could not reach the board.";
-      }
+      if (req !== lbReq) return null;
+      lbData = null;
+      lbView = "";
+      const grid = document.getElementById("lbGrid");
+      const det = document.getElementById("lbDetail");
+      if (grid) { grid.hidden = true; grid.innerHTML = ""; }
+      if (det) det.hidden = true;
+      if (st) { st.className = "lb-status err"; st.textContent = "Could not reach the board."; }
       return null;
     });
   }
 
   function lbOnOpen() {
-    lbFetchBoard();
+    if (lbView) { lbGridScroll = 0; lbShowOverview(); }
+    lbFetchAll();
+  }
+
+  // Escape: Back to the overview first, then the window closes.
+  function lbEscapeBack() {
+    if (!lbView || !windows.scores || !windows.scores.classList.contains("open")) return false;
+    lbShowOverview();
+    return true;
   }
 
   function lbHidePrompt() {
@@ -13577,9 +13745,10 @@
     }).then(function (data) {
       if (data && data.kept) showToast("Kept your better score");
       else showToast("Saved · " + name);
-      const sel = document.getElementById("lbBoardSelect");
-      if (sel) sel.value = pending.board;
-      if (windows.scores && windows.scores.classList.contains("open")) lbFetchBoard(pending.board);
+      if (windows.scores && windows.scores.classList.contains("open")) {
+        if (lbView) lbView = pending.board;
+        lbFetchAll().then(function () { if (lbView && lbData) lbShowDetail(pending.board); });
+      }
       return data;
     }).catch(function () {
       showToast("Score save failed");
@@ -13588,10 +13757,26 @@
   }
 
   (function wireScores() {
-    const sel = document.getElementById("lbBoardSelect");
     const refresh = document.getElementById("lbRefresh");
-    if (sel) sel.addEventListener("change", function () { lbFetchBoard(sel.value); });
-    if (refresh) refresh.addEventListener("click", function () { lbFetchBoard(sel ? sel.value : ""); });
+    if (refresh) refresh.addEventListener("click", function () { lbFetchAll(); });
+    const grid = document.getElementById("lbGrid");
+    if (grid) grid.addEventListener("click", function (e) {
+      const bd = e.target.closest(".lb-board");
+      if (bd) { lbShowDetail(bd.getAttribute("data-board")); return; }
+      const head = e.target.closest(".lb-game-head");
+      if (!head) return;
+      const g = LB_GAMES.find(function (x) { return x.open === head.getAttribute("data-lb-game"); });
+      if (!g) return;
+      const firstLive = g.boards.find(function (p) { return lbRows(p[0]).length; });
+      lbShowDetail((firstLive || g.boards[0])[0]);
+    });
+    const chips = document.getElementById("lbChips");
+    if (chips) chips.addEventListener("click", function (e) {
+      const c = e.target.closest(".lb-chip");
+      if (c) lbShowDetail(c.getAttribute("data-board"));
+    });
+    const back = document.getElementById("lbBack");
+    if (back) back.addEventListener("click", function () { lbShowOverview(); });
     const form = document.getElementById("lbPromptForm");
     const skip = document.getElementById("lbPromptSkip");
     if (form) form.addEventListener("submit", function (e) {
