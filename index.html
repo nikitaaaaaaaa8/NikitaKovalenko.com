@@ -3520,6 +3520,81 @@
 
 
 
+
+  /* Sports / live scores from the Worker's /sports proxy (ESPN). Numbers only. */
+  #win-sports {
+    width: min(720px, calc(100vw - 24px));
+    max-width: min(720px, calc(100vw - 24px));
+  }
+  #win-sports .content.sports-content { display: flex; flex-direction: column; gap: 10px; overflow: hidden; flex: 1 1 auto; }
+  .sp-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex: 0 0 auto; }
+  .sp-head p { margin: 0; }
+  .sp-kicker { font-size: 12px; letter-spacing: .04em; }
+  .sp-sub { font-size: 11px; }
+  .sp-updated { font-size: 11px; color: var(--muted); white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+  .sp-updated svg { width: 12px; height: 12px; color: var(--green-dim); flex: 0 0 auto; }
+  .sp-updated.loading svg { animation: spSpin 1s linear infinite; }
+  @keyframes spSpin { to { transform: rotate(360deg); } }
+  .sp-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; flex: 0 0 auto; }
+  .sp-tab {
+    appearance: none; font: inherit; font-size: 12px; letter-spacing: .06em; min-height: 36px; padding: 6px 8px;
+    border-radius: 10px; cursor: pointer; touch-action: manipulation;
+    border: 1px solid rgba(57,255,20,.28); background: rgba(57,255,20,.05); color: var(--muted);
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+  }
+  .sp-tab:hover { border-color: rgba(57,255,20,.7); color: var(--text); }
+  .sp-tab .n { font-size: 10px; color: var(--green-dim); }
+  .sp-tab.on { color: #000; background: var(--green); border-color: var(--green); box-shadow: 0 0 14px rgba(57,255,20,.35); font-weight: 700; }
+  .sp-tab.on .n { color: #0a3a05; }
+  .sp-tab .live-pip { width: 6px; height: 6px; border-radius: 50%; background: #ff3b3b; box-shadow: 0 0 6px #ff3b3b; }
+  .sp-tab.on .live-pip { background: #c00; box-shadow: none; }
+  .sp-list {
+    flex: 1 1 auto; min-height: 0; max-height: min(560px, calc(100dvh - 300px)); overflow: auto;
+    padding-right: 4px; scrollbar-width: thin; scrollbar-color: var(--green-dim) transparent; touch-action: pan-y;
+  }
+  #win-sports.user-sized .sp-list { max-height: none; }
+  .sp-sec { display: flex; align-items: center; gap: 8px; margin: 12px 0 6px; font-size: 10px; letter-spacing: .14em; color: var(--green-dim); text-transform: uppercase; }
+  .sp-sec:first-child { margin-top: 2px; }
+  .sp-sec::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(57,255,20,.3), transparent); }
+  .sp-comp { font-size: 11px; color: var(--green); letter-spacing: .08em; margin: 14px 0 2px; text-transform: uppercase; }
+  .sp-comp:first-child { margin-top: 0; }
+  .sp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .sp-game { border: 1px solid rgba(57,255,20,.18); background: rgba(0,0,0,.35); border-radius: 10px; padding: 8px 10px 9px; min-width: 0; }
+  .sp-game.live { border-color: rgba(57,255,20,.55); box-shadow: inset 0 0 16px rgba(57,255,20,.07); }
+  .sp-status { display: flex; align-items: center; gap: 7px; font-size: 10.5px; letter-spacing: .06em; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; }
+  .sp-status .when { margin-left: auto; text-transform: none; letter-spacing: 0; }
+  .sp-game.pre .sp-status .t { color: var(--text); letter-spacing: .02em; text-transform: none; }
+  .sp-game.live .sp-status { color: var(--green); }
+  .sp-pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); position: relative; flex: 0 0 auto; }
+  .sp-pulse::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 1px solid var(--green); animation: spPing 1.6s ease-out infinite; }
+  @keyframes spPing { 0% { transform: scale(.5); opacity: .9; } 100% { transform: scale(1.6); opacity: 0; } }
+  .sp-team { display: grid; grid-template-columns: 4px 44px minmax(0, 1fr) auto; align-items: center; gap: 8px; height: 24px; }
+  .sp-team .bar { width: 4px; height: 16px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(216,255,208,.22); }
+  .sp-team .ab { font-weight: 700; color: var(--text); letter-spacing: .03em; }
+  .sp-team .nm { color: var(--muted); font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sp-team .nm i { font-style: normal; color: rgba(126,168,120,.6); font-size: 10.5px; margin-left: 4px; }
+  .sp-team .sc { font-size: 16px; font-weight: 700; min-width: 28px; text-align: right; font-variant-numeric: tabular-nums; }
+  .sp-game.final .sp-team.lose .ab, .sp-game.final .sp-team.lose .sc { color: var(--muted); font-weight: 400; }
+  .sp-game.final .sp-team.win .sc { color: var(--green); }
+  .sp-game.live .sp-team.lead .sc { color: var(--green); text-shadow: 0 0 8px rgba(57,255,20,.45); }
+  .sp-game.pre .sp-team .sc { color: rgba(126,168,120,.35); font-weight: 400; }
+  .sp-empty { margin: 24px 4px; color: var(--muted); font-size: 12px; display: flex; gap: 10px; align-items: center; }
+  .sp-empty svg { width: 18px; height: 18px; color: var(--green-dim); flex: 0 0 auto; }
+  .sp-foot { font-size: 10.5px; color: var(--muted); display: flex; justify-content: space-between; gap: 10px; border-top: 1px solid rgba(57,255,20,.12); padding-top: 8px; flex: 0 0 auto; }
+  @media (max-width: 700px) {
+    #win-sports .content.sports-content { padding: 12px 12px 10px; gap: 9px; }
+    .sp-head { flex-direction: column; align-items: stretch; gap: 4px; }
+    .sp-sub { display: none; }
+    .sp-tabs { gap: 5px; }
+    .sp-tab { min-height: 44px; font-size: 12.5px; gap: 5px; padding: 6px 4px; }
+    .sp-list { max-height: none; }
+    .sp-grid { grid-template-columns: 1fr; }
+    .sp-game { padding: 9px 10px 10px; }
+    .sp-team { height: 28px; grid-template-columns: 4px 46px minmax(0, 1fr) auto; }
+    .sp-team .sc { font-size: 17px; }
+    .sp-foot span:last-child { display: none; }
+  }
+
   /* Scores / classic leaderboard */
   #win-scores {
     width: min(940px, calc(100vw - 24px));
@@ -4970,6 +5045,10 @@
         <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 18.5V10.2"/><path d="M12 18.5V6.2"/><path d="M17.5 18.5v-5.2"/><path d="M4.5 18.5h15"/></svg></div>
         <div class="label">Scores</div>
       </div>
+      <div class="icon" id="icon-sports" tabindex="0" data-open="sports" aria-label="Sports">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="11.5" rx="2"/><path d="M12 5v11.5" opacity=".55"/><path d="M6.6 9.2h2.6l-2.6 3.6h2.6"/><path d="M14.8 9.2h2.6v3.6h-2.6z"/><path d="M8 20h8"/><path d="M12 16.5V20"/><circle cx="12" cy="2.9" r=".9" fill="currentColor" stroke="none"/></svg></div>
+        <div class="label">Sports</div>
+      </div>
     </div>
 
     <section class="window" id="win-radio" style="top:90px; left:260px; width:380px;">
@@ -5033,6 +5112,37 @@
           <div class="lb-chips" id="lbChips"></div>
           <div id="lbBoardMount"></div>
         </div>
+      </div>
+    </section>
+
+    <section class="window" id="win-sports" style="top:48px; left:150px; width:720px;" aria-label="Sports">
+      <div class="titlebar" data-drag>
+        <div class="dots">
+          <div class="dot close" data-close="sports"></div>
+          <div class="dot min" data-close="sports"></div>
+          <div class="dot max"></div>
+        </div>
+        <div class="title">Sports</div>
+      </div>
+      <div class="content sports-content">
+        <div class="sp-head">
+          <div>
+            <p class="green sp-kicker">LIVE SCORES // NUMBERS ONLY</p>
+            <p class="muted sp-sub">No streams, no hot takes. Just who is winning.</p>
+          </div>
+          <div class="sp-updated" id="spUpdatedWrap" aria-live="polite">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4.5v4h-4"/></svg>
+            <span id="spUpdated">checking the scoreboard…</span>
+          </div>
+        </div>
+        <div class="sp-tabs" role="tablist" id="spTabs">
+          <button type="button" role="tab" class="sp-tab on" data-league="nfl" aria-selected="true">NFL<span class="n"></span></button>
+          <button type="button" role="tab" class="sp-tab" data-league="nba" aria-selected="false">NBA<span class="n"></span></button>
+          <button type="button" role="tab" class="sp-tab" data-league="nhl" aria-selected="false">NHL<span class="n"></span></button>
+          <button type="button" role="tab" class="sp-tab" data-league="soccer" aria-selected="false">Soccer<span class="n"></span></button>
+        </div>
+        <div class="sp-list" id="spList"></div>
+        <div class="sp-foot"><span>Times in ET. Refreshes every 30s while open.</span><span>Data: ESPN. Opinions: withheld.</span></div>
       </div>
     </section>
 
@@ -6194,6 +6304,7 @@
       <button type="button" data-open="youtube">YouTube</button>
       <button type="button" data-open="radio">Radio</button>
       <button type="button" data-open="scores">Scores</button>
+      <button type="button" data-open="sports">Sports</button>
       <button type="button" data-open="drone">DroneStuff</button>
       <button type="button" data-open="trash">Trash</button>
       <button type="button" class="start-logoff" id="startLogoff"><span class="start-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v8"/><path d="M6.6 6.9a7.5 7.5 0 1 0 10.8 0"/></svg></span>Log off</button>
@@ -6353,6 +6464,7 @@
     youtube: document.getElementById("win-youtube"),
     radio: document.getElementById("win-radio"),
     scores: document.getElementById("win-scores"),
+    sports: document.getElementById("win-sports"),
     casino: document.getElementById("win-casino"),
     blackjack: document.getElementById("win-blackjack"),
     slots: document.getElementById("win-slots"),
@@ -6541,6 +6653,7 @@
     if (name === "youtube") ytOnOpen();
     if (name === "radio") radioOnOpen();
     if (name === "scores") lbOnOpen();
+    if (name === "sports") spOnOpen();
     if (name === "drone") kitaFetchCounts();
   }
 
@@ -6800,6 +6913,7 @@
     if (name === "vlc") vlcOnClose();
     if (name === "youtube") ytOnClose();
     if (name === "radio") radioOnClose();
+    if (name === "sports") spOnClose();
     let topName = null, topZ = -1;
     Object.keys(windows).forEach(function (n) {
       const w = windows[n];
@@ -6994,7 +7108,7 @@
 
     if (cmd === "help") {
       termPrint("commands: help, whoami, winning, clear, sudo, date, kita, scan, confess, coinflip, matrix, aura, snow, screensaver");
-      termPrint("apps: about, tracker, contact, drone, games, casino, trash, bookshelf, weather, paint, vlc, youtube, radio, scores, terminal");
+      termPrint("apps: about, tracker, contact, drone, games, casino, trash, bookshelf, weather, paint, vlc, youtube, radio, scores, sports, terminal");
     } else if (cmd === "screensaver" || cmd === "saver") {
       termPrint("going dark. touch anything to come back.");
       setTimeout(() => { if (window.kitaSaverStart) window.kitaSaverStart(true); }, 400);
@@ -7155,7 +7269,10 @@
         winamp: "radio",
         scores: "scores",
         score: "scores",
-        leaderboard: "scores"
+        leaderboard: "scores",
+        sports: "sports",
+        sport: "sports",
+        scoreboard: "sports"
       };
       let launch = cmd;
       if (launch.indexOf("open ") === 0) launch = launch.slice(5).trim();
@@ -8153,6 +8270,7 @@
             "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar, newest first, with its view count and length. The newest is Elijah Taylor live at The Barbary, a full set at 1:16:21, which is why the time readout learned hours. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
             "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck: drag it up or down, mouse or finger. Tap the readout next to it (or double-click the knob) to reset to 1.00x. On touch screens every control is a full fingertip wide. The current track plays forever or until you press Next, whichever comes first. There is no Loop button; looping is the whole plan. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
             "Scores is the classic leaderboard for every rankable game, all on one screen. Each game gets a card with every difficulty stacked inside it, top 3 per board (rank, name, score) and the metric under the title (score, points, wins, fewest moves, fastest clear). #1 glows. Empty boards say Unclaimed. Cards flow three across on a desktop, fewer on a tablet, one column on a phone, and the window scrolls. Tap a board for its full top 10 with when each score landed, flip difficulties with the chips, and Back to all boards (Escape does Back first, then closes the window). One request to the Worker’s /boards fills everything; Refresh asks again. If the Worker is down it says Could not reach the board. Open it from the desktop or type scores in Terminal.",
+            "Sports is live scores and nothing else: NFL, NBA, NHL, and Soccer (Premier League and MLS on one tab). Today only, in ET. Each game is a card: Live with a pulsing green dot and the quarter, period, or minute; Upcoming with the start time; Final with the winner lit. Tabs show how many games and a red pip when one is live. It asks the Worker every 30 seconds, only while the window is open and the tab is visible, and stops the moment you close it. The Worker borrows ESPN's public scoreboard and caches it for about 30 seconds, so a thousand fans cost ESPN one request. No streams, no ticker on the taskbar, no opinions. A day with no games says so in one line. Scores is the game leaderboard; Sports is the real one.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. The shelf keeps its full height while a book is open, so every title stays readable; on a phone only the reader scrolls. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Copy email copies the address. Open mail app prefills the subject “you're the man.”"
           ]
@@ -8176,7 +8294,7 @@
         {
           title: "Terminal",
           paragraphs: [
-            "Open Terminal and type help, then press Run. Help lists commands and app names, including terminal. Type an app name to open it; open in front of it works too. vlc opens the player. youtube opens the classic YouTube window. radio opens Kita Radio. scores opens the leaderboard (folder-level apps).",
+            "Open Terminal and type help, then press Run. Help lists commands and app names, including terminal. Type an app name to open it; open in front of it works too. vlc opens the player. youtube opens the classic YouTube window. radio opens Kita Radio. sports (or scoreboard) opens Sports. scores opens the leaderboard (folder-level apps).",
             "games and casino open those folders. Not the inner games. snow toggles the snow. matrix toggles the rain. Matrix off puts snow back unless you already stopped it. Konami still unlocks VIP.",
             "scan drops a short Kita AV banner, walks fake paths, and may find a threat or two. coinflip shows a coin, then heads or tails. aura toggles an aura meter that starts draining immediately. screensaver starts the screensaver now instead of waiting a minute.",
             "The placeholder is try: help. There is no email command."
@@ -14114,6 +14232,166 @@
     if (lbView) { lbGridScroll = 0; lbShowOverview(); }
     lbFetchAll();
   }
+
+
+  // ---- Sports: live scores via the Worker's /sports proxy. Polls only while open and visible. ----
+  const SP_LEAGUES = ["nfl", "nba", "nhl", "soccer"];
+  const SP_POLL_MS = 30000;
+  const spData = {};
+  let spLeague = "nfl";
+  let spPollTimer = null;
+  let spAgoTimer = null;
+  let spReq = 0;
+  const SP_EMPTY = {
+    nfl: "No NFL today. Sundays exist for a reason; this is not one of them.",
+    nba: "No NBA today. Even the load management is resting.",
+    nhl: "No NHL today. The ice is just sitting there.",
+    soccer: "No Premier League or MLS today. Ninety minutes of your life, returned."
+  };
+  const SP_START = { nfl: "kickoff", nba: "tip-off", nhl: "puck drop", soccer: "kickoff" };
+  function spOpen() { return !!(windows.sports && windows.sports.classList.contains("open")); }
+  function spEsc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function spTime(iso) {
+    try { return new Date(iso).toLocaleTimeString("en-US", { timeZone: "America/New_York", hour: "numeric", minute: "2-digit" }) + " ET"; }
+    catch (e) { return ""; }
+  }
+  function spLive(e, league) {
+    const d = String(e.detail || "");
+    const m = d.match(/^([\d:.]+)\s*-\s*(\d)(st|nd|rd|th)\b/);
+    if (m && league !== "soccer") return (league === "nhl" ? "P" : "Q") + m[2] + " · " + m[1];
+    return d;
+  }
+  function spTeam(t, cls, pre) {
+    const color = /^#[0-9a-f]{6}$/i.test(t.color || "") ? t.color : "#39ff14";
+    return '<div class="sp-team ' + cls + '"><span class="bar" style="background:' + color + '"></span><span class="ab">' + spEsc(t.abbr) + '</span>' +
+      '<span class="nm">' + spEsc(t.name) + (t.record ? '<i>' + spEsc(t.record) + '</i>' : '') + '</span>' +
+      '<span class="sc">' + (pre ? "–" : spEsc(t.score)) + '</span></div>';
+  }
+  function spCard(e, league) {
+    const a = e.away, h = e.home, as = Number(a.score), hs = Number(h.score);
+    const kind = e.state === "in" ? "live" : e.state === "post" ? "final" : "pre";
+    let status, ac = "", hc = "";
+    if (kind === "live") {
+      status = '<span class="sp-pulse" aria-hidden="true"></span>Live · ' + spEsc(spLive(e, league));
+      if (as > hs) ac = "lead"; else if (hs > as) hc = "lead";
+    } else if (kind === "final") {
+      const det = /^(FT|Final)/i.test(e.detail || "") ? (/OT|SO|AET|Pen/i.test(e.detail) ? e.detail : "Final") : e.detail;
+      status = spEsc(det || "Final");
+      ac = a.winner ? "win" : h.winner ? "lose" : "";
+      hc = h.winner ? "win" : a.winner ? "lose" : "";
+    } else {
+      status = '<span class="t">' + spEsc(spTime(e.date)) + '</span><span class="when">' + SP_START[league] + '</span>';
+    }
+    return '<div class="sp-game ' + kind + '"><div class="sp-status">' + status + '</div>' +
+      spTeam(a, ac, kind === "pre") + spTeam(h, hc, kind === "pre") + '</div>';
+  }
+  function spRenderTabs() {
+    document.querySelectorAll("#spTabs .sp-tab").forEach(function (b) {
+      const lg = b.getAttribute("data-league");
+      const on = lg === spLeague;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+      const d = spData[lg];
+      let n = "", live = false;
+      if (d && d.groups) {
+        let c = 0;
+        d.groups.forEach(function (g) { c += g.events.length; g.events.forEach(function (e) { if (e.state === "in") live = true; }); });
+        n = String(c);
+      }
+      const pip = b.querySelector(".live-pip");
+      if (live && !pip) { const s = document.createElement("span"); s.className = "live-pip"; s.setAttribute("aria-label", "live"); b.insertBefore(s, b.firstChild); }
+      if (!live && pip) pip.remove();
+      const ns = b.querySelector(".n"); if (ns) ns.textContent = n;
+    });
+  }
+  function spRenderList() {
+    const list = document.getElementById("spList");
+    if (!list) return;
+    const d = spData[spLeague];
+    const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17"/><path d="M8 3v4M16 3v4"/><path d="M9.5 14.5h5"/></svg>';
+    if (!d) { list.innerHTML = '<div class="sp-empty">' + icon + '<span>Asking the scoreboard…</span></div>'; return; }
+    if (d.error) { list.innerHTML = '<div class="sp-empty">' + icon + '<span>The scoreboard is not answering. Probably reviewing the tape. Trying again in 30s.</span></div>'; return; }
+    let html = "", total = 0;
+    const multi = d.groups.length > 1;
+    d.groups.forEach(function (g) {
+      if (!g.events.length) return;
+      total += g.events.length;
+      if (multi) html += '<div class="sp-comp">' + spEsc(g.name) + '</div>';
+      [["in", "Live"], ["pre", "Upcoming"], ["post", "Final"]].forEach(function (o) {
+        const evs = g.events.filter(function (e) { return e.state === o[0]; });
+        if (!evs.length) return;
+        html += '<div class="sp-sec">' + o[1] + ' · ' + evs.length + '</div><div class="sp-grid">' + evs.map(function (e) { return spCard(e, spLeague); }).join("") + '</div>';
+      });
+    });
+    if (!total) html = '<div class="sp-empty">' + icon + '<span>' + SP_EMPTY[spLeague] + '</span></div>';
+    const keep = list.scrollTop;
+    list.innerHTML = html;
+    list.scrollTop = keep;
+  }
+  function spRenderAgo() {
+    const el = document.getElementById("spUpdated");
+    if (!el) return;
+    const d = spData[spLeague];
+    if (!d || !d.fetchedAt) { el.textContent = d && d.error ? "scoreboard unreachable" : "checking the scoreboard…"; return; }
+    const s = Math.max(0, Math.round((Date.now() - Date.parse(d.fetchedAt)) / 1000));
+    const ago = s < 60 ? s + "s ago" : Math.floor(s / 60) + "m ago";
+    el.textContent = "updated " + ago + (d.stale ? " (stale, ESPN is napping)" : "");
+  }
+  function spRender() { spRenderTabs(); spRenderList(); spRenderAgo(); }
+  function spFetch(league) {
+    const id = ++spReq;
+    const wrap = document.getElementById("spUpdatedWrap");
+    if (wrap) wrap.classList.add("loading");
+    return fetch(KITA_VIEWS_URL + "/sports?league=" + encodeURIComponent(league), { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("sports " + r.status); return r.json(); })
+      .then(function (data) { if (data && Array.isArray(data.groups)) spData[league] = data; else throw new Error("bad"); })
+      .catch(function () { if (!spData[league] || spData[league].error) spData[league] = { error: true }; })
+      .then(function () { if (id === spReq && wrap) wrap.classList.remove("loading"); if (spOpen()) spRender(); });
+  }
+  function spFetchAll() {
+    // Current tab first so it paints fast; the rest fill in the tab counts.
+    spFetch(spLeague).then(function () {
+      SP_LEAGUES.forEach(function (lg) { if (lg !== spLeague) spFetch(lg); });
+    });
+  }
+  function spStopPolling() {
+    if (spPollTimer) { clearInterval(spPollTimer); spPollTimer = null; }
+    if (spAgoTimer) { clearInterval(spAgoTimer); spAgoTimer = null; }
+  }
+  function spStartPolling() {
+    spStopPolling();
+    if (!spOpen() || document.hidden) return;
+    spPollTimer = setInterval(function () {
+      if (!spOpen() || document.hidden) { spStopPolling(); return; }
+      spFetchAll();
+    }, SP_POLL_MS);
+    spAgoTimer = setInterval(spRenderAgo, 1000);
+  }
+  function spOnOpen() {
+    spRender();
+    spFetchAll();
+    spStartPolling();
+  }
+  function spOnClose() { spStopPolling(); }
+  document.addEventListener("visibilitychange", function () {
+    if (!spOpen()) return;
+    if (document.hidden) { spStopPolling(); return; }
+    spFetchAll();
+    spStartPolling();
+  });
+  (function wireSports() {
+    const tabs = document.getElementById("spTabs");
+    if (!tabs) return;
+    tabs.addEventListener("click", function (e) {
+      const b = e.target.closest(".sp-tab");
+      if (!b) return;
+      spLeague = b.getAttribute("data-league");
+      const list = document.getElementById("spList");
+      if (list) list.scrollTop = 0;
+      spRender();
+      if (!spData[spLeague] || spData[spLeague].error) spFetch(spLeague);
+    });
+  })();
 
   // Escape: Back to the overview first, then the window closes.
   function lbEscapeBack() {
