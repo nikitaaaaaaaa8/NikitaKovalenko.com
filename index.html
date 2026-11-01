@@ -4718,7 +4718,7 @@
   .kb-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 11px; color: var(--muted); }
   .kb-foot .about-link { font-size: 11px; }
   .kb-drain { position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; border-radius: 2px; background: var(--green); box-shadow: 0 0 6px var(--green); transform-origin: left; transform: scaleX(1); }
-  .kb.show .kb-drain { animation: kbDrain var(--kb-life, 9s) linear forwards; }
+  .kb.show .kb-drain { animation: kbDrain var(--kb-life, 4.5s) linear forwards; }
   .kb:hover .kb-drain, .kb:focus-within .kb-drain { animation-play-state: paused; }
   @keyframes kbDrain { to { transform: scaleX(0); } }
   @media (max-width: 700px) {
@@ -8127,7 +8127,7 @@
             "Icons start in two columns. A tap opens that app and nothing else, not whatever lands under your finger. Drag snaps to a grid across the whole desktop, not only those two columns. They cannot stack. Refresh puts them back. A short window packs those two columns tighter so they stay above the taskbar. Rotate keeps a layout you already moved.",
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar. Empty clears the bin for this visit; refresh brings everything back, because nothing here is permanent.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
-            "On load nothing opens in your way. A tray balloon pops up over the clock: Your computer is ready, four quick-launch chips (YouTube, Games, Radio, DroneStuff), Tip: Konami code, and an About.txt link. A thin green line drains for 9 seconds, then the balloon leaves on its own. Hover or focus pauses it. The x, a chip, or any click on the desktop dismisses it sooner. On a phone it spans the width above the taskbar, chips two by two.",
+            "On load nothing opens in your way. A tray balloon pops up over the clock: Your computer is ready, four quick-launch chips (YouTube, Games, Radio, DroneStuff), Tip: Konami code, and an About.txt link. A thin green line drains for 4.5 seconds, then the balloon leaves on its own. Hover or focus pauses it. The x, a chip, or any click on the desktop dismisses it sooner. On a phone it spans the width above the taskbar, chips two by two.",
             "Designed for the computer, but it works on mobile too.",
             "Leave it alone for a minute and the screensaver takes over: neon stars on black and a KITA OS logo that bounces toward the corner and, like everyone, almost makes it. Any mouse, key, or touch brings the desktop back. It waits while YouTube or VLC is playing or a game window is open. With reduced motion on, it is a dim still frame.",
             "The desktop auto-detects the Tesla car browser and uses bigger icons and buttons. ?tesla forces that layout. ?tesla=0 clears it for this tab. Phone and computer layouts stay the same."
