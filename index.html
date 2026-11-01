@@ -3535,6 +3535,19 @@
   .sp-updated svg { width: 12px; height: 12px; color: var(--green-dim); flex: 0 0 auto; }
   .sp-updated.loading svg { animation: spSpin 1s linear infinite; }
   @keyframes spSpin { to { transform: rotate(360deg); } }
+  .sp-bet {
+    display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 7px 12px; flex: 0 0 auto;
+    border: 1px solid var(--green); border-radius: 10px; background: #000; color: var(--green);
+    font-family: var(--font); text-decoration: none; cursor: pointer; touch-action: manipulation;
+    box-shadow: 0 0 12px rgba(57,255,20,.35), inset 0 0 14px rgba(57,255,20,.12);
+    transition: box-shadow .15s ease, background .15s ease;
+  }
+  .sp-bet:hover, .sp-bet:focus-visible { background: rgba(57,255,20,.1); box-shadow: 0 0 20px rgba(57,255,20,.55), inset 0 0 16px rgba(57,255,20,.2); outline: none; }
+  .sp-bet svg { width: 18px; height: 18px; flex: 0 0 auto; }
+  .sp-bet-text { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+  .sp-bet-main { font-size: 13px; font-weight: 700; letter-spacing: .03em; text-shadow: 0 0 8px rgba(57,255,20,.6); }
+  .sp-bet-sub { font-size: 10.5px; color: var(--muted); letter-spacing: .04em; }
+  .sp-bet-arrow { margin-left: auto; width: 14px !important; height: 14px !important; color: var(--green-dim); }
   .sp-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; flex: 0 0 auto; }
   .sp-tab {
     appearance: none; font: inherit; font-size: 12px; letter-spacing: .06em; min-height: 36px; padding: 6px 8px;
@@ -5135,6 +5148,11 @@
             <span id="spUpdated">checking the scoreboard…</span>
           </div>
         </div>
+        <a class="sp-bet" id="spBet" href="https://kalshi.com/t/za8ns8qp" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18.5l5-5.5 3.5 3L20 7.5"/><path d="M15 7.5h5v5"/></svg>
+          <span class="sp-bet-text"><span class="sp-bet-main">Want to bet on it?</span><span class="sp-bet-sub">$25 bonus on Kalshi</span></span>
+          <svg class="sp-bet-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5h11v11"/><path d="M19 5L5 19"/></svg>
+        </a>
         <div class="sp-tabs" role="tablist" id="spTabs">
           <button type="button" role="tab" class="sp-tab on" data-league="nfl" aria-selected="true">NFL<span class="n"></span></button>
           <button type="button" role="tab" class="sp-tab" data-league="nba" aria-selected="false">NBA<span class="n"></span></button>
@@ -8270,7 +8288,7 @@
             "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar, newest first, with its view count and length. The newest is Elijah Taylor live at The Barbary, a full set at 1:16:21, which is why the time readout learned hours. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
             "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck: drag it up or down, mouse or finger. Tap the readout next to it (or double-click the knob) to reset to 1.00x. On touch screens every control is a full fingertip wide. The current track plays forever or until you press Next, whichever comes first. There is no Loop button; looping is the whole plan. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
             "Scores is the classic leaderboard for every rankable game, all on one screen. Each game gets a card with every difficulty stacked inside it, top 3 per board (rank, name, score) and the metric under the title (score, points, wins, fewest moves, fastest clear). #1 glows. Empty boards say Unclaimed. Cards flow three across on a desktop, fewer on a tablet, one column on a phone, and the window scrolls. Tap a board for its full top 10 with when each score landed, flip difficulties with the chips, and Back to all boards (Escape does Back first, then closes the window). One request to the Worker’s /boards fills everything; Refresh asks again. If the Worker is down it says Could not reach the board. Open it from the desktop or type scores in Terminal.",
-            "Sports is live scores and nothing else: NFL, NBA, NHL, and Soccer (Premier League and MLS on one tab). Today only, in ET. Each game is a card: Live with a pulsing green dot and the quarter, period, or minute; Upcoming with the start time; Final with the winner lit. Tabs show how many games and a red pip when one is live. It asks the Worker every 30 seconds, only while the window is open and the tab is visible, and stops the moment you close it. The Worker borrows ESPN's public scoreboard and caches it for about 30 seconds, so a thousand fans cost ESPN one request. No streams, no ticker on the taskbar, no opinions. A day with no games says so in one line. Scores is the game leaderboard; Sports is the real one.",
+            "Sports is live scores and nothing else: NFL, NBA, NHL, and Soccer (Premier League and MLS on one tab). Today only, in ET. Each game is a card: Live with a pulsing green dot and the quarter, period, or minute; Upcoming with the start time; Final with the winner lit. Tabs show how many games and a red pip when one is live. It asks the Worker every 30 seconds, only while the window is open and the tab is visible, and stops the moment you close it. The Worker borrows ESPN's public scoreboard and caches it for about 30 seconds, so a thousand fans cost ESPN one request. No streams, no ticker on the taskbar, no opinions. A day with no games says so in one line. Up top, Want to bet on it? opens Nikita's Kalshi referral ($25 bonus) in a new tab. Scores is the game leaderboard; Sports is the real one.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. The shelf keeps its full height while a book is open, so every title stays readable; on a phone only the reader scrolls. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Copy email copies the address. Open mail app prefills the subject “you're the man.”"
           ]
