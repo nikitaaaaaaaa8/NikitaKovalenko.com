@@ -395,6 +395,10 @@
     min-height: 80px;
     max-height: none;
   }
+  /* The reader is the only part of the Bookshelf that gives up height; the shelf, heading and hint never shrink. */
+  #win-bookshelf .content > :not(.book-reader) {
+    flex-shrink: 0;
+  }
   #win-bookshelf.user-sized > .content {
     display: flex;
     flex-direction: column;
@@ -4120,7 +4124,7 @@
       max-width: calc((100% - 32px) / 9);
     }
     .book:nth-child(1) { height: 100px; }
-    .book:nth-child(2) { height: 112px; }
+    .book:nth-child(2) { height: 130px; }
     .book:nth-child(3) { height: 106px; }
     .book:nth-child(4) { height: 94px; }
     .book:nth-child(5) { height: 110px; }
@@ -4137,7 +4141,7 @@
     .book:nth-child(6) .book-spine,
     .book:nth-child(9) .book-spine {
       font-size: 6.5px;
-      max-height: 86px;
+      max-height: 108px;
     }
 
     #win-bookshelf.window.open {
@@ -8096,7 +8100,7 @@
             "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar, newest first, with its view count and length. The newest is Elijah Taylor live at The Barbary, a full set at 1:16:21, which is why the time readout learned hours. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
             "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck: drag it up or down, mouse or finger. Tap the readout next to it (or double-click the knob) to reset to 1.00x. On touch screens every control is a full fingertip wide. The current track plays forever or until you press Next, whichever comes first. There is no Loop button; looping is the whole plan. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
             "Scores is the classic leaderboard for every rankable game, all on one screen. Each game gets a card with every difficulty stacked inside it, top 3 per board (rank, name, score) and the metric under the title (score, points, wins, fewest moves, fastest clear). #1 glows. Empty boards say Unclaimed. Cards flow three across on a desktop, fewer on a tablet, one column on a phone, and the window scrolls. Tap a board for its full top 10 with when each score landed, flip difficulties with the chips, and Back to all boards (Escape does Back first, then closes the window). One request to the Worker’s /boards fills everything; Refresh asks again. If the Worker is down it says Could not reach the board. Open it from the desktop or type scores in Terminal.",
-            "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. How Kita OS works uses tabs for its chapters.",
+            "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. The shelf keeps its full height while a book is open, so every title stays readable; on a phone only the reader scrolls. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Copy email copies the address. Open mail app prefills the subject “you're the man.”"
           ]
         },
