@@ -1005,6 +1005,17 @@
       linear-gradient(90deg, rgba(0,0,0,.25), rgba(255,255,255,.12), rgba(0,0,0,.25));
   }
   .book[data-book="hand"] .book-spine { color: #efe3a8; }
+  .book[data-book="house"] {
+    height: 176px;
+    background-color: #0e4a2a;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 1px, transparent 1px 3px),
+      linear-gradient(90deg, rgba(0,0,0,.4), rgba(0,0,0,.08) 40%, rgba(0,0,0,.42)),
+      radial-gradient(circle at 50% 9%, #f4f0e6 0 2px, #c8202a 2.3px 4.6px, #f4f0e6 4.9px 5.6px, transparent 5.9px),
+      repeating-linear-gradient(180deg, transparent 0 14px, rgba(212,175,55,.16) 14px 15px),
+      linear-gradient(90deg, #08301a, #13603a 44%, #072814);
+  }
+  .book[data-book="house"] .book-spine { color: #f2d77a; text-shadow: 0 1px 0 rgba(0,0,0,.75); }
   .book:hover,
   .book.active {
     transform: translateY(-8px);
@@ -1035,7 +1046,8 @@
   .book:nth-child(2) .book-spine,
   .book:nth-child(5) .book-spine,
   .book:nth-child(6) .book-spine,
-  .book:nth-child(9) .book-spine {
+  .book:nth-child(9) .book-spine,
+  .book:nth-child(10) .book-spine {
     font-size: 8px;
     letter-spacing: 0.02em;
     max-height: 148px;
@@ -4248,7 +4260,7 @@
     .book {
       width: 26px;
       flex: 0 0 26px;
-      max-width: calc((100% - 32px) / 9);
+      max-width: calc((100% - 36px) / 10);
     }
     .book:nth-child(1) { height: 100px; }
     .book:nth-child(2) { height: 130px; }
@@ -4259,6 +4271,7 @@
     .book:nth-child(7) { height: 102px; }
     .book:nth-child(8) { height: 100px; }
     .book:nth-child(9) { height: 112px; }
+    .book:nth-child(10) { height: 122px; }
     .book-spine {
       font-size: 7px;
       max-height: 86px;
@@ -4266,7 +4279,8 @@
     .book:nth-child(2) .book-spine,
     .book:nth-child(5) .book-spine,
     .book:nth-child(6) .book-spine,
-    .book:nth-child(9) .book-spine {
+    .book:nth-child(9) .book-spine,
+    .book:nth-child(10) .book-spine {
       font-size: 6.5px;
       max-height: 108px;
     }
@@ -4627,7 +4641,8 @@
   html.tesla .book:nth-child(2) .book-spine,
   html.tesla .book:nth-child(5) .book-spine,
   html.tesla .book:nth-child(6) .book-spine,
-  html.tesla .book:nth-child(9) .book-spine {
+  html.tesla .book:nth-child(9) .book-spine,
+  html.tesla .book:nth-child(10) .book-spine {
     font-size: 10px;
   }
   html.tesla .book-tab {
@@ -5435,6 +5450,9 @@
           </div>
           <div class="book" data-book="hand" tabindex="0">
             <div class="book-spine">The invisible hand</div>
+          </div>
+          <div class="book" data-book="house" tabindex="0">
+            <div class="book-spine">The house always wins</div>
           </div>
         </div>
         <div class="book-reader" id="bookReader">
@@ -8369,6 +8387,15 @@
         "Nobody in the market sat down and designed your sandwich. Prices do a lot of the talking. If more people want bread, the baker bakes more. If wheat is scarce, bread costs more, and people waste less of it.",
         "It is not magic and it is not kindness. It is a pattern. People looking after themselves can, in the right setup, feed a town they will never meet.",
         "It also has edges. The same pattern can skip people who cannot pay, or dump costs on a river nobody owns. The hand is a description of how trade coordinates. It is not a promise that every outcome is good."
+      ]
+    },
+    house: {
+      kicker: "Vol. 10",
+      title: "The house always wins",
+      paragraphs: [
+        "You started with 1,000 chips. The odds started with all of them.",
+        "Every hand is a fresh start. That's the problem. The cards don't remember your hot streak, and neither does the house. It just waits.",
+        "\"Tapped out.\" The house thanks you for your generosity."
       ]
     }
   };
