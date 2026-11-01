@@ -2129,11 +2129,28 @@
     margin-bottom: 6px;
   }
   .casino-tapped {
+    flex: 1 1 100%;
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    gap: 2px;
+    margin: 4px 0 2px;
+    padding: 8px 10px;
+    border: 1px solid rgba(255,77,77,.55);
+    border-radius: 8px;
+    background: rgba(255,77,77,.08);
+    box-shadow: 0 0 12px rgba(255,77,77,.25), inset 0 0 10px rgba(255,77,77,.1);
+    min-width: 0;
+  }
+  .casino-tapped strong {
     color: var(--danger);
-    font-size: 12px;
+    font-size: 18px;
+    letter-spacing: .04em;
+    text-shadow: 0 0 6px rgba(255,77,77,.8), 0 0 14px rgba(255,77,77,.45);
+  }
+  .casino-tapped span {
+    color: var(--muted, #9a9a9a);
+    font-size: 11px;
+    overflow-wrap: anywhere;
   }
   .casino-tapped[hidden] { display: none !important; }
   .casino-fun {
@@ -5152,6 +5169,10 @@
       <div class="content">
         <p class="green">CASINO // FAKE CHIPS ONLY</p>
         <p class="muted casino-fun">for fun · all-time wagered <span data-wagered>—</span> · P/L <span data-pnl>—</span></p>
+        <div class="casino-tapped" hidden role="status">
+          <strong>Tapped out.</strong>
+          <span>The house thanks you for your generosity.</span>
+        </div>
         <div class="games-launcher">
           <button type="button" class="game-card" data-open="blackjack">
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4.5" width="10" height="14" rx="1.3"/><rect x="10" y="5.5" width="10" height="14" rx="1.3"/><path d="M15 9.2c-.8-1-2.3.1-1.5 1.3L15 12.2l1.5-1.7c.8-1.2-.7-2.3-1.5-1.3z" fill="currentColor" stroke="none"/></svg></div>
@@ -5630,9 +5651,9 @@
       <div class="content casino-content">
         <div class="casino-bar">
           <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span> · P/L: <span data-pnl>—</span></div>
-          <div class="casino-tapped" hidden>
-            <span>you're tapped</span>
-            <button type="button" class="btn" data-chip-reset>Reset chips</button>
+          <div class="casino-tapped" hidden role="status">
+            <strong>Tapped out.</strong>
+            <span>The house thanks you for your generosity.</span>
           </div>
         </div>
         <p class="muted casino-fun">for fun</p>
@@ -5682,9 +5703,9 @@
       <div class="content casino-content">
         <div class="casino-bar">
           <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span> · P/L: <span data-pnl>—</span></div>
-          <div class="casino-tapped" hidden>
-            <span>you're tapped</span>
-            <button type="button" class="btn" data-chip-reset>Reset chips</button>
+          <div class="casino-tapped" hidden role="status">
+            <strong>Tapped out.</strong>
+            <span>The house thanks you for your generosity.</span>
           </div>
         </div>
         <p class="muted casino-fun">for fun</p>
@@ -5740,9 +5761,9 @@
       <div class="content casino-content">
         <div class="casino-bar">
           <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span> · P/L: <span data-pnl>—</span></div>
-          <div class="casino-tapped" hidden>
-            <span>you're tapped</span>
-            <button type="button" class="btn" data-chip-reset>Reset chips</button>
+          <div class="casino-tapped" hidden role="status">
+            <strong>Tapped out.</strong>
+            <span>The house thanks you for your generosity.</span>
           </div>
         </div>
         <p class="muted casino-fun">for fun</p>
@@ -5807,9 +5828,9 @@
       <div class="content casino-content">
         <div class="casino-bar">
           <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span> · P/L: <span data-pnl>—</span></div>
-          <div class="casino-tapped" hidden>
-            <span>you're tapped</span>
-            <button type="button" class="btn" data-chip-reset>Reset chips</button>
+          <div class="casino-tapped" hidden role="status">
+            <strong>Tapped out.</strong>
+            <span>The house thanks you for your generosity.</span>
           </div>
         </div>
         <p class="muted casino-fun">for fun</p>
@@ -5851,9 +5872,9 @@
       <div class="content casino-content">
         <div class="casino-bar">
           <div class="game-status">Chips: <span data-chips>1000</span> · Wagered: <span data-wagered>—</span> · P/L: <span data-pnl>—</span></div>
-          <div class="casino-tapped" hidden>
-            <span>you're tapped</span>
-            <button type="button" class="btn" data-chip-reset>Reset chips</button>
+          <div class="casino-tapped" hidden role="status">
+            <strong>Tapped out.</strong>
+            <span>The house thanks you for your generosity.</span>
           </div>
         </div>
         <p class="muted casino-fun">for fun</p>
@@ -7654,8 +7675,12 @@
       snitch.style.display = "none";
       clearTimeout(snitchTimeout);
       bumpWinning(47);
-      chipsGive(500, true);
-      showToast("Caught the Snitch! +47 winning · +500 chips");
+      if (casinoBroke) {
+        showToast("Caught the Snitch! +47 winning · no bailout, you're tapped out");
+      } else {
+        chipsGive(500, true);
+        showToast("Caught the Snitch! +47 winning · +500 chips");
+      }
     }
     snitch.addEventListener("click", catchSnitch);
     snitch.addEventListener("pointerup", catchSnitch);
@@ -7753,7 +7778,7 @@
             "Blackjack sits on a rectangular green felt — dealer up top, you below, chips on the rail. Hit, stand, double, split on the same rank once (8+8 yes, 10+K no), and insurance when the dealer shows an ace (pays 2:1). Cards deal one at a time. After a hand, Rebet repeats the last bet size.",
             "Roulette is a real rectangular felt, 12 numbers across and 3 down (plus 0). Outside bets — red, black, odd, even, 1–18, 19–36, dozens, and column 2to1 — sit on the table. Stack chips on a spot; click again to add. Straight pays 35:1, dozens and columns 2:1, even money 1:1. Zero kills outside bets. After a spin it names the hits and the odds. A short road of recent numbers sits under the wheel.",
             "Craps rolls two dice in a glass dome. The dome shakes, the dice bounce, then they land on the roll. Pass line plus true odds after a point. Slots is a 3-row machine with five paylines. One bet covers every line; each hit pays its best award and they add up. A line draws through a hit. Reels stop one at a time. 777 pays 20×, three diamonds 12×, any other three-of-a-kind 6×, two 7s 2×. Other pairs do not pay. Two 7s that miss 777 flash so-close — that line still pays 2×. Baccarat sits on the same green felt as Blackjack, with Player and Banker zones and a short road along the edge. Cards deal one at a time.",
-            "You start at 1000 chips. A refresh resets them. One pile, every table. All-time chips wagered and all-time P/L are Worker tallies on the tables, shared across every visit. P/L is payouts minus bets. Reset chips does not unwind them. If the Worker is down, they wait and retry, slower each time, instead of hammering it. Tables have light motion and short beeps, mute from the tray speaker."
+            "You start at 1000 chips. A refresh resets them. One pile, every table. Lose it all and you are tapped out: every table locks (deal, spin, bet, roll, all of it) and shows Tapped out. There is no refill, no re-buy, and the Snitch won’t bail you out. You are locked out for the rest of the session; only a refresh deals you back in. All-time chips wagered and all-time P/L are Worker tallies on the tables, shared across every visit. P/L is payouts minus bets. If the Worker is down, they wait and retry, slower each time, instead of hammering it. Tables have light motion and short beeps, mute from the tray speaker."
           ]
         },
         {
@@ -7769,7 +7794,7 @@
           title: "Secrets",
           paragraphs: [
             "Snow is on by default. Type snow in Terminal to toggle it. Type matrix to toggle the Matrix rain. Matrix off puts snow back unless you already stopped it. Konami still unlocks VIP. You can still see the desktop through it.",
-            "A golden snitch shows up every 120 seconds, on screen for 5 seconds. Catch it for +47 winning and +500 casino chips.",
+            "A golden snitch shows up every 120 seconds, on screen for 5 seconds. Catch it for +47 winning and +500 casino chips, unless you are tapped out. Then it is just the +47.",
             "Konami: up, up, down, down, left, right, left, right, B, A. That opens Contact with a VIP box, adds 50 winning, and starts the Matrix rain. matrix only toggles the rain. About’s tip line is Tip: Konami code.",
             "Refresh starts a new session. Nothing important is saved."
           ]
@@ -11764,29 +11789,48 @@
 
   // --- Casino (fake chips, session-only) ---
   const CHIP_START = 1000;
+  // Smallest legal bet anywhere (Blackjack's custom bet goes down to 1).
+  const CASINO_MIN_BET = 1;
   let chips = CHIP_START;
   let chipsGen = 0;
+  // Tapped out = can't cover the minimum bet with nothing left on a table.
+  // It sticks for the session: no refill, no re-buy. A refresh starts fresh.
+  let casinoBroke = false;
+  let casinoReady = false;
+  const CASINO_TABLES = ["win-blackjack", "win-slots", "win-roulette", "win-craps", "win-baccarat"];
 
+  function casinoLockSync() {
+    if (!casinoReady) return;
+    if (!casinoBroke && chips < CASINO_MIN_BET && !casinoBusy() && !cr.down) {
+      casinoBroke = true;
+      rlStack = Object.create(null);
+      rlPaint();
+      rlLabel();
+    }
+    document.querySelectorAll(".casino-tapped").forEach(el => {
+      el.hidden = !casinoBroke;
+    });
+    if (!casinoBroke) return;
+    CASINO_TABLES.forEach(id => {
+      const win = document.getElementById(id);
+      if (!win) return;
+      win.querySelectorAll(".casino-content button, .casino-content input").forEach(el => {
+        el.disabled = true;
+      });
+    });
+  }
+  function casinoTappedOut(say) {
+    if (!casinoBroke) return false;
+    if (say) say("Tapped out.");
+    casinoLockSync();
+    return true;
+  }
   function chipsUpdate() {
     document.querySelectorAll("[data-chips]").forEach(el => {
       el.textContent = String(chips);
     });
-    const busy = casinoBusy();
-    const tapped = chips <= 0;
-    document.querySelectorAll(".casino-tapped").forEach(el => {
-      el.hidden = !tapped;
-    });
-    document.querySelectorAll("[data-chip-reset]").forEach(el => {
-      el.disabled = busy;
-    });
     rlSyncSpin();
-  }
-  function chipsReset() {
-    chipsGen++;
-    chips = CHIP_START;
-    casinoClearTables();
-    chipsUpdate();
-    showToast("Chips restored");
+    casinoLockSync();
   }
   function chipsTake(n) {
     n = Math.floor(Number(n) || 0);
@@ -11805,10 +11849,6 @@
     chipsUpdate();
     if (!skipPnl && typeof kitaPnl === "function") kitaPnl(n);
   }
-  document.addEventListener("click", (e) => {
-    if (e.target.closest("[data-chip-reset]")) chipsReset();
-  });
-
   function casinoOnOpen() {
     chipsUpdate();
     if (typeof kitaFetchCounts === "function") kitaFetchCounts();
@@ -11986,6 +12026,7 @@
       bjEls.rebet.hidden = !show;
       bjEls.rebet.disabled = !show;
     }
+    casinoLockSync();
   }
   function bjSay(t) {
     if (bjEls.msg) bjEls.msg.textContent = t;
@@ -12088,9 +12129,10 @@
   }
   function bjDeal() {
     if (bj.phase !== "bet" || bj.dealing) return;
+    if (casinoTappedOut(bjSay)) return;
     const bet = bjReadBet();
     bjSetBet(bet);
-    if (chips < 1) { bjSay("you're tapped"); return; }
+    if (casinoTappedOut(bjSay)) return;
     bj.dealing = true;
     bj.anim = true;
     if (bjEls.deal) bjEls.deal.disabled = true;
@@ -12152,6 +12194,7 @@
   }
   function bjRebet() {
     if (bj.phase !== "bet" || bj.dealing) return;
+    if (casinoTappedOut(bjSay)) return;
     bjSetBet(bj.lastBet || bj.bet);
     bjDeal();
   }
@@ -12446,7 +12489,7 @@
     });
   }
   function slotSetBet(n) {
-    if (slotBusy) return;
+    if (slotBusy || casinoBroke) return;
     slotBet = Math.max(1, Math.floor(Number(n) || 5));
     slotSyncBets();
   }
@@ -12455,6 +12498,7 @@
       btn.setAttribute("aria-pressed", btn.getAttribute("data-slot-bet") === String(slotBet) ? "true" : "false");
       btn.disabled = !!slotBusy;
     });
+    casinoLockSync();
   }
   function slotLinePay(a, b, c, bet) {
     if (a.id === "seven" && b.id === "seven" && c.id === "seven") return bet * 20;
@@ -12485,7 +12529,7 @@
   }
   function slotSpin() {
     if (slotBusy) return;
-    if (chips < 1) { if (slotMsg) slotMsg.textContent = "you're tapped"; return; }
+    if (casinoTappedOut(function (t) { if (slotMsg) slotMsg.textContent = t; })) return;
     slotBusy = true;
     if (slotSpinBtn) slotSpinBtn.disabled = true;
     slotSyncBets();
@@ -12610,6 +12654,7 @@
   }
   function rlAdd(kind, n) {
     if (rlBusy) return;
+    if (casinoTappedOut(function (t) { if (rlMsg) rlMsg.textContent = t; })) return;
     if (rlTotal() + rlBetAmt > chips) { showToast("not enough chips"); return; }
     const k = rlKey(kind, n);
     rlStack[k] = (rlStack[k] || 0) + rlBetAmt;
@@ -12725,8 +12770,8 @@
   function rlSpin() {
     if (rlBusy) return;
     const total = rlTotal();
+    if (casinoTappedOut(function (t) { if (rlMsg) rlMsg.textContent = t; })) return;
     if (!total) { if (rlMsg) rlMsg.textContent = "Place a bet"; return; }
-    if (chips < 1) { if (rlMsg) rlMsg.textContent = "you're tapped"; return; }
     if (total > chips) { showToast("not enough chips"); rlSyncSpin(); return; }
     rlBusy = true;
     if (rlSpinBtn) rlSpinBtn.disabled = true;
@@ -12881,9 +12926,10 @@
       crEls.odds.hidden = !offer;
       crEls.odds.disabled = !offer || cr.rolling || chips < cr.down;
     }
+    casinoLockSync();
   }
   function crSetBet(n) {
-    if (cr.down || cr.rolling) return;
+    if (cr.down || cr.rolling || casinoBroke) return;
     n = Math.floor(Number(n) || 0);
     if (n < 1) return;
     cr.bet = n;
@@ -12951,6 +12997,7 @@
   }
   function crRoll() {
     if (cr.rolling) return;
+    if (casinoTappedOut(crSay)) return;
     cr.rolling = true;
     crSyncBets();
     chipsUpdate();
@@ -13053,14 +13100,15 @@
       btn.disabled = !!bac.busy;
     });
     if (bacEls.deal) bacEls.deal.disabled = !!bac.busy;
+    casinoLockSync();
   }
   function bacSetSide(side) {
-    if (bac.busy) return;
+    if (bac.busy || casinoBroke) return;
     bac.side = side;
     bacSync();
   }
   function bacSetBet(n) {
-    if (bac.busy) return;
+    if (bac.busy || casinoBroke) return;
     n = Math.floor(Number(n) || 0);
     if (n < 1) return;
     bac.bet = n;
@@ -13138,6 +13186,7 @@
   }
   function bacDeal() {
     if (bac.busy) return;
+    if (casinoTappedOut(bacSay)) return;
     bac.busy = true;
     bacSync();
     chipsUpdate();
@@ -13236,40 +13285,8 @@
   function casinoBusy() {
     return !!(slotBusy || rlBusy || cr.rolling || bac.busy || bj.phase !== "bet" || bj.dealing);
   }
-  function casinoClearTables() {
-    slotBusy = false;
-    slotClearLines();
-    slotSyncBets();
-    if (slotSpinBtn) slotSpinBtn.disabled = chips < 1;
-    rlBusy = false;
-    rlStack = Object.create(null);
-    rlPaint();
-    rlLabel();
-    rlSyncSpin();
-    cr.down = 0;
-    cr.odds = 0;
-    cr.point = 0;
-    cr.rolling = false;
-    if (crEls.dome) crEls.dome.classList.remove("shaking");
-    if (crEls.d1) crEls.d1.classList.remove("bounce");
-    if (crEls.d2) crEls.d2.classList.remove("bounce");
-    crShowPoint();
-    crSyncBets();
-    bac.busy = false;
-    bacSync();
-    bj.dealing = false;
-    bj.anim = false;
-    bj.phase = "bet";
-    bj.player = [];
-    bj.hands = [];
-    bj.handI = 0;
-    bj.dealer = [];
-    bj.insure = 0;
-    bj.split = false;
-    kitaPopMode = "off";
-    bjSay("Place a bet");
-    bjRender(false);
-  }
+  casinoReady = true;
+  casinoLockSync();
 
   function onGameWindowOpen(name) {
     if (name === "minesweeper") {
