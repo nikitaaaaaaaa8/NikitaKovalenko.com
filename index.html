@@ -4662,8 +4662,7 @@
   .about-extras { display: flex; align-items: center; gap: 14px; font-size: 11px; color: var(--muted); border-top: 1px dashed rgba(57,255,20,.15); padding-top: 8px; margin-top: -2px; }
   .about-link { appearance: none; background: none; border: 0; padding: 0; font: inherit; color: var(--muted); cursor: pointer; text-decoration: underline dotted rgba(126,168,120,.6); text-underline-offset: 3px; }
   .about-link:hover { color: var(--green); }
-  .about-extras .about-visitor { margin: 0 0 0 auto; color: var(--green-dim); }
-  .about-extras .about-visitor[hidden] { display: none; }
+  .about-card .about-visitor { margin: -4px 0 0; font-size: 11px; color: var(--green); line-height: 1.4; }
   @media (max-width: 700px) {
     .about-card { gap: 10px; }
     .about-app { padding: 10px 2px 8px; min-height: 58px; }
@@ -4852,7 +4851,7 @@
       </div>
     </section>
 
-    <section class="window" id="win-about" style="top:80px; left:140px; width:344px;">
+    <section class="window" id="win-about" style="top:80px; left:140px; width:380px;">
       <div class="titlebar" data-drag>
         <div class="dots">
           <div class="dot close" data-close="about"></div>
@@ -4871,8 +4870,8 @@
         <div class="about-extras">
           <button type="button" class="about-link" id="rageBtn">wisdom</button>
           <button type="button" class="about-link" id="glitchBtn">glitch</button>
-          <span class="about-visitor" id="aboutVisitor" hidden></span>
         </div>
+        <p class="about-visitor" id="aboutVisitor" hidden></p>
       </div>
     </section>
 
@@ -7814,7 +7813,7 @@
           title: "Desktop",
           paragraphs: [
             "This website is a fake desktop. Start, bottom left, lists apps with their icons; picking one closes the menu. On a screen shorter than the menu, it scrolls. The clock, bottom right, is your local time. No seconds.",
-            "Left of the clock tray sits a 2006 hit counter in its own little panel: odometer digits, VISITORS underneath. Every page load is one real visit, counted on the Worker; About’s footer also says visitor #N. Phones get the same panel. If the Worker does not answer, the counter just is not there. No fake numbers.",
+            "Left of the clock tray sits a 2006 hit counter in its own little panel: odometer digits, VISITORS underneath. Every page load is one real visit, counted on the Worker; About also says You are visitor #N. Not a prize. Just a number. Phones get the same panel. If the Worker does not answer, the counter just is not there. No fake numbers.",
             "Icons start in two columns. A tap opens that app and nothing else, not whatever lands under your finger. Drag snaps to a grid across the whole desktop, not only those two columns. They cannot stack. Refresh puts them back. A short window packs those two columns tighter so they stay above the taskbar. Rotate keeps a layout you already moved.",
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar. Empty clears the bin for this visit; refresh brings everything back, because nothing here is permanent.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
@@ -7830,7 +7829,7 @@
             "Click an icon to open a window. Drag the title bar to move it. The yellow and red dots close the window. The dots are glass, with a glare on the top and the bottom. In a Tesla those close dots are larger.",
             "On a desktop, not a phone, drag the edges or corners to resize.",
             "Escape closes one layer per press: a photo, then a score prompt, then the Start menu, then the window in front. The keyboard deserves an exit too.",
-            "About opens only when you ask: its icon, Start, or Terminal. It is a small window with one line, the same four quick-launch tiles (pick one and that app opens while About closes), Tip: Konami code, and a highlighted Got it that closes it. wisdom and glitch sit underneath as small links, next to visitor #N. On a phone it opens full-width at the top, like every window. Every window opens fully on screen and above the taskbar, whether from an icon, Start, Terminal, or a Games card. Later windows try not to sit on top of one already open. A window taller than the screen scrolls inside instead of hiding the rest. Close hands focus to the window on top. On a phone, rotate keeps windows where they are; they do not restack. A window that grows after it opens, say a book, slides up to stay above the taskbar.",
+            "About opens only when you ask: its icon, Start, or Terminal. It is a small window with one line, the same four quick-launch tiles (pick one and that app opens while About closes), Tip: Konami code, and a highlighted Got it that closes it. wisdom and glitch sit underneath as small links, with You are visitor #N. Not a prize. Just a number. on the line below. On a phone it opens full-width at the top, like every window. Every window opens fully on screen and above the taskbar, whether from an icon, Start, Terminal, or a Games card. Later windows try not to sit on top of one already open. A window taller than the screen scrolls inside instead of hiding the rest. Close hands focus to the window on top. On a phone, rotate keeps windows where they are; they do not restack. A window that grows after it opens, say a book, slides up to stay above the taskbar.",
             "Pointer cursor on clickable controls: close, buttons. Grab and drag cursor on title bars. The tray speaker mutes audio for this visit."
           ]
         },
@@ -13598,7 +13597,7 @@
           }
         }
         if (line) {
-          line.textContent = "visitor #" + n.toLocaleString("en-US"); line.title = "Not a prize. Just a number.";
+          line.textContent = txt + ". Not a prize. Just a number.";
           line.hidden = false;
         }
       })
