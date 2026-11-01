@@ -759,13 +759,13 @@
     background: rgba(0,0,0,.9);
     display: grid;
     place-items: center;
-    padding: 24px 16px 48px;
+    padding: calc(68px + env(safe-area-inset-top, 0px)) 16px calc(48px + env(safe-area-inset-bottom, 0px));
     cursor: zoom-out;
   }
   #droneLightbox[hidden] { display: none !important; }
   #droneLightbox img {
     max-width: min(92vw, 1100px);
-    max-height: min(82vh, 820px);
+    max-height: min(82vh, 820px, calc(100vh - 136px));
     object-fit: contain;
     border-radius: 6px;
     box-shadow: 0 0 40px rgba(57,255,20,.12), 0 18px 50px rgba(0,0,0,.7);
@@ -773,7 +773,7 @@
   }
   #droneLightbox .drone-lightbox-cap {
     position: absolute;
-    bottom: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom, 0px));
     left: 12px;
     right: 12px;
     text-align: center;
@@ -782,6 +782,45 @@
     letter-spacing: .04em;
     pointer-events: none;
   }
+  /* Back: top-left way out of the photo, 44px+ tap target, above the image. */
+  #droneLightbox .drone-back {
+    position: absolute;
+    top: max(12px, env(safe-area-inset-top, 0px));
+    left: max(12px, env(safe-area-inset-left, 0px));
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0;
+    padding: 0 16px 0 12px;
+    border: 1px solid #39ff14;
+    border-radius: 6px;
+    background: rgba(0,0,0,.84);
+    color: #d8ffd0;
+    font: 600 14px/1 "SF Mono", Menlo, Consolas, monospace;
+    letter-spacing: .08em;
+    text-shadow: 0 0 6px rgba(57,255,20,.55);
+    box-shadow: 0 0 12px rgba(57,255,20,.35), inset 0 0 8px rgba(57,255,20,.12);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  #droneLightbox .drone-back svg {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    color: #39ff14;
+    filter: drop-shadow(0 0 4px rgba(57,255,20,.85));
+  }
+  #droneLightbox .drone-back:hover,
+  #droneLightbox .drone-back:focus-visible {
+    outline: none;
+    background: rgba(57,255,20,.14);
+    box-shadow: 0 0 18px rgba(57,255,20,.6), inset 0 0 10px rgba(57,255,20,.2);
+  }
+  #droneLightbox .drone-back:active { transform: scale(.97); }
 
   .bookshelf {
     display: flex;
@@ -6189,6 +6228,7 @@
   </div>
   <div class="toast" id="toast"></div>
   <div id="droneLightbox" hidden role="dialog" aria-modal="true" aria-label="DroneStuff photo">
+    <button type="button" class="drone-back" id="droneLightboxBack" aria-label="Back to DroneStuff gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/></svg><span>Back</span></button>
     <img id="droneLightboxImg" alt="">
     <div class="drone-lightbox-cap" id="droneLightboxCap"></div>
   </div>
@@ -7381,10 +7421,15 @@
   const droneLightbox = document.getElementById("droneLightbox");
   const droneLightboxImg = document.getElementById("droneLightboxImg");
   const droneLightboxCap = document.getElementById("droneLightboxCap");
+  const droneLightboxBack = document.getElementById("droneLightboxBack");
+  let droneLightboxFrom = null;
 
   function closeDroneLightbox() {
     if (!droneLightbox || droneLightbox.hidden) return;
     droneLightbox.hidden = true;
+    const from = droneLightboxFrom;
+    droneLightboxFrom = null;
+    if (from && from.isConnected) { try { from.focus({ preventScroll: true }); } catch (_) {} }
     if (droneLightboxImg) {
       droneLightboxImg.removeAttribute("src");
       droneLightboxImg.alt = "";
@@ -7398,6 +7443,7 @@
     droneLightboxImg.alt = cap || "";
     if (droneLightboxCap) droneLightboxCap.textContent = cap || "";
     droneLightbox.hidden = false;
+    if (droneLightboxBack) { try { droneLightboxBack.focus({ preventScroll: true }); } catch (_) {} }
     const viewId = kitaViewIdFromDroneSrc(src);
     if (viewId) kitaHitView(viewId);
   }
@@ -7407,11 +7453,18 @@
       e.stopPropagation();
       const src = btn.getAttribute("data-drone-src");
       const cap = btn.getAttribute("data-drone-cap") || "";
+      droneLightboxFrom = btn;
       if (src) openDroneLightbox(src, cap);
     });
   });
   if (droneLightbox) {
     droneLightbox.addEventListener("click", closeDroneLightbox);
+  }
+  if (droneLightboxBack) {
+    droneLightboxBack.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeDroneLightbox();
+    });
   }
   // Escape peels one layer: photo, score prompt, Start menu, Scores detail, then the front window.
   document.addEventListener("keydown", (e) => {
@@ -8096,7 +8149,7 @@
             "Weather shows current conditions in °F with a neon SVG for the real sky (clear, partly cloudy, cloudy, rain, snow, storm, fog). The desktop icon matches it. Open-Meteo is cached on the Worker so a rate limit on one machine does not blank the sky. Default city is an IP guess, same as Tracker. A target in Weather and Tracker can pin this machine for this visit if the browser allows it. Refresh forgets the pin. Tracker also counts session clicks and a winning counter. Session clicks count taps and clicks this visit, not icon drags, window drags, marquee selects, resizes, or paint strokes.",
             "Paint has a brush, eraser, fill, eyedropper, line, rectangle, ellipse, a palette, undo, and save. Resize keeps the picture and undo.",
             "VLC is an in-OS player with Fight, Football, and Basketball. Not a redirect. Rows show view counts. Play increments them.",
-            "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts. The lightbox increments them.",
+            "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts, and each photo you open adds one view. To get out, tap the neon Back button in the top-left corner, tap anywhere outside the photo, or press Escape. Any of the three closes the photo and puts you back on the gallery.",
             "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar, newest first, with its view count and length. The newest is Elijah Taylor live at The Barbary, a full set at 1:16:21, which is why the time readout learned hours. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
             "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck: drag it up or down, mouse or finger. Tap the readout next to it (or double-click the knob) to reset to 1.00x. On touch screens every control is a full fingertip wide. The current track plays forever or until you press Next, whichever comes first. There is no Loop button; looping is the whole plan. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
             "Scores is the classic leaderboard for every rankable game, all on one screen. Each game gets a card with every difficulty stacked inside it, top 3 per board (rank, name, score) and the metric under the title (score, points, wins, fewest moves, fastest clear). #1 glows. Empty boards say Unclaimed. Cards flow three across on a desktop, fewer on a tablet, one column on a phone, and the window scrolls. Tap a board for its full top 10 with when each score landed, flip difficulties with the chips, and Back to all boards (Escape does Back first, then closes the window). One request to the Worker’s /boards fills everything; Refresh asks again. If the Worker is down it says Could not reach the board. Open it from the desktop or type scores in Terminal.",
