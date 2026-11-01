@@ -7209,10 +7209,12 @@
       if (loadBar) { loadBar.style.animation = "none"; void loadBar.offsetWidth; loadBar.style.animation = ""; }
       if (!touch) later(() => { if (stage === "welcome") tile.focus({ preventScroll: true }); }, reduce ? 0 : 350);
     }
-    function skipBoot() {
+    function skipBoot(byUser) {
       if (stage !== "boot") return;
       clearTimeout(bootTimer);
       showWelcome();
+      // only a skip tap or key needs the short guard; an auto-ended boot takes the tile at once
+      if (byUser !== true) shownAt = 0;
     }
     function finish() {
       stage = "desk";
@@ -7256,7 +7258,7 @@
     const offLines = ["Kita OS can't be turned off. Closing the tab works, though.", "Still on. It's a website.", "You've made your point. So have I."];
     let offN = 0;
     offBtn.addEventListener("click", () => { tip.textContent = offLines[Math.min(offN++, offLines.length - 1)]; });
-    bootEl.addEventListener("click", skipBoot);
+    bootEl.addEventListener("click", () => skipBoot(true));
     tile.addEventListener("click", enter);
     // While the login is up it owns the keyboard: nothing behind it reacts.
     window.addEventListener("keydown", (e) => {
@@ -7265,7 +7267,7 @@
       if (stage === "boot") {
         if (["Shift", "Control", "Alt", "Meta", "Tab"].indexOf(e.key) !== -1) return;
         e.preventDefault();
-        skipBoot();
+        skipBoot(true);
         return;
       }
       if (stage === "entering") { if (e.key !== "Tab") e.preventDefault(); return; }
@@ -7275,7 +7277,7 @@
     if (logoffRow) logoffRow.addEventListener("click", (e) => { e.stopPropagation(); logOff(); });
     window.kitaLoginActive = true;
     lockDesktop(true);
-    bootTimer = setTimeout(skipBoot, reduce ? 700 : 2100);
+    bootTimer = setTimeout(() => skipBoot(false), reduce ? 700 : 2100);
     return {
       onReady(fn) { if (firstLogin) ready.push(fn); else fn(); },
       active() { return stage !== "desk"; },
@@ -8064,7 +8066,7 @@
           paragraphs: [
             "Every page load boots first: the four-pane Kita OS mark and a progress bar for about two seconds. Tap, click, or press any key to skip it. Then comes an XP-style welcome screen with one user, Nikita. Click or tap the tile, or press Enter, and it says welcome, loads your personal settings, and fades into the desktop. No password, nothing to type. Turn off Kita OS, bottom left, does not. Nothing starts behind the login: the tray balloon, the visitor count, and shared book links wait until you are in. Refresh boots again; nothing is remembered.",
             "This website is a fake desktop. Start, bottom left, lists apps with their icons; picking one closes the menu. Log off, at the bottom of Start, closes every window and goes back to the welcome screen. On a screen shorter than the menu, it scrolls. The clock, bottom right, is your local time. No seconds.",
-            "Left of the clock tray sits a 2006 hit counter in its own little panel: odometer digits, VISITORS underneath. Every page load is one real visit, counted on the Worker; About also says You are visitor #N. Not a prize. Just a number. Phones get the same panel. If the Worker does not answer, the counter just is not there. No fake numbers.",
+            "Left of the clock tray sits a 2006 hit counter in its own little panel: odometer digits, VISITORS underneath. Every page load is one real visit, counted on the Worker; test robots and headless browsers are not counted. About also says You are visitor #N. Not a prize. Just a number. Phones get the same panel. If the Worker does not answer, the counter just is not there. No fake numbers.",
             "Icons start in two columns. A tap opens that app and nothing else, not whatever lands under your finger. Drag snaps to a grid across the whole desktop, not only those two columns. They cannot stack. Refresh puts them back. A short window packs those two columns tighter so they stay above the taskbar. Rotate keeps a layout you already moved.",
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar. Empty clears the bin for this visit; refresh brings everything back, because nothing here is permanent.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
@@ -13825,6 +13827,7 @@
 
   // Hit counter: one real count per page load. No number, no counter.
   kitaLogin.onReady(function kitaVisitorCounter() {
+    if (navigator.webdriver) return; // test robots are not visitors
     const odo = document.getElementById("hitOdo");
     const widget = document.getElementById("hitWidget");
     const line = document.getElementById("aboutVisitor");
