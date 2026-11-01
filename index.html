@@ -4918,140 +4918,44 @@
   }
   @media (prefers-reduced-motion: reduce) { .kb, .kb .kb-drain { transition: none; animation: none; } }
 
-  /* ---------- Login: boot screen + XP-style welcome (every page load, nothing stored) ---------- */
-  #kitaLogin{--kl-green:#39ff14;--kl-dim:#1f8f0f;--kl-text:#d8ffd0;--kl-muted:#7fa878;--kl-bg:#030603;--kl-glow:0 0 6px rgba(57,255,20,.55);
+  /* ---------- Boot screen (every page load and Log off, nothing stored) ---------- */
+  #kitaBoot{--kl-green:#39ff14;--kl-dim:#1f8f0f;--kl-text:#d8ffd0;--kl-muted:#7fa878;--kl-bg:#030603;--kl-glow:0 0 6px rgba(57,255,20,.55);
     --kl-font:"SF Mono",ui-monospace,Menlo,Consolas,"DejaVu Sans Mono",monospace;
     --kl-st:env(safe-area-inset-top,0px);--kl-sb:env(safe-area-inset-bottom,0px);--kl-sl:env(safe-area-inset-left,0px);--kl-sr:env(safe-area-inset-right,0px);
     position:fixed;inset:0;z-index:2147482500;background:var(--kl-bg);color:var(--kl-text);font-family:var(--kl-font);
     -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;transition:opacity .5s ease;overflow:hidden}
-  #kitaLogin[hidden]{display:none}
-  #kitaLogin.kl-out{opacity:0;pointer-events:none}
-  #kitaLogin *{box-sizing:border-box}
-  #kitaLogin button{font:inherit;color:inherit;-webkit-appearance:none;appearance:none;margin:0}
-  #kitaLogin svg{display:block}
-  #kitaLogin .kl-layer{position:fixed;inset:0;transition:opacity .5s ease}
-  #kitaLogin .kl-hidden{opacity:0;pointer-events:none;visibility:hidden;transition:opacity .5s ease,visibility 0s .5s}
-  #kitaLogin .kl-crt{pointer-events:none;position:fixed;inset:0;z-index:5;
+  #kitaBoot[hidden]{display:none}
+  #kitaBoot.kl-out{opacity:0;pointer-events:none}
+  #kitaBoot *{box-sizing:border-box}
+  #kitaBoot svg{display:block}
+  #kitaBoot .kl-layer{position:fixed;inset:0;transition:opacity .5s ease}
+  #kitaBoot .kl-crt{pointer-events:none;position:fixed;inset:0;z-index:5;
     background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.18) 2px 3px),radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.45) 100%);opacity:.55}
-  #kitaLogin .kl-mark{color:var(--kl-green);filter:drop-shadow(0 0 6px rgba(57,255,20,.6))}
-  #kitaLogin .kl-word{margin-top:18px;font-weight:700;font-size:30px;letter-spacing:.14em;color:var(--kl-text);text-shadow:0 0 12px rgba(57,255,20,.45)}
-  #kitaLogin .kl-word span{color:var(--kl-green)}
-  #kitaLogin .kl-edition{margin-top:6px;font-size:11px;letter-spacing:.3em;color:var(--kl-muted);text-transform:uppercase}
+  #kitaBoot .kl-mark{color:var(--kl-green);filter:drop-shadow(0 0 6px rgba(57,255,20,.6))}
+  #kitaBoot .kl-word{margin-top:18px;font-weight:700;font-size:30px;letter-spacing:.14em;color:var(--kl-text);text-shadow:0 0 12px rgba(57,255,20,.45)}
+  #kitaBoot .kl-word span{color:var(--kl-green)}
+  #kitaBoot .kl-edition{margin-top:6px;font-size:11px;letter-spacing:.3em;color:var(--kl-muted);text-transform:uppercase}
 
-  #kitaLogin .kl-boot{z-index:3;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;
+  #kitaBoot .kl-boot{z-index:3;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;
     padding:var(--kl-st) var(--kl-sr) var(--kl-sb) var(--kl-sl)}
-  #kitaLogin .kl-boot .kl-mark{width:84px;height:84px}
-  #kitaLogin .kl-track{margin-top:44px;width:180px;height:18px;border:1px solid var(--kl-dim);border-radius:4px;padding:3px;overflow:hidden;position:relative;box-shadow:inset 0 0 8px rgba(57,255,20,.12)}
-  #kitaLogin .kl-track i{position:absolute;top:3px;width:10px;height:10px;border-radius:2px;background:var(--kl-green);box-shadow:var(--kl-glow);left:-40px;animation:klSlide 1.3s linear infinite}
-  #kitaLogin .kl-track i:nth-child(2){animation-delay:.09s}
-  #kitaLogin .kl-track i:nth-child(3){animation-delay:.18s}
+  #kitaBoot .kl-boot .kl-mark{width:84px;height:84px}
+  #kitaBoot .kl-track{margin-top:44px;width:180px;height:18px;border:1px solid var(--kl-dim);border-radius:4px;padding:3px;overflow:hidden;position:relative;box-shadow:inset 0 0 8px rgba(57,255,20,.12)}
+  #kitaBoot .kl-track i{position:absolute;top:3px;width:10px;height:10px;border-radius:2px;background:var(--kl-green);box-shadow:var(--kl-glow);left:-40px;animation:klSlide 1.3s linear infinite}
+  #kitaBoot .kl-track i:nth-child(2){animation-delay:.09s}
+  #kitaBoot .kl-track i:nth-child(3){animation-delay:.18s}
   @keyframes klSlide{to{left:200px}}
-  #kitaLogin .kl-skip{position:absolute;bottom:calc(28px + var(--kl-sb));left:0;right:0;text-align:center;font-size:11px;color:var(--kl-dim);letter-spacing:.08em}
-  #kitaLogin .kl-copy{position:absolute;bottom:calc(52px + var(--kl-sb));left:24px;right:24px;text-align:center;font-size:10px;color:#3d5c38;letter-spacing:.06em}
-
-  #kitaLogin .kl-welcome{z-index:2;display:grid;grid-template-rows:calc(64px + var(--kl-st)) minmax(0,1fr) calc(80px + var(--kl-sb));
-    background:radial-gradient(ellipse 60% 55% at 32% 48%,rgba(57,255,20,.09),transparent 70%),radial-gradient(circle at 85% 85%,rgba(57,255,20,.04),transparent 40%),var(--kl-bg)}
-  #kitaLogin .kl-bar{position:relative;background:linear-gradient(180deg,#0f1f0d,#070b07)}
-  #kitaLogin .kl-bar.kl-top{box-shadow:0 10px 30px rgba(0,0,0,.5)}
-  #kitaLogin .kl-bar.kl-top::after,#kitaLogin .kl-bar.kl-bot::before{content:"";position:absolute;left:0;right:0;height:2px;
-    background:linear-gradient(90deg,transparent,rgba(57,255,20,.85) 20%,rgba(57,255,20,.85) 80%,transparent);box-shadow:0 0 10px rgba(57,255,20,.5)}
-  #kitaLogin .kl-bar.kl-top::after{bottom:-1px;opacity:.55}
-  #kitaLogin .kl-bar.kl-bot::before{top:-1px}
-  #kitaLogin .kl-bar.kl-bot{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 calc(32px + var(--kl-sr)) var(--kl-sb) calc(24px + var(--kl-sl))}
-  #kitaLogin .kl-mid{display:grid;grid-template-columns:1fr 2px 1fr;align-items:center;min-height:0;padding:0 var(--kl-sr) 0 var(--kl-sl)}
-  #kitaLogin .kl-left{justify-self:end;text-align:right;padding-right:52px;max-width:560px;position:relative}
-  #kitaLogin .kl-brand{display:inline-flex;align-items:center;gap:16px}
-  #kitaLogin .kl-brand .kl-mark{width:60px;height:60px}
-  #kitaLogin .kl-brand .kl-word{margin:0;font-size:34px;text-align:left;line-height:1}
-  #kitaLogin .kl-hint{margin-top:34px;font-size:15px;color:var(--kl-text)}
-  #kitaLogin .kl-hint b{color:var(--kl-green);font-weight:600;text-shadow:var(--kl-glow)}
-  #kitaLogin .kl-hello{display:none;position:absolute;right:52px;top:50%;transform:translateY(-50%);white-space:nowrap;font-size:56px;font-weight:700;font-style:italic;letter-spacing:-.01em;color:var(--kl-text);text-shadow:0 0 22px rgba(57,255,20,.6)}
-  #kitaLogin .kl-divider{align-self:stretch;margin:56px 0;background:linear-gradient(180deg,transparent,rgba(57,255,20,.75) 30%,rgba(57,255,20,.75) 70%,transparent);box-shadow:0 0 12px rgba(57,255,20,.45);opacity:.8}
-  #kitaLogin .kl-right{padding-left:44px;display:flex;flex-direction:column;align-items:flex-start;gap:12px}
-  #kitaLogin .kl-tile{display:flex;align-items:center;gap:18px;width:min(400px,100%);min-height:88px;padding:12px 18px 12px 12px;border-radius:14px;border:1px solid transparent;background:transparent;text-align:left;cursor:pointer;
-    transition:background .18s,border-color .18s,box-shadow .18s,opacity .4s,transform .18s;outline:none;touch-action:manipulation}
-  #kitaLogin .kl-av{flex:0 0 auto;width:64px;height:64px;border-radius:10px;border:2px solid rgba(57,255,20,.45);display:grid;place-items:center;color:var(--kl-green);background:#020402;transition:.18s}
-  #kitaLogin .kl-av svg{width:42px;height:42px;filter:drop-shadow(0 0 4px rgba(57,255,20,.6))}
-  #kitaLogin .kl-who{min-width:0;flex:1}
-  #kitaLogin .kl-name{font-size:20px;font-weight:600;color:var(--kl-text)}
-  #kitaLogin .kl-sub:empty{display:none}
-  #kitaLogin .kl-sub{display:block;font-size:11.5px;color:var(--kl-muted);margin-top:4px;line-height:1.4}
-  #kitaLogin .kl-go{flex:0 0 auto;color:var(--kl-green);opacity:0;transform:translateX(-4px);transition:.18s}
-  #kitaLogin .kl-go svg{width:26px;height:26px;filter:drop-shadow(0 0 4px rgba(57,255,20,.7))}
-  #kitaLogin .kl-tile:focus-visible,#kitaLogin .kl-tile.kl-hot{background:linear-gradient(90deg,rgba(57,255,20,.17),rgba(57,255,20,.03) 85%);border-color:rgba(57,255,20,.5);box-shadow:0 0 22px rgba(57,255,20,.18),inset 0 0 0 1px rgba(57,255,20,.06)}
-  #kitaLogin .kl-tile:focus-visible .kl-av,#kitaLogin .kl-tile.kl-hot .kl-av{border-color:var(--kl-green);box-shadow:0 0 16px rgba(57,255,20,.5),inset 0 0 14px rgba(57,255,20,.25)}
-  #kitaLogin .kl-tile:focus-visible .kl-name,#kitaLogin .kl-tile.kl-hot .kl-name{color:#fff;text-shadow:0 0 10px rgba(57,255,20,.5)}
-  #kitaLogin .kl-tile:focus-visible .kl-go,#kitaLogin .kl-tile.kl-hot .kl-go{opacity:1;transform:none}
-  #kitaLogin .kl-tile:active{transform:scale(.985)}
-  #kitaLogin .kl-off{display:flex;align-items:center;gap:12px;background:none;border:0;cursor:pointer;padding:8px 10px 8px 4px;border-radius:10px;min-height:48px;outline:none}
-  #kitaLogin .kl-pw{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;border:1.5px solid var(--kl-green);color:var(--kl-green);background:#020402;box-shadow:0 0 10px rgba(57,255,20,.3);transition:.18s}
-  #kitaLogin .kl-pw svg{width:18px;height:18px}
-  #kitaLogin .kl-off .kl-l{font-size:13px;color:var(--kl-text)}
-  #kitaLogin .kl-off:focus-visible .kl-pw{box-shadow:0 0 18px rgba(57,255,20,.6),inset 0 0 10px rgba(57,255,20,.3)}
-  #kitaLogin .kl-off:focus-visible{background:rgba(57,255,20,.07)}
-  #kitaLogin .kl-tip{font-size:11px;color:var(--kl-muted);text-align:right;line-height:1.55;max-width:440px}
-  @media (hover:hover){
-    #kitaLogin .kl-tile:hover{background:linear-gradient(90deg,rgba(57,255,20,.17),rgba(57,255,20,.03) 85%);border-color:rgba(57,255,20,.5);box-shadow:0 0 22px rgba(57,255,20,.18)}
-    #kitaLogin .kl-tile:hover .kl-av{border-color:var(--kl-green);box-shadow:0 0 16px rgba(57,255,20,.5),inset 0 0 14px rgba(57,255,20,.25)}
-    #kitaLogin .kl-tile:hover .kl-name{color:#fff;text-shadow:0 0 10px rgba(57,255,20,.5)}
-    #kitaLogin .kl-tile:hover .kl-go{opacity:1;transform:none}
-    #kitaLogin .kl-off:hover .kl-pw{box-shadow:0 0 18px rgba(57,255,20,.6),inset 0 0 10px rgba(57,255,20,.3)}
-  }
-  @media (hover:none){
-    #kitaLogin .kl-tile{border-color:rgba(57,255,20,.32);background:linear-gradient(90deg,rgba(57,255,20,.07),transparent 85%)}
-    #kitaLogin .kl-tile .kl-go{opacity:.6;transform:none}
-  }
-  @media (min-width:1200px) and (min-height:760px){
-    #kitaLogin .kl-brand .kl-mark{width:72px;height:72px}
-    #kitaLogin .kl-brand .kl-word{font-size:42px}
-    #kitaLogin .kl-hint{font-size:17px;margin-top:40px}
-    #kitaLogin .kl-tile{width:440px;min-height:100px;gap:20px}
-    #kitaLogin .kl-av{width:76px;height:76px}
-    #kitaLogin .kl-av svg{width:50px;height:50px}
-    #kitaLogin .kl-name{font-size:23px}
-    #kitaLogin .kl-sub{font-size:12.5px}
-    #kitaLogin .kl-hello{font-size:68px;right:64px}
-    #kitaLogin .kl-left{padding-right:64px}
-    #kitaLogin .kl-right{padding-left:56px}
-  }
-  #kitaLogin .kl-welcome.kl-entering .kl-hint,#kitaLogin .kl-welcome.kl-entering .kl-brand{visibility:hidden}
-  #kitaLogin .kl-welcome.kl-entering .kl-hello{display:block;animation:klFade .5s ease both}
-  #kitaLogin .kl-welcome.kl-entering .kl-tile{pointer-events:none}
-  #kitaLogin .kl-welcome.kl-entering .kl-tile .kl-go{opacity:0}
-  #kitaLogin .kl-welcome.kl-entering .kl-off,#kitaLogin .kl-welcome.kl-entering .kl-tip{opacity:.35;pointer-events:none}
-  #kitaLogin .kl-load{display:none;margin-top:8px;height:3px;width:100%;max-width:200px;background:rgba(57,255,20,.12);border-radius:2px;overflow:hidden}
-  #kitaLogin .kl-load i{display:block;height:100%;width:0;background:var(--kl-green);box-shadow:var(--kl-glow);animation:klFill 1.6s ease-in-out forwards}
-  #kitaLogin .kl-picked .kl-load{display:block}
-  @keyframes klFill{to{width:100%}}
-  @keyframes klFade{from{opacity:0;margin-top:6px}to{opacity:1;margin-top:0}}
-  @media (max-width:760px){
-    #kitaLogin .kl-welcome{grid-template-rows:calc(44px + var(--kl-st)) minmax(0,1fr) auto}
-    #kitaLogin .kl-mid{grid-template-columns:1fr;grid-template-rows:auto 2px auto;align-content:center;padding:0 calc(20px + var(--kl-sr)) 0 calc(20px + var(--kl-sl));overflow-y:auto}
-    #kitaLogin .kl-left{justify-self:center;text-align:center;padding:0 0 30px;max-width:none}
-    #kitaLogin .kl-brand{flex-direction:column;gap:12px}
-    #kitaLogin .kl-brand .kl-mark{width:56px;height:56px}
-    #kitaLogin .kl-brand .kl-word{text-align:center;font-size:28px}
-    #kitaLogin .kl-hint{margin-top:26px;font-size:15px}
-    #kitaLogin .kl-hello{font-size:44px;left:0;right:0;top:calc(50% - 15px);text-align:center}
-    #kitaLogin .kl-divider{margin:0 8px;background:linear-gradient(90deg,transparent,rgba(57,255,20,.75) 25%,rgba(57,255,20,.75) 75%,transparent)}
-    #kitaLogin .kl-right{padding:26px 0 8px;align-items:stretch}
-    #kitaLogin .kl-tile{width:100%;max-width:440px;margin:0 auto;min-height:92px}
-    #kitaLogin .kl-bar.kl-bot{flex-direction:column;align-items:stretch;gap:6px;padding:12px calc(18px + var(--kl-sr)) calc(12px + var(--kl-sb)) calc(14px + var(--kl-sl))}
-    #kitaLogin .kl-tip{text-align:left;font-size:10.5px;max-width:none;padding-left:4px}
-    #kitaLogin .kl-tip:empty{display:none}
-  }
-  @media (max-height:520px) and (min-width:761px){ #kitaLogin .kl-left{padding-right:36px} #kitaLogin .kl-hello{right:36px} #kitaLogin .kl-hint{margin-top:18px} #kitaLogin .kl-divider{margin:24px 0} }
+  #kitaBoot .kl-skip{position:absolute;bottom:calc(28px + var(--kl-sb));left:0;right:0;text-align:center;font-size:11px;color:var(--kl-dim);letter-spacing:.08em}
+  #kitaBoot .kl-copy{position:absolute;bottom:calc(52px + var(--kl-sb));left:24px;right:24px;text-align:center;font-size:10px;color:#3d5c38;letter-spacing:.06em}
   @media (prefers-reduced-motion:reduce){
-    #kitaLogin,#kitaLogin *,#kitaLogin *::before,#kitaLogin *::after{animation:none!important;transition:none!important}
-    #kitaLogin .kl-track{display:flex;padding:3px}
-    #kitaLogin .kl-track i{left:0;position:static;display:inline-block;margin-right:4px}
-    #kitaLogin .kl-load i{width:100%}
+    #kitaBoot,#kitaBoot *,#kitaBoot *::before,#kitaBoot *::after{animation:none!important;transition:none!important}
+    #kitaBoot .kl-track{display:flex;padding:3px}
+    #kitaBoot .kl-track i{left:0;position:static;display:inline-block;margin-right:4px}
   }
   .start-menu .start-logoff{border-top:1px solid rgba(57,255,20,.18);margin-top:4px}
 </style>
 </head>
 <body>
-  <div id="kitaLogin" aria-label="Kita OS login">
+  <div id="kitaBoot" aria-label="Kita OS boot screen">
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
       <symbol id="klMark" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="6" y="6" width="16" height="16" rx="3"/><rect x="26" y="6" width="16" height="16" rx="3"/>
@@ -5067,31 +4971,6 @@
       <div class="kl-track" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="kl-copy">© 2026 Nikita Kovalenko. Most rights reserved.</div>
       <div class="kl-skip" id="klSkip">click anywhere to skip</div>
-    </div>
-    <div class="kl-layer kl-welcome kl-hidden" id="klWelcome">
-      <div class="kl-bar kl-top"></div>
-      <div class="kl-mid">
-        <div class="kl-left">
-          <div class="kl-brand">
-            <svg class="kl-mark" aria-hidden="true"><use href="#klMark"/></svg>
-            <div class="kl-word">KITA<span>&nbsp;OS</span></div>
-          </div>
-          <div class="kl-hint">To begin, <span id="klVerb">click</span> <b>Nikita</b> to log in</div>
-          <div class="kl-hello" aria-live="polite">welcome</div>
-        </div>
-        <div class="kl-divider" aria-hidden="true"></div>
-        <div class="kl-right">
-          <button type="button" class="kl-tile" id="klTile" aria-label="Log in as Nikita">
-            <span class="kl-av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="4.6"/><path d="M10 8.2h.01M14 8.2h.01" stroke-width="2.2"/><path d="M10.4 11.1c1.2.6 2.4.5 3.5-.4"/><path d="M3.8 21c1.1-3.9 4.4-6.2 8.2-6.2s7.1 2.3 8.2 6.2"/></svg></span>
-            <span class="kl-who"><span class="kl-name" style="display:block">Nikita</span><span class="kl-sub" id="klSub"></span><span class="kl-load" id="klLoad"><i></i></span></span>
-            <span class="kl-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h7M12 8.5l3.5 3.5-3.5 3.5"/></svg></span>
-          </button>
-        </div>
-      </div>
-      <div class="kl-bar kl-bot">
-        <button type="button" class="kl-off" id="klOff"><span class="kl-pw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 3.5v8"/><path d="M6.6 6.9a7.5 7.5 0 1 0 10.8 0"/></svg></span><span class="kl-l">Turn off Kita OS</span></button>
-        <div class="kl-tip" id="klTip" aria-live="polite"></div>
-      </div>
     </div>
   </div>
 
@@ -7455,25 +7334,15 @@
     document.querySelectorAll(".window.open").forEach(w => { placeWindowOnScreen(w); });
   });
 
-  // Login: boot screen -> XP-style welcome -> desktop. Every page load; nothing is stored.
-  // Anything that should not happen behind the login registers with kitaLogin.onReady().
-  const kitaLogin = (function () {
-    const root = document.getElementById("kitaLogin");
-    const bootEl = document.getElementById("klBoot");
-    const wel = document.getElementById("klWelcome");
-    const tile = document.getElementById("klTile");
-    const sub = document.getElementById("klSub");
-    const tip = document.getElementById("klTip");
-    const offBtn = document.getElementById("klOff");
-    const loadBar = document.querySelector("#klLoad i");
+  // Boot screen -> desktop. Every page load; nothing is stored. Log off replays it.
+  // Anything that should not happen behind the boot screen registers with kitaBoot.onReady().
+  const kitaBoot = (function () {
+    const root = document.getElementById("kitaBoot");
     const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
     const touch = window.matchMedia && matchMedia("(hover: none)").matches;
     const ready = [];
-    let stage = "boot", shownAt = 0, bootTimer = 0, firstLogin = true, locked = [], timers = [];
-    if (touch) {
-      document.getElementById("klVerb").textContent = "tap";
-      document.getElementById("klSkip").textContent = "tap anywhere to skip";
-    }
+    let booting = false, bootTimer = 0, hideTimer = 0, firstBoot = true, locked = [];
+    if (touch) document.getElementById("klSkip").textContent = "tap anywhere to skip";
     function lockDesktop(on) {
       if (on) {
         locked = Array.from(document.body.children).filter(el => el !== root && el.tagName !== "SCRIPT" && !el.inert);
@@ -7483,93 +7352,56 @@
         locked = [];
       }
     }
-    function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
-    function showWelcome() {
-      stage = "welcome";
-      shownAt = performance.now();
-      bootEl.classList.add("kl-hidden");
-      wel.classList.remove("kl-hidden", "kl-entering");
-      tile.classList.remove("kl-picked");
-      sub.textContent = "";
-      if (loadBar) { loadBar.style.animation = "none"; void loadBar.offsetWidth; loadBar.style.animation = ""; }
-      if (!touch) later(() => { if (stage === "welcome") tile.focus({ preventScroll: true }); }, reduce ? 0 : 350);
-    }
-    function skipBoot(byUser) {
-      if (stage !== "boot") return;
-      clearTimeout(bootTimer);
-      showWelcome();
-      // only a skip tap or key needs the short guard; an auto-ended boot takes the tile at once
-      if (byUser !== true) shownAt = 0;
+    function boot() {
+      booting = true;
+      window.kitaBootActive = true;
+      clearTimeout(hideTimer);
+      root.hidden = false;
+      void root.offsetWidth;
+      root.classList.remove("kl-out");
+      lockDesktop(true);
+      bootTimer = setTimeout(finish, reduce ? 700 : 2100);
     }
     function finish() {
-      stage = "desk";
+      if (!booting) return;
+      booting = false;
+      clearTimeout(bootTimer);
       root.classList.add("kl-out");
       lockDesktop(false);
-      window.kitaLoginActive = false;
-      later(() => { if (stage === "desk") root.hidden = true; }, reduce ? 0 : 520);
-      if (firstLogin) {
-        firstLogin = false;
+      window.kitaBootActive = false;
+      hideTimer = setTimeout(() => { if (!booting) root.hidden = true; }, reduce ? 0 : 520);
+      if (firstBoot) {
+        firstBoot = false;
         ready.splice(0).forEach(fn => { try { fn(); } catch (err) { console.error(err); } });
       }
       // No window at boot: an XP-style tray balloon instead.
       kbShow();
     }
-    function enter() {
-      // the tap that skipped the boot screen must not also log in
-      if (stage !== "welcome" || performance.now() - shownAt < 450) return;
-      stage = "entering";
-      tile.classList.add("kl-picked");
-      wel.classList.add("kl-entering");
-      sub.textContent = "loading your personal settings…";
-      later(() => { sub.textContent = "applying ego…"; }, reduce ? 0 : 900);
-      later(finish, reduce ? 600 : 1900);
-    }
     function logOff() {
-      if (stage !== "desk") return;
+      if (booting) return;
       setStartOpen(false);
       kbHide();
       Object.keys(windows).forEach(n => { if (windows[n] && windows[n].classList.contains("open")) closeWindow(n); });
       if (window.kitaSaverOn && window.kitaSaverOn() && window.kitaSaverStop) window.kitaSaverStop();
-      timers.forEach(clearTimeout); timers = [];
-      tip.textContent = "";
-      window.kitaLoginActive = true;
-      root.hidden = false;
-      void root.offsetWidth;
-      root.classList.remove("kl-out");
-      lockDesktop(true);
-      showWelcome();
-      shownAt = 0; // a deliberate Log off can log straight back in
+      boot();
     }
-    const offLines = ["Kita OS can't be turned off. Closing the tab works, though.", "Still on. It's a website.", "You've made your point. So have I."];
-    let offN = 0;
-    offBtn.addEventListener("click", () => { tip.textContent = offLines[Math.min(offN++, offLines.length - 1)]; });
-    bootEl.addEventListener("click", () => skipBoot(true));
-    tile.addEventListener("click", enter);
-    // While the login is up it owns the keyboard: nothing behind it reacts.
+    root.addEventListener("click", finish);
+    // While the boot screen is up it owns the keyboard: nothing behind it reacts.
     window.addEventListener("keydown", (e) => {
-      if (stage === "desk") return;
+      if (!booting) return;
       e.stopImmediatePropagation();
-      if (stage === "boot") {
-        if (["Shift", "Control", "Alt", "Meta", "Tab"].indexOf(e.key) !== -1) return;
-        e.preventDefault();
-        skipBoot(true);
-        return;
-      }
-      if (stage === "entering") { if (e.key !== "Tab") e.preventDefault(); return; }
-      if (e.key === "Enter" && document.activeElement !== offBtn) { e.preventDefault(); enter(); }
+      if (["Shift", "Control", "Alt", "Meta", "Tab"].indexOf(e.key) !== -1) return;
+      e.preventDefault();
+      finish();
     }, true);
     const logoffRow = document.getElementById("startLogoff");
     if (logoffRow) logoffRow.addEventListener("click", (e) => { e.stopPropagation(); logOff(); });
-    window.kitaLoginActive = true;
-    lockDesktop(true);
-    bootTimer = setTimeout(() => skipBoot(false), reduce ? 700 : 2100);
+    boot();
     return {
-      onReady(fn) { if (firstLogin) ready.push(fn); else fn(); },
-      active() { return stage !== "desk"; },
-      logOff
+      onReady(fn) { if (firstBoot) ready.push(fn); else fn(); }
     };
   })();
-  kitaLogin.onReady(() => {
+  kitaBoot.onReady(() => {
     termPrint("Kita OS ready.");
     termPrint("type `help` to pretend you know what you're doing.");
   });
@@ -8363,13 +8195,13 @@
         {
           title: "Desktop",
           paragraphs: [
-            "Every page load boots first: the four-pane Kita OS mark and a progress bar for about two seconds. Tap, click, or press any key to skip it. Then comes an XP-style welcome screen with one user, Nikita. Click or tap the tile, or press Enter, and it says welcome, loads your personal settings, and fades into the desktop. No password, nothing to type. Turn off Kita OS, bottom left, does not. Nothing starts behind the login: the tray balloon, the visitor count, and shared book links wait until you are in. Refresh boots again; nothing is remembered.",
-            "This website is a fake desktop. Start, bottom left, lists apps with their icons; picking one closes the menu. Log off, at the bottom of Start, closes every window and goes back to the welcome screen. On a screen shorter than the menu, it scrolls. The clock, bottom right, is your local time. No seconds.",
+            "Every page load boots first: the four-pane Kita OS mark and a progress bar for about two seconds. Tap, click, or press any key to skip it. Then it fades straight into the desktop. No login, no password, nothing to type. The tray balloon and shared book links wait until the boot screen is gone. Refresh boots again; nothing is remembered.",
+            "This website is a fake desktop. Start, bottom left, lists apps with their icons; picking one closes the menu. Log off, at the bottom of Start, closes every window and plays the boot screen again, then drops you back on the desktop. On a screen shorter than the menu, it scrolls. The clock, bottom right, is your local time. No seconds.",
             "Left of the clock tray sits a 2006 hit counter in its own little panel: odometer digits, VISITORS underneath. Every page load is one real visit, counted on the Worker; test robots and headless browsers are not counted. About also says You are visitor #N. Not a prize. Just a number. Phones get the same panel. If the Worker does not answer, the counter just is not there. No fake numbers.",
             "Icons start in two columns. A tap opens that app and nothing else, not whatever lands under your finger. Drag snaps to a grid across the whole desktop, not only those two columns. They cannot stack. Refresh puts them back. A short window packs those two columns tighter so they stay above the taskbar. Rotate keeps a layout you already moved.",
             "Drag a box around icons to select them, mouse or touch. Drag any selected icon to move the whole pile. Drop the pile on Trash to bin them. Open Trash to restore. Restore stays above the taskbar. Empty clears the bin for this visit; refresh brings everything back, because nothing here is permanent.",
             "Click empty desktop, or an unselected icon, to clear a selection. The first click after a marquee also clears unless it is on a selected icon, which starts a group drag.",
-            "On load nothing opens in your way. A tray balloon pops up over the clock: Your computer is ready, four quick-launch chips (YouTube, Games, Radio, DroneStuff), Tip: Konami code, and an About.txt link. A thin green line drains for 4.5 seconds, then the balloon leaves on its own. Hover or focus pauses it. The x, a chip, or any click on the desktop dismisses it sooner. On a phone it spans the width above the taskbar, chips two by two.",
+            "On load nothing opens in your way. Right after the boot screen, a tray balloon pops up over the clock: Your computer is ready, four quick-launch chips (YouTube, Games, Radio, DroneStuff), Tip: Konami code, and an About.txt link. A thin green line drains for 4.5 seconds, then the balloon leaves on its own. Hover or focus pauses it. The x, a chip, or any click on the desktop dismisses it sooner. On a phone it spans the width above the taskbar, chips two by two.",
             "Designed for the computer, but it works on mobile too.",
             "Leave it alone for a minute and the screensaver takes over: neon stars on black and a KITA OS logo that bounces toward the corner and, like everyone, almost makes it. Any mouse, key, or touch brings the desktop back. It waits while YouTube or VLC is playing or a game window is open. With reduced motion on, it is a dim still frame.",
             "The desktop auto-detects the Tesla car browser and uses bigger icons and buttons. ?tesla forces that layout. ?tesla=0 clears it for this tab. Phone and computer layouts stay the same."
@@ -8617,7 +8449,7 @@
   }
   window.addEventListener("hashchange", () => { openEssayFromHash(); });
   // Shared #book= links open once, then the hash is stripped so refresh is a clean desktop
-  kitaLogin.onReady(() => { setTimeout(() => { openEssayFromHash(); }, 100); });
+  kitaBoot.onReady(() => { setTimeout(() => { openEssayFromHash(); }, 100); });
 
 
 
@@ -14026,7 +13858,7 @@
     const GAME_IDS = /^win-(snake|tetris|minesweeper|2048|chess|pipes|solitaire|flappy|tron|pacman|blackjack|slots|roulette|craps|baccarat)$/;
 
     function busy() {
-      if (window.kitaLoginActive) return true;
+      if (window.kitaBootActive) return true;
       const v = document.getElementById("vlcVideo");
       if (v && !v.paused && !v.ended) return true;
       if (typeof ytUiPlaying !== "undefined" && ytUiPlaying) return true;
@@ -14136,7 +13968,7 @@
   })();
 
   // Hit counter: one real count per page load. No number, no counter.
-  kitaLogin.onReady(function kitaVisitorCounter() {
+  (function kitaVisitorCounter() {
     if (navigator.webdriver) return; // test robots are not visitors
     const odo = document.getElementById("hitOdo");
     const widget = document.getElementById("hitWidget");
@@ -14167,7 +13999,7 @@
         }
       })
       .catch(() => {});
-  });
+  })();
 
   // --- Classic leaderboards (Worker KV) ---
   let lbName = "";
