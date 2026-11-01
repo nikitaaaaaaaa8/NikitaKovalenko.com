@@ -3578,6 +3578,93 @@
     padding-right: 4px; scrollbar-width: thin; scrollbar-color: var(--green-dim) transparent; touch-action: pan-y;
   }
   #win-sports.user-sized .sp-list { max-height: none; }
+
+  /* Sports game detail: tap a card, Back returns to the list. */
+  .sp-game.tap { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+  .sp-game.tap:hover, .sp-game.tap:focus-visible { border-color: rgba(57,255,20,.85); box-shadow: 0 0 14px rgba(57,255,20,.25); outline: none; }
+  #win-sports .sports-content.gd-on > :not(#spDetail) { display: none !important; }
+  #spDetail { display: none; flex-direction: column; gap: 10px; min-height: 0; flex: 1 1 auto; }
+  #win-sports .sports-content.gd-on #spDetail { display: flex; }
+  #spDetail .gd-bar { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; min-width: 0; }
+  #spDetail .gd-back { appearance: none; font: inherit; font-size: 12px; color: var(--green); background: rgba(0,0,0,.35); border: 1px solid rgba(57,255,20,.45); border-radius: 10px; padding: 6px 12px; min-height: 44px; display: flex; align-items: center; gap: 6px; cursor: pointer; flex: 0 0 auto; }
+  #spDetail .gd-back:hover, #spDetail .gd-back:focus-visible { border-color: var(--green); box-shadow: 0 0 12px rgba(57,255,20,.35); outline: none; }
+  #spDetail .gd-back svg { width: 14px; height: 14px; }
+  #spDetail .gd-crumb { font-size: 11px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  #spDetail .gd-upd { margin-left: auto; font-size: 11px; color: var(--muted); white-space: nowrap; flex: 0 0 auto; }
+  #spDetail .gd-scroll { flex: 1 1 auto; min-height: 0; max-height: min(620px, calc(100dvh - 230px)); overflow: auto; padding-right: 4px; scrollbar-width: thin; scrollbar-color: var(--green-dim) transparent; touch-action: pan-y; }
+  #win-sports.user-sized #spDetail .gd-scroll { max-height: none; }
+  #spDetail .gd-hero { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid rgba(57,255,20,.55); border-radius: 12px; background: rgba(0,0,0,.4); box-shadow: inset 0 0 22px rgba(57,255,20,.08); }
+  #spDetail .gd-team { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  #spDetail .gd-team.home { flex-direction: row-reverse; text-align: right; }
+  #spDetail .gd-team .bar { width: 5px; height: 40px; border-radius: 3px; flex: 0 0 auto; box-shadow: 0 0 0 1px rgba(216,255,208,.22); }
+  #spDetail .gd-team .who { min-width: 0; max-width: 100%; }
+  #spDetail .gd-team .ab { font-size: 20px; font-weight: 700; letter-spacing: .03em; color: var(--text); }
+  #spDetail .gd-team .nm { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #spDetail .gd-team .sc { font-size: 34px; font-weight: 700; font-variant-numeric: tabular-nums; margin: 0 6px; color: var(--text); }
+  #spDetail .gd-team.lead .sc { color: var(--green); text-shadow: 0 0 12px rgba(57,255,20,.5); }
+  #spDetail .gd-team.lose .sc, #spDetail .gd-team.lose .ab { color: var(--muted); }
+  #spDetail .gd-mid { text-align: center; font-size: 11px; color: var(--green); letter-spacing: .06em; text-transform: uppercase; min-width: 0; }
+  #spDetail .gd-mid .st { display: flex; align-items: center; gap: 7px; justify-content: center; }
+  #spDetail .gd-mid .per { color: var(--text); font-size: 13px; font-weight: 700; letter-spacing: .04em; margin-top: 2px; white-space: nowrap; }
+  #spDetail .gd-mid .sub { color: var(--muted); text-transform: none; letter-spacing: 0; margin-top: 2px; }
+  #spDetail .gd-cols { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px; margin-top: 12px; align-items: start; }
+  #spDetail .gd-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  #spDetail .gd-card { border: 1px solid rgba(57,255,20,.18); border-radius: 10px; background: rgba(0,0,0,.35); padding: 10px 12px; min-width: 0; }
+  #spDetail .gd-h { display: flex; align-items: center; gap: 8px; font-size: 10px; letter-spacing: .14em; color: var(--green-dim); text-transform: uppercase; margin-bottom: 8px; }
+  #spDetail .gd-h::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(57,255,20,.3), transparent); }
+  #spDetail .gd-h svg { width: 13px; height: 13px; color: var(--green); flex: 0 0 auto; }
+  #spDetail table.gd-ls { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 12px; }
+  #spDetail table.gd-ls th { font-weight: 400; color: var(--muted); font-size: 10.5px; text-align: center; padding: 2px 4px; }
+  #spDetail table.gd-ls td { text-align: center; padding: 4px; border-top: 1px solid rgba(57,255,20,.1); }
+  #spDetail table.gd-ls td:first-child, #spDetail table.gd-ls th:first-child { text-align: left; font-weight: 700; }
+  #spDetail table.gd-ls td.t { color: var(--green); font-weight: 700; }
+  #spDetail table.gd-ls td.na { color: rgba(126,168,120,.35); }
+  #spDetail .gd-st { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; gap: 8px; font-size: 12px; padding: 4px 0; border-top: 1px solid rgba(57,255,20,.08); }
+  #spDetail .gd-st .v { font-variant-numeric: tabular-nums; font-weight: 700; }
+  #spDetail .gd-st .v.h { text-align: right; }
+  #spDetail .gd-st .v.better { color: var(--green); }
+  #spDetail .gd-st .lb { color: var(--muted); font-size: 10.5px; text-align: center; white-space: nowrap; }
+  #spDetail .gd-legend { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--green); letter-spacing: .06em; margin-bottom: 2px; }
+  #spDetail .gd-feed { list-style: none; margin: 0; padding: 0; }
+  #spDetail .gd-feed li { display: grid; grid-template-columns: 52px minmax(0,1fr); gap: 8px; padding: 6px 0; border-top: 1px solid rgba(57,255,20,.08); font-size: 12px; line-height: 1.4; }
+  #spDetail .gd-feed li:first-child { border-top: 0; }
+  #spDetail .gd-feed .tm { color: var(--muted); font-size: 10.5px; font-variant-numeric: tabular-nums; padding-top: 1px; }
+  #spDetail .gd-feed .tx { color: var(--text); overflow-wrap: anywhere; }
+  #spDetail .gd-feed .tx b { color: var(--green); font-weight: 700; margin-right: 5px; font-size: 10.5px; letter-spacing: .04em; }
+  #spDetail .gd-feed li.score .tx, #spDetail .gd-feed li.score .tm { color: var(--green); }
+  #spDetail .gd-feed .gsc { color: var(--muted); font-size: 10.5px; margin-left: 6px; white-space: nowrap; }
+  #spDetail .gd-sub { margin-top: 10px; }
+  #spDetail .gd-drive { font-size: 11px; color: var(--muted); margin: -2px 0 6px; }
+  #spDetail .gd-drive b { color: var(--green); }
+  #spDetail .gd-ldt { font-size: 11px; letter-spacing: .08em; color: var(--green); margin: 10px 0 4px; display: flex; align-items: center; gap: 7px; }
+  #spDetail .gd-ldt:first-of-type { margin-top: 0; }
+  #spDetail .gd-ldt .bar { width: 4px; height: 12px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(216,255,208,.22); }
+  #spDetail .gd-pl { padding: 6px 0; border-top: 1px solid rgba(57,255,20,.08); }
+  #spDetail .gd-ldt + .gd-pl { border-top: 0; }
+  #spDetail .gd-pl .pn { font-weight: 700; font-size: 12.5px; color: var(--text); }
+  #spDetail .gd-pl .pn i { font-style: normal; font-weight: 400; color: var(--muted); font-size: 10.5px; margin-left: 6px; }
+  #spDetail .gd-pl .gm { font-size: 12px; color: var(--green); }
+  #spDetail .gd-pl .ss { font-size: 10.5px; color: var(--muted); }
+  #spDetail .gd-pl .ss span { color: rgba(126,168,120,.7); }
+  #spDetail .gd-none { font-size: 11.5px; color: var(--muted); padding: 4px 0; }
+  #spDetail .gd-foot { font-size: 10.5px; color: var(--muted); display: flex; justify-content: space-between; gap: 10px; border-top: 1px solid rgba(57,255,20,.12); padding-top: 8px; flex: 0 0 auto; }
+  @media (max-width: 700px) {
+    #spDetail { gap: 8px; }
+    #spDetail .gd-back { padding: 6px 14px; font-size: 12.5px; }
+    #spDetail .gd-scroll { max-height: none; }
+    #spDetail .gd-hero { padding: 10px; gap: 6px; }
+    #spDetail .gd-team, #spDetail .gd-team.home { gap: 6px; flex-direction: column; align-items: flex-start; }
+    #spDetail .gd-team.home { align-items: flex-end; }
+    #spDetail .gd-team .bar { width: 28px; height: 4px; }
+    #spDetail .gd-team .ab { font-size: 17px; }
+    #spDetail .gd-team .nm .rec { display: none; }
+    #spDetail .gd-team .sc { font-size: 30px; margin: 0; line-height: 1; }
+    #spDetail .gd-mid { font-size: 10.5px; max-width: 96px; }
+    #spDetail .gd-cols { grid-template-columns: minmax(0,1fr); gap: 10px; margin-top: 10px; }
+    #spDetail .gd-col { display: contents; }
+    #spDetail .a-line { order: 1; } #spDetail .a-plays { order: 2; } #spDetail .a-leaders { order: 3; } #spDetail .a-stats { order: 4; }
+    #spDetail .gd-foot span:last-child { display: none; }
+  }
   .sp-sec { display: flex; align-items: center; gap: 8px; margin: 12px 0 6px; font-size: 10px; letter-spacing: .14em; color: var(--green-dim); text-transform: uppercase; }
   .sp-sec:first-child { margin-top: 2px; }
   .sp-sec::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(57,255,20,.3), transparent); }
@@ -5175,7 +5262,8 @@
           <button type="button" role="tab" class="sp-tab" data-league="soccer" aria-selected="false">Soccer<span class="n"></span></button>
         </div>
         <div class="sp-list" id="spList"></div>
-        <div class="sp-foot"><span>Times in ET. Refreshes every 30s while open.</span><span>Data: ESPN. Opinions: withheld.</span></div>
+        <div class="sp-foot"><span>Times in ET. Tap a game for the details. Refreshes every 30s while open.</span><span>Data: ESPN. Opinions: withheld.</span></div>
+        <div id="spDetail" aria-live="off"></div>
       </div>
     </section>
 
@@ -7619,7 +7707,7 @@
       closeDroneLightbox();
     });
   }
-  // Escape peels one layer: photo, score prompt, Start menu, Scores detail, then the front window.
+  // Escape peels one layer: photo, score prompt, Start menu, Scores or Sports detail, then the front window.
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape" || e.defaultPrevented) return;
     if (droneLightbox && !droneLightbox.hidden) { closeDroneLightbox(); return; }
@@ -7628,6 +7716,7 @@
     if (startMenu && !startMenu.hidden) { setStartOpen(false); if (startBtn) startBtn.focus(); return; }
     const front = Object.keys(windows).find(n => windows[n] && windows[n].classList.contains("open") && windows[n].classList.contains("active"));
     if (front === "scores" && lbEscapeBack()) return;
+    if (front === "sports" && spEscapeBack()) return;
     if (front) closeWindow(front);
   });
 
@@ -8307,6 +8396,7 @@
             "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck: drag it up or down, mouse or finger. Tap the readout next to it (or double-click the knob) to reset to 1.00x. On touch screens every control is a full fingertip wide. The current track plays forever or until you press Next, whichever comes first. There is no Loop button; looping is the whole plan. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
             "Scores is the classic leaderboard for every rankable game, all on one screen. Each game gets a card with every difficulty stacked inside it, top 3 per board (rank, name, score) and the metric under the title (score, points, wins, fewest moves, fastest clear). #1 glows. Empty boards say Unclaimed. Cards flow three across on a desktop, fewer on a tablet, one column on a phone, and the window scrolls. Tap a board for its full top 10 with when each score landed, flip difficulties with the chips, and Back to all boards (Escape does Back first, then closes the window). One request to the Worker’s /boards fills everything; Refresh asks again. If the Worker is down it says Could not reach the board. Open it from the desktop or type scores in Terminal.",
             "Sports is live scores and nothing else: NFL, NBA, NHL, and Soccer (Premier League and MLS on one tab). Today only, in ET. Each game is a card: Live with a pulsing green dot and the quarter, period, or minute; Upcoming with the start time; Final with the winner lit. Tabs show how many games and a red pip when one is live. It asks the Worker every 30 seconds, only while the window is open and the tab is visible, and stops the moment you close it. The Worker borrows ESPN's public scoreboard and caches it for about 30 seconds, so a thousand fans cost ESPN one request. No streams, no ticker on the taskbar, no opinions. A day with no games says so in one line. Up top, Want to bet on it? opens Nikita's Kalshi referral ($25 bonus) in a new tab. Scores is the game leaderboard; Sports is the real one.",
+            "Tap any game to open it. The detail view replaces the list inside the Sports window: the score and clock up top, the line score by quarter, period or half, team stats with the better side in green, the latest plays (the current drive for the NFL, key moments and commentary for soccer), and the top players on each side with their line in this game and their season line underneath. Two columns on a desktop, one on a phone. It asks the Worker every 15 seconds, only while that game is open and the tab is visible, and stops on Back, on close, or when the game goes Final, because a finished game has nothing new to say. The Worker trims ESPN's half-megabyte game summary to a few kilobytes and caches it for 15 seconds while live and 10 minutes otherwise; season lines are cached for six hours. Back, top left, returns to the list. So does Escape, the first time. The second Escape closes the window.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. The shelf keeps its full height while a book is open, so every title stays readable; on a phone only the reader scrolls. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Copy email copies the address. Open mail app prefills the subject “you're the man.”"
           ]
@@ -14304,6 +14394,8 @@
     const d = String(e.detail || "");
     const m = d.match(/^([\d:.]+)\s*-\s*(\d)(st|nd|rd|th)\b/);
     if (m && league !== "soccer") return (league === "nhl" ? "P" : "Q") + m[2] + " · " + m[1];
+    const ot = d.match(/^([\d:.]+)\s*-\s*(\d*OT)\b/);
+    if (ot && league !== "soccer") return ot[2] + " · " + ot[1];
     return d;
   }
   function spTeam(t, cls, pre) {
@@ -14312,7 +14404,7 @@
       '<span class="nm">' + spEsc(t.name) + (t.record ? '<i>' + spEsc(t.record) + '</i>' : '') + '</span>' +
       '<span class="sc">' + (pre ? "–" : spEsc(t.score)) + '</span></div>';
   }
-  function spCard(e, league) {
+  function spCard(e, league, comp) {
     const a = e.away, h = e.home, as = Number(a.score), hs = Number(h.score);
     const kind = e.state === "in" ? "live" : e.state === "post" ? "final" : "pre";
     let status, ac = "", hc = "";
@@ -14327,7 +14419,7 @@
     } else {
       status = '<span class="t">' + spEsc(spTime(e.date)) + '</span><span class="when">' + SP_START[league] + '</span>';
     }
-    return '<div class="sp-game ' + kind + '"><div class="sp-status">' + status + '</div>' +
+    return '<div class="sp-game tap ' + kind + '" role="button" tabindex="0" data-id="' + spEsc(e.id) + '" data-comp="' + spEsc(comp || "") + '" aria-label="' + spEsc(a.abbr + " at " + h.abbr + ", details") + '"><div class="sp-status">' + status + '</div>' +
       spTeam(a, ac, kind === "pre") + spTeam(h, hc, kind === "pre") + '</div>';
   }
   function spRenderTabs() {
@@ -14365,7 +14457,7 @@
       [["in", "Live"], ["pre", "Upcoming"], ["post", "Final"]].forEach(function (o) {
         const evs = g.events.filter(function (e) { return e.state === o[0]; });
         if (!evs.length) return;
-        html += '<div class="sp-sec">' + o[1] + ' · ' + evs.length + '</div><div class="sp-grid">' + evs.map(function (e) { return spCard(e, spLeague); }).join("") + '</div>';
+        html += '<div class="sp-sec">' + o[1] + ' · ' + evs.length + '</div><div class="sp-grid">' + evs.map(function (e) { return spCard(e, spLeague, g.comp); }).join("") + '</div>';
       });
     });
     if (!total) html = '<div class="sp-empty">' + icon + '<span>' + SP_EMPTY[spLeague] + '</span></div>';
@@ -14408,6 +14500,7 @@
     if (!spOpen() || document.hidden) return;
     spPollTimer = setInterval(function () {
       if (!spOpen() || document.hidden) { spStopPolling(); return; }
+      if (gdGame) return; // the game panel has its own 15s poll
       spFetchAll();
     }, SP_POLL_MS);
     spAgoTimer = setInterval(spRenderAgo, 1000);
@@ -14417,12 +14510,13 @@
     spFetchAll();
     spStartPolling();
   }
-  function spOnClose() { spStopPolling(); }
+  function spOnClose() { spStopPolling(); gdClose(); }
   document.addEventListener("visibilitychange", function () {
     if (!spOpen()) return;
-    if (document.hidden) { spStopPolling(); return; }
+    if (document.hidden) { spStopPolling(); gdStop(); return; }
     spFetchAll();
     spStartPolling();
+    if (gdGame) { gdFetch(); gdStart(); }
   });
   (function wireSports() {
     const tabs = document.getElementById("spTabs");
@@ -14436,6 +14530,216 @@
       spRender();
       if (!spData[spLeague] || spData[spLeague].error) spFetch(spLeague);
     });
+  })();
+
+  // ---- Sports game detail: one game, polled every 15s only while its panel is open ----
+  const GD_POLL_MS = 15000;
+  let gdGame = null;      // { league, id, comp }
+  let gdData = null;
+  let gdTimer = null, gdAgoTimer = null, gdReq = 0;
+  const GD_ICON = {
+    line: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M3.5 10h17M9 5v14"/></svg>',
+    stats: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19V11M10 19V6M15 19v-9M20 19V4"/></svg>',
+    feed: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h11M4 18h7"/><circle cx="19" cy="17" r="2"/></svg>',
+    star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l2.4 5 5.4.6-4 3.7 1.1 5.3L12 16l-4.9 2.6 1.1-5.3-4-3.7 5.4-.6z"/></svg>',
+    back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>'
+  };
+  const GD_LOWER_BETTER = /turnover|penalt|foul|yellow|red|offside|giveaway/i;
+  function gdNum(v) { const m = String(v).match(/-?[\d.]+/); return m ? parseFloat(m[0]) : NaN; }
+  function gdLabel() {
+    if (!gdGame) return "";
+    if (gdGame.league === "soccer") return (gdData && gdData.comp) || (gdGame.comp === "eng.1" ? "Premier League" : "MLS");
+    return gdGame.league.toUpperCase();
+  }
+  function gdLive(G) {
+    const d = String(G.detail || ""), m = d.match(/^([\d:.]+)\s*-\s*(\d)(st|nd|rd|th)/);
+    const ck = function (c) { return c.indexOf(":") < 0 ? "0:" + ("0" + c).slice(-4) : c; };
+    if (m && G.league !== "soccer") return (G.league === "nhl" ? "P" : "Q") + m[2] + " · " + ck(m[1]);
+    const ot = d.match(/^([\d:.]+)\s*-\s*(\d*OT)\b/);
+    if (ot && G.league !== "soccer") return ot[2] + " · " + ck(ot[1]);
+    return d;
+  }
+  function gdLineScore(G) {
+    const lg = G.league, n = Math.max(G.away.lines.length, G.home.lines.length);
+    const base = lg === "soccer" ? 2 : lg === "nhl" ? 3 : 4, cols = [];
+    for (let i = 0; i < Math.max(n, base); i++) {
+      if (lg === "soccer") cols.push(i === 0 ? "1H" : i === 1 ? "2H" : "ET" + (i - 1));
+      else if (i < base) cols.push(String(i + 1));
+      else cols.push(lg === "nhl" ? (i === base ? "OT" : "SO") : (i === base ? "OT" : "OT" + (i - base + 1)));
+    }
+    const row = function (t) {
+      return '<tr><td>' + spEsc(t.abbr) + '</td>' + cols.map(function (c, i) { const v = t.lines[i]; return v == null ? '<td class="na">–</td>' : '<td>' + spEsc(v) + '</td>'; }).join("") +
+        '<td class="t">' + (G.state === "pre" ? "–" : spEsc(t.score)) + '</td></tr>';
+    };
+    return '<table class="gd-ls"><thead><tr><th></th>' + cols.map(function (c) { return '<th>' + c + '</th>'; }).join("") + '<th>T</th></tr></thead><tbody>' + row(G.away) + row(G.home) + '</tbody></table>';
+  }
+  function gdStats(G) {
+    if (!G.stats.length) return '<div class="gd-none">No numbers yet. The stat crew is still finding their seats.</div>';
+    let h = '<div class="gd-legend"><span>' + spEsc(G.away.abbr) + '</span><span>' + spEsc(G.home.abbr) + '</span></div>';
+    G.stats.forEach(function (r) {
+      const a = gdNum(r[1]), b = gdNum(r[2]), low = GD_LOWER_BETTER.test(r[0]);
+      const w = a === b || isNaN(a) || isNaN(b) ? "" : ((a > b) !== low ? "a" : "h");
+      h += '<div class="gd-st"><span class="v a' + (w === "a" ? " better" : "") + '">' + spEsc(r[1]) + '</span><span class="lb">' + spEsc(r[0]) + '</span><span class="v h' + (w === "h" ? " better" : "") + '">' + spEsc(r[2]) + '</span></div>';
+    });
+    return h;
+  }
+  function gdFeed(G) {
+    const lg = G.league, items = G.plays || [];
+    let h = "";
+    if (lg === "nfl" && G.drive && G.drive.team && G.state === "in") h += '<div class="gd-drive">Current drive: <b>' + spEsc(G.drive.team) + '</b> · ' + spEsc(G.drive.desc) + '</div>';
+    if (lg === "soccer" && G.keyEvents && G.keyEvents.length) {
+      h += '<ul class="gd-feed">' + G.keyEvents.slice().reverse().map(function (k) {
+        const goal = /goal/i.test(k.type);
+        return '<li class="' + (goal ? "score" : "") + '"><span class="tm">' + spEsc(k.clock) + '</span><span class="tx"><b>' + spEsc(String(k.type || "").toUpperCase()) + '</b>' +
+          spEsc(String(k.text || "").replace(/^Goal!\s*/, "").replace(/^[^.]*\d+, [^.]*\d+\.\s*/, "")) + '</span></li>';
+      }).join("") + '</ul><div class="gd-h gd-sub">Commentary</div>';
+    }
+    if (!items.length) return h + '<div class="gd-none">Nothing has happened yet. Riveting.</div>';
+    h += '<ul class="gd-feed">' + items.map(function (p) {
+      const reg = lg === "nhl" ? 3 : 4;
+      const per = p.period > reg ? (p.period - reg > 1 ? (p.period - reg) + "OT" : "OT") : (lg === "nhl" ? "P" : "Q") + (p.period || "");
+      const tm = lg === "soccer" ? (p.clock || "") : per + " " + (p.clock || "");
+      const sc = (p.awayScore != null && p.score) ? '<span class="gsc">' + spEsc(G.away.abbr) + ' ' + spEsc(p.awayScore) + '–' + spEsc(p.homeScore) + ' ' + spEsc(G.home.abbr) + '</span>' : "";
+      return '<li class="' + (p.score ? "score" : "") + '"><span class="tm">' + spEsc(tm) + '</span><span class="tx">' + (p.team ? '<b>' + spEsc(p.team) + '</b>' : "") + spEsc(p.text) + sc + '</span></li>';
+    }).join("") + '</ul>';
+    return h;
+  }
+  function gdLeaders(G) {
+    let h = "";
+    [G.away, G.home].forEach(function (t) {
+      const L = (G.leaders && G.leaders[t.abbr]) || [];
+      h += '<div class="gd-ldt"><span class="bar" style="background:' + spEsc(t.color) + '"></span>' + spEsc(t.name) + '</div>';
+      if (!L.length) { h += '<div class="gd-none">Nobody has done enough to be listed. Yet.</div>'; return; }
+      L.forEach(function (p) {
+        h += '<div class="gd-pl"><div class="pn">' + spEsc(p.name) + '<i>' + spEsc([p.pos, p.jersey ? "#" + p.jersey : ""].filter(Boolean).join(" ")) + '</i></div>' +
+          '<div class="gm">' + spEsc(p.game) + '</div>' + (p.season ? '<div class="ss"><span>Season</span> ' + spEsc(p.season) + '</div>' : "") + '</div>';
+      });
+    });
+    return h;
+  }
+  function gdBar() {
+    return '<div class="gd-bar"><button type="button" class="gd-back" id="gdBack">' + GD_ICON.back + 'Back</button>' +
+      '<span class="gd-crumb">' + spEsc(gdLabel()) + (gdData && gdData.away ? ' · ' + spEsc(gdData.away.abbr) + ' at ' + spEsc(gdData.home.abbr) : "") + '</span>' +
+      '<span class="gd-upd" id="gdUpd"></span></div>';
+  }
+  function gdRender() {
+    const box = document.getElementById("spDetail");
+    if (!box || !gdGame) return;
+    const old = box.querySelector(".gd-scroll"), keep = old ? old.scrollTop : 0;
+    const hadFocus = document.activeElement && document.activeElement.id === "gdBack";
+    const foot = '<div class="gd-foot"><span>' + (gdData && gdData.state === "post" ? "Final. It will not change, so it stopped asking." : "Refreshes every 15s while this game is open.") + '</span><span>Data: ESPN. Opinions: still withheld.</span></div>';
+    const G = gdData;
+    if (!G || G.error) {
+      box.innerHTML = gdBar() + '<div class="gd-scroll"><div class="sp-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5l3 2"/></svg><span>' +
+        (G && G.error ? "ESPN is not answering about this one. Trying again in 15s." : "Asking ESPN for the details…") + '</span></div></div>' + foot;
+    } else {
+      const a = G.away, hm = G.home, as = Number(a.score), hs = Number(hm.score), live = G.state === "in", post = G.state === "post";
+      let ac = "", hc = "";
+      if (post) { ac = a.winner ? "lead" : hm.winner ? "lose" : ""; hc = hm.winner ? "lead" : a.winner ? "lose" : ""; }
+      else if (live) { if (as > hs) ac = "lead"; else if (hs > as) hc = "lead"; }
+      const status = live ? '<div class="st"><span class="sp-pulse" aria-hidden="true"></span>Live</div><div class="per">' + spEsc(gdLive(G)) + '</div>'
+        : post ? '<div class="st">' + spEsc(/OT|SO|AET|Pen/i.test(G.detail || "") ? G.detail : "Final") + '</div>'
+        : '<div class="st">Upcoming</div><div class="per">' + spEsc(spTime(G.date)) + '</div>';
+      const team = function (t, cls, home) {
+        return '<div class="gd-team' + (home ? " home" : "") + (cls ? " " + cls : "") + '"><span class="bar" style="background:' + spEsc(t.color) + '"></span><div class="who"><div class="ab">' + spEsc(t.abbr) + '</div>' +
+          '<div class="nm">' + spEsc(t.short || t.name) + (t.record ? '<span class="rec"> · ' + spEsc(t.record) + '</span>' : "") + '</div></div><span class="sc">' + (G.state === "pre" ? "–" : spEsc(t.score)) + '</span></div>';
+      };
+      const lg = G.league;
+      box.innerHTML = gdBar() + '<div class="gd-scroll">' +
+        '<div class="gd-hero">' + team(a, ac, false) + '<div class="gd-mid">' + status + '<div class="sub">' + spEsc(G.venue || "") + '</div></div>' + team(hm, hc, true) + '</div>' +
+        '<div class="gd-cols"><div class="gd-col">' +
+          '<div class="gd-card a-line"><div class="gd-h">' + GD_ICON.line + (lg === "soccer" ? "By half" : lg === "nhl" ? "By period" : "By quarter") + '</div>' + gdLineScore(G) + '</div>' +
+          '<div class="gd-card a-plays"><div class="gd-h">' + GD_ICON.feed + (lg === "soccer" ? "Key moments" : "Play-by-play") + '</div>' + gdFeed(G) + '</div>' +
+        '</div><div class="gd-col">' +
+          '<div class="gd-card a-stats"><div class="gd-h">' + GD_ICON.stats + 'Team stats</div>' + gdStats(G) + '</div>' +
+          '<div class="gd-card a-leaders"><div class="gd-h">' + GD_ICON.star + 'Top players</div>' + gdLeaders(G) + '</div>' +
+        '</div></div></div>' + foot;
+    }
+    const sc = box.querySelector(".gd-scroll"); if (sc) sc.scrollTop = keep;
+    if (hadFocus) { const b = document.getElementById("gdBack"); if (b) b.focus(); }
+    gdRenderAgo();
+  }
+  function gdRenderAgo() {
+    const el = document.getElementById("gdUpd");
+    if (!el) return;
+    if (!gdData || !gdData.fetchedAt) { el.textContent = gdData && gdData.error ? "unreachable" : "checking…"; return; }
+    const s = Math.max(0, Math.round((Date.now() - Date.parse(gdData.fetchedAt)) / 1000));
+    el.textContent = "updated " + (s < 60 ? s + "s ago" : Math.floor(s / 60) + "m ago") + (gdData.stale ? " (stale)" : "");
+  }
+  function gdFetch() {
+    if (!gdGame) return Promise.resolve();
+    const g = gdGame, req = ++gdReq;
+    let q = "/sports/game?league=" + encodeURIComponent(g.league) + "&id=" + encodeURIComponent(g.id);
+    if (g.league === "soccer") q += "&comp=" + encodeURIComponent(g.comp);
+    return fetch(KITA_VIEWS_URL + q, { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("game " + r.status); return r.json(); })
+      .then(function (d) { if (!d || !d.away || !d.home) throw new Error("bad"); if (req === gdReq && gdGame === g) gdData = d; })
+      .catch(function () { if (req === gdReq && gdGame === g && (!gdData || gdData.error)) gdData = { error: true }; })
+      .then(function () {
+        if (req !== gdReq || gdGame !== g || !spOpen()) return;
+        gdRender();
+        if (gdData && gdData.state === "post") gdStop(); // Final: nothing left to ask about
+      });
+  }
+  function gdStop() {
+    if (gdTimer) { clearInterval(gdTimer); gdTimer = null; }
+    if (gdAgoTimer) { clearInterval(gdAgoTimer); gdAgoTimer = null; }
+  }
+  function gdStart() {
+    gdStop();
+    if (!gdGame || !spOpen() || document.hidden || (gdData && gdData.state === "post")) return;
+    gdTimer = setInterval(function () {
+      if (!gdGame || !spOpen() || document.hidden) { gdStop(); return; }
+      gdFetch();
+    }, GD_POLL_MS);
+    gdAgoTimer = setInterval(gdRenderAgo, 1000);
+  }
+  function gdOpenGame(league, id, comp) {
+    if (!/^\d+$/.test(String(id || ""))) return;
+    gdGame = { league: league, id: String(id), comp: comp || "" };
+    gdData = null;
+    const content = windows.sports && windows.sports.querySelector(".sports-content");
+    if (content) content.classList.add("gd-on");
+    gdRender();
+    gdFetch();
+    gdStart();
+    const b = document.getElementById("gdBack"); if (b) b.focus({ preventScroll: true });
+  }
+  function gdClose() {
+    gdStop();
+    gdReq++;
+    const was = gdGame;
+    gdGame = null; gdData = null;
+    const content = windows.sports && windows.sports.querySelector(".sports-content");
+    if (content) content.classList.remove("gd-on");
+    const box = document.getElementById("spDetail"); if (box) box.innerHTML = "";
+    return was;
+  }
+  function gdBack() {
+    const was = gdClose();
+    if (!was || !spOpen()) return;
+    spRender();
+    spFetchAll(); // the list may be 15 minutes old by now
+    const card = document.querySelector('#spList .sp-game[data-id="' + was.id + '"]');
+    if (card) card.focus({ preventScroll: false });
+  }
+  // Escape: Back to the list first, then the window closes.
+  function spEscapeBack() {
+    if (!gdGame || !spOpen()) return false;
+    gdBack();
+    return true;
+  }
+  (function wireGameDetail() {
+    const list = document.getElementById("spList"), box = document.getElementById("spDetail");
+    if (!list || !box) return;
+    const open = function (card) { gdOpenGame(spLeague, card.getAttribute("data-id"), card.getAttribute("data-comp")); };
+    list.addEventListener("click", function (e) { const c = e.target.closest(".sp-game.tap"); if (c) open(c); });
+    list.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const c = e.target.closest(".sp-game.tap"); if (!c) return;
+      e.preventDefault(); open(c);
+    });
+    box.addEventListener("click", function (e) { if (e.target.closest("#gdBack")) gdBack(); });
   })();
 
   // Escape: Back to the overview first, then the window closes.
