@@ -6812,7 +6812,7 @@
     return activeGeo().then(geo => {
       if (!Number.isFinite(geo.lat) || !Number.isFinite(geo.lon)) throw new Error("no coords");
       const unitSym = "°F";
-      const url = "https://kita-views.nikitaaaaaaaa.workers.dev/weather?lat=" + geo.lat + "&lon=" + geo.lon;
+      const url = "https://api.nikitakovalenko.com/weather?lat=" + geo.lat + "&lon=" + geo.lon;
       return fetch(url, { cache: "no-store" }).then(r => {
         if (!r.ok) throw new Error("weather failed");
         return r.json();
@@ -8227,7 +8227,7 @@
             "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar, newest first, with its view count and length. The newest is Elijah Taylor live at The Barbary, a full set at 1:16:21, which is why the time readout learned hours. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
             "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck: drag it up or down, mouse or finger. Tap the readout next to it (or double-click the knob) to reset to 1.00x. On touch screens every control is a full fingertip wide. The current track plays forever or until you press Next, whichever comes first. There is no Loop button; looping is the whole plan. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
             "Scores is the classic leaderboard for every rankable game, all on one screen. Each game gets a card with every difficulty stacked inside it, top 3 per board (rank, name, score) and the metric under the title (score, points, wins, fewest moves, fastest clear). #1 glows. Empty boards say Unclaimed. Cards flow three across on a desktop, fewer on a tablet, one column on a phone, and the window scrolls. Tap a board for its full top 10 with when each score landed, flip difficulties with the chips, and Back to all boards (Escape does Back first, then closes the window). One request to the Worker’s /boards fills everything; Refresh asks again. If the Worker is down it says Could not reach the board. Open it from the desktop or type scores in Terminal.",
-            "Sports is live scores and nothing else: NFL, NBA, NHL, and Soccer (Premier League and MLS on one tab). Today only, in ET. Each game is a card: Live with a pulsing green dot and the quarter, period, or minute; Upcoming with the start time; Final with the winner lit. Tabs show how many games and a red pip when one is live. It asks the Worker every 30 seconds, only while the window is open and the tab is visible, and stops the moment you close it. The Worker borrows ESPN's public scoreboard and caches it for about 30 seconds, so a thousand fans cost ESPN one request. No streams, no ticker on the taskbar, no opinions. A day with no games says so in one line. Up top, Want to bet on it? opens Nikita's Kalshi referral ($25 bonus) in a new tab. Scores is the game leaderboard; Sports is the real one.",
+            "Sports is live scores and nothing else: NFL, NBA, NHL, and Soccer (Premier League and MLS on one tab). Today only, in ET. Each game is a card: Live with a pulsing green dot and the quarter, period, or minute; Upcoming with the start time; Final with the winner lit. Tabs show how many games and a red pip when one is live. It asks the Worker every 30 seconds, only while the window is open and the tab is visible, and stops the moment you close it. The Worker borrows ESPN's public scoreboard and caches it for about 30 seconds, so a thousand fans cost ESPN one request. No streams, no ticker on the taskbar, no opinions. A day with no games says so in one line. Up top, Want to bet on it? opens Nikita's Kalshi referral ($25 bonus) in a new tab. Scores come from Kita's own api.nikitakovalenko.com; if that hiccups, Sports quietly retries on a backup line before it gives up. Scores is the game leaderboard; Sports is the real one.",
             "Tap any game to open it. The detail view replaces the list inside the Sports window: the score and clock up top, the line score by quarter, period or half, team stats with the better side in green, the latest plays (the current drive for the NFL, key moments and commentary for soccer), and the top players on each side with their line in this game and their season line underneath. Two columns on a desktop, one on a phone. It asks the Worker every 15 seconds, only while that game is open and the tab is visible, and stops on Back, on close, or when the game goes Final, because a finished game has nothing new to say. The Worker trims ESPN's half-megabyte game summary to a few kilobytes and caches it for 15 seconds while live and 10 minutes otherwise; season lines are cached for six hours. Back, top left, returns to the list. So does Escape, the first time. The second Escape closes the window.",
             "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. The shelf keeps its full height while a book is open, so every title stays readable; on a phone only the reader scrolls. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Copy email copies the address. Open mail app prefills the subject “you're the man.”"
@@ -13842,7 +13842,17 @@
 
 
   // View counts live on the Worker. Session-only otherwise. No localStorage.
-  const KITA_VIEWS_URL = "https://kita-views.nikitaaaaaaaa.workers.dev";
+  const KITA_VIEWS_URL = "https://api.nikitakovalenko.com";
+  const KITA_VIEWS_FALLBACK = "https://kita-views.nikitaaaaaaaa.workers.dev";
+  // Read-only GET with one retry: same host after a beat, then the workers.dev backup.
+  function kitaGet(path) {
+    function once(base) {
+      return fetch(base + path, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.json(); });
+    }
+    return once(KITA_VIEWS_URL).catch(function () {
+      return new Promise(function (res) { setTimeout(res, 1200); }).then(function () { return once(KITA_VIEWS_FALLBACK); });
+    });
+  }
   const kitaViews = { inflight: null };
 
   // --- Screensaver: 60s idle, neon starfield, Kita logo that never quite hits the corner ---
@@ -14301,7 +14311,7 @@
     const el = document.getElementById("spUpdated");
     if (!el) return;
     const d = spData[spLeague];
-    if (!d || !d.fetchedAt) { el.textContent = d && d.error ? "scoreboard unreachable" : "checking the scoreboard…"; return; }
+    if (!d || !d.fetchedAt) { el.textContent = d && d.error ? "scoreboard is napping, retrying…" : "checking the scoreboard…"; return; }
     const s = Math.max(0, Math.round((Date.now() - Date.parse(d.fetchedAt)) / 1000));
     const ago = s < 60 ? s + "s ago" : Math.floor(s / 60) + "m ago";
     el.textContent = "updated " + ago + (d.stale ? " (stale, ESPN is napping)" : "");
@@ -14311,8 +14321,7 @@
     const id = ++spReq;
     const wrap = document.getElementById("spUpdatedWrap");
     if (wrap) wrap.classList.add("loading");
-    return fetch(KITA_VIEWS_URL + "/sports?league=" + encodeURIComponent(league), { cache: "no-store" })
-      .then(function (r) { if (!r.ok) throw new Error("sports " + r.status); return r.json(); })
+    return kitaGet("/sports?league=" + encodeURIComponent(league))
       .then(function (data) { if (data && Array.isArray(data.groups)) spData[league] = data; else throw new Error("bad"); })
       .catch(function () { if (!spData[league] || spData[league].error) spData[league] = { error: true }; })
       .then(function () { if (id === spReq && wrap) wrap.classList.remove("loading"); if (spOpen()) spRender(); });
@@ -14503,8 +14512,7 @@
     const g = gdGame, req = ++gdReq;
     let q = "/sports/game?league=" + encodeURIComponent(g.league) + "&id=" + encodeURIComponent(g.id);
     if (g.league === "soccer") q += "&comp=" + encodeURIComponent(g.comp);
-    return fetch(KITA_VIEWS_URL + q, { cache: "no-store" })
-      .then(function (r) { if (!r.ok) throw new Error("game " + r.status); return r.json(); })
+    return kitaGet(q)
       .then(function (d) { if (!d || !d.away || !d.home) throw new Error("bad"); if (req === gdReq && gdGame === g) gdData = d; })
       .catch(function () { if (req === gdReq && gdGame === g && (!gdData || gdData.error)) gdData = { error: true }; })
       .then(function () {
