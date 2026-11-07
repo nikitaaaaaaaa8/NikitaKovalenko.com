@@ -1044,10 +1044,9 @@
     overflow: hidden;
   }
   .book:nth-child(2) .book-spine,
-  .book:nth-child(5) .book-spine,
+  .book:nth-child(4) .book-spine,
   .book:nth-child(6) .book-spine,
-  .book:nth-child(9) .book-spine,
-  .book:nth-child(10) .book-spine {
+  .book:nth-child(7) .book-spine {
     font-size: 8px;
     letter-spacing: 0.02em;
     max-height: 148px;
@@ -4347,27 +4346,23 @@
     .book {
       width: 26px;
       flex: 0 0 26px;
-      max-width: calc((100% - 36px) / 10);
+      max-width: calc((100% - 24px) / 7);
     }
     .book:nth-child(1) { height: 100px; }
     .book:nth-child(2) { height: 130px; }
     .book:nth-child(3) { height: 106px; }
-    .book:nth-child(4) { height: 94px; }
-    .book:nth-child(5) { height: 110px; }
-    .book:nth-child(6) { height: 114px; }
-    .book:nth-child(7) { height: 102px; }
-    .book:nth-child(8) { height: 100px; }
-    .book:nth-child(9) { height: 112px; }
-    .book:nth-child(10) { height: 122px; }
+    .book:nth-child(4) { height: 110px; }
+    .book:nth-child(5) { height: 100px; }
+    .book:nth-child(6) { height: 112px; }
+    .book:nth-child(7) { height: 122px; }
     .book-spine {
       font-size: 7px;
       max-height: 86px;
     }
     .book:nth-child(2) .book-spine,
-    .book:nth-child(5) .book-spine,
+    .book:nth-child(4) .book-spine,
     .book:nth-child(6) .book-spine,
-    .book:nth-child(9) .book-spine,
-    .book:nth-child(10) .book-spine {
+    .book:nth-child(7) .book-spine {
       font-size: 6.5px;
       max-height: 108px;
     }
@@ -4726,10 +4721,9 @@
     font-size: 11px;
   }
   html.tesla .book:nth-child(2) .book-spine,
-  html.tesla .book:nth-child(5) .book-spine,
+  html.tesla .book:nth-child(4) .book-spine,
   html.tesla .book:nth-child(6) .book-spine,
-  html.tesla .book:nth-child(9) .book-spine,
-  html.tesla .book:nth-child(10) .book-spine {
+  html.tesla .book:nth-child(7) .book-spine {
     font-size: 10px;
   }
   html.tesla .book-tab {
@@ -5400,17 +5394,8 @@
           <div class="book" data-book="evolution" tabindex="0">
             <div class="book-spine">Theory of evolution</div>
           </div>
-          <div class="book" data-book="memetics" tabindex="0">
-            <div class="book-spine">Memetics</div>
-          </div>
           <div class="book" data-book="howto" tabindex="0">
             <div class="book-spine">How Kita OS works</div>
-          </div>
-          <div class="book" data-book="commons" tabindex="0">
-            <div class="book-spine">Tragedy of the commons</div>
-          </div>
-          <div class="book" data-book="dunbar" tabindex="0">
-            <div class="book-spine">Dunbar's number</div>
           </div>
           <div class="book" data-book="sunk" tabindex="0">
             <div class="book-spine">Sunk cost</div>
@@ -8178,6 +8163,7 @@
       imageAlt: "March of progress, frog to human",
       paragraphs: []
     },
+    // Off the shelf. Essay kept so the Memetics spine can be restored.
     memetics: {
       kicker: "Vol. 04",
       title: "Memetics",
@@ -8229,7 +8215,7 @@
             "Scores is the classic leaderboard for every rankable game, all on one screen. Each game gets a card with every difficulty stacked inside it, top 3 per board (rank, name, score) and the metric under the title (score, points, wins, fewest moves, fastest clear). #1 glows. Empty boards say Unclaimed. Cards flow three across on a desktop, fewer on a tablet, one column on a phone, and the window scrolls. Tap a board for its full top 10 with when each score landed, flip difficulties with the chips, and Back to all boards (Escape does Back first, then closes the window). One request to the Worker’s /boards fills everything; Refresh asks again. If the Worker is down it says Could not reach the board. Open it from the desktop or type scores in Terminal.",
             "Sports is live scores and nothing else: NFL, NBA, NHL, and Soccer (Premier League and MLS on one tab). Today only, in ET. Each game is a card: Live with a pulsing green dot and the quarter, period, or minute; Upcoming with the start time; Final with the winner lit. Tabs show how many games and a red pip when one is live. It asks the Worker every 30 seconds, only while the window is open and the tab is visible, and stops the moment you close it. The Worker borrows ESPN's public scoreboard and caches it for about 30 seconds, so a thousand fans cost ESPN one request. No streams, no ticker on the taskbar, no opinions. A day with no games says so in one line. Up top, Want to bet on it? opens Nikita's Kalshi referral ($25 bonus) in a new tab. Scores come from Kita's own api.nikitakovalenko.com; if that hiccups, Sports quietly retries on a backup line before it gives up. Scores is the game leaderboard; Sports is the real one.",
             "Tap any game to open it. The detail view replaces the list inside the Sports window: the score and clock up top, the line score by quarter, period or half, team stats with the better side in green, the latest plays (the current drive for the NFL, key moments and commentary for soccer), and the top players on each side with their line in this game and their season line underneath. Two columns on a desktop, one on a phone. It asks the Worker every 15 seconds, only while that game is open and the tab is visible, and stops on Back, on close, or when the game goes Final, because a finished game has nothing new to say. The Worker trims ESPN's half-megabyte game summary to a few kilobytes and caches it for 15 seconds while live and 10 minutes otherwise; season lines are cached for six hours. Back, top left, returns to the list. So does Escape, the first time. The second Escape closes the window.",
-            "Bookshelf is these notes. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. The shelf keeps its full height while a book is open, so every title stays readable; on a phone only the reader scrolls. How Kita OS works uses tabs for its chapters.",
+            "Bookshelf is these notes. Seven spines stay on the shelf in this order: Game theory, Whoever needs to hear this, Theory of evolution, How Kita OS works, Sunk cost, The invisible hand, The house always wins. Memetics, Tragedy of the commons, and Dunbar's number are off the shelf; their essays stay in the page so those spines can be put back, and a shared #book= link still opens one. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. The shelf keeps its full height while a book is open, so every visible title stays readable; on a phone only the reader scrolls. How Kita OS works uses tabs for its chapters.",
             "Contact says “Got something? Write me.” Copy email copies the address. Open mail app prefills the subject “you're the man.”"
           ]
         },
@@ -8269,6 +8255,7 @@
         }
       ]
     },
+    // Off the shelf. Essays kept so the Tragedy of the commons and Dunbar's number spines can be restored.
     commons: {
       kicker: "Vol. 06",
       title: "Tragedy of the commons",
