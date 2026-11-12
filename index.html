@@ -1592,6 +1592,52 @@
     margin-top: 2px;
   }
 
+  .game-card.scores-lead {
+    background: linear-gradient(165deg, rgba(57,255,20,.24) 0%, rgba(57,255,20,.08) 55%, rgba(0,0,0,.3) 100%);
+    border-color: rgba(57,255,20,.85);
+    box-shadow: 0 0 20px rgba(57,255,20,.2), inset 0 1px 0 rgba(57,255,20,.35);
+  }
+  .game-card.scores-lead:hover {
+    background: linear-gradient(165deg, rgba(57,255,20,.32) 0%, rgba(57,255,20,.14) 55%, rgba(0,0,0,.28) 100%);
+    border-color: var(--green);
+    box-shadow: 0 0 26px rgba(57,255,20,.34), inset 0 1px 0 rgba(57,255,20,.45);
+  }
+  .game-card.scores-lead .gc-glyph {
+    background: linear-gradient(180deg, rgba(57,255,20,.5), rgba(57,255,20,.14));
+    border-color: rgba(57,255,20,.95);
+    color: #eaffe3;
+    box-shadow: 0 0 14px rgba(57,255,20,.4);
+  }
+  .game-card.scores-lead .gc-kicker {
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+  .game-card.scores-lead .gc-title {
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-shadow: 0 0 8px rgba(57,255,20,.55);
+  }
+  .games-rule {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 2px 0 0;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+  .games-rule::before,
+  .games-rule::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(57,255,20,.28);
+  }
+
   .game-toolbar {
     display: flex;
     justify-content: space-between;
@@ -4704,6 +4750,7 @@
   }
   html.tesla .game-card .gc-title { font-size: 15px; }
   html.tesla .game-card .gc-desc { font-size: 13px; }
+  html.tesla .game-card.scores-lead .gc-kicker { font-size: 11px; }
   html.tesla .btn {
     min-height: 44px;
     font-size: 14px;
@@ -5456,6 +5503,11 @@
         <p class="green">ARCADE FOLDER // PICK YOUR POISON</p>
         <p class="muted" style="margin-bottom:12px;">Lightweight classics. Keyboard on desktop, on-screen pads on mobile.</p>
         <div class="games-launcher">
+          <button type="button" class="game-card scores-lead" data-open="scores">
+            <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4.3" y="11.5" width="4.4" height="7" rx=".8" fill="currentColor" fill-opacity=".25"/><rect x="9.8" y="5.2" width="4.4" height="13.3" rx=".8" fill="currentColor" fill-opacity=".45"/><rect x="15.3" y="8.6" width="4.4" height="9.9" rx=".8" fill="currentColor" fill-opacity=".28"/><path d="M12 2.4l.7 1.45 1.58.18-1.18 1.08.35 1.55L12 5.8l-1.45.86.35-1.55-1.18-1.08 1.58-.18z" fill="currentColor" stroke="none"/></svg></div>
+            <div class="gc-meta"><div class="gc-kicker">Leaderboards</div><div class="gc-title">Scores</div><div class="gc-desc">For every game in this folder</div></div>
+          </button>
+          <div class="games-rule" aria-hidden="true">Games</div>
           <button type="button" class="game-card" data-open="minesweeper">
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6.2"/><path d="M12 3.5v2"/><path d="M12 18.5v2"/><path d="M3.5 12h2"/><path d="M18.5 12h2"/><path d="M6.2 6.2l1.4 1.4"/><path d="M16.4 16.4l1.4 1.4"/><circle cx="10.5" cy="10.2" r="1" fill="currentColor" stroke="none"/></svg></div>
             <div class="gc-meta"><div class="gc-title">Minesweeper</div><div class="gc-desc">Easy 9×9 · Medium 16×16 · Hard 16×30</div></div>
@@ -5496,10 +5548,6 @@
           <button type="button" class="game-card" data-open="pacman">
             <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12a7 7 0 1 1-7-7"/><path d="M12 5v7h7"/><circle cx="9.2" cy="9.2" r="0.9" fill="currentColor" stroke="none"/></svg></div>
             <div class="gc-meta"><div class="gc-title">Pac-Man</div><div class="gc-desc">Maze · ghosts · power pellets · Easy / Medium / Hard</div></div>
-          </button>
-          <button type="button" class="game-card" data-open="scores">
-            <div class="gc-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 18.5V10.2"/><path d="M12 18.5V6.2"/><path d="M17.5 18.5v-5.2"/><path d="M4.5 18.5h15"/></svg></div>
-            <div class="gc-meta"><div class="gc-title">Scores</div><div class="gc-desc">Classic leaderboard · every game</div></div>
           </button>
         </div>
       </div>
@@ -8211,7 +8259,7 @@
             "DroneStuff is an in-OS gallery of ten aerials, not a redirect. Click a shot for the lightbox. Shots show view counts, and each photo you open adds one view. To get out, tap the neon Back button in the top-left corner, tap anywhere outside the photo, or press Escape. Any of the three closes the photo and puts you back on the gallery.",
             "YouTube is a classic-era player for @Nikita_Kovy. Every public upload is in the sidebar, newest first, with its view count and length. The newest is Elijah Taylor live at The Barbary, a full set at 1:16:21, which is why the time readout learned hours. Click a row to play in the window. Search filters this channel. The logo opens the real channel. Playback uses a built-in old-style control bar (YouTube’s modern embed chrome stays hidden). It asks YouTube for the highest available quality; YouTube may still step down for bandwidth or a small player.",
             "Radio is Kita Radio, a small Stem Player-style deck. Four loops, all synthesized live in your browser, nothing downloaded and nothing licensed. Each track is split into four stems on one shared clock: drums, bass, keys, lead. Drag a glowing bar to set that stem, mouse or touch. M mutes a stem, S solos it. The knob is speed and pitch together, 0.5x to 1.5x, like a tape deck: drag it up or down, mouse or finger. Tap the readout next to it (or double-click the knob) to reset to 1.00x. On touch screens every control is a full fingertip wide. The current track plays forever or until you press Next, whichever comes first. There is no Loop button; looping is the whole plan. Nothing plays until you press Play, closing the window stops it, and the tray speaker mutes it.",
-            "Scores is the classic leaderboard for every rankable game, all on one screen. Each game gets a card with every difficulty stacked inside it, top 3 per board (rank, name, score) and the metric under the title (score, points, wins, fewest moves, fastest clear). #1 glows. Empty boards say Unclaimed. Cards flow three across on a desktop, fewer on a tablet, one column on a phone, and the window scrolls. Tap a board for its full top 10 with when each score landed, flip difficulties with the chips, and Back to all boards (Escape does Back first, then closes the window). One request to the Worker’s /boards fills everything; Refresh asks again. If the Worker is down it says Could not reach the board. Open it from the Games folder.",
+            "Scores is the classic leaderboard for every rankable game, all on one screen. Each game gets a card with every difficulty stacked inside it, top 3 per board (rank, name, score) and the metric under the title (score, points, wins, fewest moves, fastest clear). #1 glows. Empty boards say Unclaimed. Cards flow three across on a desktop, fewer on a tablet, one column on a phone, and the window scrolls. Tap a board for its full top 10 with when each score landed, flip difficulties with the chips, and Back to all boards (Escape does Back first, then closes the window). One request to the Worker’s /boards fills everything; Refresh asks again. If the Worker is down it says Could not reach the board. Open it from the top of the Games folder, where it sits above the games and is marked as the leaderboards.",
             "Sports is live scores and nothing else: NFL, NBA, NHL, and Soccer (Premier League and MLS on one tab). Today only, in ET. Each game is a card: Live with a pulsing green dot and the quarter, period, or minute; Upcoming with the start time; Final with the winner lit. Tabs show how many games and a red pip when one is live. It asks the Worker every 30 seconds, only while the window is open and the tab is visible, and stops the moment you close it. The Worker borrows ESPN's public scoreboard and caches it for about 30 seconds, so a thousand fans cost ESPN one request. No streams, no ticker on the taskbar, no opinions. A day with no games says so in one line. Up top, Want to bet on it? opens Nikita's Kalshi referral ($25 bonus) in a new tab. Scores come from Kita's own api.nikitakovalenko.com; if that hiccups, Sports quietly retries on a backup line before it gives up. Scores is the game leaderboard; Sports is the real one.",
             "Tap any game to open it. The detail view replaces the list inside the Sports window: the score and clock up top, the line score by quarter, period or half, team stats with the better side in green, the latest plays (the current drive for the NFL, key moments and commentary for soccer), and the top players on each side with their line in this game and their season line underneath. Two columns on a desktop, one on a phone. It asks the Worker every 15 seconds, only while that game is open and the tab is visible, and stops on Back, on close, or when the game goes Final, because a finished game has nothing new to say. The Worker trims ESPN's half-megabyte game summary to a few kilobytes and caches it for 15 seconds while live and 10 minutes otherwise; season lines are cached for six hours. Back, top left, returns to the list. So does Escape, the first time. The second Escape closes the window.",
             "Bookshelf is these notes. Seven spines stay on the shelf in this order: Game theory, Whoever needs to hear this, Theory of evolution, How Kita OS works, Sunk cost, The invisible hand, The house always wins. Memetics, Tragedy of the commons, and Dunbar's number are off the shelf; their essays stay in the page so those spines can be put back, and a shared #book= link still opens one. Click a spine. Each spine is dressed for its title. The reader scroll resets to the top. The shelf keeps its full height while a book is open, so every visible title stays readable; on a phone only the reader scrolls. How Kita OS works uses tabs for its chapters.",
@@ -8221,7 +8269,7 @@
         {
           title: "Games",
           paragraphs: [
-            "The Games folder has Minesweeper, Snake, Tetris, Solitaire (Klondike, Draw 3 or Draw 1), Chess (Easy / Medium / Hard), Pipes, 2048, Flappy Bird, Tron, Pac-Man, and Scores (the classic leaderboard). Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome. On a phone, Flag stays Flag (it does not grow). Toolbars do not wrap. Snake and Tetris keep a bigger pad on screen; keyboard hints hide. Flappy Bird has character skins (Bird, Kita, Pixel, Drone) and neon site-green pipes; Easy / Medium / Hard change gravity and gap. On a phone the character / AI / difficulty picks stay above the board (the canvas shrinks to fit). Tron is light-cycles versus 1–3 AIs with color picks for you and each AI; score is your trail; Easy / Medium / Hard. Pac-Man is a neon maze with dots, power pellets, four ghosts, and three lives; Easy / Medium / Hard. Scores is the shared classic leaderboard. When a run ends you can type a short name; the Worker keeps the top scores. Same name on the same board updates if you beat yourself (Chess tallies wins). Minesweeper / Pipes / Solitaire rank by lower time or moves. The Games list and each game window sit above the taskbar; the list scrolls if a card would tuck under Start."
+            "The Games folder opens with Scores at the top — the classic leaderboard for every game, set apart from the list below. Then Minesweeper, Snake, Tetris, Solitaire (Klondike, Draw 3 or Draw 1), Chess (Easy / Medium / Hard), Pipes, 2048, Flappy Bird, Tron, and Pac-Man. Click the board to focus that game. Minesweeper is Easy 9×9 / 10 mines, Medium 16×16 / 40, Hard 16×30 / 99. First reveal is safe even if you flagged first. Snake and Tetris keep the same board; Easy / Medium / Hard change speed — Snake tick and Tetris gravity. Snake can chase its tail. Food never lands on the body. Pipes has Easy 7×7, Medium 10×10, and Hard 13×13. Click tiles to rotate them until a path connects start to end. New puzzle stays on the size you picked. 2048 is a 4×4 merge puzzle — arrows or swipe, session best. Tiles past 2048 keep their own chrome. On a phone, Flag stays Flag (it does not grow). Toolbars do not wrap. Snake and Tetris keep a bigger pad on screen; keyboard hints hide. Flappy Bird has character skins (Bird, Kita, Pixel, Drone) and neon site-green pipes; Easy / Medium / Hard change gravity and gap. On a phone the character / AI / difficulty picks stay above the board (the canvas shrinks to fit). Tron is light-cycles versus 1–3 AIs with color picks for you and each AI; score is your trail; Easy / Medium / Hard. Pac-Man is a neon maze with dots, power pellets, four ghosts, and three lives; Easy / Medium / Hard. Scores is the shared classic leaderboard. When a run ends you can type a short name; the Worker keeps the top scores. Same name on the same board updates if you beat yourself (Chess tallies wins). Minesweeper / Pipes / Solitaire rank by lower time or moves. The Games list and each game window sit above the taskbar; the list scrolls if a card would tuck under Start."
           ]
         },
         {
